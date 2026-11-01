@@ -91,7 +91,7 @@ Once a week at most, opening Claude Code in a repo with AI code in it shows one 
 
 ### Add it to GitHub
 
-This runs keepup each week on your own Claude plan, with no API key and no server of ours, using [Anthropic's own GitHub action](https://code.claude.com/docs/en/github-actions). You connect GitHub once:
+This runs keepup each week on your own Claude plan, with no API key and no server of ours, using [Anthropic's own GitHub action](https://code.claude.com/docs/en/github-actions). This route is new and hasn't been run for real yet, so try it on a test repo first. You connect GitHub once:
 
 1. In Claude Code, in your repo, run `/install-github-app` and choose your Claude subscription. That's Anthropic's setup: it installs their GitHub App and saves your plan's token as a repo secret. keepup never sees the token. You need admin on the repo, and the token lasts a year.
 2. Copy [the workflow file](examples/support-bot/.github/workflows/keepup.yml) to `.github/workflows/keepup.yml` in your repo.
