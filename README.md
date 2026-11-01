@@ -99,7 +99,7 @@ This runs keepup each week on your own Claude plan, with no API key and no serve
 
 You get one issue with the levers and their ROI, and a draft pull request for the top one, from `claude[bot]`. A person merges every one. For another finding, run `/keepup:apply 2` in Claude Code.
 
-Five things to know. Keep `persist-credentials: false` in that file, or keepup refuses the checkout. It uses your plan's limits, like running `/keepup` yourself, and if a limit stops it, the run fails and says so. A private repo on a free plan gets a normal pull request, because GitHub has no drafts there. A company or shared setup should use an API key instead, which is one changed line in that file. And Anthropic's docs name CI as a use for this token, but they say nothing specific about a third-party plugin running unattended, so read [their rules](https://code.claude.com/docs/en/legal-and-compliance) for your own use.
+Five things to know. Keep `persist-credentials: false` in that file, or keepup refuses the checkout. It uses your plan's limits, like running `/keepup` yourself, and if a limit stops it, the run fails and says so. If GitHub refuses a draft in your repo, you get a normal pull request instead. A company or shared setup should use an API key instead, which is one changed line in that file. And Anthropic's docs name CI as a use for this token, but they say nothing specific about a third-party plugin running unattended, so read [their rules](https://code.claude.com/docs/en/legal-and-compliance) for your own use.
 
 ## What it needs
 

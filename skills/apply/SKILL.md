@@ -83,7 +83,7 @@ git push -u origin keepup/<date>
 gh pr create --draft --title "<the finding's title>" --body-file "${CLAUDE_PLUGIN_DATA}/pr-body.md"
 ```
 
-If GitHub says draft pull requests aren't supported in this repo, which is what a private repo on a free plan gets, run the same command without `--draft`. Print the link gh gives you. Push only this branch, and never force. Never merge, and never mark it ready.
+If GitHub says draft pull requests aren't supported in this repo, run the same command without `--draft`. Print the link gh gives you. Push only this branch, and never force. Never merge, and never mark it ready.
 
 ## 7. When you didn't push
 
