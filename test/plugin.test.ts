@@ -218,7 +218,7 @@ describe('the plugin', () => {
     const readme = read('README.md');
     assert.ok(readme.startsWith("# keepup\n\n**You can't keep up with AI. Your product can.**"));
     assert.ok(readme.indexOf('Private by default') < readme.indexOf('## What it finds'));
-    for (const text of ['claude plugin marketplace add ColvraAI/keepup', 'claude plugin install keepup@keepup', 'claude --plugin-dir', 'Node 22.18 or later', '## Skip this if', '## What it never does']) assert.ok(readme.includes(text), text);
+    for (const text of ['claude plugin marketplace add ColvraAI/keepup', 'claude plugin install keepup\n', 'and type `/keepup`,', 'claude --plugin-dir', 'Node 22.18 or later', '## Skip this if', '## What it never does']) assert.ok(readme.includes(text), text);
     assert.ok(!/\bemail\b/i.test(readme));
   });
 

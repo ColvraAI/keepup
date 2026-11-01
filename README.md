@@ -36,17 +36,17 @@ Or run the two commands yourself:
 
 ```sh
 claude plugin marketplace add ColvraAI/keepup
-claude plugin install keepup@keepup
+claude plugin install keepup
 ```
 
 These work once ColvraAI/keepup is public. Until then, from a checkout of this repo, use its real path:
 
 ```sh
 claude plugin marketplace add /path/to/keepup
-claude plugin install keepup@keepup
+claude plugin install keepup
 ```
 
-or `KEEPUP_SOURCE=/path/to/keepup ./install.sh`, which does the same. Both commands only change Claude Code's settings, and running them again is safe. To remove it: `claude plugin uninstall keepup@keepup`, then `claude plugin marketplace remove keepup`.
+or `KEEPUP_SOURCE=/path/to/keepup ./install.sh`, which does the same. Both commands only change Claude Code's settings, and running them again is safe. To remove it: `claude plugin uninstall keepup`, then `claude plugin marketplace remove keepup`.
 
 Then, in any repo:
 
@@ -55,7 +55,7 @@ cd your-repo
 claude
 ```
 
-and type `/keepup:keepup`, or just ask what's worth changing. You get one screen. Say which finding you want and type `/keepup:apply 1`: that refuses a dirty tree and makes the change on a local branch with one commit. Then it asks, and on your yes it pushes that branch and opens a draft pull request with your `gh` login, with the ROI and the proof in it. You merge. A finding that needs an account or a project gets written steps instead of a code change.
+and type `/keepup`, or just ask what's worth changing. `/keepup:keepup` is its full name and works too. You get one screen. Say which finding you want and type `/keepup:apply 1`: that refuses a dirty tree and makes the change on a local branch with one commit. Then it asks, and on your yes it pushes that branch and opens a draft pull request with your `gh` login, with the ROI and the proof in it. You merge. A finding that needs an account or a project gets written steps instead of a code change.
 
 ### What asks you first
 
@@ -72,7 +72,7 @@ What holds in every mode: the `keepup` commands themselves read only the project
 
 keepup's "check first" is a text search. It sees what your code sets, not what a library under it sends. So when a successor rejects a setting your code never mentions and an SDK such as `ai` or `langchain` makes the calls, the brief says "Not ruled out", names the SDK and version, offers a bridge model if the provider's page lists one, and `/keepup:apply` makes that smaller move and says the rest isn't verified.
 
-With a local path, Claude Code loads the plugin from your checkout, so keep the folder where it is; changes there apply at your next session. To remove it: `claude plugin uninstall keepup@keepup`.
+With a local path, Claude Code loads the plugin from your checkout, so keep the folder where it is; changes there apply at your next session. To remove it: `claude plugin uninstall keepup`.
 
 **Run it on your own repos, or ones you trust.** keepup only reads and masks. But Claude Code itself loads a repo's settings, hooks and MCP servers when you start a session inside it, and that happens before keepup is involved.
 
@@ -83,7 +83,7 @@ cd your-repo
 claude --plugin-dir /path/to/keepup/plugin
 ```
 
-The plugin is the `plugin/` folder: the engine, the skills and the database, about 5 MB. Claude Code's skill names are plugin:skill, which is why it's `/keepup:keepup`.
+The plugin is the `plugin/` folder: the engine, the skills and the database, about 5 MB. A plugin's skills have full names in the form plugin:skill, and the bare skill name also works unless another command already uses it. That's why `/keepup` works, and why `/keepup:apply` stays written in full: a bare `/apply` could clash.
 
 You need **Node 22.18 or later**, because keepup is TypeScript that Node runs directly. There's nothing else to install.
 
@@ -103,7 +103,7 @@ Five things to know. Keep `persist-credentials: false` in that file, or keepup r
 
 ## What it needs
 
-- **The skill** (`/keepup:keepup` and `/keepup:apply`) needs Claude Code and Node 22.18 or later. It uses your own Claude Code, so it needs no key of its own. Opening the pull request needs `gh`, logged in; without it, the skill prints the commands.
+- **The skill** (`/keepup` and `/keepup:apply`) needs Claude Code and Node 22.18 or later. It uses your own Claude Code, so it needs no key of its own. Opening the pull request needs `gh`, logged in; without it, the skill prints the commands.
 - **The weekly GitHub run** needs a Claude plan and `/install-github-app`, or an API key if you'd rather. It needs no account with us.
 - **An Anthropic API key,** as `ANTHROPIC_API_KEY`, only for the judge in the command line's `keepup run` and in the dashboard. `scan`, `facts` and the other commands use none.
 - **The GitHub App path** (`npm run setup`, `npm run pr`) needs your own setup: you register your own GitHub App on an org you own, with `npm run setup -- --org <your-org>`, and put what it gives you in `.env`. Nothing here gives you a running App.
