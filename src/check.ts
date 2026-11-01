@@ -328,11 +328,13 @@ function deadlineProblem(finding: Finding, records: string): string | null {
 const MODEL_CALL = /\.messages\.(?:create|stream)\(|\.chat\.completions\.create\(|\.responses\.create\(|\b(?:generateText|streamText|generateObject|generate_content|generateContent)\(/;
 const CACHE_SET = /cache_control|cacheControl|prompt_cache_key|cachedContent/;
 const CACHE_RADIUS = 20;
+/** A line this far below a call's first line is still inside it: its model, its system prompt. */
+const CALL_SPAN = 6;
 
 /** A call that doesn't ask for caching is exactly where it's missing: it needs no setting there to turn on. */
 function isUncachedCall(place: Finding['where'][number], files: ReadonlyMap<string, string>): boolean {
   const lines = files.get(place.file)?.split('\n') ?? [];
-  if (!MODEL_CALL.test(lines[place.line - 1] ?? '')) return false;
+  if (!lines.slice(Math.max(0, place.line - 1 - CALL_SPAN), place.line).some((line) => MODEL_CALL.test(line))) return false;
   return !CACHE_SET.test(lines.slice(Math.max(0, place.line - 1 - CACHE_RADIUS), place.line + CACHE_RADIUS).join('\n'));
 }
 
