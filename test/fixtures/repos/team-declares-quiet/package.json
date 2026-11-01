@@ -1,0 +1,34 @@
+{
+  "name": "stripe",
+  "description": "stripe, supabase, sentry, vercel, cloudflare, linear and github, in words",
+  "homepage": "https://github.com/acme/quiet#readme",
+  "keywords": [
+    "stripe",
+    "supabase",
+    "wrangler"
+  ],
+  "repository": {
+    "url": "git+https://github.com/acme/quiet.git"
+  },
+  "scripts": {
+    "deploy": "npm run build && wrangler pages deploy",
+    "stripe": "stripe listen --forward-to localhost:3000",
+    "supabase": "supabase start",
+    "vercel": "vercel dev",
+    "wrangler": "wrangler dev",
+    "typegen": "wrangler types"
+  },
+  "dependencies": {
+    "@remix-run/cloudflare": "^2.10.2",
+    "my-thing": "git+https://github.com/acme/my-thing.git#main",
+    "stripe-mock": "^1.0.0",
+    "supabase-mock": "^1.0.0",
+    "linear-sdk": "^1.0.0",
+    "sentry-testkit": "^5.0.0"
+  },
+  "devDependencies": {
+    "@vercel/ncc": "^0.38.0",
+    "@vercel/nft": "^0.27.0",
+    "@vercel/style-guide": "^6.0.0"
+  }
+}

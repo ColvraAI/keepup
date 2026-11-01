@@ -190,8 +190,54 @@ describe('patterns are data', () => {
     assert.throws(() => loadPatterns(dir), /PAT-bad.*(find|name)/);
   });
 
+  it('a find entry whose files is not a list of globs fails loudly', () => {
+    writeFileSync(join(dir, 'PAT-bad.json'), JSON.stringify({ id: 'PAT-bad', name: 'x', find: [{ regex: 'a', files: 'package.json' }], skip_if_near: [], files: ['*.json'], why: 'x', status: 'live', effect: [], live_from: 'v0.1' }));
+    assert.throws(() => loadPatterns(dir), /PAT-bad.*files/);
+  });
+
+  it('a find with its own files reads only those, and the others read all the pattern\'s files', () => {
+    writeFileSync(join(dir, 'PAT-bad.json'), JSON.stringify({ id: 'PAT-bad', name: 'x', find: [{ regex: 'anywhere' }, { regex: 'only there', files: ['**/there.json'] }], skip_if_near: [], files: ['*.json', '*.ts'], why: 'x', status: 'live', effect: [], live_from: 'v0.1' }));
+    const patterns = loadPatterns(dir).filter((pattern) => pattern.id === 'PAT-bad');
+    const text = 'anywhere\nonly there\n';
+    const { hits } = scanFiles([{ path: 'a/there.json', text }, { path: 'there.json', text }, { path: 'here.json', text }, { path: 'a.ts', text }], patterns);
+    assert.deepEqual(hits.map((hit) => `${hit.file}:${hit.line}`), ['a.ts:1', 'a/there.json:1', 'a/there.json:2', 'here.json:1', 'there.json:1', 'there.json:2']);
+  });
+
   it('an absent patterns folder means no patterns, not a crash', () => {
     assert.deepEqual(loadPatterns(join(dir, 'nope')), []);
+  });
+});
+
+describe('what a repo declares, with the real patterns', () => {
+  const placesIn = (name: string): Record<string, string[]> => {
+    const repo = fixtureRepo(name);
+    try {
+      const hits = scanRepo(repo.path, { commit: repo.commit }).hits.filter((hit) => hit.pattern.startsWith('PAT-uses-'));
+      return Object.fromEntries([...new Set(hits.map((hit) => hit.pattern))].sort().map((id) => [id, hits.filter((hit) => hit.pattern === id).map((hit) => `${hit.file}:${hit.line}`)]));
+    } finally {
+      repo.cleanup();
+    }
+  };
+
+  it('fires on dependency lines in package.json, requirements and pyproject, on config files, and on workflows', () => {
+    assert.deepEqual(placesIn('team-declares'), {
+      'PAT-uses-cloudflare': ['package.json:13', 'pyproject.toml:8', 'requirements.txt:6', 'services/worker/wrangler.json:1', 'services/worker/wrangler.toml:2', 'services/worker/wrangler.toml:3'],
+      'PAT-uses-github': ['.github/workflows/ci.yml:3', '.github/workflows/release.yaml:2', 'package.json:9', 'pyproject.toml:9', 'requirements.txt:7'],
+      'PAT-uses-linear': ['package.json:8'],
+      'PAT-uses-sentry': ['package.json:10', 'pyproject.toml:5', 'pyproject.toml:14', 'requirements.txt:3', 'sentry.server.config.js:3'],
+      'PAT-uses-stripe': ['package.json:14', 'pyproject.toml:6', 'pyproject.toml:15', 'requirements.txt:4'],
+      'PAT-uses-supabase': ['package.json:11', 'pyproject.toml:7', 'pyproject.toml:16', 'requirements.txt:5', 'supabase/config.toml:2'],
+      'PAT-uses-vercel': ['package.json:12', 'vercel.json:1'],
+    });
+  });
+
+  it('stays quiet on a README, a comment, a script, a look-alike, a template, a nested workflow and a manifest written in code', () => {
+    assert.deepEqual(placesIn('team-declares-quiet'), {});
+  });
+
+  it('an import in code still fires, as it always did', () => {
+    const { hits } = scanFiles([{ path: 'src/a.ts', text: "import * as Sentry from '@sentry/node';\n" }], loadPatterns());
+    assert.deepEqual(hits.map((hit) => hit.pattern), ['PAT-uses-sentry']);
   });
 });
 

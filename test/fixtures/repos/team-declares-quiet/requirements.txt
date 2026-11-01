@@ -1,0 +1,9 @@
+# stripe==12.0
+# sentry-sdk==2.20.0
+#supabase
+stripe-mock==1.0
+pystripe==1.0
+sentry-sdk-extras==1.0
+supabase-mock==1.0
+cloudflare-ddns==1.0
+my-pygithub==1.0

@@ -130,7 +130,7 @@ function refusePromisor(repo: string): void {
 /** An include hands git a file the repo chose, and a FIFO there hangs every call, so a repo's own config can't use one. */
 function refuseIncludes(repo: string): void {
   const includes = gitCall(repo, ['config', '--local', '--no-includes', '--name-only', '--get-regexp', '^include(if)?\\.']);
-  if (includes.status === 0 && includes.stdout.length > 0) throw new Error(`${repo} has an include in its git config, which points git at a file outside the repo, so keepup won't read it.`);
+  if (includes.status === 0 && includes.stdout.length > 0) throw new Error(`${repo} has an include in its git config, which points git at a file outside the repo, so keepup won't read it. In GitHub Actions, set persist-credentials: false on actions/checkout.`);
 }
 
 /** Why a path alone rules a file out, or null when only its contents can tell. */

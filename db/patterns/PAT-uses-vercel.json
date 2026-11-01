@@ -5,6 +5,20 @@
   "find": [
     {
       "regex": "^\\s*import .* from [\\\"']@vercel/(?:blob|kv|postgres|analytics|edge)"
+    },
+    {
+      "regex": "^\\s*\"(?:vercel|@vercel/(?!(?:ncc|nft|style-guide)\")[\\w.-]+)\"\\s*:\\s*\"(?:[\\^~<>=*\\d]|v\\d|(?:latest|next)\"|workspace:|catalog:|npm:)",
+      "files": [
+        "**/package.json"
+      ],
+      "note": "A dependency line in package.json: the name as a key, then a version, so a script of the same name stays quiet. @vercel/ncc, @vercel/nft and @vercel/style-guide are build tools that run anywhere, so they don't say the team runs on Vercel."
+    },
+    {
+      "regex": "^\\{",
+      "files": [
+        "**/vercel.json"
+      ],
+      "note": "vercel.json is Vercel's own config, so its opening line is the receipt."
     }
   ],
   "skip_if_near": [],
@@ -16,7 +30,9 @@
     "**/*.js",
     "**/*.jsx",
     "**/*.mjs",
-    "**/*.cjs"
+    "**/*.cjs",
+    "**/package.json",
+    "**/vercel.json"
   ],
   "skip_files": [
     "**/__tests__/**",
@@ -31,9 +47,13 @@
     "**/vendor/**",
     "**/dist/**",
     "**/*.test.*",
-    "**/*.spec.*"
+    "**/*.spec.*",
+    "**/templates/**",
+    "**/template/**",
+    "**/*-templates/**",
+    "**/starters/**"
   ],
-  "why": "Vercel is in the code, so its own MCP server lets the team's coding agent read that service. It's a team tool and never a pull request.",
+  "why": "Vercel is in the code or in what the repo declares, so its own MCP server lets the team's coding agent read that service. It's a team tool and never a pull request.",
   "status": "info",
   "effect": [
     "new capability"

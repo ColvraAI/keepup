@@ -19,3 +19,4 @@ lab/.work/
 !.env.example
 tsconfig.tsbuildinfo
 data/live-prs/
+graphify-out/

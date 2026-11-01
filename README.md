@@ -55,20 +55,20 @@ cd your-repo
 claude
 ```
 
-and type `/keepup:keepup`, or just ask what's worth changing. You get one screen. Say which finding you want and type `/keepup:apply 1`: that refuses a dirty tree, makes the change on a local branch with one commit, and prints the `git push` and `gh pr create --draft` commands for you to run. It never pushes. A finding that needs an account or a project gets written steps instead of a code change.
+and type `/keepup:keepup`, or just ask what's worth changing. You get one screen. Say which finding you want and type `/keepup:apply 1`: that refuses a dirty tree and makes the change on a local branch with one commit. Then it asks, and on your yes it pushes that branch and opens a draft pull request with your `gh` login, with the ROI and the proof in it. You merge. A finding that needs an account or a project gets written steps instead of a code change.
 
 ### What asks you first
 
 keepup can't promise you a prompt. Your permission mode decides, and this is what happens in each:
 
-- **Auto, the built-in default for interactive sessions on current Claude Code.** Claude Code's background safety checks decide, and they let `/keepup:apply` edit files, make the branch and commit with no prompt. Typing `/keepup:apply` is your yes. Read the commit before you push it.
+- **Auto, the built-in default for interactive sessions on current Claude Code.** Claude Code's background safety checks decide, and they let `/keepup:apply` edit files, make the branch and commit with no prompt. Typing `/keepup:apply` is your yes to that. It asks again before it pushes, so read the commit first.
 - **Manual.** Every edit and every command `/keepup:apply` runs stops and asks first, and nothing changes until you say yes. To start a session that way:
 
   ```sh
   claude --permission-mode default
   ```
 
-What holds in every mode: the `keepup` commands themselves read only the project and write only to the plugin's data folder, and they refuse `keepup run`. That's enforced by the program. That `/keepup:apply` never pushes is an instruction in the skill, not a lock, so don't rely on it in auto mode.
+What holds in every mode: the `keepup` commands themselves read only the project and write only to the plugin's data folder, and they refuse `keepup run`. That's enforced by the program. That `/keepup:apply` asks before it pushes, and never merges, is an instruction in the skill, not a lock, so don't rely on it in auto mode.
 
 keepup's "check first" is a text search. It sees what your code sets, not what a library under it sends. So when a successor rejects a setting your code never mentions and an SDK such as `ai` or `langchain` makes the calls, the brief says "Not ruled out", names the SDK and version, offers a bridge model if the provider's page lists one, and `/keepup:apply` makes that smaller move and says the rest isn't verified.
 
@@ -89,9 +89,22 @@ You need **Node 22.18 or later**, because keepup is TypeScript that Node runs di
 
 Once a week at most, opening Claude Code in a repo with AI code in it shows one line, such as `keepup: 1 model you use shuts down 30 Nov · /keepup` or `keepup: 2 new changes apply · 9,869 new or updated this week · /keepup`. It compares your repo's model ids and dependencies only: the things in that count aren't checked against your code until you run `/keepup`, and most are registry entries whose date is the newest publish, so it says "new or updated". A repo with no AI code hears nothing.
 
+### Add it to GitHub
+
+This runs keepup each week on your own Claude plan, with no API key and no server of ours, using [Anthropic's own GitHub action](https://code.claude.com/docs/en/github-actions). You connect GitHub once:
+
+1. In Claude Code, in your repo, run `/install-github-app` and choose your Claude subscription. That's Anthropic's setup: it installs their GitHub App and saves your plan's token as a repo secret. keepup never sees the token. You need admin on the repo, and the token lasts a year.
+2. Copy [the workflow file](examples/support-bot/.github/workflows/keepup.yml) to `.github/workflows/keepup.yml` in your repo.
+3. Run `gh workflow run keepup.yml` once and read the log, then let it run each Monday.
+
+You get one issue with the levers and their ROI, and a draft pull request for the top one, from `claude[bot]`. A person merges every one. For another finding, run `/keepup:apply 2` in Claude Code.
+
+Five things to know. Keep `persist-credentials: false` in that file, or keepup refuses the checkout. It uses your plan's limits, like running `/keepup` yourself, and if a limit stops it, the run fails and says so. A private repo on a free plan gets a normal pull request, because GitHub has no drafts there. A company or shared setup should use an API key instead, which is one changed line in that file. And Anthropic's docs name CI as a use for this token, but they say nothing specific about a third-party plugin running unattended, so read [their rules](https://code.claude.com/docs/en/legal-and-compliance) for your own use.
+
 ## What it needs
 
-- **The skill** (`/keepup:keepup` and `/keepup:apply`) needs Claude Code and Node 22.18 or later. It uses your own Claude Code, so it needs no key of its own.
+- **The skill** (`/keepup:keepup` and `/keepup:apply`) needs Claude Code and Node 22.18 or later. It uses your own Claude Code, so it needs no key of its own. Opening the pull request needs `gh`, logged in; without it, the skill prints the commands.
+- **The weekly GitHub run** needs a Claude plan and `/install-github-app`, or an API key if you'd rather. It needs no account with us.
 - **An Anthropic API key,** as `ANTHROPIC_API_KEY`, only for the judge in the command line's `keepup run` and in the dashboard. `scan`, `facts` and the other commands use none.
 - **The GitHub App path** (`npm run setup`, `npm run pr`) needs your own setup: you register your own GitHub App on an org you own, with `npm run setup -- --org <your-org>`, and put what it gives you in `.env`. Nothing here gives you a running App.
 - **The repo's own commands** (the dashboard, the labs, the tests) need a checkout and `npm ci`. The skill doesn't.
@@ -104,11 +117,12 @@ npm run dashboard
 
 That builds the site if it's out of date and serves it at http://127.0.0.1:4317, on this machine only. Its screens read the runs in `data/runs`, what a replay of the demo weeks did in `data/timeline.json`, and the lab's measured results. No pull request or issue has been opened: the pull requests on those screens are specs, marked ready to open. If you run the App, it records what it opens in `data/github-objects.json`, and the dashboard links to that. To put your own repo on it, run `node bin/keepup.ts run <path> --publish` with `ANTHROPIC_API_KEY` set, then start the dashboard again.
 
-**How a change reaches you.** There are three ways, and the only one that acts by itself is the one you install on purpose:
+**How a change reaches you.** A person merges every one, whichever way it comes:
 
-- **The keepup GitHub App** would open pull requests and post a weekly issue on the repos it's installed on, once you register it on your own org. It only touches the forks in that org, never upstream: `npm run pr` and `npm run brief` do it, as the App.
-- **The Claude Code plugin** answers `/keepup`, and when you say yes, `/keepup:apply` makes a local branch with one commit per finding and prints the command that would open a draft pull request. You run it.
-- **The dashboard** shows all of it in one place.
+- **The Claude Code plugin** answers `/keepup`, and when you say yes, `/keepup:apply` makes a local branch with one commit per finding. On a second yes it pushes and opens a draft pull request.
+- **The weekly GitHub run** works in your repo's own CI on your own Claude plan. It keeps one weekly issue with the levers and their ROI, and opens a draft pull request for the top one. Nothing runs on a server of ours. See "Add it to GitHub" above.
+- **The dashboard** shows all of it in one place, on your machine.
+- **The keepup GitHub App** is how this repo's own demo opens pull requests, on forks in one org and never upstream: `npm run pr` and `npm run brief`. It isn't a hosted service yet.
 
 **Getting newer data.** The database ships inside the plugin, and the plugin has no version number on purpose, so each commit counts as an update. Claude Code only auto-updates official marketplaces by default: turn it on for this one in `/plugin`, under Marketplaces. A line older than two weeks says which day its database is from.
 
@@ -121,7 +135,8 @@ That builds the site if it's out of date and serves it at http://127.0.0.1:4317,
 ## What it never does
 
 - Upload your code.
-- Push, merge or open a pull request from the plugin or the command line. They print the command, and you run it. Only the GitHub App opens pull requests, on repos you installed it on.
+- Merge anything. A person merges every change.
+- Push or open a pull request without being asked. The plugin asks each time, and the GitHub Action only runs in repos where you added it.
 - Send telemetry.
 - Run anything from your repo.
 - Print a key it finds.

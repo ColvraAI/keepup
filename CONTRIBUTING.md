@@ -10,12 +10,14 @@ claude plugin validate .
 claude plugin validate plugin
 ```
 
+CI runs the tests and the type check on every pull request.
+
 Some tests need the four pinned clones: `npm run clones` fetches them under `tmp/`, and `npm run verify` rebuilds and checks every published run from them. Without the clones those tests skip.
 
 ## Where things are
 
 - `src/` and `bin/`: the engine and the `keepup` command.
-- `skills/`: the two Claude Code skills. `plugin/` is the plugin, which links to these.
+- `skills/`: the three Claude Code skills. `plugin/` is the plugin, which links to these.
 - `db/`: the patterns, levers and tools it checks against. `data/`: recorded runs and replay data.
 - `lab/`: the measured pull request changes. `docs/contracts.md` and `docs/prs/` describe them.
 - `app/` and `site/`: the optional GitHub App tooling and the dashboard.

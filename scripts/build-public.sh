@@ -1,19 +1,18 @@
 #!/usr/bin/env bash
-# Rebuilds the local branch named public as one fresh commit with no parents, from
-# a commit on main, leaving out the working notes. It uses a temporary index, so the
+# Rebuilds the local branch named public as one commit on top of the last public
+# commit (the first build has no parent), from a commit on main, leaving out the working notes. It uses a temporary index, so the
 # working tree and the real index aren't touched, and it never pushes.
 #
 #   scripts/build-public.sh [source-commit]    (default: main)
 #
-# The commit takes its dates from the source commit, so the same source gives the
-# same commit id.
+# The commit takes its dates from the source commit, so the same source on the same
+# previous commit gives the same commit id, and `git push origin public:main` always fast-forwards.
 set -euo pipefail
 
 SOURCE_REF="${1:-main}"
 BRANCH=public
 AUTHOR_NAME=kunalbhatia18
 AUTHOR_EMAIL=kunalbhatia18@users.noreply.github.com
-MESSAGE="keepup: first public release"
 LEFT_OUT=(
   thoughts/ docs/plan
   NOW.md
@@ -45,6 +44,7 @@ fi
 
 source_commit="$(git rev-parse --verify "$SOURCE_REF^{commit}")"
 source_date="$(git log -1 --format=%aI "$source_commit")"
+MESSAGE="keepup: public release from ${source_commit:0:12}"
 
 temp_dir="$(mktemp -d)"
 trap 'rm -rf "$temp_dir"' EXIT
@@ -63,6 +63,12 @@ done
 tree="$(git write-tree)"
 unset GIT_INDEX_FILE
 
+previous="$(git rev-parse --verify --quiet "refs/heads/$BRANCH" || true)"
+if [ -n "$previous" ] && [ "$(git rev-parse "$previous^{tree}")" = "$tree" ]; then
+  echo "$BRANCH is unchanged at $previous: $source_commit gives the same public tree"
+  exit 0
+fi
+
 grep_args=()
 for text in "${PRIVATE_STRINGS[@]}" "$(git config user.email || true)"; do
   [ -n "$text" ] && grep_args+=(-e "$text")
@@ -75,7 +81,7 @@ fi
 commit="$(
   GIT_AUTHOR_NAME="$AUTHOR_NAME" GIT_AUTHOR_EMAIL="$AUTHOR_EMAIL" GIT_AUTHOR_DATE="$source_date" \
   GIT_COMMITTER_NAME="$AUTHOR_NAME" GIT_COMMITTER_EMAIL="$AUTHOR_EMAIL" GIT_COMMITTER_DATE="$source_date" \
-  git commit-tree "$tree" -m "$MESSAGE"
+  git commit-tree "$tree" ${previous:+-p "$previous"} -m "$MESSAGE"
 )"
 
 git update-ref "refs/heads/$BRANCH" "$commit"

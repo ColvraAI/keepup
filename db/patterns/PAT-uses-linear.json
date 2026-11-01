@@ -5,6 +5,13 @@
   "find": [
     {
       "regex": "^\\s*import .* from [\\\"']@linear/sdk[\\\"']"
+    },
+    {
+      "regex": "^\\s*\"(?:@linear/sdk)\"\\s*:\\s*\"(?:[\\^~<>=*\\d]|v\\d|(?:latest|next)\"|workspace:|catalog:|npm:)",
+      "files": [
+        "**/package.json"
+      ],
+      "note": "A dependency line in package.json: the name as a key, then a version, so a script of the same name stays quiet."
     }
   ],
   "skip_if_near": [],
@@ -16,7 +23,8 @@
     "**/*.js",
     "**/*.jsx",
     "**/*.mjs",
-    "**/*.cjs"
+    "**/*.cjs",
+    "**/package.json"
   ],
   "skip_files": [
     "**/__tests__/**",
@@ -31,9 +39,13 @@
     "**/vendor/**",
     "**/dist/**",
     "**/*.test.*",
-    "**/*.spec.*"
+    "**/*.spec.*",
+    "**/templates/**",
+    "**/template/**",
+    "**/*-templates/**",
+    "**/starters/**"
   ],
-  "why": "Linear is in the code, so its own MCP server lets the team's coding agent read that service. It's a team tool and never a pull request.",
+  "why": "Linear is in the code or in what the repo declares, so its own MCP server lets the team's coding agent read that service. It's a team tool and never a pull request.",
   "status": "info",
   "effect": [
     "new capability"

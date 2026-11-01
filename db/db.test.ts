@@ -6,6 +6,7 @@ import { spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { loadPatterns, scanFiles } from '../src/scan.ts';
 
 const DB = import.meta.dirname;
 const CLONES = join(DB, '..', 'tmp');
@@ -26,7 +27,7 @@ const PERSON_SHAPES = [
   /(?:^|\s)@[a-z][\w-]+(?=\s|$)/,
 ];
 
-type Find = { regex: string; flags?: string; note?: string };
+type Find = { regex: string; flags?: string; note?: string; files?: string[] };
 type Pattern = {
   id: string; name: string; find: Find[]; skip_if_near: string[]; files: string[];
   why: string; status: string; effect: string[]; live_from: string;
@@ -95,6 +96,13 @@ for (const { file, data: p } of patterns) {
   test(`pattern ${file} regexes compile`, () => {
     for (const f of p.find) assert.doesNotThrow(() => new RegExp(f.regex, f.flags ?? ''), f.regex);
     for (const s of [...p.skip_if_near, ...(p.skip_if_in_file ?? [])]) assert.doesNotThrow(() => new RegExp(s), s);
+  });
+
+  test(`pattern ${file}: a find with its own files can reach them`, () => {
+    for (const f of p.find.filter((entry) => entry.files !== undefined)) {
+      assert.ok(f.files?.length, f.regex);
+      for (const glob of f.files ?? []) assert.ok(p.files.includes(glob), `${glob} is in the pattern's files, or this find never runs there`);
+    }
   });
 }
 
@@ -304,6 +312,157 @@ for (const [id, lines] of Object.entries(MUST_NOT_FIRE)) {
     for (const line of lines) assert.ok(!firesOn(pattern(id), line), line);
   });
 }
+
+const loaded = loadPatterns();
+/** The real scan on one line of one file, so a pattern's globs, its skip_files and a find's own files all count. */
+const scanFires = (id: string, file: string, line: string): boolean => scanFiles([{ path: file, text: `${line}\n` }], loaded.filter((p) => p.id === id)).hits.length > 0;
+
+// What a repo declares, for the team's own tools. Same rule as above: a trailing comment says where a real line came from.
+const DECLARED_FIRES: readonly (readonly [string, string, string])[] = [
+  ['PAT-uses-cloudflare', 'package.json', '    "@cloudflare/workers-types": "^4.20240620.0",'], // bolt.new package.json:81
+  ['PAT-uses-cloudflare', 'package.json', '    "wrangler": "^3.63.2",'], // bolt.new package.json:98
+  ['PAT-uses-cloudflare', 'package.json', '    "cloudflare": "^4.0.0",'],
+  ['PAT-uses-cloudflare', 'requirements-dev.txt', 'cloudflare==4.0.0'],
+  ['PAT-uses-cloudflare', 'pyproject.toml', '  "cloudflare>=4.0",'],
+  ['PAT-uses-cloudflare', 'wrangler.toml', 'name = "bolt"'], // bolt.new wrangler.toml:2
+  ['PAT-uses-cloudflare', 'wrangler.toml', 'compatibility_date = "2024-07-01"'], // bolt.new wrangler.toml:4
+  ['PAT-uses-cloudflare', 'workers/api/wrangler.toml', 'main = "src/index.ts"'],
+  ['PAT-uses-cloudflare', 'wrangler.json', '{'],
+  ['PAT-uses-cloudflare', 'wrangler.jsonc', '{'],
+  ['PAT-uses-github', '.github/workflows/cla.yml', 'on:'], // AURA .github/workflows/cla.yml:2
+  ['PAT-uses-github', '.github/workflows/ci.yaml', 'on:'], // bolt.new .github/workflows/ci.yaml:3
+  ['PAT-uses-github', '.github/workflows/lint.yml', '"on": [push]'],
+  ['PAT-uses-github', '.github/workflows/lint.yml', "'on': push"],
+  ['PAT-uses-github', 'package.json', '    "@octokit/auth-app": "^8.3.1",'], // keepup package.json:35
+  ['PAT-uses-github', 'package.json', '    "octokit": "^5.0.5"'], // keepup package.json:36
+  ['PAT-uses-github', 'requirements.txt', 'PyGithub==2.6.0'],
+  ['PAT-uses-github', 'requirements.txt', 'pygithub'],
+  ['PAT-uses-github', 'pyproject.toml', '  "PyGithub>=2.0",'],
+  ['PAT-uses-linear', 'package.json', '    "@linear/sdk": "^60.0.0",'],
+  ['PAT-uses-sentry', 'package.json', '    "@sentry/node": "^10.0.0",'], // ColvraAI/keepup examples/support-bot/package.json:13
+  ['PAT-uses-sentry', 'apps/web/package.json', '    "@sentry/nextjs": "^10.0.0",'],
+  ['PAT-uses-sentry', 'requirements.txt', 'sentry-sdk[fastapi]==2.20.0'],
+  ['PAT-uses-sentry', 'requirements.txt', 'sentry_sdk>=2.0'],
+  ['PAT-uses-sentry', 'pyproject.toml', '  "sentry-sdk[fastapi]>=2.0",'],
+  ['PAT-uses-sentry', 'pyproject.toml', '  "sentry-sdk[fastapi]",'],
+  ['PAT-uses-sentry', 'pyproject.toml', 'dependencies = ["fastapi>=0.115", "sentry-sdk>=2.0"]'],
+  ['PAT-uses-sentry', 'pyproject.toml', 'sentry-sdk = { version = "^2.0", extras = ["fastapi"] }'],
+  ['PAT-uses-sentry', 'sentry.client.config.ts', 'Sentry.init({'],
+  ['PAT-uses-sentry', 'src/frontend/sentry.edge.config.mjs', '  Sentry.init({'],
+  ['PAT-uses-stripe', 'package.json', '    "stripe": "^18.0.0"'], // ColvraAI/keepup examples/support-bot/package.json:16
+  ['PAT-uses-stripe', 'package.json', '    "@stripe/stripe-js": "^7.0.0",'],
+  ['PAT-uses-stripe', 'package.json', '    "stripe": "latest",'],
+  ['PAT-uses-stripe', 'package.json', '    "stripe": "workspace:*",'],
+  ['PAT-uses-stripe', 'requirements.txt', 'stripe'],
+  ['PAT-uses-stripe', 'requirements.txt', 'stripe>=12.0\r'],
+  ['PAT-uses-stripe', 'requirements.txt', 'stripe ; python_version >= "3.10"'],
+  ['PAT-uses-stripe', 'requirements/requirements-prod.txt', 'stripe~=12.0  # payments'],
+  ['PAT-uses-stripe', 'pyproject.toml', 'stripe = "^12.0"'],
+  ['PAT-uses-supabase', 'package.json', '    "@supabase/supabase-js": "^2.50.0",'], // fragments package.json:37
+  ['PAT-uses-supabase', 'package.json', '    "supabase": "^2.0.0",'],
+  ['PAT-uses-supabase', 'requirements.txt', 'supabase==2.10.0'],
+  ['PAT-uses-supabase', 'pyproject.toml', '  "supabase>=2.0",'],
+  ['PAT-uses-supabase', 'supabase/config.toml', 'project_id = "shop"'],
+  ['PAT-uses-supabase', 'apps/web/supabase/config.toml', 'project_id = "shop"'],
+  ['PAT-uses-vercel', 'src/frontend/package.json', '    "@vercel/analytics": "^1.2.2",'], // farfalle src/frontend/package.json:31
+  ['PAT-uses-vercel', 'package.json', '    "@vercel/kv": "^2.0.0",'], // fragments package.json:40
+  ['PAT-uses-vercel', 'package.json', '    "vercel": "^41.0.0",'],
+  ['PAT-uses-vercel', 'vercel.json', '{'],
+  ['PAT-uses-vercel', 'apps/web/vercel.json', '{ "rewrites": [] }'],
+];
+
+const DECLARED_STAYS_QUIET: readonly (readonly [string, string, string])[] = [
+  // A script, a description or a keyword isn't a dependency.
+  ['PAT-uses-cloudflare', 'package.json', '    "deploy": "npm run build && wrangler pages deploy",'], // bolt.new package.json:10
+  ['PAT-uses-cloudflare', 'package.json', '    "typegen": "wrangler types",'], // bolt.new package.json:19
+  ['PAT-uses-cloudflare', 'package.json', '    "wrangler": "wrangler dev",'],
+  ['PAT-uses-github', 'package.json', '  "homepage": "https://github.com/mezmo/aura#readme",'], // AURA package.json:15
+  ['PAT-uses-github', 'package.json', '    "url": "git+https://github.com/mintplex-labs/anything-llm.git"'], // AnythingLLM package.json:11
+  ['PAT-uses-github', 'package.json', '    "epub2": "git+https://github.com/Mintplex-Labs/epub2-static.git#main",'], // AnythingLLM collector/package.json:24
+  ['PAT-uses-stripe', 'package.json', '    "stripe": "stripe listen --forward-to localhost:3000",'],
+  ['PAT-uses-stripe', 'package.json', '    "stripe",'],
+  ['PAT-uses-stripe', 'package.json', '  "name": "stripe",'],
+  ['PAT-uses-stripe', 'package.json', '  "description": "stripe payments",'],
+  ['PAT-uses-supabase', 'package.json', '    "supabase": "supabase start",'],
+  ['PAT-uses-vercel', 'package.json', '    "vercel": "vercel dev",'],
+  // A look-alike name isn't the service.
+  ['PAT-uses-cloudflare', 'package.json', '    "@remix-run/cloudflare": "^2.10.2",'], // bolt.new package.json:48
+  ['PAT-uses-linear', 'package.json', '    "linear-sdk": "^1.0.0",'],
+  ['PAT-uses-linear', 'requirements.txt', 'linear==1.0'],
+  ['PAT-uses-sentry', 'package.json', '    "sentry-testkit": "^5.0.0",'],
+  ['PAT-uses-sentry', 'requirements.txt', 'sentry-sdk-extras==1.0'],
+  ['PAT-uses-stripe', 'package.json', '    "stripe-mock": "^1.0.0",'],
+  ['PAT-uses-stripe', 'requirements.txt', 'stripe-mock==1.0'],
+  ['PAT-uses-stripe', 'requirements.txt', 'pystripe==1.0'],
+  ['PAT-uses-stripe', 'pyproject.toml', '  "stripe-mock>=1.0",'],
+  // Build tools from Vercel run anywhere, so they don't say the team runs there.
+  ['PAT-uses-vercel', 'package.json', '    "@vercel/ncc": "^0.38.0",'],
+  ['PAT-uses-vercel', 'package.json', '    "@vercel/nft": "^0.27.0",'],
+  ['PAT-uses-vercel', 'package.json', '    "@vercel/style-guide": "^6.0.0",'],
+  // A comment says nothing.
+  ['PAT-uses-sentry', 'requirements.txt', '# sentry-sdk==2.20.0'],
+  ['PAT-uses-sentry', 'pyproject.toml', '  # "sentry-sdk>=2.0",'],
+  ['PAT-uses-sentry', 'pyproject.toml', '# sentry-sdk = "^2.0"'],
+  ['PAT-uses-sentry', 'sentry.client.config.ts', '// Sentry.init({'],
+  ['PAT-uses-cloudflare', 'wrangler.toml', '# name = "bolt"'],
+  ['PAT-uses-supabase', 'supabase/config.toml', '# project_id = "shop"'],
+  ['PAT-uses-github', '.github/workflows/ci.yml', '# on: push'],
+  // pyproject.toml has lists and keys that aren't dependencies.
+  ['PAT-uses-stripe', 'pyproject.toml', 'keywords = ["stripe", "payments"]'],
+  ['PAT-uses-stripe', 'pyproject.toml', 'description = "stripe>=12.0 is what we looked at"'],
+  ['PAT-uses-stripe', 'pyproject.toml', 'stripe = "shop.cli:main"'],
+  ['PAT-uses-supabase', 'pyproject.toml', '  "supabase",'],
+  ['PAT-uses-supabase', 'pyproject.toml', 'supabase = "shop.cli:db"'],
+  // The same line in another file means nothing. A word in a README never counts.
+  ['PAT-uses-stripe', 'README.md', '    "stripe": "^18.0.0",'],
+  ['PAT-uses-stripe', 'README.md', 'import stripe'],
+  ['PAT-uses-stripe', 'docs/setup.txt', 'stripe==12.0'],
+  ['PAT-uses-stripe', 'src/scaffold.ts', '    "stripe": "^18.0.0",'], // the manifest a product writes for its users
+  ['PAT-uses-stripe', 'src/generate.py', 'stripe==12.0'],
+  ['PAT-uses-stripe', 'src/generate.py', 'stripe = "^12.0"'],
+  ['PAT-uses-sentry', 'src/app.ts', 'Sentry.init({'],
+  ['PAT-uses-vercel', 'package.json', '{'],
+  ['PAT-uses-vercel', 'vercel.json.example', '{'],
+  ['PAT-uses-vercel', 'vercel.json', '  {'], // a nested object, so a file wouldn't fire once for each
+  ['PAT-uses-cloudflare', 'pyproject.toml', 'name = "bolt"'],
+  ['PAT-uses-cloudflare', 'wrangler.toml.example', 'name = "bolt"'],
+  ['PAT-uses-supabase', 'config.toml', 'project_id = "shop"'],
+  ['PAT-uses-github', '.github/dependabot.yml', 'on:'],
+  ['PAT-uses-github', '.github/workflows/README.md', 'on:'],
+  ['PAT-uses-github', 'docker-compose.yml', 'on:'],
+  ['PAT-uses-github', '.github/workflows/ci.yml', '  on:'],
+  ['PAT-uses-github', '.github/workflows/ci.yml', '    runs-on: ubuntu-latest'],
+  // GitHub only runs workflows at the top of a repo.
+  ['PAT-uses-github', 'packages/app/.github/workflows/ci.yml', 'on:'],
+  ['PAT-uses-github', '.github/workflows/old/ci.yml', 'on:'],
+  // What a product scaffolds for its users isn't this team's stack.
+  ['PAT-uses-stripe', 'templates/next/package.json', '    "stripe": "^18.0.0",'],
+  ['PAT-uses-sentry', 'template/requirements.txt', 'sentry-sdk==2.20.0'],
+  ['PAT-uses-supabase', 'sandbox-templates/next/package.json', '    "@supabase/supabase-js": "^2.50.0",'],
+  ['PAT-uses-vercel', 'templates/next/vercel.json', '{'],
+  ['PAT-uses-cloudflare', 'starters/worker/wrangler.toml', 'name = "starter"'],
+  ['PAT-uses-supabase', 'templates/app/supabase/config.toml', 'project_id = "shop"'],
+  ['PAT-uses-github', 'templates/.github/workflows/ci.yml', 'on:'],
+  // Tests, fixtures and examples were always out.
+  ['PAT-uses-stripe', 'examples/support-bot/package.json', '    "stripe": "^18.0.0"'],
+  ['PAT-uses-stripe', 'test/fixtures/repos/shop/package.json', '    "stripe": "^18.0.0"'],
+  ['PAT-uses-sentry', 'tests/integration/requirements.txt', 'sentry-sdk==2.20.0'],
+];
+
+test('what a repo declares fires its service', () => {
+  for (const [id, file, line] of DECLARED_FIRES) assert.ok(scanFires(id, file, line), `${id}: ${file}: ${line}`);
+});
+
+test('a word that only looks like a declaration stays quiet', () => {
+  for (const [id, file, line] of DECLARED_STAYS_QUIET) assert.ok(!scanFires(id, file, line), `${id}: ${file}: ${line}`);
+});
+
+test('a lever\'s install line is whole: GitHub\'s used to stop at 100 characters, in the middle of a word', () => {
+  const github = levers.find(({ data }) => data.id === 'ADV-2026-1101-mcp-github')?.data as Lever & { install: string; change_recipe: { how: string } };
+  assert.equal(github.install, 'claude mcp add github -e GITHUB_PERSONAL_ACCESS_TOKEN=$GITHUB_PAT -- docker run -i --rm -e GITHUB_PERSONAL_ACCESS_TOKEN ghcr.io/github/github-mcp-server'); // github/github-mcp-server docs/installation-guides/install-claude.md:78
+  assert.equal(github.how, github.install);
+  assert.equal(github.change_recipe.how, github.install);
+});
 
 test('sample code is out of the label-picking pattern', () => {
   // autogen's samples/ has an abstract classify_intent with no model behind it. The line can match, so the file glob drops it.

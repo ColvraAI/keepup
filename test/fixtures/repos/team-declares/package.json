@@ -1,0 +1,16 @@
+{
+  "name": "shop",
+  "scripts": {
+    "deploy": "wrangler pages deploy",
+    "stripe": "stripe listen --forward-to localhost:3000"
+  },
+  "dependencies": {
+    "@linear/sdk": "^60.0.0",
+    "@octokit/rest": "^22.0.0",
+    "@sentry/node": "^10.0.0",
+    "@supabase/supabase-js": "^2.50.0",
+    "@vercel/analytics": "^1.5.0",
+    "cloudflare": "^4.0.0",
+    "stripe": "^18.0.0"
+  }
+}

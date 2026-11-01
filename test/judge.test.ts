@@ -133,6 +133,21 @@ describe('mergeFindings', () => {
     assert.deepEqual(merged.map((f) => f.title), ['A', 'C']);
     assert.deepEqual(merged[0].where.map((w) => w.line), [1, 2]);
   });
+
+  it("drops a finding with no lever and nothing to pick when it's a lever's own call said again", () => {
+    const merged = mergeFindings([finding('Lever', 'ADV-a', 25), finding('Same call', null, 28), finding('Far away', null, 90)]);
+    assert.deepEqual(merged.map((f) => f.title), ['Lever', 'Far away']);
+  });
+
+  it('keeps one at the same call that offers something to pick, has a date, or has another effect', () => {
+    const merged = mergeFindings([
+      finding('Lever', 'ADV-a', 8),
+      { ...finding('A cheaper model', null, 9), options: [{ name: 'Haiku', what: 'x', needs: 'A key.', source: 'https://s.example' }] },
+      { ...finding('Retiring', null, 9), deadline: '2027-01-01' },
+      { ...finding('Keeps working', null, 9), effect: ['keeps working'] },
+    ]);
+    assert.deepEqual(merged.map((f) => f.title), ['Lever', 'A cheaper model', 'Retiring', 'Keeps working']);
+  });
 });
 
 function contextFor(files: ReadonlyMap<string, string>): PipelineContext {

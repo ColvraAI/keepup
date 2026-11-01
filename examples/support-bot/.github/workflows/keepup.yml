@@ -1,0 +1,53 @@
+# Copy this file to .github/workflows/keepup.yml in your repo.
+#
+# First run /install-github-app in Claude Code and choose your Claude subscription. That's Anthropic's own setup: it
+# connects GitHub and saves your plan's token as the repo secret below. keepup never sees the token.
+#
+# Each Monday this keeps one issue with what's worth changing and its ROI, and opens a draft pull request for the top
+# lever. A person merges. It uses your Claude plan's limits, like running /keepup and /keepup:apply yourself.
+#
+# For a company or a shared setup, use an API key: replace the token line with
+#   anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+name: keepup
+
+on:
+  schedule:
+    - cron: '17 6 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+  id-token: write
+
+jobs:
+  keepup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # keepup refuses a repo whose git config includes another file, and checkout writes one to hold its credential.
+          # Anthropic's action sets up its own.
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '22'
+          package-manager-cache: false
+      - id: keepup
+        uses: anthropics/claude-code-action@d535f5172dec02b204866b393d6b20b9b2aaf98d # v1.0.266
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          plugin_marketplaces: https://github.com/ColvraAI/keepup.git
+          plugins: keepup@keepup
+          prompt: /keepup:weekly
+          claude_args: >-
+            --model sonnet
+            --max-turns 200
+            --allowedTools "Skill,Read,Edit,Write,Glob,Grep,Bash(printenv GITHUB_ACTIONS),Bash(keepup:*),Bash(date:*),Bash(git status:*),Bash(git switch:*),Bash(git add:*),Bash(git commit:*),Bash(git log:*),Bash(git diff:*),Bash(git push -u origin keepup/*),Bash(gh label create:*),Bash(gh issue:*),Bash(gh pr list:*),Bash(gh pr create:*)"
+      - name: Say so if it stopped early
+        if: ${{ always() && steps.keepup.outputs.conclusion != 'success' }}
+        run: |
+          echo "::error::keepup didn't finish: a turn limit, a time limit or a Claude plan limit. Read the step above, then run this workflow again."
+          exit 1

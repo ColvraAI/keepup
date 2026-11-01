@@ -15,6 +15,8 @@ import { loadEnv } from '../src/env.ts';
 import { buildFacts } from '../src/facts.ts';
 import { loadLevers, loadPatternMeta } from '../src/levers.ts';
 import { maskText, maskValue } from '../src/mask.ts';
+import { renderIssueBody, renderPrBody } from '../src/pr-body.ts';
+import type { Finding } from '../src/run-shape.ts';
 import { dataDir, logEvent, readLog, resetLog } from '../src/session.ts';
 import { repoRoot } from '../src/git-files.ts';
 import { createLlm, DEFAULT_LLM_CACHE, DEFAULT_MAX_USD, DEFAULT_MODEL } from '../src/llm.ts';
@@ -63,6 +65,12 @@ const USAGE = `keepup: check a product's code against everything new in AI.
                                           the whole pipeline: writes the run file, prints a one-screen brief. --full prints all of it.
                                           It writes to ~/.keepup/runs, or the plugin's data folder; --publish writes data/runs, which the dashboard reads.
                                           --replay rebuilds a demo run from data/replay: no key, no network, no cost.
+  keepup pr-body --finding <rank> [--run <run.json>] [--dir <dir>] [--summary <text>] [--tests <text>] [--out <file>]
+                                          the words for a draft pull request: why, where, ROI, proof, and the real test result if you give it. Offline.
+
+  keepup issue-body [--dir <dir>] [--out <file>]
+                                          the weekly issue's words, from the brief keepup verify --brief wrote. Offline.
+
   keepup change <path> --finding <rank> [--commit <sha>] [--run <run.json>] [--max-usd <n>]
                                           write the code change for one finding: one commit on a branch in a temporary clone under tmp/live-scans.
                                           It sends masked windows to Claude, refuses anything out of bounds, never pushes and never runs the repo.
@@ -106,6 +114,8 @@ const OPTIONS = {
   'first-sight': { type: 'boolean' },
   'hook-child': { type: 'boolean' },
   finding: { type: 'string' },
+  summary: { type: 'string' },
+  tests: { type: 'string' },
   run: { type: 'string' },
   help: { type: 'boolean', short: 'h' },
 } as const;
@@ -330,6 +340,37 @@ async function commandChange(path: string, values: Values): Promise<void> {
   print(formatChange(result));
 }
 
+function printOrWrite(text: string, out?: string): void {
+  if (!out) return print(text);
+  mkdirSync(dirname(out), { recursive: true });
+  writeFileSync(out, `${text}\n`);
+  process.stderr.write(`keepup: wrote ${out}\n`);
+}
+
+/** The words for a draft pull request, from a run file or from what this session verified. */
+function commandPrBody(values: Values): void {
+  const rank = Number(values.finding);
+  if (!Number.isInteger(rank) || rank < 1) throw new UsageError("pr-body takes --finding <rank>, a finding's number in the brief.");
+  if (values.run && inSession()) throw new SessionRefusal('In a session, pr-body reads only what this session verified, so it takes no --run.');
+  const dir = dataDir(values.dir);
+  const read = (file: string) => {
+    if (!existsSync(file)) throw new Error(`${file} isn't there yet. Run /keepup or keepup run first.`);
+    return JSON.parse(readFileSync(file, 'utf8'));
+  };
+  const run = values.run ? read(values.run) : { ...read(join(dir, 'facts.json')), findings: read(join(dir, 'verified.json')).findings };
+  const finding = run.findings.find((item: Finding) => item.rank === rank) ?? run.findings[rank - 1];
+  if (!finding) throw new Error(`There's no finding ${rank} in that run.`);
+  printOrWrite(maskValue(renderPrBody({ finding, repo: run.repo, commit: run.commit, summary: values.summary, tests: values.tests })), values.out);
+}
+
+/** The weekly issue's words, from the brief this session verified. */
+function commandIssueBody(values: Values): void {
+  const file = join(dataDir(values.dir), 'verified.json');
+  const brief = existsSync(file) ? (JSON.parse(readFileSync(file, 'utf8')) as { brief?: string }).brief : undefined;
+  if (!brief) throw new Error('There\'s no brief yet. Run keepup verify --brief first.');
+  printOrWrite(maskValue(renderIssueBody(brief)), values.out);
+}
+
 async function commandMeasure(path: string, values: Values): Promise<void> {
   const rank = Number(values.finding);
   if (!Number.isInteger(rank) || rank < 1) throw new UsageError('measure takes --finding <rank>, a finding\'s number in the run.');
@@ -372,6 +413,8 @@ async function main(argv: readonly string[]): Promise<void> {
   }
   if (command === 'run') return commandRun(pathArgument(positionals, command), values);
   if (command === 'change') return commandChange(pathArgument(positionals, command), values);
+  if (command === 'pr-body') return commandPrBody(values);
+  if (command === 'issue-body') return commandIssueBody(values);
   if (command === 'measure') return commandMeasure(pathArgument(positionals, command), values);
   throw new UsageError(`Unknown command: ${command}`);
 }

@@ -1,0 +1,5 @@
+# A string used to tell Supabase projects apart on the same host.
+project_id = "shop"
+
+[api]
+port = 54321

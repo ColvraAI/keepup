@@ -253,7 +253,7 @@ export function proseProblem(given: string, corpus: string, provenance: Provenan
   if (fixed) return fixed;
   const badVersion = [...prose.matchAll(VERSION_IN_TEXT)].map((match) => match[1]).find((version) => !corpus.includes(version));
   if (badVersion) return `the version ${badVersion} isn't in its sources`;
-  const badModel = findModelIds(prose).map((mention) => mention.id).find((id) => !corpus.includes(id));
+  const badModel = findModelIds(prose).map((mention) => mention.id).find((id) => !corpus.includes(id) && !provenance.knownIds?.has(id));
   if (badModel) return `the model id ${badModel} isn't in its sources`;
   return numberProblemIn(prose, records, corpus) ?? claimProblem(prose, records, attributed);
 }
@@ -409,12 +409,27 @@ function placeOf(finding: Finding): string | undefined {
   return place ? `${place.file}:${place.line}` : undefined;
 }
 
+/** A lever's finding that fails on one sentence of its why loses that sentence, not the lever. What's left must still pass every check. */
+function withoutBadSentences(finding: Finding, input: JudgeChecksInput): Finding | null {
+  if (!finding.lever) return null;
+  const sentences = finding.why.split(/(?<=[.!?])\s+/);
+  const kept = sentences.filter((sentence) => !findingProblem({ ...finding, why: sentence }, input));
+  if (kept.length === 0 || kept.length === sentences.length) return null;
+  const repaired = { ...finding, why: kept.join(' ') };
+  return findingProblem(repaired, input) ? null : repaired;
+}
+
 export function runJudgeChecks(input: JudgeChecksInput): JudgeChecksResult {
   const dropped: Dropped[] = [];
   const exactByTitle = new Map((input.exact_findings ?? []).map((finding) => [finding.title, finding]));
   const survivors = input.findings.map(rewordedFinding).flatMap((finding) => {
     const problem = findingProblem(finding, input);
     if (!problem) return [finding];
+    const repaired = withoutBadSentences(finding, input);
+    if (repaired) {
+      dropped.push({ what: `A sentence in "${finding.title}"`, why: problem, where: placeOf(finding) });
+      return [repaired];
+    }
     const exact = exactByTitle.get(finding.title);
     // The program's count isn't on any page, and it needn't be: it read the repo. What a judge added is what can't stand.
     if (exact) {

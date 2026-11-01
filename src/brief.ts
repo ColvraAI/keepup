@@ -106,7 +106,7 @@ function roiLines(value: LeverValue | undefined): string[] {
   ];
 }
 
-function roiSection(value: LeverValue | undefined): string[] {
+export function roiSection(value: LeverValue | undefined): string[] {
   const roi = value?.roi;
   if (!roi) return [];
   if (!roi.money) return [`**ROI.** ${plainText(roi.statement ?? '')}`, ''];

@@ -5,6 +5,44 @@
   "find": [
     {
       "regex": "^\\s*(?:import sentry_sdk\\b|import .* from [\\\"']@sentry/)"
+    },
+    {
+      "regex": "^\\s*\"(?:@sentry/[\\w.-]+)\"\\s*:\\s*\"(?:[\\^~<>=*\\d]|v\\d|(?:latest|next)\"|workspace:|catalog:|npm:)",
+      "files": [
+        "**/package.json"
+      ],
+      "note": "A dependency line in package.json: the name as a key, then a version, so a script of the same name stays quiet."
+    },
+    {
+      "regex": "^\\s*(?:sentry[-_.]sdk)(?:\\[[^\\]]*\\])?\\s*(?:[=<>~!]=|[<>;@#]|$)",
+      "flags": "i",
+      "files": [
+        "**/requirements*.txt"
+      ],
+      "note": "A dependency line in a requirements file. The whole name, so a look-alike package stays quiet."
+    },
+    {
+      "regex": "^\\s*(?:[\\w-]+\\s*=\\s*\\[\\s*)?(?:[\"'][^\"']*[\"']\\s*,\\s*)*[\"'](?:sentry[-_.]sdk)(?:\\[[^\\]]*\\][\"']|(?:\\[[^\\]]*\\])?\\s*(?:[=<>~!]=|[<>;]))",
+      "flags": "i",
+      "files": [
+        "**/pyproject.toml"
+      ],
+      "note": "A dependency in a pyproject.toml list. It needs a version or an extra, because a bare name could be a keyword."
+    },
+    {
+      "regex": "^\\s*(?:sentry[-_.]sdk)\\s*=\\s*(?:[\"'][\\^~<>=!*\\d]|\\{)",
+      "flags": "i",
+      "files": [
+        "**/pyproject.toml"
+      ],
+      "note": "A dependency in a pyproject.toml table, as Poetry writes it. Its value is a version or a table, so a script of the same name stays quiet."
+    },
+    {
+      "regex": "^\\s*Sentry\\.init\\(",
+      "files": [
+        "**/sentry.*.config.*"
+      ],
+      "note": "The init call in Sentry's own config file, which a require can hide from the import line above."
     }
   ],
   "skip_if_near": [],
@@ -16,7 +54,11 @@
     "**/*.js",
     "**/*.jsx",
     "**/*.mjs",
-    "**/*.cjs"
+    "**/*.cjs",
+    "**/package.json",
+    "**/requirements*.txt",
+    "**/pyproject.toml",
+    "**/sentry.*.config.*"
   ],
   "skip_files": [
     "**/__tests__/**",
@@ -31,9 +73,13 @@
     "**/vendor/**",
     "**/dist/**",
     "**/*.test.*",
-    "**/*.spec.*"
+    "**/*.spec.*",
+    "**/templates/**",
+    "**/template/**",
+    "**/*-templates/**",
+    "**/starters/**"
   ],
-  "why": "Sentry is in the code, so its own MCP server lets the team's coding agent read that service. It's a team tool and never a pull request.",
+  "why": "Sentry is in the code or in what the repo declares, so its own MCP server lets the team's coding agent read that service. It's a team tool and never a pull request.",
   "status": "live",
   "effect": [
     "new capability"

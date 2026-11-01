@@ -175,13 +175,12 @@ function jobsOf(input: VerifyInput): number {
   return Array.isArray(input.jobs) ? input.jobs.length : 0;
 }
 
-function briefFor(floorRun: Run, checked: ReturnType<typeof runJudgeChecks>, input: VerifyInput, log: SessionLog, files: ReadonlyMap<string, string>): string {
+function briefFor(floorRun: Run, checked: ReturnType<typeof runJudgeChecks>, ranked: readonly Finding[], input: VerifyInput, log: SessionLog, files: ReadonlyMap<string, string>): string {
   const covered = coverageHolds(log, jobsOf(input));
-  const ranked = rankFindings(withValues(checked.findings, valueContext(floorRun.facts, files)), floorRun.as_of);
   const brief = renderSummary({
     ...floorRun,
     profile: null,
-    findings: ranked.findings,
+    findings: [...ranked],
     watching: checked.watching,
     held_back: checked.held_back,
     checks: checked.checks,
@@ -189,7 +188,7 @@ function briefFor(floorRun: Run, checked: ReturnType<typeof runJudgeChecks>, inp
     coverage: { searches: log.searches, reads: log.reads },
     unrecognised: unrecognisedOnLists(floorRun.facts.model_ids, files),
   });
-  if (covered || (noAiCode(floorRun) && ranked.findings.length === 0)) return brief;
+  if (covered || (noAiCode(floorRun) && ranked.length === 0)) return brief;
   return `${brief}Not checked against the database: ${log.searches} searches ran for ${jobsOf(input)} jobs, and it takes 2 for each, with at least one read.\n`;
 }
 
@@ -222,7 +221,9 @@ export async function verifyFindings(path: string, input: VerifyInput, options: 
     provenance: { ...provenance, leverNames: new Map(loadLevers().map((lever) => [lever.id, lever.name])), repoFiles: new Set([...files.keys()].map((file) => (file.split('/').pop() ?? file).toLowerCase())), repoStems: stemsOf(files.keys()) },
   });
   const checked = { ...judged, checks: { ...judged.checks, dropped: [...atTheDoor, ...judged.checks.dropped].map((item) => knownWhere(item, files)) } };
-  return { version: 1, findings: checked.findings, watching: checked.watching, held_back: checked.held_back, dropped: publicDropped(checked.checks.dropped, files), ...(options.log ? { brief: briefFor(floorRun, checked, input, options.log, files) } : {}) };
+  // The saved findings carry the brief's numbers and ROI, because a person says yes to a number, and the pull request prints the ROI.
+  const ranked = rankFindings(withValues(checked.findings, valueContext(floorRun.facts, files)), floorRun.as_of).findings;
+  return { version: 1, findings: ranked, watching: checked.watching, held_back: checked.held_back, dropped: publicDropped(checked.checks.dropped, files), ...(options.log ? { brief: briefFor(floorRun, checked, ranked, input, options.log, files) } : {}) };
 }
 
 /** A masked, numbered window of one file: the only way the plugin path reads code. */

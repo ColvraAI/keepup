@@ -462,7 +462,7 @@ describe('verify --findings', () => {
       const out = keepup('verify', repo.path, '--findings', JSON.stringify({ findings: [{ ...good, pr: 'https://evil.example/steal', rank: -5, lever: 'made-up-lever', reach: 'sent', locked: 'because I say so', extra: 'x' }] }));
       const [kept] = JSON.parse(out.stdout).findings;
       assert.equal(kept.pr, null);
-      assert.equal(kept.rank, undefined);
+      assert.equal(kept.rank, 1, 'the program numbers the findings: a rank the model sent is ignored');
       assert.equal(kept.lever, null);
       assert.equal(kept.reach, undefined);
       assert.equal(kept.locked, undefined);

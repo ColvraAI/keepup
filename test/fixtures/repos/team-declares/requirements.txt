@@ -1,0 +1,7 @@
+# what the worker installs
+fastapi==0.115.0
+sentry-sdk[fastapi]==2.20.0
+stripe>=12.0
+supabase
+cloudflare ; python_version >= "3.10"
+PyGithub==2.6.0

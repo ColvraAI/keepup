@@ -244,6 +244,15 @@ function dedupeKey(finding: Finding): string {
   return finding.lever ?? finding.options[0]?.source ?? finding.title;
 }
 
+/** Lines this close are the same call. */
+const SAME_CALL_LINES = 5;
+
+const samePlace = (a: Finding, b: Finding): boolean => a.where.some((one) => b.where.some((other) => one.file === other.file && Math.abs(one.line - other.line) <= SAME_CALL_LINES));
+
+/** No lever, nothing to pick and no date: at a lever's own call, with the same effect, it's that lever said again. */
+const saysNothingMore = (finding: Finding, all: readonly Finding[]): boolean =>
+  !finding.lever && !finding.deadline && finding.options.length === 0 && all.some((other) => other.lever && samePlace(finding, other) && finding.effect.some((word) => other.effect.includes(word)));
+
 /** One finding per lever: two bundles landing on the same thing become one, with both sets of places. */
 export function mergeFindings(findings: readonly Finding[]): Finding[] {
   const merged = new Map<string, Finding>();
@@ -254,7 +263,8 @@ export function mergeFindings(findings: readonly Finding[]): Finding[] {
     const places = new Map([...earlier.where, ...finding.where].map((place) => [`${place.file}:${place.line}`, place]));
     merged.set(key, { ...earlier, where: [...places.values()] });
   }
-  return [...merged.values()];
+  const all = [...merged.values()];
+  return all.filter((finding) => !saysNothingMore(finding, all));
 }
 
 function dedupeRows<T>(rows: readonly T[], key: (row: T) => string): T[] {

@@ -1,7 +1,8 @@
 // Runs db/patterns as data: each line against each pattern, only in that pattern's file types.
 // skip_files drops a file before a pattern runs on it. A hit is dropped when a skip_if_near sign
 // appears within 20 lines, and all of a pattern's hits in a file go when a skip_if_in_file sign
-// appears anywhere in it. skip_files and skip_if_in_file are optional. No pattern lives in code.
+// appears anywhere in it. skip_files and skip_if_in_file are optional. A find can name its own files,
+// when the line alone can't tell. No pattern lives in code.
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { listRepoFiles, repoName, type RepoFile } from './git-files.ts';
@@ -14,10 +15,15 @@ const NEAR_LINES = 20;
 const MAX_TEXT = 500;
 const REQUIRED_FIELDS = ['id', 'name', 'find', 'skip_if_near', 'files'] as const;
 
+export interface FindRule extends GatedRegex {
+  /** Only these of the pattern's files: stripe==12.0 is a dependency in a requirements file and nothing in a docstring. */
+  readonly files?: readonly string[];
+}
+
 export interface Pattern {
   readonly id: string;
   readonly name: string;
-  readonly find: readonly GatedRegex[];
+  readonly find: readonly FindRule[];
   readonly skipIfNear: readonly RegExp[];
   readonly files: readonly string[];
   readonly skipFiles: readonly string[];
@@ -67,13 +73,13 @@ function parsePatternFile(path: string, name: string): Pattern {
   const missing = REQUIRED_FIELDS.filter((field) => raw[field] === undefined);
   if (missing.length) throw new Error(`${name} is missing ${missing.join(', ')}`);
   if (!Array.isArray(raw.find)) throw new Error(`${name}: "find" must be a list`);
-  const find = raw.find as { regex: string; flags?: string }[];
+  const find = raw.find as ({ regex: string; flags?: string } & Record<string, unknown>)[];
   if (find.some((entry) => typeof entry?.regex !== 'string')) throw new Error(`${name}: every "find" entry needs a "regex"`);
   const compile = (field: string) => stringList(raw, field, name).map((regex) => compileRegex(regex, '', { label: name }));
   return {
     id: raw.id as string,
     name: raw.name as string,
-    find: find.map((f) => gated(compileRegex(f.regex, f.flags, { label: name }))),
+    find: find.map((f) => ({ ...gated(compileRegex(f.regex, f.flags, { label: name })), ...(f.files === undefined ? {} : { files: stringList(f, 'files', name) }) })),
     skipIfNear: compile('skip_if_near'),
     files: stringList(raw, 'files', name),
     skipFiles: stringList(raw, 'skip_files', name),
@@ -114,7 +120,7 @@ function matchesFind(rules: readonly GatedRegex[], line: string): boolean {
 
 /** Most patterns have nothing to look for in most files, so the gate runs on the whole file first. */
 function hitsForPattern(file: RepoFile, pattern: Pattern, lines: readonly string[]): Hit[] {
-  const rules = pattern.find.filter((rule) => mayMatch(rule.gate, file.text));
+  const rules = pattern.find.filter((rule) => (rule.files === undefined || matchesAnyGlob(file.path, rule.files)) && mayMatch(rule.gate, file.text));
   if (rules.length === 0) return [];
   const out: Hit[] = [];
   lines.forEach((text, index) => {

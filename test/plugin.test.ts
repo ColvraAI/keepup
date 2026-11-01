@@ -189,15 +189,20 @@ describe('the plugin', () => {
     assert.match(readme, /forks/);
   });
 
-  it('apply refuses a dirty tree, makes a local branch, one commit per finding, and never pushes', () => {
+  it('apply refuses a dirty tree, makes a local branch, one commit per finding, and pushes only on a second yes', () => {
     const skill = read('skills/apply/SKILL.md');
     assert.match(skill, /git status --porcelain/);
     assert.match(skill, /date \+%Y-%m-%d/);
     assert.match(skill, /git switch -c keepup\/<date>/);
     assert.match(skill, /One commit per finding/);
+    assert.match(skill, /keepup pr-body --finding/);
     assert.match(skill, /gh pr create --draft/);
-    assert.match(skill, /never push/i);
-    assert.match(skill, /Print the command, don't run it/);
+    assert.match(skill, /--body-file/);
+    assert.match(skill, /only a yes after you ask counts/);
+    assert.match(skill, /you never merge/i);
+    assert.match(skill, /never force/);
+    assert.match(skill, /without `--draft`/);
+    assert.match(skill, /nothing has been pushed/);
   });
 
   it('the hook runs once a week from the plugin root, with its state in the plugin data folder', () => {

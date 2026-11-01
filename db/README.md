@@ -11,7 +11,7 @@ Two kinds of record, one JSON file each. Nothing here runs: the scan reads these
 | Field | What it is |
 | --- | --- |
 | id, name, why | The permanent id, the plain name, and why it matters, including when it doesn't fit |
-| find | `[{ regex, flags?, note? }]`, tried per line as JavaScript regular expressions |
+| find | `[{ regex, flags?, note?, files? }]`, tried per line as JavaScript regular expressions. `files` limits one entry to those globs, which must also be in the pattern's own `files`, for a line that only means something in certain files |
 | skip_if_near | Regexes meaning "already handled"; a hit is dropped if one matches within 20 lines |
 | files | Globs on the repo-relative path; `**/` is zero or more folders |
 | status | `live`, or `info` when the detector is under the 85% bar (P6) |

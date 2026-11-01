@@ -1,0 +1,3 @@
+#:schema node_modules/wrangler/config-schema.json
+name = "shop-worker"
+compatibility_date = "2026-01-01"

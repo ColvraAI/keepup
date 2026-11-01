@@ -1,0 +1,16 @@
+[project]
+name = "shop-api"
+dependencies = [
+  "fastapi>=0.115",
+  "sentry-sdk[fastapi]>=2.0",
+  "stripe>=12.0",
+  "supabase>=2.0",
+  "cloudflare>=4.0",
+  "PyGithub>=2.0",
+]
+
+[tool.poetry.dependencies]
+python = "^3.12"
+sentry-sdk = { version = "^2.0", extras = ["fastapi"] }
+stripe = "^12.0"
+supabase = "^2.0"

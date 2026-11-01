@@ -1,0 +1,22 @@
+[project]
+name = "stripe"
+description = "stripe>=12.0 is what we looked at"
+keywords = ["stripe", "supabase", "sentry-sdk"]
+classifiers = [
+  "stripe",
+  "supabase",
+  "cloudflare",
+]
+dependencies = [
+  # "stripe>=12.0",
+  # "sentry-sdk[fastapi]>=2.0",
+  "stripe-mock>=1.0",
+]
+
+[project.scripts]
+stripe = "shop.cli:main"
+supabase = "shop.cli:db"
+
+[tool.shop]
+cloudflare = "enabled"
+# sentry-sdk = "^2.0"

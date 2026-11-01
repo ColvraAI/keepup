@@ -22,7 +22,7 @@ const SAMPLE_EVERY = 5;
 
 const ungated = (patterns: readonly Pattern[]): Pattern[] => patterns.map((pattern) => ({
   ...pattern,
-  find: pattern.find.map(({ re }) => ({ re, gate: OPEN_GATE })),
+  find: pattern.find.map((rule) => ({ ...rule, gate: OPEN_GATE })),
 }));
 const key = (hit: { pattern: string; file: string; line: number }) => `${hit.pattern} ${hit.file}:${hit.line}`;
 
