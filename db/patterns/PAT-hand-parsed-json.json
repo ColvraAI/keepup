@@ -1,0 +1,123 @@
+{
+  "version": 1,
+  "id": "PAT-hand-parsed-json",
+  "name": "Model text parsed as JSON by hand",
+  "find": [
+    {
+      "regex": "^(?!\\s*(?:#|//|\\*|/\\*|--|\"\"\"|''')).*(?:JSON\\.parse|json\\.loads)\\(\\s*(?:\\w+\\()?(?:[\\w$.\\[\\]?!\"']|\\(\\)){0,200}?(?:choices\\[0\\]|\\.message\\.content|output_text|\\.content\\[0\\]\\.text|generated_text|(?:llm|gpt|openai|claude|anthropic|completion|assistant|chat|ai|model|cleaned?)_?(?:response|output|result|reply|text|content|answer|message)\\b|raw_?(?:response|output|reply|answer)\\b)",
+      "flags": "i",
+      "note": "JSON.parse or json.loads directly on a model's reply"
+    },
+    {
+      "regex": "^(?!\\s*(?:#|//|\\*|/\\*|--|\"\"\"|''')).*\\.(?:replace|replaceAll|strip|lstrip|rstrip|removeprefix|removesuffix|split|startswith|endswith|startsWith|endsWith|trimStart)\\(\\s*(?:/|r?[\"'`])\\\\?(?:\\\\`|`){3}(?:\\(\\?:)?json",
+      "note": "Strips a json code fence from a reply before parsing it"
+    },
+    {
+      "regex": "^(?!\\s*(?:#|//|\\*|/\\*|--|\"\"\"|''')).*\\bre\\.(?:sub|search|match|findall|compile)\\(\\s*(?:rf?|fr?)?[\"'].{0,12}`{3}(?:\\(\\?:)?json",
+      "note": "A Python regex that digs JSON out of a code fence"
+    },
+    {
+      "regex": "^(?!\\s*(?:#|//|\\*|/\\*|--|\"\"\"|''')).*/(?:\\\\`|`){3}(?:\\(\\?:)?json",
+      "note": "A JavaScript regex that digs JSON out of a code fence"
+    },
+    {
+      "regex": "^(?!\\s*(?:#|//|\\*|/\\*|--|\"\"\"|''')).*\\b(?:json_repair\\.loads?\\(\\s*[\\w.]*(?:response|reply|output|content|text|result|candidate|answer|completion)|repair_json\\(|dirtyJson\\.parse\\(|parse_json_markdown\\(|parse_partial_json\\(|parseJsonMarkdown\\()",
+      "note": "A library that repairs broken model JSON"
+    },
+    {
+      "regex": "(?:def|function|const|async function)\\s+_?(?:extract|repair|fix|clean|parse|safe_?parse)_?json_?(?:from_?)?(?:response|output|llm|completion|reply|markdown|block|text)",
+      "flags": "i",
+      "note": "A helper written to pull JSON out of a model reply"
+    },
+    {
+      "regex": "[\"']?role[\"']?\\s*:\\s*[\"']assistant[\"']\\s*,\\s*[\"']?content[\"']?\\s*:\\s*(?:\"\\s*[\\{\\[]\\s*\"|'\\s*[\\{\\[]\\s*'|`\\s*[\\{\\[]\\s*`)\\s*[,}]",
+      "note": "Prefills the reply with a bracket to force JSON"
+    },
+    {
+      "regex": "^(?!\\s*(?:#|//|\\*|/\\*|--|\"\"\"|''')).*\\b(?:return|respond|reply|output|answer)(?: with)?(?: only)? (?:(?:a |an )?(?:valid |raw |pure )?json\\b(?: only| object only| and nothing else)|only (?:(?:a |an |the )?(?:valid |raw |pure )?json)\\b)",
+      "flags": "i",
+      "note": "A prompt that begs for JSON and nothing else"
+    }
+  ],
+  "skip_if_near": [
+    "json_schema",
+    "jsonSchema",
+    "zodResponseFormat",
+    "zodTextFormat",
+    "zodOutputFormat",
+    "with_structured_output",
+    "withStructuredOutput",
+    "\\bgenerateObject[<(]",
+    "\\bstreamObject[<(]",
+    "Output\\.object\\(",
+    "(?:completions|responses|messages)\\.parse\\(",
+    "\\bresponse_model\\s*=",
+    "\\boutput_config\\b",
+    "\\bresponseSchema\\b",
+    "\\bresponse_schema\\b",
+    "responseJsonSchema",
+    "response_json_schema",
+    "\\boutput_type\\s*=",
+    "\\binstructor\\."
+  ],
+  "skip_if_in_file": [
+    "json_schema",
+    "jsonSchema",
+    "zodResponseFormat",
+    "zodTextFormat",
+    "zodOutputFormat",
+    "with_structured_output",
+    "withStructuredOutput",
+    "\\bgenerateObject[<(]",
+    "\\bstreamObject[<(]",
+    "Output\\.object\\(",
+    "(?:completions|responses|messages)\\.parse\\(",
+    "\\bresponse_model\\s*=",
+    "\\boutput_config\\b",
+    "\\bresponseSchema\\b",
+    "\\bresponse_schema\\b",
+    "responseJsonSchema",
+    "response_json_schema",
+    "\\boutput_type\\s*=",
+    "\\binstructor\\."
+  ],
+  "files": [
+    "**/*.py",
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.js",
+    "**/*.jsx",
+    "**/*.mjs",
+    "**/*.cjs"
+  ],
+  "skip_files": [
+    "**/__tests__/**",
+    "**/test/**",
+    "**/tests/**",
+    "**/testdata/**",
+    "**/fixtures/**",
+    "**/spec/**",
+    "**/e2e/**",
+    "**/*.test.*",
+    "**/*.spec.*",
+    "**/*_test.*",
+    "**/test_*",
+    "**/test-*",
+    "**/conftest.py",
+    "**/samples/**",
+    "**/sample/**",
+    "**/examples/**",
+    "**/example/**",
+    "**/docs/**",
+    "**/website/**",
+    "**/cookbook/**",
+    "**/cookbooks/**"
+  ],
+  "why": "Model text parsed by hand breaks when the model adds a word or a fence. Providers now guarantee the shape at the API, so the parsing code and its retries can go.",
+  "status": "live",
+  "effect": [
+    "better answers",
+    "keeps working"
+  ],
+  "live_from": "v0.1"
+}

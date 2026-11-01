@@ -1,0 +1,624 @@
+From 250a4978ecc4d7cb169062de70e5684976775b6a Mon Sep 17 00:00:00 2001
+From: "keepup[bot]" <keepup[bot]@users.noreply.github.com>
+Date: Tue, 6 Oct 2026 12:00:00 +0000
+Subject: [PATCH 2/3] feat: add EmbeddingGemma 2 to the native embedder
+
+The ONNX build, whose Hugging Face repo was created on 4 Oct 2026, could not
+run on 4.3.0, which asks for image, video and audio inputs.
+@huggingface/transformers 4.3.1, released on 6 Oct 2026, is the first version
+that supports it, so bump to it and add the model to the picker.
+all-MiniLM-L6-v2 stays the default.
+
+The model is multimodal and the feature-extraction pipeline loads every
+encoder in its config. Remove the vision and audio configs so only the 4-bit
+text model is downloaded and loaded, and use the query and document prefixes
+from the model card.
+
+The tokenizer config sets model_max_length to 1e+30, so the pipeline's
+truncation does nothing for this model. The text splitter holds document
+chunks to 2,000 characters, but a chat message goes straight to
+embedTextInput, and one long message ran a 3.5 GB container out of memory. So
+embedTextInput cuts this model's queries to the same 2,000 characters. The
+chat itself keeps the whole message, and the other models' tokenizers already
+cut theirs, so they don't change.
+
+The settings page already warns before changing the embedder model: it
+clears all embeddings and removes every document from every workspace, in
+both directions, and nothing re-embeds until documents are added again. So
+this adds no new warning, and the model's description says the same.
+
+This is the first model that isn't on the fallback host, which answers 404
+for it, so three things that were only safe while every model was mirrored
+change. With Hugging Face blocked, picking it through updateENV ended the
+server after the documents were cleared, because the background download's
+rejection went unhandled: catch and log it. On 4.3.1 that catch can't see a
+failed download of the .onnx_data weights: the library's own rejection goes
+unhandled, and in our test it still ended the process. env is shared by every
+load, so one fallback sent every later load in the process to the fallback
+host, and the model stayed unloadable until a restart: each attempt now starts
+from the primary host. And this model skips the fallback, so the error people
+see is Hugging Face's, not a 404 from a host that never had it.
+
+Replay date: 6 Oct 2026. Sources:
+https://huggingface.co/onnx-community/embeddinggemma-2-ONNX
+https://www.npmjs.com/package/@huggingface/transformers
+---
+ .../native/fixtures/embeddinggemma-2.json     |  15 ++
+ .../EmbeddingEngines/native/index.test.js     | 227 ++++++++++++++++++
+ .../__tests__/utils/helpers/updateENV.test.js |  50 ++++
+ server/package.json                           |   2 +-
+ .../EmbeddingEngines/native/constants.js      |  30 +++
+ server/utils/EmbeddingEngines/native/index.js |  83 +++++--
+ server/utils/helpers/updateENV.js             |   7 +-
+ server/yarn.lock                              |   8 +-
+ 8 files changed, 399 insertions(+), 23 deletions(-)
+ create mode 100644 server/__tests__/utils/EmbeddingEngines/native/fixtures/embeddinggemma-2.json
+ create mode 100644 server/__tests__/utils/helpers/updateENV.test.js
+
+diff --git a/server/__tests__/utils/EmbeddingEngines/native/fixtures/embeddinggemma-2.json b/server/__tests__/utils/EmbeddingEngines/native/fixtures/embeddinggemma-2.json
+new file mode 100644
+index 00000000..67222d67
+--- /dev/null
++++ b/server/__tests__/utils/EmbeddingEngines/native/fixtures/embeddinggemma-2.json
+@@ -0,0 +1,15 @@
++{
++  "source": "https://huggingface.co/onnx-community/embeddinggemma-2-ONNX/tree/daa72c51243991dfcaf9f9137d2c573d8f7790c0",
++  "config": {
++    "model_type": "embedding_gemma2",
++    "text_config": {
++      "embedding_dim": 768,
++      "hidden_size": 512
++    },
++    "vision_config": {},
++    "audio_config": {}
++  },
++  "tokenizer_config": {
++    "model_max_length": 1000000000000000019884624838656
++  }
++}
+diff --git a/server/__tests__/utils/EmbeddingEngines/native/index.test.js b/server/__tests__/utils/EmbeddingEngines/native/index.test.js
+index 00003c42..672526d0 100644
+--- a/server/__tests__/utils/EmbeddingEngines/native/index.test.js
++++ b/server/__tests__/utils/EmbeddingEngines/native/index.test.js
+@@ -7,6 +7,9 @@ const {
+ } = require("../../../../utils/EmbeddingEngines/native/constants");
+ 
+ const DEFAULT_MODEL = "Xenova/all-MiniLM-L6-v2";
++const EMBEDDING_GEMMA_2 = "onnx-community/embeddinggemma-2-ONNX";
++// Values read from the real model repo, which CI never downloads. See the file's "source".
++const REAL_GEMMA = require("./fixtures/embeddinggemma-2.json");
+ 
+ // A tiny stand-in for the feature-extraction pipeline, so CI never downloads a model.
+ function fakeTransformers(dimension) {
+@@ -19,6 +22,13 @@ function fakeTransformers(dimension) {
+     transformers: {
+       env: { remoteHost: "https://huggingface.co/" },
+       pipeline: jest.fn(async () => extractor),
++      AutoConfig: {
++        from_pretrained: jest.fn(async () => ({
++          model_type: "embedding_gemma2",
++          vision_config: {},
++          audio_config: {},
++        })),
++      },
+     },
+   };
+ }
+@@ -105,6 +115,223 @@ describe("NativeEmbedder", () => {
+     );
+   });
+ 
++  describe("EmbeddingGemma 2", () => {
++    const QUERY_PREFIX = "task: search result | query: ";
++    const CHUNK_LIMIT =
++      SUPPORTED_NATIVE_EMBEDDING_MODELS[EMBEDDING_GEMMA_2]
++        .embeddingMaxChunkLength;
++
++    // Like the real pipeline, a vector's length comes from the config the embedder loads the model with.
++    function fakeGemma() {
++      const fake = fakeTransformers(0);
++      const { pipeline, AutoConfig } = fake.transformers;
++      AutoConfig.from_pretrained.mockImplementation(async () =>
++        JSON.parse(JSON.stringify(REAL_GEMMA.config))
++      );
++      pipeline.mockImplementation(async (_task, _model, { config }) => {
++        const dimension = config.text_config.embedding_dim;
++        fake.extractor.mockImplementation(async (chunk) => ({
++          length: chunk.length,
++          tolist: () => chunk.map(() => new Array(dimension).fill(0.5)),
++        }));
++        return fake.extractor;
++      });
++      return fake;
++    }
++
++    beforeEach(() => {
++      process.env.EMBEDDING_MODEL_PREF = EMBEDDING_GEMMA_2;
++    });
++
++    it("is offered in the picker without changing the default", () => {
++      delete process.env.EMBEDDING_MODEL_PREF;
++      expect(new NativeEmbedder().model).toBe(DEFAULT_MODEL);
++      expect(NativeEmbedder.availableModels().map((m) => m.id)).toContain(
++        EMBEDDING_GEMMA_2
++      );
++    });
++
++    it("loads only the 4-bit text model", async () => {
++      const fake = fakeTransformers(768);
++      loadWith(fake);
++
++      await new NativeEmbedder().embedderClient();
++
++      const [, model, options] = fake.transformers.pipeline.mock.calls[0];
++      expect(model).toBe(EMBEDDING_GEMMA_2);
++      expect(options.dtype).toBe("q4");
++      expect(options.config.model_type).toBe("embedding_gemma2");
++      expect(options.config.vision_config).toBeNull();
++      expect(options.config.audio_config).toBeNull();
++    });
++
++    it("reports the dimension in the model's real config, and says it in the picker", async () => {
++      const { embedding_dim: dimension } = REAL_GEMMA.config.text_config;
++      loadWith(fakeGemma());
++
++      const vector = await new NativeEmbedder().embedTextInput("auroras");
++
++      expect(vector).toHaveLength(dimension);
++      expect(
++        SUPPORTED_NATIVE_EMBEDDING_MODELS[EMBEDDING_GEMMA_2].apiInfo.description
++      ).toContain(`${dimension}-dimension`);
++    });
++
++    it("uses the model card's prefixes", async () => {
++      const fake = fakeGemma();
++      loadWith(fake);
++      const embedder = new NativeEmbedder();
++
++      await embedder.embedTextInput("what causes auroras?");
++
++      expect(fake.extractor.mock.calls[0][0]).toEqual([
++        `${QUERY_PREFIX}what causes auroras?`,
++      ]);
++      expect(fake.extractor.mock.calls[0][1]).toEqual({
++        pooling: "mean",
++        normalize: true,
++      });
++      expect(embedder.embeddingPrefix).toBe("title: none | text: ");
++    });
++
++    it("cuts a long query itself, because its real tokenizer config cuts nothing", async () => {
++      const { model_max_length: tokenizerLimit } = REAL_GEMMA.tokenizer_config;
++      const fake = fakeGemma();
++      loadWith(fake);
++
++      await new NativeEmbedder().embedTextInput("a".repeat(60_000));
++
++      const [sent] = fake.extractor.mock.calls[0][0];
++      // What the tokenizer would pass on, at the limit in the model's own config.
++      expect(Math.min(sent.length, tokenizerLimit)).toBe(
++        QUERY_PREFIX.length + CHUNK_LIMIT
++      );
++      expect(sent).toBe(`${QUERY_PREFIX}${"a".repeat(CHUNK_LIMIT)}`);
++    });
++
++    it("cuts every query in a list, and leaves a short one whole", async () => {
++      const fake = fakeGemma();
++      loadWith(fake);
++
++      await new NativeEmbedder().embedTextInput(["short", "b".repeat(9_000)]);
++
++      expect(fake.extractor.mock.calls[0][0]).toEqual([
++        `${QUERY_PREFIX}short`,
++        `${QUERY_PREFIX}${"b".repeat(CHUNK_LIMIT)}`,
++      ]);
++    });
++
++    it("leaves document chunks to the text splitter", async () => {
++      const fake = fakeGemma();
++      loadWith(fake);
++      const chunk = "c".repeat(CHUNK_LIMIT + 500);
++
++      await new NativeEmbedder().embedChunks([chunk]);
++
++      expect(fake.extractor.mock.calls[0][0]).toEqual([chunk]);
++    });
++
++    it("leaves the other models' queries to their tokenizers", async () => {
++      process.env.EMBEDDING_MODEL_PREF = DEFAULT_MODEL;
++      const fake = fakeTransformers(384);
++      loadWith(fake);
++      const message = "d".repeat(60_000);
++
++      await new NativeEmbedder().embedTextInput(message);
++
++      expect(fake.extractor.mock.calls[0][0]).toEqual([message]);
++    });
++
++    it("asks for fresh downloads in its own folder", () => {
++      const embedder = new NativeEmbedder();
++      expect(embedder.modelPath).toBe(
++        path.resolve(storageDir, "models", ...EMBEDDING_GEMMA_2.split("/"))
++      );
++      expect(embedder.modelDownloaded).toBe(false);
++    });
++  });
++
++  describe("when a download fails", () => {
++    const PRIMARY_HOST = "https://huggingface.co/";
++    const PRIMARY_PATH = "{model}/resolve/{revision}/";
++    const FALLBACK_HOST = "https://cdn.anythingllm.com/support/models/";
++
++    // Hugging Face is down while `isDown()` says so. Records where each load really went.
++    function failOnPrimaryHost(fake, isDown) {
++      const { env, pipeline } = fake.transformers;
++      env.remotePathTemplate = PRIMARY_PATH;
++      const loads = [];
++      pipeline.mockImplementation(async (_task, model) => {
++        loads.push({ model, host: env.remoteHost, path: env.remotePathTemplate });
++        if (env.remoteHost === PRIMARY_HOST && isDown())
++          throw new Error("fetch failed");
++        return fake.extractor;
++      });
++      return loads;
++    }
++
++    it("sends the next model to Hugging Face after a fallback", async () => {
++      const fake = fakeTransformers(384);
++      loadWith(fake);
++      let down = true;
++      const loads = failOnPrimaryHost(fake, () => down);
++
++      process.env.EMBEDDING_MODEL_PREF = DEFAULT_MODEL;
++      await new NativeEmbedder().embedderClient();
++      expect(loads.map((load) => load.host)).toEqual([
++        PRIMARY_HOST,
++        FALLBACK_HOST,
++      ]);
++      expect(loads[1].path).toBe("{model}/");
++
++      down = false;
++      process.env.EMBEDDING_MODEL_PREF = "Xenova/nomic-embed-text-v1";
++      await new NativeEmbedder().embedderClient();
++      expect(loads[2]).toEqual({
++        model: "Xenova/nomic-embed-text-v1",
++        host: PRIMARY_HOST,
++        path: PRIMARY_PATH,
++      });
++    });
++
++    it("does not try the fallback for a model that is not on it", async () => {
++      const fake = fakeTransformers(768);
++      loadWith(fake);
++      const { env, AutoConfig } = fake.transformers;
++      env.remotePathTemplate = PRIMARY_PATH;
++      AutoConfig.from_pretrained.mockRejectedValueOnce(
++        new Error("fetch failed")
++      );
++
++      process.env.EMBEDDING_MODEL_PREF = EMBEDDING_GEMMA_2;
++      await expect(new NativeEmbedder().embedderClient()).rejects.toThrow(
++        "fetch failed"
++      );
++      expect(AutoConfig.from_pretrained).toHaveBeenCalledTimes(1);
++      expect(env.remoteHost).toBe(PRIMARY_HOST);
++    });
++
++    it("loads a model that failed once Hugging Face is back", async () => {
++      const fake = fakeTransformers(768);
++      loadWith(fake);
++      const { AutoConfig } = fake.transformers;
++      let down = true;
++      const loads = failOnPrimaryHost(fake, () => down);
++      AutoConfig.from_pretrained.mockRejectedValueOnce(
++        new Error("fetch failed")
++      );
++
++      process.env.EMBEDDING_MODEL_PREF = EMBEDDING_GEMMA_2;
++      await expect(new NativeEmbedder().embedderClient()).rejects.toThrow();
++
++      down = false;
++      await new NativeEmbedder().embedderClient();
++      expect(loads).toEqual([
++        { model: EMBEDDING_GEMMA_2, host: PRIMARY_HOST, path: PRIMARY_PATH },
++      ]);
++    });
++  });
++
+   it("only logs download progress for a single file", async () => {
+     const fake = fakeTransformers(384);
+     loadWith(fake);
+diff --git a/server/__tests__/utils/helpers/updateENV.test.js b/server/__tests__/utils/helpers/updateENV.test.js
+new file mode 100644
+index 00000000..728681ca
+--- /dev/null
++++ b/server/__tests__/utils/helpers/updateENV.test.js
+@@ -0,0 +1,50 @@
++/* eslint-env jest */
++jest.mock("../../../utils/vectorStore/resetAllVectorStores", () => ({
++  resetAllVectorStores: jest.fn(async () => true),
++}));
++
++const {
++  resetAllVectorStores,
++} = require("../../../utils/vectorStore/resetAllVectorStores");
++const { NativeEmbedder } = require("../../../utils/EmbeddingEngines/native");
++const { updateENV } = require("../../../utils/helpers/updateENV");
++
++const EMBEDDING_GEMMA_2 = "onnx-community/embeddinggemma-2-ONNX";
++
++describe("updateENV EmbeddingModelPref", () => {
++  const ORIGINAL_ENV = process.env;
++
++  beforeEach(() => {
++    process.env = {
++      ...ORIGINAL_ENV,
++      EMBEDDING_ENGINE: "native",
++      EMBEDDING_MODEL_PREF: NativeEmbedder.defaultModel,
++    };
++    jest.spyOn(console, "log").mockImplementation(() => {});
++    jest.spyOn(console, "error").mockImplementation(() => {});
++  });
++
++  afterEach(() => {
++    process.env = ORIGINAL_ENV;
++    jest.restoreAllMocks();
++  });
++
++  it("logs a failed background download instead of leaving it unhandled", async () => {
++    const download = jest
++      .spyOn(NativeEmbedder.prototype, "embedderClient")
++      .mockRejectedValue(new Error("fetch failed"));
++
++    const { error } = await updateENV({ EmbeddingModelPref: EMBEDDING_GEMMA_2 });
++    await new Promise(setImmediate);
++
++    expect(error).toBe(false);
++    expect(resetAllVectorStores).toHaveBeenCalled();
++    expect(download).toHaveBeenCalledTimes(1);
++    expect(console.error).toHaveBeenCalledWith(
++      expect.stringContaining(EMBEDDING_GEMMA_2)
++    );
++    expect(console.error).toHaveBeenCalledWith(
++      expect.stringContaining("fetch failed")
++    );
++  });
++});
+diff --git a/server/package.json b/server/package.json
+index 222506a4..e534ef65 100644
+--- a/server/package.json
++++ b/server/package.json
+@@ -23,7 +23,7 @@
+     "@anthropic-ai/sdk": "^0.39.0",
+     "@breejs/later": "4.2.0",
+     "@datastax/astra-db-ts": "^0.1.3",
+-    "@huggingface/transformers": "4.3.0",
++    "@huggingface/transformers": "4.3.1",
+     "@ladjs/graceful": "^3.2.2",
+     "@lancedb/lancedb": "0.15.0",
+     "@langchain/anthropic": "0.1.16",
+diff --git a/server/utils/EmbeddingEngines/native/constants.js b/server/utils/EmbeddingEngines/native/constants.js
+index 4bf1b3e0..22875d31 100644
+--- a/server/utils/EmbeddingEngines/native/constants.js
++++ b/server/utils/EmbeddingEngines/native/constants.js
+@@ -62,6 +62,36 @@ const SUPPORTED_NATIVE_EMBEDDING_MODELS = {
+       modelCard: "https://huggingface.co/intfloat/multilingual-e5-small",
+     },
+   },
++  "onnx-community/embeddinggemma-2-ONNX": {
++    maxConcurrentChunks: 5,
++    // Right now, this is NOT the token length, and is instead the number of characters
++    // that can be processed in a single pass. So we override to 2,000 characters.
++    // Memory grows with tokens times batch size, and well under the 8192 tokens the model
++    // accepts (from the model card) a batch of long chunks can run a small server out of memory.
++    embeddingMaxChunkLength: 2_000,
++    // The text splitter holds chunks to that limit, but a chat message comes straight to embedTextInput,
++    // and this tokenizer cuts nothing: its config sets model_max_length to 1e+30. Unlike the other
++    // models' tokenizers, nothing stops one long message from running the server out of memory, so
++    // queries stop at the same limit.
++    capQueryLength: true,
++    chunkPrefix: "title: none | text: ",
++    queryPrefix: "task: search result | query: ",
++    dtype: "q4",
++    // This model is multimodal and the pipeline loads every encoder it finds in the config.
++    // We only embed text, so the vision and audio encoders are never downloaded.
++    textOnly: true,
++    // The fallback host answers 404 for this model, which would hide Hugging Face's real error.
++    noFallback: true,
++    apiInfo: {
++      id: "onnx-community/embeddinggemma-2-ONNX",
++      name: "embeddinggemma-2",
++      description:
++        "A multilingual model from Google. Produces 768-dimension vectors. Switching to or from it clears your embeddings and removes documents from your workspaces, so add them again to re-embed. It downloads only from Hugging Face: if this server can't reach Hugging Face, documents can't be embedded until it can. Requires more processing power and memory.",
++      lang: "100+ languages",
++      size: "175MB",
++      modelCard: "https://huggingface.co/onnx-community/embeddinggemma-2-ONNX",
++    },
++  },
+ };
+ 
+ module.exports = {
+diff --git a/server/utils/EmbeddingEngines/native/index.js b/server/utils/EmbeddingEngines/native/index.js
+index c7974f9a..a18624aa 100644
+--- a/server/utils/EmbeddingEngines/native/index.js
++++ b/server/utils/EmbeddingEngines/native/index.js
+@@ -13,6 +13,8 @@ class NativeEmbedder {
+   static #pipelines = new Map();
+   /** @type {Map<string, Promise<any>>} */
+   static #pipelinePromises = new Map();
++  /** @type {{remoteHost: string, remotePathTemplate: string} | null} */
++  static #primaryHost = null;
+ 
+   /**
+    * Supported embedding models for native.
+@@ -20,6 +22,9 @@ class NativeEmbedder {
+    *   chunkPrefix: string;
+    *   queryPrefix: string;
+    *   dtype: string;
++   *   textOnly?: boolean;
++   *   noFallback?: boolean;
++   *   capQueryLength?: boolean;
+    *   apiInfo: {
+    *     id: string;
+    *     name: string;
+@@ -146,21 +151,36 @@ class NativeEmbedder {
+ 
+   async #fetchWithHost(hostOverride = null) {
+     try {
+-      const pipeline = (...args) =>
+-        NativeEmbedder._loadTransformers().then(({ pipeline, env }) => {
+-          // pipeline() does not pass cache_dir to all of its file lookups. Those use env.cacheDir,
+-          // and would go to the network for files we already have.
+-          env.cacheDir = this.cacheDir;
+-          if (!this.modelDownloaded) {
+-            // if model is not downloaded, we will log where we are fetching from.
+-            if (hostOverride) {
+-              env.remoteHost = hostOverride;
+-              env.remotePathTemplate = "{model}/"; // Our S3 fallback url does not support revision File structure.
++      const pipeline = (task, model, options) =>
++        NativeEmbedder._loadTransformers().then(
++          async ({ pipeline, env, AutoConfig }) => {
++            // pipeline() does not pass cache_dir to all of its file lookups. Those use env.cacheDir,
++            // and would go to the network for files we already have.
++            env.cacheDir = this.cacheDir;
++            // env is shared by every load in this process, so a fallback for one load
++            // must not send the next one, for any model, to the fallback host.
++            NativeEmbedder.#primaryHost ??= {
++              remoteHost: env.remoteHost,
++              remotePathTemplate: env.remotePathTemplate,
++            };
++            Object.assign(env, NativeEmbedder.#primaryHost);
++            if (!this.modelDownloaded) {
++              // if model is not downloaded, we will log where we are fetching from.
++              if (hostOverride) {
++                env.remoteHost = hostOverride;
++                env.remotePathTemplate = "{model}/"; // Our S3 fallback url does not support revision File structure.
++              }
++              this.log(`Downloading ${this.model} from ${env.remoteHost}`);
+             }
+-            this.log(`Downloading ${this.model} from ${env.remoteHost}`);
++            if (!this.modelInfo.textOnly) return pipeline(task, model, options);
++
++            const config = await AutoConfig.from_pretrained(model, {
++              cache_dir: this.cacheDir,
++            });
++            config.vision_config = config.audio_config = null;
++            return pipeline(task, model, { ...options, config });
+           }
+-          return pipeline(...args);
+-        });
++        );
+       return {
+         pipeline: await pipeline("feature-extraction", this.model, {
+           cache_dir: this.cacheDir,
+@@ -185,7 +205,10 @@ class NativeEmbedder {
+     } catch (error) {
+       return {
+         pipeline: null,
+-        retry: hostOverride === null ? this.#fallbackHost : false,
++        retry:
++          hostOverride === null && !this.modelInfo.noFallback
++            ? this.#fallbackHost
++            : false,
+         error,
+       };
+     }
+@@ -205,7 +228,7 @@ class NativeEmbedder {
+     const loadPromise = (async () => {
+       if (!this.modelDownloaded)
+         this.log(
+-          "The native embedding model has never been run and will be downloaded right now. Subsequent runs will be faster. (~23MB)"
++          `The native embedding model has never been run and will be downloaded right now. Subsequent runs will be faster. (~${this.modelInfo.apiInfo.size})`
+         );
+ 
+       let fetchResponse = await this.#fetchWithHost();
+@@ -216,7 +239,11 @@ class NativeEmbedder {
+       }
+ 
+       this.log(
+-        `Failed to download model from primary URL. Using fallback ${fetchResponse.retry}`
++        `Failed to download model from primary URL. ${
++          fetchResponse.retry
++            ? `Using fallback ${fetchResponse.retry}`
++            : `${this.model} has no fallback.`
++        }`
+       );
+       if (!!fetchResponse.retry)
+         fetchResponse = await this.#fetchWithHost(fetchResponse.retry);
+@@ -250,13 +277,35 @@ class NativeEmbedder {
+     return `${this.queryPrefix}${textInput}`;
+   }
+ 
++  /**
++   * Cut a query to the chunk limit, for a model whose tokenizer won't cut it.
++   * Only what is embedded for the search is cut: the chat keeps the whole message.
++   * @param {string} text - The query text.
++   * @returns {string} The text the model should see.
++   */
++  #capQueryLength(text) {
++    if (
++      !this.modelInfo.capQueryLength ||
++      text.length <= this.embeddingMaxChunkLength
++    )
++      return text;
++    this.log(
++      `Embedding the first ${this.embeddingMaxChunkLength} of ${text.length} characters of a query.`
++    );
++    return text.slice(0, this.embeddingMaxChunkLength);
++  }
++
+   /**
+    * Embed a single text input.
+    * @param {string|string[]} textInput - The text to embed.
+    * @returns {Promise<Array<number>>} The embedded text.
+    */
+   async embedTextInput(textInput) {
+-    textInput = this.#applyQueryPrefix(textInput);
++    textInput = this.#applyQueryPrefix(
++      Array.isArray(textInput)
++        ? textInput.map((text) => this.#capQueryLength(text))
++        : this.#capQueryLength(textInput)
++    );
+     const result = await this.embedChunks(
+       Array.isArray(textInput) ? textInput : [textInput]
+     );
+diff --git a/server/utils/helpers/updateENV.js b/server/utils/helpers/updateENV.js
+index b9227681..8b01ff46 100644
+--- a/server/utils/helpers/updateENV.js
++++ b/server/utils/helpers/updateENV.js
+@@ -1382,7 +1382,12 @@ async function downloadEmbeddingModelIfRequired(key, prevValue, nextValue) {
+ 
+   const { NativeEmbedder } = require("../EmbeddingEngines/native");
+   if (!NativeEmbedder.supportedModels[nextValue]) return; // if the model is not supported, don't download it
+-  new NativeEmbedder().embedderClient();
++  // Nothing else handles a failure here, and an unhandled rejection ends the process.
++  new NativeEmbedder().embedderClient().catch((error) => {
++    console.error(
++      `Failed to download embedding model ${nextValue}: ${error.message}`
++    );
++  });
+   return false;
+ }
+ 
+diff --git a/server/yarn.lock b/server/yarn.lock
+index 610706f0..56ad036b 100644
+--- a/server/yarn.lock
++++ b/server/yarn.lock
+@@ -487,10 +487,10 @@
+   resolved "https://registry.yarnpkg.com/@huggingface/tokenizers/-/tokenizers-0.2.0.tgz#3913cd936b6e5cbc24e20d0c81dc3ec0f97b8eb0"
+   integrity sha512-LidMHe1FpcSYH4vcSjXooda34pC0M8m1gmDOv7SQi6Iv+ib1zX7J3sHBCC9/3FPCkn2k1b55FneVqMRxrr99pg==
+ 
+-"@huggingface/transformers@4.3.0":
+-  version "4.3.0"
+-  resolved "https://registry.yarnpkg.com/@huggingface/transformers/-/transformers-4.3.0.tgz#bd838fcd2f64b21dc79028a520f89af8b2dda41d"
+-  integrity sha512-fL1A/WUZwouPrOlYxU5dzIwD2T5J781JiB2jDR8bFe5DwCj0Gfudq+NEXCMno49kQgajHA7xQkrRLJlqG1veEA==
++"@huggingface/transformers@4.3.1":
++  version "4.3.1"
++  resolved "https://registry.yarnpkg.com/@huggingface/transformers/-/transformers-4.3.1.tgz#907c4dee112d94ad3ec02e22c55007cf2b72ff8a"
++  integrity sha512-5+voSeUCFK6PCKlY15dPhNOKq3/zOTxDN7oC+Wy9dFb1QZ0TSQomZRRy7URRK8YRuUoE9fGMQTTPC5d/pWBJhA==
+   dependencies:
+     "@huggingface/jinja" "^0.5.10"
+     "@huggingface/tokenizers" "^0.2.0"
+-- 
+2.43.0
+

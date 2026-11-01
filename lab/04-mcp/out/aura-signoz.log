@@ -1,0 +1,1196 @@
+2026-11-01T04:47:09.305635Z  INFO aura_web_server::server: Starting Aura Web Server v0.2.18-nightly.9
+2026-11-01T04:47:09.310749Z  INFO aura_web_server::server: Loading configuration from: /repo/examples/complete/incident-response-signoz.toml
+2026-11-01T04:47:09.344225Z  WARN aura::instance_id: No stable machine identity found (AURA_INSTANCE_ID, POD_NAME/POD_NAMESPACE, and the OS machine ID are all absent). Instance IDs will be random and change on restart. Set AURA_INSTANCE_ID for a stable identity.
+2026-11-01T04:47:09.347449Z  INFO aura_web_server::server: Loaded agent 'incident-response/signoz' (openai/gpt-5.2) [instance_id=ceb43e78-48a3-5f5f-a477-675aa01ec190]
+2026-11-01T04:47:09.348160Z  INFO aura::mcp::manager: Initializing MCP servers (2 configured) as McpUserAgent("aura/0.2.18-nightly.9")
+2026-11-01T04:47:09.348382Z  INFO aura::mcp::manager: Schema sanitization: ENABLED (OpenAI compatibility)
+2026-11-01T04:47:09.348549Z  INFO aura::mcp::manager: Connecting to MCP server: signoz
+2026-11-01T04:47:09.349539Z  INFO aura::mcp::manager:   Spawning STDIO server: ["docker"] ["run", "-i", "--rm", "-e", "SIGNOZ_URL", "-e", "SIGNOZ_API_KEY", "signoz/signoz-mcp-server:v0.17.0"]
+2026-11-01T04:47:11.914777Z  INFO serve_inner: rmcp::service: Service initialized as client peer_info=Some(InitializeResult { protocol_version: ProtocolVersion("2025-03-26"), capabilities: ServerCapabilities { experimental: None, logging: None, completions: None, prompts: Some(PromptsCapability { list_changed: None }), resources: Some(ResourcesCapability { subscribe: None, list_changed: None }), tools: Some(ToolsCapability { list_changed: None }) }, server_info: Implementation { name: "SigNozMCP", title: None, version: "v0.17.0", icons: None, website_url: None }, instructions: Some("Use SigNoz tools to investigate metrics, logs, traces, and exceptions, including the LLM apps and AI agents the user runs (model calls, tokens, cost, tool calls, prompts); questions about those mean the user's app in SigNoz, not this chat. Manage dashboards, alerts, and saved views, and consult SigNoz docs. Start with the user's signal; if none is clear, ask whether to use metrics, traces, or logs.\n\n## Rules\n\n1. **Query once when possible.** Fetch more only if the first result is insufficient or the user asks. Never repeat overlapping queries.\n\n2. **Prefer resource attributes in filters.** Use service.name, k8s.namespace.name, or host.name when available. If none was supplied, call signoz_get_field_keys with fieldContext=resource, optionally signoz_get_field_values, then ask the user to choose. Keys vary by workspace/signal; logs may lack standard resource fields. On \"key not found\", discover valid keys, then retry with an existing key or remove that condition. Never retry the invalid filter.\n\n3. **Match operators to intent and type.** Use EXISTS/NOT EXISTS for presence, = for exact matches, IN/NOT IN for sets, and LIKE/ILIKE/CONTAINS/REGEXP for string patterns. int64 also supports >, >=, <, and <=; bool supports =, !=, EXISTS, and NOT EXISTS.\n\n4. **Guard negative filters.** !=, NOT LIKE, NOT IN, NOT CONTAINS, and NOT REGEXP also match missing fields. Require presence when excluding a value, for example: service.name EXISTS AND service.name != 'redis'.\n\n5. **Convert timestamps programmatically.** SigNoz start/end and time-series timestamps are Unix milliseconds. Never convert them mentally; use a date/time function before presenting them.\n\n6. **Use returned webUrl values verbatim.** Resource results include SigNoz deep links. Never construct links from IDs or the instance URL.\n\n7. **Prepare mutations with reads.** Reuse reads from the same still-current prepared operation; do not repeat them. Otherwise resolve names/IDs and fetch replacement objects. Refresh if state may have changed; preserve unchanged fields.\n") })
+2026-11-01T04:47:11.940426Z  INFO aura::mcp::manager:   STDIO connection established, discovering tools
+2026-11-01T04:47:12.121156Z  INFO aura::mcp::client: Discovered 46 tools from server: stdio://signoz
+2026-11-01T04:47:12.121326Z  INFO aura::mcp::manager:   Discovered 46 tools from STDIO server 'signoz'
+2026-11-01T04:47:12.217500Z  INFO aura::mcp::manager:   STDIO connection successful
+2026-11-01T04:47:12.217757Z  INFO aura::mcp::manager: signoz - Connected successfully, 46 tools discovered
+2026-11-01T04:47:12.217928Z  INFO aura::mcp::manager: Connecting to MCP server: pagerduty
+2026-11-01T04:47:12.221157Z  INFO aura::mcp::manager:   Connecting to HTTP streamable server at: https://mcp.pagerduty.com/mcp
+2026-11-01T04:47:12.224260Z  INFO aura::mcp::manager:   Forwarding 1 headers to MCP client
+2026-11-01T04:47:12.224739Z  INFO aura::mcp::client: Creating streamable HTTP MCP client for: https://mcp.pagerduty.com/mcp
+2026-11-01T04:47:13.480322Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when Client(reqwest::Error { kind: Status(401, None), url: "https://mcp.pagerduty.com/mcp" })
+2026-11-01T04:47:13.487314Z  WARN aura::mcp::manager: pagerduty - Connection failed: MCP initialization error: HTTP MCP server 'pagerduty' authentication failed (401 Unauthorized). Check that your headers, forwarded headers, and/or credentials are correct.
+2026-11-01T04:47:13.487980Z  INFO aura::mcp::manager: MCP initialization complete:
+2026-11-01T04:47:13.488880Z  INFO aura::mcp::manager:   - Total tools available: 46
+2026-11-01T04:47:13.489065Z  INFO aura::mcp::manager:   - Successful connections: 1/2
+2026-11-01T04:47:13.490258Z  WARN aura::mcp::manager:   - Failed connections: 1
+2026-11-01T04:47:13.502825Z  INFO serve_inner: rmcp::service: task cancelled
+2026-11-01T04:47:13.548908Z  INFO aura_web_server::server: Session store backend: memory
+2026-11-01T04:47:13.553064Z  WARN aura::hitl::signing: HITL webhook HMAC verification DISABLED: AURA_HITL_WEBHOOK_SECRET is not set; webhook traffic is unsigned and unverified
+2026-11-01T04:47:13.562217Z  INFO aura_web_server::server: Starting server on 127.0.0.1:36069 (shutdown_timeout=2s)
+2026-11-01T04:47:13.728496Z  INFO aura::mcp::manager: Initializing MCP servers (2 configured) as McpUserAgent("aura/0.2.18-nightly.9")
+2026-11-01T04:47:13.728747Z  INFO aura::mcp::manager: Schema sanitization: ENABLED (OpenAI compatibility)
+2026-11-01T04:47:13.728965Z  INFO aura::mcp::manager: Connecting to MCP server: signoz
+2026-11-01T04:47:13.729626Z  INFO aura::mcp::manager:   Spawning STDIO server: ["docker"] ["run", "-i", "--rm", "-e", "SIGNOZ_URL", "-e", "SIGNOZ_API_KEY", "signoz/signoz-mcp-server:v0.17.0"]
+2026-11-01T04:47:14.278720Z  INFO serve_inner: rmcp::transport::child_process: Child exited gracefully exit status: 0
+2026-11-01T04:47:14.280035Z  INFO serve_inner: rmcp::service: serve finished quit_reason=Cancelled
+2026-11-01T04:47:16.264698Z  INFO serve_inner: rmcp::service: Service initialized as client peer_info=Some(InitializeResult { protocol_version: ProtocolVersion("2025-03-26"), capabilities: ServerCapabilities { experimental: None, logging: None, completions: None, prompts: Some(PromptsCapability { list_changed: None }), resources: Some(ResourcesCapability { subscribe: None, list_changed: None }), tools: Some(ToolsCapability { list_changed: None }) }, server_info: Implementation { name: "SigNozMCP", title: None, version: "v0.17.0", icons: None, website_url: None }, instructions: Some("Use SigNoz tools to investigate metrics, logs, traces, and exceptions, including the LLM apps and AI agents the user runs (model calls, tokens, cost, tool calls, prompts); questions about those mean the user's app in SigNoz, not this chat. Manage dashboards, alerts, and saved views, and consult SigNoz docs. Start with the user's signal; if none is clear, ask whether to use metrics, traces, or logs.\n\n## Rules\n\n1. **Query once when possible.** Fetch more only if the first result is insufficient or the user asks. Never repeat overlapping queries.\n\n2. **Prefer resource attributes in filters.** Use service.name, k8s.namespace.name, or host.name when available. If none was supplied, call signoz_get_field_keys with fieldContext=resource, optionally signoz_get_field_values, then ask the user to choose. Keys vary by workspace/signal; logs may lack standard resource fields. On \"key not found\", discover valid keys, then retry with an existing key or remove that condition. Never retry the invalid filter.\n\n3. **Match operators to intent and type.** Use EXISTS/NOT EXISTS for presence, = for exact matches, IN/NOT IN for sets, and LIKE/ILIKE/CONTAINS/REGEXP for string patterns. int64 also supports >, >=, <, and <=; bool supports =, !=, EXISTS, and NOT EXISTS.\n\n4. **Guard negative filters.** !=, NOT LIKE, NOT IN, NOT CONTAINS, and NOT REGEXP also match missing fields. Require presence when excluding a value, for example: service.name EXISTS AND service.name != 'redis'.\n\n5. **Convert timestamps programmatically.** SigNoz start/end and time-series timestamps are Unix milliseconds. Never convert them mentally; use a date/time function before presenting them.\n\n6. **Use returned webUrl values verbatim.** Resource results include SigNoz deep links. Never construct links from IDs or the instance URL.\n\n7. **Prepare mutations with reads.** Reuse reads from the same still-current prepared operation; do not repeat them. Otherwise resolve names/IDs and fetch replacement objects. Refresh if state may have changed; preserve unchanged fields.\n") })
+2026-11-01T04:47:16.286324Z  INFO aura::mcp::manager:   STDIO connection established, discovering tools
+2026-11-01T04:47:16.371612Z  INFO aura::mcp::client: Discovered 46 tools from server: stdio://signoz
+2026-11-01T04:47:16.372022Z  INFO aura::mcp::manager:   Discovered 46 tools from STDIO server 'signoz'
+2026-11-01T04:47:16.373921Z  INFO aura::mcp::manager:   STDIO connection successful
+2026-11-01T04:47:16.374459Z  INFO aura::mcp::manager: signoz - Connected successfully, 46 tools discovered
+2026-11-01T04:47:16.374647Z  INFO aura::mcp::manager: Connecting to MCP server: pagerduty
+2026-11-01T04:47:16.374787Z  INFO aura::mcp::manager:   Connecting to HTTP streamable server at: https://mcp.pagerduty.com/mcp
+2026-11-01T04:47:16.375004Z  INFO aura::mcp::manager:   Forwarding 1 headers to MCP client
+2026-11-01T04:47:16.375206Z  INFO aura::mcp::client: Creating streamable HTTP MCP client for: https://mcp.pagerduty.com/mcp
+2026-11-01T04:47:17.380420Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when Client(reqwest::Error { kind: Status(401, None), url: "https://mcp.pagerduty.com/mcp" })
+2026-11-01T04:47:17.386527Z  WARN aura::mcp::manager: pagerduty - Connection failed: MCP initialization error: HTTP MCP server 'pagerduty' authentication failed (401 Unauthorized). Check that your headers, forwarded headers, and/or credentials are correct.
+2026-11-01T04:47:17.387205Z  INFO aura::mcp::manager: MCP initialization complete:
+2026-11-01T04:47:17.387646Z  INFO aura::mcp::manager:   - Total tools available: 46
+2026-11-01T04:47:17.388089Z  INFO aura::mcp::manager:   - Successful connections: 1/2
+2026-11-01T04:47:17.389510Z  WARN aura::mcp::manager:   - Failed connections: 1
+2026-11-01T04:47:17.393325Z  INFO aura::mcp::client: Forcefully closing MCP connection to: stdio://signoz
+2026-11-01T04:47:17.393746Z  INFO aura::mcp::client: Cancelled 0 request(s) and closed MCP connection for HTTP request aura-info
+2026-11-01T04:47:17.414910Z  INFO serve_inner: rmcp::service: task cancelled
+2026-11-01T04:47:17.453274Z  INFO aura_web_server::server: Received SIGTERM, initiating graceful shutdown
+2026-11-01T04:47:17.453491Z  INFO aura_web_server::server: Allowing 2s for in-flight requests to complete
+2026-11-01T04:47:17.453630Z  INFO aura_web_server::server: shutdown complete clean_shutdown=true unaborted_tasks=false
+2026-11-01T04:47:17.636447Z  INFO aura_web_server::server: Starting Aura Web Server v0.2.18-nightly.9
+2026-11-01T04:47:17.648036Z  INFO aura_web_server::server: Loading configuration from: /tmp/lab04-offered-soQ7T9/config.toml
+2026-11-01T04:47:17.698411Z  WARN aura::instance_id: No stable machine identity found (AURA_INSTANCE_ID, POD_NAME/POD_NAMESPACE, and the OS machine ID are all absent). Instance IDs will be random and change on restart. Set AURA_INSTANCE_ID for a stable identity.
+2026-11-01T04:47:17.702331Z  INFO aura_web_server::server: Loaded agent 'incident-response/signoz' (openai/gpt-5.2) [instance_id=083b1792-be60-5079-8fe7-7cde2f962fd1]
+2026-11-01T04:47:17.703275Z  INFO aura::mcp::manager: Initializing MCP servers (2 configured) as McpUserAgent("aura/0.2.18-nightly.9")
+2026-11-01T04:47:17.703938Z  INFO aura::mcp::manager: Schema sanitization: ENABLED (OpenAI compatibility)
+2026-11-01T04:47:17.704517Z  INFO aura::mcp::manager: Connecting to MCP server: pagerduty
+2026-11-01T04:47:17.705514Z  INFO aura::mcp::manager:   Connecting to HTTP streamable server at: https://mcp.pagerduty.com/mcp
+2026-11-01T04:47:17.706514Z  INFO aura::mcp::manager:   Forwarding 1 headers to MCP client
+2026-11-01T04:47:17.706964Z  INFO aura::mcp::client: Creating streamable HTTP MCP client for: https://mcp.pagerduty.com/mcp
+2026-11-01T04:47:18.817217Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when Client(reqwest::Error { kind: Status(401, None), url: "https://mcp.pagerduty.com/mcp" })
+2026-11-01T04:47:18.828829Z  WARN aura::mcp::manager: pagerduty - Connection failed: MCP initialization error: HTTP MCP server 'pagerduty' authentication failed (401 Unauthorized). Check that your headers, forwarded headers, and/or credentials are correct.
+2026-11-01T04:47:18.828972Z  INFO aura::mcp::manager: Connecting to MCP server: signoz
+2026-11-01T04:47:18.829467Z  INFO aura::mcp::manager:   Spawning STDIO server: ["docker"] ["run", "-i", "--rm", "-e", "SIGNOZ_URL", "-e", "SIGNOZ_API_KEY", "signoz/signoz-mcp-server:v0.17.0"]
+2026-11-01T04:47:20.968540Z  INFO serve_inner: rmcp::service: Service initialized as client peer_info=Some(InitializeResult { protocol_version: ProtocolVersion("2025-03-26"), capabilities: ServerCapabilities { experimental: None, logging: None, completions: None, prompts: Some(PromptsCapability { list_changed: None }), resources: Some(ResourcesCapability { subscribe: None, list_changed: None }), tools: Some(ToolsCapability { list_changed: None }) }, server_info: Implementation { name: "SigNozMCP", title: None, version: "v0.17.0", icons: None, website_url: None }, instructions: Some("Use SigNoz tools to investigate metrics, logs, traces, and exceptions, including the LLM apps and AI agents the user runs (model calls, tokens, cost, tool calls, prompts); questions about those mean the user's app in SigNoz, not this chat. Manage dashboards, alerts, and saved views, and consult SigNoz docs. Start with the user's signal; if none is clear, ask whether to use metrics, traces, or logs.\n\n## Rules\n\n1. **Query once when possible.** Fetch more only if the first result is insufficient or the user asks. Never repeat overlapping queries.\n\n2. **Prefer resource attributes in filters.** Use service.name, k8s.namespace.name, or host.name when available. If none was supplied, call signoz_get_field_keys with fieldContext=resource, optionally signoz_get_field_values, then ask the user to choose. Keys vary by workspace/signal; logs may lack standard resource fields. On \"key not found\", discover valid keys, then retry with an existing key or remove that condition. Never retry the invalid filter.\n\n3. **Match operators to intent and type.** Use EXISTS/NOT EXISTS for presence, = for exact matches, IN/NOT IN for sets, and LIKE/ILIKE/CONTAINS/REGEXP for string patterns. int64 also supports >, >=, <, and <=; bool supports =, !=, EXISTS, and NOT EXISTS.\n\n4. **Guard negative filters.** !=, NOT LIKE, NOT IN, NOT CONTAINS, and NOT REGEXP also match missing fields. Require presence when excluding a value, for example: service.name EXISTS AND service.name != 'redis'.\n\n5. **Convert timestamps programmatically.** SigNoz start/end and time-series timestamps are Unix milliseconds. Never convert them mentally; use a date/time function before presenting them.\n\n6. **Use returned webUrl values verbatim.** Resource results include SigNoz deep links. Never construct links from IDs or the instance URL.\n\n7. **Prepare mutations with reads.** Reuse reads from the same still-current prepared operation; do not repeat them. Otherwise resolve names/IDs and fetch replacement objects. Refresh if state may have changed; preserve unchanged fields.\n") })
+2026-11-01T04:47:20.978972Z  INFO aura::mcp::manager:   STDIO connection established, discovering tools
+2026-11-01T04:47:21.052183Z  INFO aura::mcp::client: Discovered 46 tools from server: stdio://signoz
+2026-11-01T04:47:21.052423Z  INFO aura::mcp::manager:   Discovered 46 tools from STDIO server 'signoz'
+2026-11-01T04:47:21.057654Z  INFO aura::mcp::manager:   STDIO connection successful
+2026-11-01T04:47:21.058160Z  INFO aura::mcp::manager: signoz - Connected successfully, 46 tools discovered
+2026-11-01T04:47:21.058391Z  INFO aura::mcp::manager: MCP initialization complete:
+2026-11-01T04:47:21.058520Z  INFO aura::mcp::manager:   - Total tools available: 46
+2026-11-01T04:47:21.058572Z  INFO aura::mcp::manager:   - Successful connections: 1/2
+2026-11-01T04:47:21.058815Z  WARN aura::mcp::manager:   - Failed connections: 1
+2026-11-01T04:47:21.061593Z  INFO serve_inner: rmcp::service: task cancelled
+2026-11-01T04:47:21.063716Z  INFO aura_web_server::server: Session store backend: memory
+2026-11-01T04:47:21.063868Z  WARN aura::hitl::signing: HITL webhook HMAC verification DISABLED: AURA_HITL_WEBHOOK_SECRET is not set; webhook traffic is unsigned and unverified
+2026-11-01T04:47:21.064463Z  INFO aura_web_server::server: Starting server on 127.0.0.1:41659 (shutdown_timeout=2s)
+2026-11-01T04:47:21.145324Z  INFO chat_completions{otel.kind="server"}: aura::builder: Initializing MCP tools using dynamic adaptors
+2026-11-01T04:47:21.145755Z  INFO chat_completions{otel.kind="server"}: aura::mcp::manager: Initializing MCP servers (2 configured) as McpUserAgent("aura/0.2.18-nightly.9")
+2026-11-01T04:47:21.148154Z  INFO chat_completions{otel.kind="server"}: aura::mcp::manager: Schema sanitization: ENABLED (OpenAI compatibility)
+2026-11-01T04:47:21.151048Z  INFO chat_completions{otel.kind="server"}: aura::mcp::manager: Connecting to MCP server: pagerduty
+2026-11-01T04:47:21.153182Z  INFO chat_completions{otel.kind="server"}: aura::mcp::manager:   Connecting to HTTP streamable server at: https://mcp.pagerduty.com/mcp
+2026-11-01T04:47:21.155225Z  INFO chat_completions{otel.kind="server"}: aura::mcp::manager:   Forwarding 1 headers to MCP client
+2026-11-01T04:47:21.156304Z  INFO chat_completions{otel.kind="server"}: aura::mcp::client: Creating streamable HTTP MCP client for: https://mcp.pagerduty.com/mcp
+2026-11-01T04:47:21.614366Z  INFO serve_inner: rmcp::transport::child_process: Child exited gracefully exit status: 0
+2026-11-01T04:47:21.616791Z  INFO serve_inner: rmcp::service: serve finished quit_reason=Cancelled
+2026-11-01T04:47:22.169259Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when Client(reqwest::Error { kind: Status(401, None), url: "https://mcp.pagerduty.com/mcp" })
+2026-11-01T04:47:22.171376Z  WARN chat_completions{otel.kind="server"}: aura::mcp::manager: pagerduty - Connection failed: MCP initialization error: HTTP MCP server 'pagerduty' authentication failed (401 Unauthorized). Check that your headers, forwarded headers, and/or credentials are correct.
+2026-11-01T04:47:22.173048Z  INFO chat_completions{otel.kind="server"}: aura::mcp::manager: Connecting to MCP server: signoz
+2026-11-01T04:47:22.173349Z  INFO chat_completions{otel.kind="server"}: aura::mcp::manager:   Spawning STDIO server: ["docker"] ["run", "-i", "--rm", "-e", "SIGNOZ_URL", "-e", "SIGNOZ_API_KEY", "signoz/signoz-mcp-server:v0.17.0"]
+2026-11-01T04:47:24.881018Z  INFO chat_completions{otel.kind="server"}:serve_inner: rmcp::service: Service initialized as client peer_info=Some(InitializeResult { protocol_version: ProtocolVersion("2025-03-26"), capabilities: ServerCapabilities { experimental: None, logging: None, completions: None, prompts: Some(PromptsCapability { list_changed: None }), resources: Some(ResourcesCapability { subscribe: None, list_changed: None }), tools: Some(ToolsCapability { list_changed: None }) }, server_info: Implementation { name: "SigNozMCP", title: None, version: "v0.17.0", icons: None, website_url: None }, instructions: Some("Use SigNoz tools to investigate metrics, logs, traces, and exceptions, including the LLM apps and AI agents the user runs (model calls, tokens, cost, tool calls, prompts); questions about those mean the user's app in SigNoz, not this chat. Manage dashboards, alerts, and saved views, and consult SigNoz docs. Start with the user's signal; if none is clear, ask whether to use metrics, traces, or logs.\n\n## Rules\n\n1. **Query once when possible.** Fetch more only if the first result is insufficient or the user asks. Never repeat overlapping queries.\n\n2. **Prefer resource attributes in filters.** Use service.name, k8s.namespace.name, or host.name when available. If none was supplied, call signoz_get_field_keys with fieldContext=resource, optionally signoz_get_field_values, then ask the user to choose. Keys vary by workspace/signal; logs may lack standard resource fields. On \"key not found\", discover valid keys, then retry with an existing key or remove that condition. Never retry the invalid filter.\n\n3. **Match operators to intent and type.** Use EXISTS/NOT EXISTS for presence, = for exact matches, IN/NOT IN for sets, and LIKE/ILIKE/CONTAINS/REGEXP for string patterns. int64 also supports >, >=, <, and <=; bool supports =, !=, EXISTS, and NOT EXISTS.\n\n4. **Guard negative filters.** !=, NOT LIKE, NOT IN, NOT CONTAINS, and NOT REGEXP also match missing fields. Require presence when excluding a value, for example: service.name EXISTS AND service.name != 'redis'.\n\n5. **Convert timestamps programmatically.** SigNoz start/end and time-series timestamps are Unix milliseconds. Never convert them mentally; use a date/time function before presenting them.\n\n6. **Use returned webUrl values verbatim.** Resource results include SigNoz deep links. Never construct links from IDs or the instance URL.\n\n7. **Prepare mutations with reads.** Reuse reads from the same still-current prepared operation; do not repeat them. Otherwise resolve names/IDs and fetch replacement objects. Refresh if state may have changed; preserve unchanged fields.\n") })
+2026-11-01T04:47:24.884495Z  INFO chat_completions{otel.kind="server"}: aura::mcp::manager:   STDIO connection established, discovering tools
+2026-11-01T04:47:24.985074Z  INFO chat_completions{otel.kind="server"}: aura::mcp::client: Discovered 46 tools from server: stdio://signoz
+2026-11-01T04:47:24.985269Z  INFO chat_completions{otel.kind="server"}: aura::mcp::manager:   Discovered 46 tools from STDIO server 'signoz'
+2026-11-01T04:47:24.990992Z  INFO chat_completions{otel.kind="server"}: aura::mcp::manager:   STDIO connection successful
+2026-11-01T04:47:24.991517Z  INFO chat_completions{otel.kind="server"}: aura::mcp::manager: signoz - Connected successfully, 46 tools discovered
+2026-11-01T04:47:24.991761Z  INFO chat_completions{otel.kind="server"}: aura::mcp::manager: MCP initialization complete:
+2026-11-01T04:47:24.991887Z  INFO chat_completions{otel.kind="server"}: aura::mcp::manager:   - Total tools available: 46
+2026-11-01T04:47:24.992609Z  INFO chat_completions{otel.kind="server"}: aura::mcp::manager:   - Successful connections: 1/2
+2026-11-01T04:47:24.992889Z  WARN chat_completions{otel.kind="server"}: aura::mcp::manager:   - Failed connections: 1
+2026-11-01T04:47:24.994187Z  INFO chat_completions{otel.kind="server"}: aura::builder:   Max turn depth: 10 (tool calls per turn)
+2026-11-01T04:47:24.995116Z  INFO chat_completions{otel.kind="server"}: aura::builder: Initializing OpenAI provider
+2026-11-01T04:47:24.997184Z  INFO chat_completions{otel.kind="server"}: aura::builder:   Using custom base URL: http://127.0.0.1:39601/v1
+2026-11-01T04:47:25.000052Z  INFO chat_completions{otel.kind="server"}: aura::builder: OpenAI client initialized successfully
+2026-11-01T04:47:25.002802Z  INFO chat_completions{otel.kind="server"}: aura::builder: MCP filter: 3 pattern(s): [GlobPattern { source: "pagerduty:*", name_matcher: GlobMatcher { pat: Glob("*"), re: Regex { imp: RegexI { strat: Core { info: RegexInfo(RegexInfoI { config: Config { match_kind: None, utf8_empty: Some(false), autopre: None, pre: None, which_captures: None, nfa_size_limit: Some(Some(10485760)), onepass_size_limit: None, hybrid_cache_capacity: Some(10485760), hybrid: None, dfa: None, dfa_size_limit: None, dfa_state_limit: None, onepass: None, backtrack: None, byte_classes: None, line_terminator: None }, props: [Properties(PropertiesI { minimum_len: Some(0), maximum_len: None, look_set: Az, look_set_prefix: A, look_set_suffix: z, look_set_prefix_any: A, look_set_suffix_any: z, utf8: false, explicit_captures_len: 0, static_explicit_captures_len: Some(0), literal: false, alternation_literal: false })], props_union: Properties(PropertiesI { minimum_len: Some(0), maximum_len: None, look_set: Az, look_set_prefix: A, look_set_suffix: z, look_set_prefix_any: A, look_set_suffix_any: z, utf8: false, explicit_captures_len: 0, static_explicit_captures_len: Some(0), literal: false, alternation_literal: false }) }), pre: None, nfa: thompson::NFA(
+^000000: capture(pid=0, group=0, slot=0) => 1
+ 000001: Start => 2
+ 000002: binary-union(3, 4)
+ 000003: \x00-\xFF => 2
+ 000004: End => 5
+ 000005: capture(pid=0, group=0, slot=1) => 6
+ 000006: MATCH(0)
+
+transition equivalence classes: ByteClasses(0 => [\x00-\xFF], 1 => [EOI])
+)
+, nfarev: Some(thompson::NFA(
+^000000: Start => 1
+ 000001: binary-union(2, 3)
+ 000002: \x00-\xFF => 1
+ 000003: End => 4
+ 000004: MATCH(0)
+
+transition equivalence classes: ByteClasses(0 => [\x00-\xFF], 1 => [EOI])
+)
+), pikevm: PikeVM(PikeVMEngine(PikeVM { config: Config { match_kind: Some(LeftmostFirst), pre: Some(None) }, nfa: thompson::NFA(
+^000000: capture(pid=0, group=0, slot=0) => 1
+ 000001: Start => 2
+ 000002: binary-union(3, 4)
+ 000003: \x00-\xFF => 2
+ 000004: End => 5
+ 000005: capture(pid=0, group=0, slot=1) => 6
+ 000006: MATCH(0)
+
+transition equivalence classes: ByteClasses(0 => [\x00-\xFF], 1 => [EOI])
+)
+ })), backtrack: BoundedBacktracker(Some(BoundedBacktrackerEngine(BoundedBacktracker { config: Config { pre: Some(None), visited_capacity: None }, nfa: thompson::NFA(
+^000000: capture(pid=0, group=0, slot=0) => 1
+ 000001: Start => 2
+ 000002: binary-union(3, 4)
+ 000003: \x00-\xFF => 2
+ 000004: End => 5
+ 000005: capture(pid=0, group=0, slot=1) => 6
+ 000006: MATCH(0)
+
+transition equivalence classes: ByteClasses(0 => [\x00-\xFF], 1 => [EOI])
+)
+ }))), onepass: OnePass(None), hybrid: Hybrid(None), dfa: DFA(Some(DFAEngine(Regex { forward: dense::DFA(
+D 000000: 
+Q 000001: 
+ *000002: 
+  000003: \x00 => 5, EOI => 2
+  000004: 
+  000005: \x00 => 5, EOI => 2
+
+START-GROUP(unanchored)
+  NonWordByte => 000004
+  WordByte => 000004
+  Text => 000003
+  LineLF => 000004
+  LineCR => 000004
+  CustomLineTerminator => 000004
+START-GROUP(anchored)
+  NonWordByte => 000004
+  WordByte => 000004
+  Text => 000003
+  LineLF => 000004
+  LineCR => 000004
+  CustomLineTerminator => 000004
+START_GROUP(pattern: PatternID(0))
+  NonWordByte => 000004
+  WordByte => 000004
+  Text => 000003
+  LineLF => 000004
+  LineCR => 000004
+  CustomLineTerminator => 000004
+state length: 6
+pattern length: 1
+flags: Flags { has_empty: true, is_utf8: false, is_always_start_anchored: true }
+)
+, reverse: dense::DFA(
+D 000000: 
+Q 000001: 
+ *000002: 
+  000003: \x00 => 5, EOI => 2
+  000004: 
+  000005: \x00 => 5, EOI => 2
+
+START-GROUP(unanchored)
+  NonWordByte => 000000
+  WordByte => 000000
+  Text => 000000
+  LineLF => 000000
+  LineCR => 000000
+  CustomLineTerminator => 000000
+START-GROUP(anchored)
+  NonWordByte => 000004
+  WordByte => 000004
+  Text => 000003
+  LineLF => 000004
+  LineCR => 000004
+  CustomLineTerminator => 000004
+START_GROUP(pattern: PatternID(0))
+  NonWordByte => 000004
+  WordByte => 000004
+  Text => 000003
+  LineLF => 000004
+  LineCR => 000004
+  CustomLineTerminator => 000004
+state length: 6
+pattern length: 1
+flags: Flags { has_empty: true, is_utf8: false, is_always_start_anchored: true }
+)
+ }))) }, info: RegexInfo(RegexInfoI { config: Config { match_kind: None, utf8_empty: Some(false), autopre: None, pre: None, which_captures: None, nfa_size_limit: Some(Some(10485760)), onepass_size_limit: None, hybrid_cache_capacity: Some(10485760), hybrid: None, dfa: None, dfa_size_limit: None, dfa_state_limit: None, onepass: None, backtrack: None, byte_classes: None, line_terminator: None }, props: [Properties(PropertiesI { minimum_len: Some(0), maximum_len: None, look_set: Az, look_set_prefix: A, look_set_suffix: z, look_set_prefix_any: A, look_set_suffix_any: z, utf8: false, explicit_captures_len: 0, static_explicit_captures_len: Some(0), literal: false, alternation_literal: false })], props_union: Properties(PropertiesI { minimum_len: Some(0), maximum_len: None, look_set: Az, look_set_prefix: A, look_set_suffix: z, look_set_prefix_any: A, look_set_suffix_any: z, utf8: false, explicit_captures_len: 0, static_explicit_captures_len: Some(0), literal: false, alternation_literal: false }) }) }, pool: Pool(Pool { stacks: [CacheLine(Mutex { data: [], poisoned: false, .. }), CacheLine(Mutex { data: [], poisoned: false, .. }), CacheLine(Mutex { data: [], poisoned: false, .. }), CacheLine(Mutex { data: [], poisoned: false, .. }), CacheLine(Mutex { data: [], poisoned: false, .. }), CacheLine(Mutex { data: [], poisoned: false, .. }), CacheLine(Mutex { data: [], poisoned: false, .. }), CacheLine(Mutex { data: [], poisoned: false, .. })], owner: 0, owner_val: UnsafeCell { .. } }) } }, ns_matcher: Some(GlobMatcher { pat: Glob("pagerduty"), re: Regex { imp: RegexI { strat: Core { info: RegexInfo(RegexInfoI { config: Config { match_kind: None, utf8_empty: Some(false), autopre: None, pre: None, which_captures: None, nfa_size_limit: Some(Some(10485760)), onepass_size_limit: None, hybrid_cache_capacity: Some(10485760), hybrid: None, dfa: None, dfa_size_limit: None, dfa_state_limit: None, onepass: None, backtrack: None, byte_classes: None, line_terminator: None }, props: [Properties(PropertiesI { minimum_len: Some(9), maximum_len: Some(9), look_set: Az, look_set_prefix: A, look_set_suffix: z, look_set_prefix_any: A, look_set_suffix_any: z, utf8: true, explicit_captures_len: 0, static_explicit_captures_len: Some(0), literal: false, alternation_literal: false })], props_union: Properties(PropertiesI { minimum_len: Some(9), maximum_len: Some(9), look_set: Az, look_set_prefix: A, look_set_suffix: z, look_set_prefix_any: A, look_set_suffix_any: z, utf8: true, explicit_captures_len: 0, static_explicit_captures_len: Some(0), literal: false, alternation_literal: false }) }), pre: None, nfa: thompson::NFA(
+^000000: capture(pid=0, group=0, slot=0) => 1
+ 000001: Start => 2
+ 000002: p => 3
+ 000003: a => 4
+ 000004: g => 5
+ 000005: e => 6
+ 000006: r => 7
+ 000007: d => 8
+ 000008: u => 9
+ 000009: t => 10
+ 000010: y => 11
+ 000011: End => 12
+ 000012: capture(pid=0, group=0, slot=1) => 13
+ 000013: MATCH(0)
+
+transition equivalence classes: ByteClasses(0 => [\x00-`], 1 => [a], 2 => [b-c], 3 => [d], 4 => [e], 5 => [f], 6 => [g], 7 => [h-o], 8 => [p], 9 => [q], 10 => [r], 11 => [s], 12 => [t], 13 => [u], 14 => [v-x], 15 => [y], 16 => [z-\xFF], 17 => [EOI])
+)
+, nfarev: Some(thompson::NFA(
+^000000: Start => 1
+ 000001: y => 2
+ 000002: t => 3
+ 000003: u => 4
+ 000004: d => 5
+ 000005: r => 6
+ 000006: e => 7
+ 000007: g => 8
+ 000008: a => 9
+ 000009: p => 10
+ 000010: End => 11
+ 000011: MATCH(0)
+
+transition equivalence classes: ByteClasses(0 => [\x00-`], 1 => [a], 2 => [b-c], 3 => [d], 4 => [e], 5 => [f], 6 => [g], 7 => [h-o], 8 => [p], 9 => [q], 10 => [r], 11 => [s], 12 => [t], 13 => [u], 14 => [v-x], 15 => [y], 16 => [z-\xFF], 17 => [EOI])
+)
+), pikevm: PikeVM(PikeVMEngine(PikeVM { config: Config { match_kind: Some(LeftmostFirst), pre: Some(None) }, nfa: thompson::NFA(
+^000000: capture(pid=0, group=0, slot=0) => 1
+ 000001: Start => 2
+ 000002: p => 3
+ 000003: a => 4
+ 000004: g => 5
+ 000005: e => 6
+ 000006: r => 7
+ 000007: d => 8
+ 000008: u => 9
+ 000009: t => 10
+ 000010: y => 11
+ 000011: End => 12
+ 000012: capture(pid=0, group=0, slot=1) => 13
+ 000013: MATCH(0)
+
+transition equivalence classes: ByteClasses(0 => [\x00-`], 1 => [a], 2 => [b-c], 3 => [d], 4 => [e], 5 => [f], 6 => [g], 7 => [h-o], 8 => [p], 9 => [q], 10 => [r], 11 => [s], 12 => [t], 13 => [u], 14 => [v-x], 15 => [y], 16 => [z-\xFF], 17 => [EOI])
+)
+ })), backtrack: BoundedBacktracker(Some(BoundedBacktrackerEngine(BoundedBacktracker { config: Config { pre: Some(None), visited_capacity: None }, nfa: thompson::NFA(
+^000000: capture(pid=0, group=0, slot=0) => 1
+ 000001: Start => 2
+ 000002: p => 3
+ 000003: a => 4
+ 000004: g => 5
+ 000005: e => 6
+ 000006: r => 7
+ 000007: d => 8
+ 000008: u => 9
+ 000009: t => 10
+ 000010: y => 11
+ 000011: End => 12
+ 000012: capture(pid=0, group=0, slot=1) => 13
+ 000013: MATCH(0)
+
+transition equivalence classes: ByteClasses(0 => [\x00-`], 1 => [a], 2 => [b-c], 3 => [d], 4 => [e], 5 => [f], 6 => [g], 7 => [h-o], 8 => [p], 9 => [q], 10 => [r], 11 => [s], 12 => [t], 13 => [u], 14 => [v-x], 15 => [y], 16 => [z-\xFF], 17 => [EOI])
+)
+ }))), onepass: OnePass(None), hybrid: Hybrid(None), dfa: DFA(Some(DFAEngine(Regex { forward: dense::DFA(
+D 000000: 
+Q 000001: 
+ *000002: 
+  000003: \x08 => 13
+  000004: 
+  000005: \x06 => 6
+  000006: \x04 => 7
+  000007: \n => 8
+  000008: \x03 => 9
+  000009: \r => 10
+  000010: \x0C => 11
+  000011: \x0F => 12
+  000012: EOI => 2
+  000013: \x01 => 5
+
+START-GROUP(unanchored)
+  NonWordByte => 000004
+  WordByte => 000004
+  Text => 000003
+  LineLF => 000004
+  LineCR => 000004
+  CustomLineTerminator => 000004
+START-GROUP(anchored)
+  NonWordByte => 000004
+  WordByte => 000004
+  Text => 000003
+  LineLF => 000004
+  LineCR => 000004
+  CustomLineTerminator => 000004
+START_GROUP(pattern: PatternID(0))
+  NonWordByte => 000004
+  WordByte => 000004
+  Text => 000003
+  LineLF => 000004
+  LineCR => 000004
+  CustomLineTerminator => 000004
+state length: 14
+pattern length: 1
+flags: Flags { has_empty: false, is_utf8: false, is_always_start_anchored: true }
+)
+, reverse: dense::DFA(
+D 000000: 
+Q 000001: 
+ *000002: 
+  000003: \x0F => 13
+  000004: 
+  000005: \r => 6
+  000006: \x03 => 7
+  000007: \n => 8
+  000008: \x04 => 9
+  000009: \x06 => 10
+  000010: \x01 => 11
+  000011: \x08 => 12
+  000012: EOI => 2
+  000013: \x0C => 5
+
+START-GROUP(unanchored)
+  NonWordByte => 000000
+  WordByte => 000000
+  Text => 000000
+  LineLF => 000000
+  LineCR => 000000
+  CustomLineTerminator => 000000
+START-GROUP(anchored)
+  NonWordByte => 000004
+  WordByte => 000004
+  Text => 000003
+  LineLF => 000004
+  LineCR => 000004
+  CustomLineTerminator => 000004
+START_GROUP(pattern: PatternID(0))
+  NonWordByte => 000004
+  WordByte => 000004
+  Text => 000003
+  LineLF => 000004
+  LineCR => 000004
+  CustomLineTerminator => 000004
+state length: 14
+pattern length: 1
+flags: Flags { has_empty: false, is_utf8: false, is_always_start_anchored: true }
+)
+ }))) }, info: RegexInfo(RegexInfoI { config: Config { match_kind: None, utf8_empty: Some(false), autopre: None, pre: None, which_captures: None, nfa_size_limit: Some(Some(10485760)), onepass_size_limit: None, hybrid_cache_capacity: Some(10485760), hybrid: None, dfa: None, dfa_size_limit: None, dfa_state_limit: None, onepass: None, backtrack: None, byte_classes: None, line_terminator: None }, props: [Properties(PropertiesI { minimum_len: Some(9), maximum_len: Some(9), look_set: Az, look_set_prefix: A, look_set_suffix: z, look_set_prefix_any: A, look_set_suffix_any: z, utf8: true, explicit_captures_len: 0, static_explicit_captures_len: Some(0), literal: false, alternation_literal: false })], props_union: Properties(PropertiesI { minimum_len: Some(9), maximum_len: Some(9), look_set: Az, look_set_prefix: A, look_set_suffix: z, look_set_prefix_any: A, look_set_suffix_any: z, utf8: true, explicit_captures_len: 0, static_explicit_captures_len: Some(0), literal: false, alternation_literal: false }) }) }, pool: Pool(Pool { stacks: [CacheLine(Mutex { data: [], poisoned: false, .. }), CacheLine(Mutex { data: [], poisoned: false, .. }), CacheLine(Mutex { data: [], poisoned: false, .. }), CacheLine(Mutex { data: [], poisoned: false, .. }), CacheLine(Mutex { data: [], poisoned: false, .. }), CacheLine(Mutex { data: [], poisoned: false, .. }), CacheLine(Mutex { data: [], poisoned: false, .. }), CacheLine(Mutex { data: [], poisoned: false, .. })], owner: 0, owner_val: UnsafeCell { .. } }) } }) }, GlobPattern { source: "signoz:signoz_{aggregate,check,execute,fetch,list,query,search}_*", name_matcher: GlobMatcher { pat: Glob("signoz_{aggregate,check,execute,fetch,list,query,search}_*"), re: Regex { imp: RegexI { strat: Core { info: RegexInfo(RegexInfoI { config: Config { match_kind: None, utf8_empty: Some(false), autopre: None, pre: None, which_captures: None, nfa_size_limit: Some(Some(10485760)), onepass_size_limit: None, hybrid_cache_capacity: Some(10485760), hybrid: None, dfa: None, dfa_size_limit: None, dfa_state_limit: None, onepass: None, backtrack: None, byte_classes: None, line_terminator: None }, props: [Properties(PropertiesI { minimum_len: Some(12), maximum_len: None, look_set: Az, look_set_prefix: A, look_set_suffix: z, look_set_prefix_any: A, look_set_suffix_any: z, utf8: false, explicit_captures_len: 0, static_explicit_captures_len: Some(0), literal: false, alternation_literal: false })], props_union: Properties(PropertiesI { minimum_len: Some(12), maximum_len: None, look_set: Az, look_set_prefix: A, look_set_suffix: z, look_set_prefix_any: A, look_set_suffix_any: z, utf8: false, explicit_captures_len: 0, static_explicit_captures_len: Some(0), literal: false, alternation_literal: false }) }), pre: None, nfa: thompson::NFA(
+^000000: capture(pid=0, group=0, slot=0) => 1
+ 000001: Start => 2
+ 000002: s => 3
+ 000003: i => 4
+ 000004: g => 5
+ 000005: n => 6
+ 000006: o => 7
+ 000007: z => 8
+ 000008: _ => 43
+ 000009: e => 44
+ 000010: t => 9
+ 000011: a => 10
+ 000012: g => 11
+ 000013: e => 12
+ 000014: r => 13
+ 000015: g => 14
+ 000016: g => 15
+ 000017: k => 44
+ 000018: c => 17
+ 000019: e => 18
+ 000020: h => 19
+ 000021: e => 44
+ 000022: t => 21
+ 000023: u => 22
+ 000024: c => 23
+ 000025: e => 24
+ 000026: x => 25
+ 000027: h => 44
+ 000028: c => 27
+ 000029: t => 28
+ 000030: e => 29
+ 000031: t => 44
+ 000032: s => 31
+ 000033: i => 32
+ 000034: y => 44
+ 000035: r => 34
+ 000036: e => 35
+ 000037: u => 36
+ 000038: h => 44
+ 000039: c => 38
+ 000040: r => 39
+ 000041: a => 40
+ 000042: e => 41
+ 000043: sparse(a => 16, c => 20, e => 26, f => 30, l => 33, q => 37, s => 42)
+ 000044: _ => 45
+ 000045: binary-union(46, 47)
+ 000046: \x00-\xFF => 45
+ 000047: End => 48
+ 000048: capture(pid=0, group=0, slot=1) => 49
+ 000049: MATCH(0)
+
+transition equivalence classes: ByteClasses(0 => [\x00-^], 1 => [_], 2 => [`], 3 => [a], 4 => [b], 5 => [c], 6 => [d], 7 => [e], 8 => [f], 9 => [g], 10 => [h], 11 => [i], 12 => [j], 13 => [k], 14 => [l], 15 => [m], 16 => [n], 17 => [o], 18 => [p], 19 => [q], 20 => [r], 21 => [s], 22 => [t], 23 => [u], 24 => [v-w], 25 => [x], 26 => [y], 27 => [z], 28 => [{-\xFF], 29 => [EOI])
+)
+, nfarev: Some(thompson::NFA(
+^000000: Start => 1
+ 000001: binary-union(2, 3)
+ 000002: \x00-\xFF => 1
+ 000003: _ => 34
+ 000004: a => 35
+ 000005: g => 4
+ 000006: g => 5
+ 000007: r => 6
+ 000008: e => 7
+ 000009: g => 8
+ 000010: e => 35
+ 000011: x => 10
+ 000012: e => 11
+ 000013: c => 12
+ 000014: sparse(a => 9, u => 13)
+ 000015: t => 14
+ 000016: s => 35
+ 000017: e => 16
+ 000018: a => 17
+ 000019: f => 35
+ 000020: e => 19
+ 000021: sparse(r => 18, t => 20)
+ 000022: c => 21
+ 000023: c => 35
+ 000024: h => 23
+ 000025: e => 24
+ 000026: c => 25
+ 000027: l => 35
+ 000028: i => 27
+ 000029: s => 28
+ 000030: q => 35
+ 000031: u => 30
+ 000032: e => 31
+ 000033: r => 32
+ 000034: sparse(e => 15, h => 22, k => 26, t => 29, y => 33)
+ 000035: _ => 36
+ 000036: z => 37
+ 000037: o => 38
+ 000038: n => 39
+ 000039: g => 40
+ 000040: i => 41
+ 000041: s => 42
+ 000042: End => 43
+ 000043: MATCH(0)
+
+transition equivalence classes: ByteClasses(0 => [\x00-^], 1 => [_], 2 => [`], 3 => [a], 4 => [b], 5 => [c], 6 => [d], 7 => [e], 8 => [f], 9 => [g], 10 => [h], 11 => [i], 12 => [j], 13 => [k], 14 => [l], 15 => [m], 16 => [n], 17 => [o], 18 => [p], 19 => [q], 20 => [r], 21 => [s], 22 => [t], 23 => [u], 24 => [v-w], 25 => [x], 26 => [y], 27 => [z], 28 => [{-\xFF], 29 => [EOI])
+)
+), pikevm: PikeVM(PikeVMEngine(PikeVM { config: Config { match_kind: Some(LeftmostFirst), pre: Some(None) }, nfa: thompson::NFA(
+^000000: capture(pid=0, group=0, slot=0) => 1
+ 000001: Start => 2
+ 000002: s => 3
+ 000003: i => 4
+ 000004: g => 5
+ 000005: n => 6
+ 000006: o => 7
+ 000007: z => 8
+ 000008: _ => 43
+ 000009: e => 44
+ 000010: t => 9
+ 000011: a => 10
+ 000012: g => 11
+ 000013: e => 12
+ 000014: r => 13
+ 000015: g => 14
+ 000016: g => 15
+ 000017: k => 44
+ 000018: c => 17
+ 000019: e => 18
+ 000020: h => 19
+ 000021: e => 44
+ 000022: t => 21
+ 000023: u => 22
+ 000024: c => 23
+ 000025: e => 24
+ 000026: x => 25
+ 000027: h => 44
+ 000028: c => 27
+ 000029: t => 28
+ 000030: e => 29
+ 000031: t => 44
+ 000032: s => 31
+ 000033: i => 32
+ 000034: y => 44
+ 000035: r => 34
+ 000036: e => 35
+ 000037: u => 36
+ 000038: h => 44
+ 000039: c => 38
+ 000040: r => 39
+ 000041: a => 40
+ 000042: e => 41
+ 000043: sparse(a => 16, c => 20, e => 26, f => 30, l => 33, q => 37, s => 42)
+ 000044: _ => 45
+ 000045: binary-union(46, 47)
+ 000046: \x00-\xFF => 45
+ 000047: End => 48
+ 000048: capture(pid=0, group=0, slot=1) => 49
+ 000049: MATCH(0)
+
+transition equivalence classes: ByteClasses(0 => [\x00-^], 1 => [_], 2 => [`], 3 => [a], 4 => [b], 5 => [c], 6 => [d], 7 => [e], 8 => [f], 9 => [g], 10 => [h], 11 => [i], 12 => [j], 13 => [k], 14 => [l], 15 => [m], 16 => [n], 17 => [o], 18 => [p], 19 => [q], 20 => [r], 21 => [s], 22 => [t], 23 => [u], 24 => [v-w], 25 => [x], 26 => [y], 27 => [z], 28 => [{-\xFF], 29 => [EOI])
+)
+ })), backtrack: BoundedBacktracker(Some(BoundedBacktrackerEngine(BoundedBacktracker { config: Config { pre: Some(None), visited_capacity: None }, nfa: thompson::NFA(
+^000000: capture(pid=0, group=0, slot=0) => 1
+ 000001: Start => 2
+ 000002: s => 3
+ 000003: i => 4
+ 000004: g => 5
+ 000005: n => 6
+ 000006: o => 7
+ 000007: z => 8
+ 000008: _ => 43
+ 000009: e => 44
+ 000010: t => 9
+ 000011: a => 10
+ 000012: g => 11
+ 000013: e => 12
+ 000014: r => 13
+ 000015: g => 14
+ 000016: g => 15
+ 000017: k => 44
+ 000018: c => 17
+ 000019: e => 18
+ 000020: h => 19
+ 000021: e => 44
+ 000022: t => 21
+ 000023: u => 22
+ 000024: c => 23
+ 000025: e => 24
+ 000026: x => 25
+ 000027: h => 44
+ 000028: c => 27
+ 000029: t => 28
+ 000030: e => 29
+ 000031: t => 44
+ 000032: s => 31
+ 000033: i => 32
+ 000034: y => 44
+ 000035: r => 34
+ 000036: e => 35
+ 000037: u => 36
+ 000038: h => 44
+ 000039: c => 38
+ 000040: r => 39
+ 000041: a => 40
+ 000042: e => 41
+ 000043: sparse(a => 16, c => 20, e => 26, f => 30, l => 33, q => 37, s => 42)
+ 000044: _ => 45
+ 000045: binary-union(46, 47)
+ 000046: \x00-\xFF => 45
+ 000047: End => 48
+ 000048: capture(pid=0, group=0, slot=1) => 49
+ 000049: MATCH(0)
+
+transition equivalence classes: ByteClasses(0 => [\x00-^], 1 => [_], 2 => [`], 3 => [a], 4 => [b], 5 => [c], 6 => [d], 7 => [e], 8 => [f], 9 => [g], 10 => [h], 11 => [i], 12 => [j], 13 => [k], 14 => [l], 15 => [m], 16 => [n], 17 => [o], 18 => [p], 19 => [q], 20 => [r], 21 => [s], 22 => [t], 23 => [u], 24 => [v-w], 25 => [x], 26 => [y], 27 => [z], 28 => [{-\xFF], 29 => [EOI])
+)
+ }))), onepass: OnePass(None), hybrid: Hybrid(Some(HybridEngine(Regex { forward: DFA { config: Config { match_kind: Some(LeftmostFirst), pre: Some(None), starts_for_each_pattern: Some(true), byte_classes: Some(true), unicode_word_boundary: Some(true), quitset: None, specialize_start_states: Some(false), cache_capacity: Some(10485760), skip_cache_capacity_check: Some(false), minimum_cache_clear_count: Some(Some(3)), minimum_bytes_per_state: Some(Some(10)) }, nfa: thompson::NFA(
+^000000: capture(pid=0, group=0, slot=0) => 1
+ 000001: Start => 2
+ 000002: s => 3
+ 000003: i => 4
+ 000004: g => 5
+ 000005: n => 6
+ 000006: o => 7
+ 000007: z => 8
+ 000008: _ => 43
+ 000009: e => 44
+ 000010: t => 9
+ 000011: a => 10
+ 000012: g => 11
+ 000013: e => 12
+ 000014: r => 13
+ 000015: g => 14
+ 000016: g => 15
+ 000017: k => 44
+ 000018: c => 17
+ 000019: e => 18
+ 000020: h => 19
+ 000021: e => 44
+ 000022: t => 21
+ 000023: u => 22
+ 000024: c => 23
+ 000025: e => 24
+ 000026: x => 25
+ 000027: h => 44
+ 000028: c => 27
+ 000029: t => 28
+ 000030: e => 29
+ 000031: t => 44
+ 000032: s => 31
+ 000033: i => 32
+ 000034: y => 44
+ 000035: r => 34
+ 000036: e => 35
+ 000037: u => 36
+ 000038: h => 44
+ 000039: c => 38
+ 000040: r => 39
+ 000041: a => 40
+ 000042: e => 41
+ 000043: sparse(a => 16, c => 20, e => 26, f => 30, l => 33, q => 37, s => 42)
+ 000044: _ => 45
+ 000045: binary-union(46, 47)
+ 000046: \x00-\xFF => 45
+ 000047: End => 48
+ 000048: capture(pid=0, group=0, slot=1) => 49
+ 000049: MATCH(0)
+
+transition equivalence classes: ByteClasses(0 => [\x00-^], 1 => [_], 2 => [`], 3 => [a], 4 => [b], 5 => [c], 6 => [d], 7 => [e], 8 => [f], 9 => [g], 10 => [h], 11 => [i], 12 => [j], 13 => [k], 14 => [l], 15 => [m], 16 => [n], 17 => [o], 18 => [p], 19 => [q], 20 => [r], 21 => [s], 22 => [t], 23 => [u], 24 => [v-w], 25 => [x], 26 => [y], 27 => [z], 28 => [{-\xFF], 29 => [EOI])
+)
+, stride2: 5, start_map: StartByteMap{\x00 => NonWordByte, \x01 => NonWordByte, \x02 => NonWordByte, \x03 => NonWordByte, \x04 => NonWordByte, \x05 => NonWordByte, \x06 => NonWordByte, \x07 => NonWordByte, \x08 => NonWordByte, \t => NonWordByte, \n => LineLF, \x0B => NonWordByte, \x0C => NonWordByte, \r => LineCR, \x0E => NonWordByte, \x0F => NonWordByte, \x10 => NonWordByte, \x11 => NonWordByte, \x12 => NonWordByte, \x13 => NonWordByte, \x14 => NonWordByte, \x15 => NonWordByte, \x16 => NonWordByte, \x17 => NonWordByte, \x18 => NonWordByte, \x19 => NonWordByte, \x1A => NonWordByte, \x1B => NonWordByte, \x1C => NonWordByte, \x1D => NonWordByte, \x1E => NonWordByte, \x1F => NonWordByte, ' ' => NonWordByte, ! => NonWordByte, \" => NonWordByte, # => NonWordByte, $ => NonWordByte, % => NonWordByte, & => NonWordByte, \' => NonWordByte, ( => NonWordByte, ) => NonWordByte, * => NonWordByte, + => NonWordByte, , => NonWordByte, - => NonWordByte, . => NonWordByte, / => NonWordByte, 0 => WordByte, 1 => WordByte, 2 => WordByte, 3 => WordByte, 4 => WordByte, 5 => WordByte, 6 => WordByte, 7 => WordByte, 8 => WordByte, 9 => WordByte, : => NonWordByte, ; => NonWordByte, < => NonWordByte, = => NonWordByte, > => NonWordByte, ? => NonWordByte, @ => NonWordByte, A => WordByte, B => WordByte, C => WordByte, D => WordByte, E => WordByte, F => WordByte, G => WordByte, H => WordByte, I => WordByte, J => WordByte, K => WordByte, L => WordByte, M => WordByte, N => WordByte, O => WordByte, P => WordByte, Q => WordByte, R => WordByte, S => WordByte, T => WordByte, U => WordByte, V => WordByte, W => WordByte, X => WordByte, Y => WordByte, Z => WordByte, [ => NonWordByte, \\ => NonWordByte, ] => NonWordByte, ^ => NonWordByte, _ => WordByte, ` => NonWordByte, a => WordByte, b => WordByte, c => WordByte, d => WordByte, e => WordByte, f => WordByte, g => WordByte, h => WordByte, i => WordByte, j => WordByte, k => WordByte, l => WordByte, m => WordByte, n => WordByte, o => WordByte, p => WordByte, q => WordByte, r => WordByte, s => WordByte, t => WordByte, u => WordByte, v => WordByte, w => WordByte, x => WordByte, y => WordByte, z => WordByte, { => NonWordByte, | => NonWordByte, } => NonWordByte, ~ => NonWordByte, \x7F => NonWordByte, \x80 => NonWordByte, \x81 => NonWordByte, \x82 => NonWordByte, \x83 => NonWordByte, \x84 => NonWordByte, \x85 => NonWordByte, \x86 => NonWordByte, \x87 => NonWordByte, \x88 => NonWordByte, \x89 => NonWordByte, \x8A => NonWordByte, \x8B => NonWordByte, \x8C => NonWordByte, \x8D => NonWordByte, \x8E => NonWordByte, \x8F => NonWordByte, \x90 => NonWordByte, \x91 => NonWordByte, \x92 => NonWordByte, \x93 => NonWordByte, \x94 => NonWordByte, \x95 => NonWordByte, \x96 => NonWordByte, \x97 => NonWordByte, \x98 => NonWordByte, \x99 => NonWordByte, \x9A => NonWordByte, \x9B => NonWordByte, \x9C => NonWordByte, \x9D => NonWordByte, \x9E => NonWordByte, \x9F => NonWordByte, \xA0 => NonWordByte, \xA1 => NonWordByte, \xA2 => NonWordByte, \xA3 => NonWordByte, \xA4 => NonWordByte, \xA5 => NonWordByte, \xA6 => NonWordByte, \xA7 => NonWordByte, \xA8 => NonWordByte, \xA9 => NonWordByte, \xAA => NonWordByte, \xAB => NonWordByte, \xAC => NonWordByte, \xAD => NonWordByte, \xAE => NonWordByte, \xAF => NonWordByte, \xB0 => NonWordByte, \xB1 => NonWordByte, \xB2 => NonWordByte, \xB3 => NonWordByte, \xB4 => NonWordByte, \xB5 => NonWordByte, \xB6 => NonWordByte, \xB7 => NonWordByte, \xB8 => NonWordByte, \xB9 => NonWordByte, \xBA => NonWordByte, \xBB => NonWordByte, \xBC => NonWordByte, \xBD => NonWordByte, \xBE => NonWordByte, \xBF => NonWordByte, \xC0 => NonWordByte, \xC1 => NonWordByte, \xC2 => NonWordByte, \xC3 => NonWordByte, \xC4 => NonWordByte, \xC5 => NonWordByte, \xC6 => NonWordByte, \xC7 => NonWordByte, \xC8 => NonWordByte, \xC9 => NonWordByte, \xCA => NonWordByte, \xCB => NonWordByte, \xCC => NonWordByte, \xCD => NonWordByte, \xCE => NonWordByte, \xCF => NonWordByte, \xD0 => NonWordByte, \xD1 => NonWordByte, \xD2 => NonWordByte, \xD3 => NonWordByte, \xD4 => NonWordByte, \xD5 => NonWordByte, \xD6 => NonWordByte, \xD7 => NonWordByte, \xD8 => NonWordByte, \xD9 => NonWordByte, \xDA => NonWordByte, \xDB => NonWordByte, \xDC => NonWordByte, \xDD => NonWordByte, \xDE => NonWordByte, \xDF => NonWordByte, \xE0 => NonWordByte, \xE1 => NonWordByte, \xE2 => NonWordByte, \xE3 => NonWordByte, \xE4 => NonWordByte, \xE5 => NonWordByte, \xE6 => NonWordByte, \xE7 => NonWordByte, \xE8 => NonWordByte, \xE9 => NonWordByte, \xEA => NonWordByte, \xEB => NonWordByte, \xEC => NonWordByte, \xED => NonWordByte, \xEE => NonWordByte, \xEF => NonWordByte, \xF0 => NonWordByte, \xF1 => NonWordByte, \xF2 => NonWordByte, \xF3 => NonWordByte, \xF4 => NonWordByte, \xF5 => NonWordByte, \xF6 => NonWordByte, \xF7 => NonWordByte, \xF8 => NonWordByte, \xF9 => NonWordByte, \xFA => NonWordByte, \xFB => NonWordByte, \xFC => NonWordByte, \xFD => NonWordByte, \xFE => NonWordByte, \xFF => NonWordByte}, classes: ByteClasses(0 => [\x00-^], 1 => [_], 2 => [`], 3 => [a], 4 => [b], 5 => [c], 6 => [d], 7 => [e], 8 => [f], 9 => [g], 10 => [h], 11 => [i], 12 => [j], 13 => [k], 14 => [l], 15 => [m], 16 => [n], 17 => [o], 18 => [p], 19 => [q], 20 => [r], 21 => [s], 22 => [t], 23 => [u], 24 => [v-w], 25 => [x], 26 => [y], 27 => [z], 28 => [{-\xFF], 29 => [EOI]), quitset: ByteSet { bits: {} }, cache_capacity: 10485760 }, reverse: DFA { config: Config { match_kind: Some(All), pre: Some(None), starts_for_each_pattern: Some(true), byte_classes: Some(true), unicode_word_boundary: Some(true), quitset: None, specialize_start_states: Some(false), cache_capacity: Some(10485760), skip_cache_capacity_check: Some(false), minimum_cache_clear_count: Some(Some(3)), minimum_bytes_per_state: Some(Some(10)) }, nfa: thompson::NFA(
+^000000: Start => 1
+ 000001: binary-union(2, 3)
+ 000002: \x00-\xFF => 1
+ 000003: _ => 34
+ 000004: a => 35
+ 000005: g => 4
+ 000006: g => 5
+ 000007: r => 6
+ 000008: e => 7
+ 000009: g => 8
+ 000010: e => 35
+ 000011: x => 10
+ 000012: e => 11
+ 000013: c => 12
+ 000014: sparse(a => 9, u => 13)
+ 000015: t => 14
+ 000016: s => 35
+ 000017: e => 16
+ 000018: a => 17
+ 000019: f => 35
+ 000020: e => 19
+ 000021: sparse(r => 18, t => 20)
+ 000022: c => 21
+ 000023: c => 35
+ 000024: h => 23
+ 000025: e => 24
+ 000026: c => 25
+ 000027: l => 35
+ 000028: i => 27
+ 000029: s => 28
+ 000030: q => 35
+ 000031: u => 30
+ 000032: e => 31
+ 000033: r => 32
+ 000034: sparse(e => 15, h => 22, k => 26, t => 29, y => 33)
+ 000035: _ => 36
+ 000036: z => 37
+ 000037: o => 38
+ 000038: n => 39
+ 000039: g => 40
+ 000040: i => 41
+ 000041: s => 42
+ 000042: End => 43
+ 000043: MATCH(0)
+
+transition equivalence classes: ByteClasses(0 => [\x00-^], 1 => [_], 2 => [`], 3 => [a], 4 => [b], 5 => [c], 6 => [d], 7 => [e], 8 => [f], 9 => [g], 10 => [h], 11 => [i], 12 => [j], 13 => [k], 14 => [l], 15 => [m], 16 => [n], 17 => [o], 18 => [p], 19 => [q], 20 => [r], 21 => [s], 22 => [t], 23 => [u], 24 => [v-w], 25 => [x], 26 => [y], 27 => [z], 28 => [{-\xFF], 29 => [EOI])
+)
+, stride2: 5, start_map: StartByteMap{\x00 => NonWordByte, \x01 => NonWordByte, \x02 => NonWordByte, \x03 => NonWordByte, \x04 => NonWordByte, \x05 => NonWordByte, \x06 => NonWordByte, \x07 => NonWordByte, \x08 => NonWordByte, \t => NonWordByte, \n => LineLF, \x0B => NonWordByte, \x0C => NonWordByte, \r => LineCR, \x0E => NonWordByte, \x0F => NonWordByte, \x10 => NonWordByte, \x11 => NonWordByte, \x12 => NonWordByte, \x13 => NonWordByte, \x14 => NonWordByte, \x15 => NonWordByte, \x16 => NonWordByte, \x17 => NonWordByte, \x18 => NonWordByte, \x19 => NonWordByte, \x1A => NonWordByte, \x1B => NonWordByte, \x1C => NonWordByte, \x1D => NonWordByte, \x1E => NonWordByte, \x1F => NonWordByte, ' ' => NonWordByte, ! => NonWordByte, \" => NonWordByte, # => NonWordByte, $ => NonWordByte, % => NonWordByte, & => NonWordByte, \' => NonWordByte, ( => NonWordByte, ) => NonWordByte, * => NonWordByte, + => NonWordByte, , => NonWordByte, - => NonWordByte, . => NonWordByte, / => NonWordByte, 0 => WordByte, 1 => WordByte, 2 => WordByte, 3 => WordByte, 4 => WordByte, 5 => WordByte, 6 => WordByte, 7 => WordByte, 8 => WordByte, 9 => WordByte, : => NonWordByte, ; => NonWordByte, < => NonWordByte, = => NonWordByte, > => NonWordByte, ? => NonWordByte, @ => NonWordByte, A => WordByte, B => WordByte, C => WordByte, D => WordByte, E => WordByte, F => WordByte, G => WordByte, H => WordByte, I => WordByte, J => WordByte, K => WordByte, L => WordByte, M => WordByte, N => WordByte, O => WordByte, P => WordByte, Q => WordByte, R => WordByte, S => WordByte, T => WordByte, U => WordByte, V => WordByte, W => WordByte, X => WordByte, Y => WordByte, Z => WordByte, [ => NonWordByte, \\ => NonWordByte, ] => NonWordByte, ^ => NonWordByte, _ => WordByte, ` => NonWordByte, a => WordByte, b => WordByte, c => WordByte, d => WordByte, e => WordByte, f => WordByte, g => WordByte, h => WordByte, i => WordByte, j => WordByte, k => WordByte, l => WordByte, m => WordByte, n => WordByte, o => WordByte, p => WordByte, q => WordByte, r => WordByte, s => WordByte, t => WordByte, u => WordByte, v => WordByte, w => WordByte, x => WordByte, y => WordByte, z => WordByte, { => NonWordByte, | => NonWordByte, } => NonWordByte, ~ => NonWordByte, \x7F => NonWordByte, \x80 => NonWordByte, \x81 => NonWordByte, \x82 => NonWordByte, \x83 => NonWordByte, \x84 => NonWordByte, \x85 => NonWordByte, \x86 => NonWordByte, \x87 => NonWordByte, \x88 => NonWordByte, \x89 => NonWordByte, \x8A => NonWordByte, \x8B => NonWordByte, \x8C => NonWordByte, \x8D => NonWordByte, \x8E => NonWordByte, \x8F => NonWordByte, \x90 => NonWordByte, \x91 => NonWordByte, \x92 => NonWordByte, \x93 => NonWordByte, \x94 => NonWordByte, \x95 => NonWordByte, \x96 => NonWordByte, \x97 => NonWordByte, \x98 => NonWordByte, \x99 => NonWordByte, \x9A => NonWordByte, \x9B => NonWordByte, \x9C => NonWordByte, \x9D => NonWordByte, \x9E => NonWordByte, \x9F => NonWordByte, \xA0 => NonWordByte, \xA1 => NonWordByte, \xA2 => NonWordByte, \xA3 => NonWordByte, \xA4 => NonWordByte, \xA5 => NonWordByte, \xA6 => NonWordByte, \xA7 => NonWordByte, \xA8 => NonWordByte, \xA9 => NonWordByte, \xAA => NonWordByte, \xAB => NonWordByte, \xAC => NonWordByte, \xAD => NonWordByte, \xAE => NonWordByte, \xAF => NonWordByte, \xB0 => NonWordByte, \xB1 => NonWordByte, \xB2 => NonWordByte, \xB3 => NonWordByte, \xB4 => NonWordByte, \xB5 => NonWordByte, \xB6 => NonWordByte, \xB7 => NonWordByte, \xB8 => NonWordByte, \xB9 => NonWordByte, \xBA => NonWordByte, \xBB => NonWordByte, \xBC => NonWordByte, \xBD => NonWordByte, \xBE => NonWordByte, \xBF => NonWordByte, \xC0 => NonWordByte, \xC1 => NonWordByte, \xC2 => NonWordByte, \xC3 => NonWordByte, \xC4 => NonWordByte, \xC5 => NonWordByte, \xC6 => NonWordByte, \xC7 => NonWordByte, \xC8 => NonWordByte, \xC9 => NonWordByte, \xCA => NonWordByte, \xCB => NonWordByte, \xCC => NonWordByte, \xCD => NonWordByte, \xCE => NonWordByte, \xCF => NonWordByte, \xD0 => NonWordByte, \xD1 => NonWordByte, \xD2 => NonWordByte, \xD3 => NonWordByte, \xD4 => NonWordByte, \xD5 => NonWordByte, \xD6 => NonWordByte, \xD7 => NonWordByte, \xD8 => NonWordByte, \xD9 => NonWordByte, \xDA => NonWordByte, \xDB => NonWordByte, \xDC => NonWordByte, \xDD => NonWordByte, \xDE => NonWordByte, \xDF => NonWordByte, \xE0 => NonWordByte, \xE1 => NonWordByte, \xE2 => NonWordByte, \xE3 => NonWordByte, \xE4 => NonWordByte, \xE5 => NonWordByte, \xE6 => NonWordByte, \xE7 => NonWordByte, \xE8 => NonWordByte, \xE9 => NonWordByte, \xEA => NonWordByte, \xEB => NonWordByte, \xEC => NonWordByte, \xED => NonWordByte, \xEE => NonWordByte, \xEF => NonWordByte, \xF0 => NonWordByte, \xF1 => NonWordByte, \xF2 => NonWordByte, \xF3 => NonWordByte, \xF4 => NonWordByte, \xF5 => NonWordByte, \xF6 => NonWordByte, \xF7 => NonWordByte, \xF8 => NonWordByte, \xF9 => NonWordByte, \xFA => NonWordByte, \xFB => NonWordByte, \xFC => NonWordByte, \xFD => NonWordByte, \xFE => NonWordByte, \xFF => NonWordByte}, classes: ByteClasses(0 => [\x00-^], 1 => [_], 2 => [`], 3 => [a], 4 => [b], 5 => [c], 6 => [d], 7 => [e], 8 => [f], 9 => [g], 10 => [h], 11 => [i], 12 => [j], 13 => [k], 14 => [l], 15 => [m], 16 => [n], 17 => [o], 18 => [p], 19 => [q], 20 => [r], 21 => [s], 22 => [t], 23 => [u], 24 => [v-w], 25 => [x], 26 => [y], 27 => [z], 28 => [{-\xFF], 29 => [EOI]), quitset: ByteSet { bits: {} }, cache_capacity: 10485760 } }))), dfa: DFA(None) }, info: RegexInfo(RegexInfoI { config: Config { match_kind: None, utf8_empty: Some(false), autopre: None, pre: None, which_captures: None, nfa_size_limit: Some(Some(10485760)), onepass_size_limit: None, hybrid_cache_capacity: Some(10485760), hybrid: None, dfa: None, dfa_size_limit: None, dfa_state_limit: None, onepass: None, backtrack: None, byte_classes: None, line_terminator: None }, props: [Properties(PropertiesI { minimum_len: Some(12), maximum_len: None, look_set: Az, look_set_prefix: A, look_set_suffix: z, look_set_prefix_any: A, look_set_suffix_any: z, utf8: false, explicit_captures_len: 0, static_explicit_captures_len: Some(0), literal: false, alternation_literal: false })], props_union: Properties(PropertiesI { minimum_len: Some(12), maximum_len: None, look_set: Az, look_set_prefix: A, look_set_suffix: z, look_set_prefix_any: A, look_set_suffix_any: z, utf8: false, explicit_captures_len: 0, static_explicit_captures_len: Some(0), literal: false, alternation_literal: false }) }) }, pool: Pool(Pool { stacks: [CacheLine(Mutex { data: [], poisoned: false, .. }), CacheLine(Mutex { data: [], poisoned: false, .. }), CacheLine(Mutex { data: [], poisoned: false, .. }), CacheLine(Mutex { data: [], poisoned: false, .. }), CacheLine(Mutex { data: [], poisoned: false, .. }), CacheLine(Mutex { data: [], poisoned: false, .. }), CacheLine(Mutex { data: [], poisoned: false, .. }), CacheLine(Mutex { data: [], poisoned: false, .. })], owner: 0, owner_val: UnsafeCell { .. } }) } }, ns_matcher: Some(GlobMatcher { pat: Glob("signoz"), re: Regex { imp: RegexI { strat: Core { info: RegexInfo(RegexInfoI { config: Config { match_kind: None, utf8_empty: Some(false), autopre: None, pre: None, which_captures: None, nfa_size_limit: Some(Some(10485760)), onepass_size_limit: None, hybrid_cache_capacity: Some(10485760), hybrid: None, dfa: None, dfa_size_limit: None, dfa_state_limit: None, onepass: None, backtrack: None, byte_classes: None, line_terminator: None }, props: [Properties(PropertiesI { minimum_len: Some(6), maximum_len: Some(6), look_set: Az, look_set_prefix: A, look_set_suffix: z, look_set_prefix_any: A, look_set_suffix_any: z, utf8: true, explicit_captures_len: 0, static_explicit_captures_len: Some(0), literal: false, alternation_literal: false })], props_union: Properties(PropertiesI { minimum_len: Some(6), maximum_len: Some(6), look_set: Az, look_set_prefix: A, look_set_suffix: z, look_set_prefix_any: A, look_set_suffix_any: z, utf8: true, explicit_captures_len: 0, static_explicit_captures_len: Some(0), literal: false, alternation_literal: false }) }), pre: None, nfa: thompson::NFA(
+^000000: capture(pid=0, group=0, slot=0) => 1
+ 000001: Start => 2
+ 000002: s => 3
+ 000003: i => 4
+ 000004: g => 5
+ 000005: n => 6
+ 000006: o => 7
+ 000007: z => 8
+ 000008: End => 9
+ 000009: capture(pid=0, group=0, slot=1) => 10
+ 000010: MATCH(0)
+
+transition equivalence classes: ByteClasses(0 => [\x00-f], 1 => [g], 2 => [h], 3 => [i], 4 => [j-m], 5 => [n], 6 => [o], 7 => [p-r], 8 => [s], 9 => [t-y], 10 => [z], 11 => [{-\xFF], 12 => [EOI])
+)
+, nfarev: Some(thompson::NFA(
+^000000: Start => 1
+ 000001: z => 2
+ 000002: o => 3
+ 000003: n => 4
+ 000004: g => 5
+ 000005: i => 6
+ 000006: s => 7
+ 000007: End => 8
+ 000008: MATCH(0)
+
+transition equivalence classes: ByteClasses(0 => [\x00-f], 1 => [g], 2 => [h], 3 => [i], 4 => [j-m], 5 => [n], 6 => [o], 7 => [p-r], 8 => [s], 9 => [t-y], 10 => [z], 11 => [{-\xFF], 12 => [EOI])
+)
+), pikevm: PikeVM(PikeVMEngine(PikeVM { config: Config { match_kind: Some(LeftmostFirst), pre: Some(None) }, nfa: thompson::NFA(
+^000000: capture(pid=0, group=0, slot=0) => 1
+ 000001: Start => 2
+ 000002: s => 3
+ 000003: i => 4
+ 000004: g => 5
+ 000005: n => 6
+ 000006: o => 7
+ 000007: z => 8
+ 000008: End => 9
+ 000009: capture(pid=0, group=0, slot=1) => 10
+ 000010: MATCH(0)
+
+transition equivalence classes: ByteClasses(0 => [\x00-f], 1 => [g], 2 => [h], 3 => [i], 4 => [j-m], 5 => [n], 6 => [o], 7 => [p-r], 8 => [s], 9 => [t-y], 10 => [z], 11 => [{-\xFF], 12 => [EOI])
+)
+ })), backtrack: BoundedBacktracker(Some(BoundedBacktrackerEngine(BoundedBacktracker { config: Config { pre: Some(None), visited_capacity: None }, nfa: thompson::NFA(
+^000000: capture(pid=0, group=0, slot=0) => 1
+ 000001: Start => 2
+ 000002: s => 3
+ 000003: i => 4
+ 000004: g => 5
+ 000005: n => 6
+ 000006: o => 7
+ 000007: z => 8
+ 000008: End => 9
+ 000009: capture(pid=0, group=0, slot=1) => 10
+ 000010: MATCH(0)
+
+transition equivalence classes: ByteClasses(0 => [\x00-f], 1 => [g], 2 => [h], 3 => [i], 4 => [j-m], 5 => [n], 6 => [o], 7 => [p-r], 8 => [s], 9 => [t-y], 10 => [z], 11 => [{-\xFF], 12 => [EOI])
+)
+ }))), onepass: OnePass(None), hybrid: Hybrid(None), dfa: DFA(Some(DFAEngine(Regex { forward: dense::DFA(
+D 000000: 
+Q 000001: 
+ *000002: 
+  000003: \x08 => 10
+  000004: 
+  000005: \x01 => 6
+  000006: \x05 => 7
+  000007: \x06 => 8
+  000008: \n => 9
+  000009: EOI => 2
+  000010: \x03 => 5
+
+START-GROUP(unanchored)
+  NonWordByte => 000004
+  WordByte => 000004
+  Text => 000003
+  LineLF => 000004
+  LineCR => 000004
+  CustomLineTerminator => 000004
+START-GROUP(anchored)
+  NonWordByte => 000004
+  WordByte => 000004
+  Text => 000003
+  LineLF => 000004
+  LineCR => 000004
+  CustomLineTerminator => 000004
+START_GROUP(pattern: PatternID(0))
+  NonWordByte => 000004
+  WordByte => 000004
+  Text => 000003
+  LineLF => 000004
+  LineCR => 000004
+  CustomLineTerminator => 000004
+state length: 11
+pattern length: 1
+flags: Flags { has_empty: false, is_utf8: false, is_always_start_anchored: true }
+)
+, reverse: dense::DFA(
+D 000000: 
+Q 000001: 
+ *000002: 
+  000003: \n => 10
+  000004: 
+  000005: \x05 => 6
+  000006: \x01 => 7
+  000007: \x03 => 8
+  000008: \x08 => 9
+  000009: EOI => 2
+  000010: \x06 => 5
+
+START-GROUP(unanchored)
+  NonWordByte => 000000
+  WordByte => 000000
+  Text => 000000
+  LineLF => 000000
+  LineCR => 000000
+  CustomLineTerminator => 000000
+START-GROUP(anchored)
+  NonWordByte => 000004
+  WordByte => 000004
+  Text => 000003
+  LineLF => 000004
+  LineCR => 000004
+  CustomLineTerminator => 000004
+START_GROUP(pattern: PatternID(0))
+  NonWordByte => 000004
+  WordByte => 000004
+  Text => 000003
+  LineLF => 000004
+  LineCR => 000004
+  CustomLineTerminator => 000004
+state length: 11
+pattern length: 1
+flags: Flags { has_empty: false, is_utf8: false, is_always_start_anchored: true }
+)
+ }))) }, info: RegexInfo(RegexInfoI { config: Config { match_kind: None, utf8_empty: Some(false), autopre: None, pre: None, which_captures: None, nfa_size_limit: Some(Some(10485760)), onepass_size_limit: None, hybrid_cache_capacity: Some(10485760), hybrid: None, dfa: None, dfa_size_limit: None, dfa_state_limit: None, onepass: None, backtrack: None, byte_classes: None, line_terminator: None }, props: [Properties(PropertiesI { minimum_len: Some(6), maximum_len: Some(6), look_set: Az, look_set_prefix: A, look_set_suffix: z, look_set_prefix_any: A, look_set_suffix_any: z, utf8: true, explicit_captures_len: 0, static_explicit_captures_len: Some(0), literal: false, alternation_literal: false })], props_union: Properties(PropertiesI { minimum_len: Some(6), maximum_len: Some(6), look_set: Az, look_set_prefix: A, look_set_suffix: z, look_set_prefix_any: A, look_set_suffix_any: z, utf8: true, explicit_captures_len: 0, static_explicit_captures_len: Some(0), literal: false, alternation_literal: false }) }) }, pool: Pool(Pool { stacks: [CacheLine(Mutex { data: [], poisoned: false, .. }), CacheLine(Mutex { data: [], poisoned: false, .. }), CacheLine(Mutex { data: [], poisoned: false, .. }), CacheLine(Mutex { data: [], poisoned: false, .. }), CacheLine(Mutex { data: [], poisoned: false, .. }), CacheLine(Mutex { data: [], poisoned: false, .. }), CacheLine(Mutex { data: [], poisoned: false, .. }), CacheLine(Mutex { data: [], poisoned: false, .. })], owner: 0, owner_val: UnsafeCell { .. } }) } }) }, GlobPattern { source: "signoz:signoz_get_[!n]*", name_matcher: GlobMatcher { pat: Glob("signoz_get_[!n]*"), re: Regex { imp: RegexI { strat: Core { info: RegexInfo(RegexInfoI { config: Config { match_kind: None, utf8_empty: Some(false), autopre: None, pre: None, which_captures: None, nfa_size_limit: Some(Some(10485760)), onepass_size_limit: None, hybrid_cache_capacity: Some(10485760), hybrid: None, dfa: None, dfa_size_limit: None, dfa_state_limit: None, onepass: None, backtrack: None, byte_classes: None, line_terminator: None }, props: [Properties(PropertiesI { minimum_len: Some(12), maximum_len: None, look_set: Az, look_set_prefix: A, look_set_suffix: z, look_set_prefix_any: A, look_set_suffix_any: z, utf8: false, explicit_captures_len: 0, static_explicit_captures_len: Some(0), literal: false, alternation_literal: false })], props_union: Properties(PropertiesI { minimum_len: Some(12), maximum_len: None, look_set: Az, look_set_prefix: A, look_set_suffix: z, look_set_prefix_any: A, look_set_suffix_any: z, utf8: false, explicit_captures_len: 0, static_explicit_captures_len: Some(0), literal: false, alternation_literal: false }) }), pre: None, nfa: thompson::NFA(
+^000000: capture(pid=0, group=0, slot=0) => 1
+ 000001: Start => 2
+ 000002: s => 3
+ 000003: i => 4
+ 000004: g => 5
+ 000005: n => 6
+ 000006: o => 7
+ 000007: z => 8
+ 000008: _ => 9
+ 000009: g => 10
+ 000010: e => 11
+ 000011: t => 12
+ 000012: _ => 13
+ 000013: sparse(\x00-m => 14, o-\xFF => 14)
+ 000014: binary-union(15, 16)
+ 000015: \x00-\xFF => 14
+ 000016: End => 17
+ 000017: capture(pid=0, group=0, slot=1) => 18
+ 000018: MATCH(0)
+
+transition equivalence classes: ByteClasses(0 => [\x00-^], 1 => [_], 2 => [`-d], 3 => [e], 4 => [f], 5 => [g], 6 => [h], 7 => [i], 8 => [j-m], 9 => [n], 10 => [o], 11 => [p-r], 12 => [s], 13 => [t], 14 => [u-y], 15 => [z], 16 => [{-\xFF], 17 => [EOI])
+)
+, nfarev: Some(thompson::NFA(
+^000000: Start => 1
+ 000001: binary-union(2, 3)
+ 000002: \x00-\xFF => 1
+ 000003: sparse(\x00-m => 4, o-\xFF => 4)
+ 000004: _ => 5
+ 000005: t => 6
+ 000006: e => 7
+ 000007: g => 8
+ 000008: _ => 9
+ 000009: z => 10
+ 000010: o => 11
+ 000011: n => 12
+ 000012: g => 13
+ 000013: i => 14
+ 000014: s => 15
+ 000015: End => 16
+ 000016: MATCH(0)
+
+transition equivalence classes: ByteClasses(0 => [\x00-^], 1 => [_], 2 => [`-d], 3 => [e], 4 => [f], 5 => [g], 6 => [h], 7 => [i], 8 => [j-m], 9 => [n], 10 => [o], 11 => [p-r], 12 => [s], 13 => [t], 14 => [u-y], 15 => [z], 16 => [{-\xFF], 17 => [EOI])
+)
+), pikevm: PikeVM(PikeVMEngine(PikeVM { config: Config { match_kind: Some(LeftmostFirst), pre: Some(None) }, nfa: thompson::NFA(
+^000000: capture(pid=0, group=0, slot=0) => 1
+ 000001: Start => 2
+ 000002: s => 3
+ 000003: i => 4
+ 000004: g => 5
+ 000005: n => 6
+ 000006: o => 7
+ 000007: z => 8
+ 000008: _ => 9
+ 000009: g => 10
+ 000010: e => 11
+ 000011: t => 12
+ 000012: _ => 13
+ 000013: sparse(\x00-m => 14, o-\xFF => 14)
+ 000014: binary-union(15, 16)
+ 000015: \x00-\xFF => 14
+ 000016: End => 17
+ 000017: capture(pid=0, group=0, slot=1) => 18
+ 000018: MATCH(0)
+
+transition equivalence classes: ByteClasses(0 => [\x00-^], 1 => [_], 2 => [`-d], 3 => [e], 4 => [f], 5 => [g], 6 => [h], 7 => [i], 8 => [j-m], 9 => [n], 10 => [o], 11 => [p-r], 12 => [s], 13 => [t], 14 => [u-y], 15 => [z], 16 => [{-\xFF], 17 => [EOI])
+)
+ })), backtrack: BoundedBacktracker(Some(BoundedBacktrackerEngine(BoundedBacktracker { config: Config { pre: Some(None), visited_capacity: None }, nfa: thompson::NFA(
+^000000: capture(pid=0, group=0, slot=0) => 1
+ 000001: Start => 2
+ 000002: s => 3
+ 000003: i => 4
+ 000004: g => 5
+ 000005: n => 6
+ 000006: o => 7
+ 000007: z => 8
+ 000008: _ => 9
+ 000009: g => 10
+ 000010: e => 11
+ 000011: t => 12
+ 000012: _ => 13
+ 000013: sparse(\x00-m => 14, o-\xFF => 14)
+ 000014: binary-union(15, 16)
+ 000015: \x00-\xFF => 14
+ 000016: End => 17
+ 000017: capture(pid=0, group=0, slot=1) => 18
+ 000018: MATCH(0)
+
+transition equivalence classes: ByteClasses(0 => [\x00-^], 1 => [_], 2 => [`-d], 3 => [e], 4 => [f], 5 => [g], 6 => [h], 7 => [i], 8 => [j-m], 9 => [n], 10 => [o], 11 => [p-r], 12 => [s], 13 => [t], 14 => [u-y], 15 => [z], 16 => [{-\xFF], 17 => [EOI])
+)
+ }))), onepass: OnePass(None), hybrid: Hybrid(None), dfa: DFA(Some(DFAEngine(Regex { forward: dense::DFA(
+D 000000: 
+Q 000001: 
+ *000002: 
+  000003: \x0C => 16
+  000004: 
+  000005: \x05 => 6
+  000006: \t => 7
+  000007: \n => 8
+  000008: \x0F => 9
+  000009: \x01 => 10
+  000010: \x05 => 11
+  000011: \x03 => 12
+  000012: \r => 13
+  000013: \x01 => 14
+  000014: \x00-\x08 => 15, \n-\x10 => 15
+  000015: \x00-\x10 => 15, EOI => 2
+  000016: \x07 => 5
+
+START-GROUP(unanchored)
+  NonWordByte => 000004
+  WordByte => 000004
+  Text => 000003
+  LineLF => 000004
+  LineCR => 000004
+  CustomLineTerminator => 000004
+START-GROUP(anchored)
+  NonWordByte => 000004
+  WordByte => 000004
+  Text => 000003
+  LineLF => 000004
+  LineCR => 000004
+  CustomLineTerminator => 000004
+START_GROUP(pattern: PatternID(0))
+  NonWordByte => 000004
+  WordByte => 000004
+  Text => 000003
+  LineLF => 000004
+  LineCR => 000004
+  CustomLineTerminator => 000004
+state length: 17
+pattern length: 1
+flags: Flags { has_empty: false, is_utf8: false, is_always_start_anchored: true }
+)
+, reverse: dense::DFA(
+D 000000: 
+Q 000001: 
+ *000002: 
+A 000003: \x00 => 3, \x01 => 6, \x02-\x08 => 3, \t => 17, \n-\x10 => 3
+  000004: 
+  000005: \x00-\x08 => 3, \t => 17, \n-\x10 => 3
+  000006: \x00 => 3, \x01 => 6, \x02-\x08 => 3, \t => 17, \n-\x0C => 3, \r => 7, \x0E-\x10 => 3
+  000007: \x00 => 3, \x01 => 6, \x02 => 3, \x03 => 8, \x04-\x08 => 3, \t => 17, \n-\x10 => 3
+  000008: \x00 => 3, \x01 => 6, \x02-\x04 => 3, \x05 => 9, \x06-\x08 => 3, \t => 17, \n-\x10 => 3
+  000009: \x00 => 3, \x01 => 10, \x02-\x08 => 3, \t => 17, \n-\x10 => 3
+  000010: \x00 => 3, \x01 => 6, \x02-\x08 => 3, \t => 17, \n-\x0C => 3, \r => 7, \x0E => 3, \x0F => 11, \x10 => 3
+  000011: \x00 => 3, \x01 => 6, \x02-\x08 => 3, \t => 17, \n => 12, \x0B-\x10 => 3
+  000012: \x00 => 3, \x01 => 6, \x02-\x08 => 3, \t => 13, \n-\x10 => 3
+  000013: \x00-\x04 => 3, \x05 => 14, \x06-\x08 => 3, \t => 17, \n-\x10 => 3
+  000014: \x00 => 3, \x01 => 6, \x02-\x06 => 3, \x07 => 15, \x08 => 3, \t => 17, \n-\x10 => 3
+  000015: \x00 => 3, \x01 => 6, \x02-\x08 => 3, \t => 17, \n-\x0B => 3, \x0C => 16, \r-\x10 => 3
+  000016: \x00 => 3, \x01 => 6, \x02-\x08 => 3, \t => 17, \n-\x10 => 3, EOI => 2
+  000017: \x00-\x08 => 3, \t => 17, \n-\x10 => 3
+
+START-GROUP(unanchored)
+  NonWordByte => 000000
+  WordByte => 000000
+  Text => 000000
+  LineLF => 000000
+  LineCR => 000000
+  CustomLineTerminator => 000000
+START-GROUP(anchored)
+  NonWordByte => 000004
+  WordByte => 000004
+  Text => 000005
+  LineLF => 000004
+  LineCR => 000004
+  CustomLineTerminator => 000004
+START_GROUP(pattern: PatternID(0))
+  NonWordByte => 000004
+  WordByte => 000004
+  Text => 000005
+  LineLF => 000004
+  LineCR => 000004
+  CustomLineTerminator => 000004
+state length: 18
+pattern length: 1
+flags: Flags { has_empty: false, is_utf8: false, is_always_start_anchored: true }
+)
+ }))) }, info: RegexInfo(RegexInfoI { config: Config { match_kind: None, utf8_empty: Some(false), autopre: None, pre: None, which_captures: None, nfa_size_limit: Some(Some(10485760)), onepass_size_limit: None, hybrid_cache_capacity: Some(10485760), hybrid: None, dfa: None, dfa_size_limit: None, dfa_state_limit: None, onepass: None, backtrack: None, byte_classes: None, line_terminator: None }, props: [Properties(PropertiesI { minimum_len: Some(12), maximum_len: None, look_set: Az, look_set_prefix: A, look_set_suffix: z, look_set_prefix_any: A, look_set_suffix_any: z, utf8: false, explicit_captures_len: 0, static_explicit_captures_len: Some(0), literal: false, alternation_literal: false })], props_union: Properties(PropertiesI { minimum_len: Some(12), maximum_len: None, look_set: Az, look_set_prefix: A, look_set_suffix: z, look_set_prefix_any: A, look_set_suffix_any: z, utf8: false, explicit_captures_len: 0, static_explicit_captures_len: Some(0), literal: false, alternation_literal: false }) }) }, pool: Pool(Pool { stacks: [CacheLine(Mutex { data: [], poisoned: false, .. }), CacheLine(Mutex { data: [], poisoned: false, .. }), CacheLine(Mutex { data: [], poisoned: false, .. }), CacheLine(Mutex { data: [], poisoned: false, .. }), CacheLine(Mutex { data: [], poisoned: false, .. }), CacheLine(Mutex { data: [], poisoned: false, .. }), CacheLine(Mutex { data: [], poisoned: false, .. }), CacheLine(Mutex { data: [], poisoned: false, .. })], owner: 0, owner_val: UnsafeCell { .. } }) } }, ns_matcher: Some(GlobMatcher { pat: Glob("signoz"), re: Regex { imp: RegexI { strat: Core { info: RegexInfo(RegexInfoI { config: Config { match_kind: None, utf8_empty: Some(false), autopre: None, pre: None, which_captures: None, nfa_size_limit: Some(Some(10485760)), onepass_size_limit: None, hybrid_cache_capacity: Some(10485760), hybrid: None, dfa: None, dfa_size_limit: None, dfa_state_limit: None, onepass: None, backtrack: None, byte_classes: None, line_terminator: None }, props: [Properties(PropertiesI { minimum_len: Some(6), maximum_len: Some(6), look_set: Az, look_set_prefix: A, look_set_suffix: z, look_set_prefix_any: A, look_set_suffix_any: z, utf8: true, explicit_captures_len: 0, static_explicit_captures_len: Some(0), literal: false, alternation_literal: false })], props_union: Properties(PropertiesI { minimum_len: Some(6), maximum_len: Some(6), look_set: Az, look_set_prefix: A, look_set_suffix: z, look_set_prefix_any: A, look_set_suffix_any: z, utf8: true, explicit_captures_len: 0, static_explicit_captures_len: Some(0), literal: false, alternation_literal: false }) }), pre: None, nfa: thompson::NFA(
+^000000: capture(pid=0, group=0, slot=0) => 1
+ 000001: Start => 2
+ 000002: s => 3
+ 000003: i => 4
+ 000004: g => 5
+ 000005: n => 6
+ 000006: o => 7
+ 000007: z => 8
+ 000008: End => 9
+ 000009: capture(pid=0, group=0, slot=1) => 10
+ 000010: MATCH(0)
+
+transition equivalence classes: ByteClasses(0 => [\x00-f], 1 => [g], 2 => [h], 3 => [i], 4 => [j-m], 5 => [n], 6 => [o], 7 => [p-r], 8 => [s], 9 => [t-y], 10 => [z], 11 => [{-\xFF], 12 => [EOI])
+)
+, nfarev: Some(thompson::NFA(
+^000000: Start => 1
+ 000001: z => 2
+ 000002: o => 3
+ 000003: n => 4
+ 000004: g => 5
+ 000005: i => 6
+ 000006: s => 7
+ 000007: End => 8
+ 000008: MATCH(0)
+
+transition equivalence classes: ByteClasses(0 => [\x00-f], 1 => [g], 2 => [h], 3 => [i], 4 => [j-m], 5 => [n], 6 => [o], 7 => [p-r], 8 => [s], 9 => [t-y], 10 => [z], 11 => [{-\xFF], 12 => [EOI])
+)
+), pikevm: PikeVM(PikeVMEngine(PikeVM { config: Config { match_kind: Some(LeftmostFirst), pre: Some(None) }, nfa: thompson::NFA(
+^000000: capture(pid=0, group=0, slot=0) => 1
+ 000001: Start => 2
+ 000002: s => 3
+ 000003: i => 4
+ 000004: g => 5
+ 000005: n => 6
+ 000006: o => 7
+ 000007: z => 8
+ 000008: End => 9
+ 000009: capture(pid=0, group=0, slot=1) => 10
+ 000010: MATCH(0)
+
+transition equivalence classes: ByteClasses(0 => [\x00-f], 1 => [g], 2 => [h], 3 => [i], 4 => [j-m], 5 => [n], 6 => [o], 7 => [p-r], 8 => [s], 9 => [t-y], 10 => [z], 11 => [{-\xFF], 12 => [EOI])
+)
+ })), backtrack: BoundedBacktracker(Some(BoundedBacktrackerEngine(BoundedBacktracker { config: Config { pre: Some(None), visited_capacity: None }, nfa: thompson::NFA(
+^000000: capture(pid=0, group=0, slot=0) => 1
+ 000001: Start => 2
+ 000002: s => 3
+ 000003: i => 4
+ 000004: g => 5
+ 000005: n => 6
+ 000006: o => 7
+ 000007: z => 8
+ 000008: End => 9
+ 000009: capture(pid=0, group=0, slot=1) => 10
+ 000010: MATCH(0)
+
+transition equivalence classes: ByteClasses(0 => [\x00-f], 1 => [g], 2 => [h], 3 => [i], 4 => [j-m], 5 => [n], 6 => [o], 7 => [p-r], 8 => [s], 9 => [t-y], 10 => [z], 11 => [{-\xFF], 12 => [EOI])
+)
+ }))), onepass: OnePass(None), hybrid: Hybrid(None), dfa: DFA(Some(DFAEngine(Regex { forward: dense::DFA(
+D 000000: 
+Q 000001: 
+ *000002: 
+  000003: \x08 => 10
+  000004: 
+  000005: \x01 => 6
+  000006: \x05 => 7
+  000007: \x06 => 8
+  000008: \n => 9
+  000009: EOI => 2
+  000010: \x03 => 5
+
+START-GROUP(unanchored)
+  NonWordByte => 000004
+  WordByte => 000004
+  Text => 000003
+  LineLF => 000004
+  LineCR => 000004
+  CustomLineTerminator => 000004
+START-GROUP(anchored)
+  NonWordByte => 000004
+  WordByte => 000004
+  Text => 000003
+  LineLF => 000004
+  LineCR => 000004
+  CustomLineTerminator => 000004
+START_GROUP(pattern: PatternID(0))
+  NonWordByte => 000004
+  WordByte => 000004
+  Text => 000003
+  LineLF => 000004
+  LineCR => 000004
+  CustomLineTerminator => 000004
+state length: 11
+pattern length: 1
+flags: Flags { has_empty: false, is_utf8: false, is_always_start_anchored: true }
+)
+, reverse: dense::DFA(
+D 000000: 
+Q 000001: 
+ *000002: 
+  000003: \n => 10
+  000004: 
+  000005: \x05 => 6
+  000006: \x01 => 7
+  000007: \x03 => 8
+  000008: \x08 => 9
+  000009: EOI => 2
+  000010: \x06 => 5
+
+START-GROUP(unanchored)
+  NonWordByte => 000000
+  WordByte => 000000
+  Text => 000000
+  LineLF => 000000
+  LineCR => 000000
+  CustomLineTerminator => 000000
+START-GROUP(anchored)
+  NonWordByte => 000004
+  WordByte => 000004
+  Text => 000003
+  LineLF => 000004
+  LineCR => 000004
+  CustomLineTerminator => 000004
+START_GROUP(pattern: PatternID(0))
+  NonWordByte => 000004
+  WordByte => 000004
+  Text => 000003
+  LineLF => 000004
+  LineCR => 000004
+  CustomLineTerminator => 000004
+state length: 11
+pattern length: 1
+flags: Flags { has_empty: false, is_utf8: false, is_always_start_anchored: true }
+)
+ }))) }, info: RegexInfo(RegexInfoI { config: Config { match_kind: None, utf8_empty: Some(false), autopre: None, pre: None, which_captures: None, nfa_size_limit: Some(Some(10485760)), onepass_size_limit: None, hybrid_cache_capacity: Some(10485760), hybrid: None, dfa: None, dfa_size_limit: None, dfa_state_limit: None, onepass: None, backtrack: None, byte_classes: None, line_terminator: None }, props: [Properties(PropertiesI { minimum_len: Some(6), maximum_len: Some(6), look_set: Az, look_set_prefix: A, look_set_suffix: z, look_set_prefix_any: A, look_set_suffix_any: z, utf8: true, explicit_captures_len: 0, static_explicit_captures_len: Some(0), literal: false, alternation_literal: false })], props_union: Properties(PropertiesI { minimum_len: Some(6), maximum_len: Some(6), look_set: Az, look_set_prefix: A, look_set_suffix: z, look_set_prefix_any: A, look_set_suffix_any: z, utf8: true, explicit_captures_len: 0, static_explicit_captures_len: Some(0), literal: false, alternation_literal: false }) }) }, pool: Pool(Pool { stacks: [CacheLine(Mutex { data: [], poisoned: false, .. }), CacheLine(Mutex { data: [], poisoned: false, .. }), CacheLine(Mutex { data: [], poisoned: false, .. }), CacheLine(Mutex { data: [], poisoned: false, .. }), CacheLine(Mutex { data: [], poisoned: false, .. }), CacheLine(Mutex { data: [], poisoned: false, .. }), CacheLine(Mutex { data: [], poisoned: false, .. }), CacheLine(Mutex { data: [], poisoned: false, .. })], owner: 0, owner_val: UnsafeCell { .. } }) } }) }]
+2026-11-01T04:47:25.009401Z  INFO chat_completions{otel.kind="server"}: aura::builder:  Adding 30/46 STDIO tools from signoz
+2026-11-01T04:47:25.009620Z  INFO chat_completions{otel.kind="server"}: aura::builder:   Adding dynamic STDIO tool: signoz_aggregate_logs
+2026-11-01T04:47:25.011008Z  INFO chat_completions{otel.kind="server"}: aura::builder:   Adding dynamic STDIO tool: signoz_aggregate_traces
+2026-11-01T04:47:25.011335Z  INFO chat_completions{otel.kind="server"}: aura::builder:   Adding dynamic STDIO tool: signoz_check_metric_cardinality
+2026-11-01T04:47:25.011941Z  INFO chat_completions{otel.kind="server"}: aura::builder:   Adding dynamic STDIO tool: signoz_check_metric_usage
+2026-11-01T04:47:25.012198Z  INFO chat_completions{otel.kind="server"}: aura::builder:   Adding dynamic STDIO tool: signoz_execute_builder_query
+2026-11-01T04:47:25.013913Z  INFO chat_completions{otel.kind="server"}: aura::builder:   Adding dynamic STDIO tool: signoz_fetch_doc
+2026-11-01T04:47:25.014435Z  INFO chat_completions{otel.kind="server"}: aura::builder:   Adding dynamic STDIO tool: signoz_get_ai_pricing
+2026-11-01T04:47:25.015507Z  INFO chat_completions{otel.kind="server"}: aura::builder:   Adding dynamic STDIO tool: signoz_get_alert
+2026-11-01T04:47:25.016063Z  INFO chat_completions{otel.kind="server"}: aura::builder:   Adding dynamic STDIO tool: signoz_get_alert_history
+2026-11-01T04:47:25.016558Z  INFO chat_completions{otel.kind="server"}: aura::builder:   Adding dynamic STDIO tool: signoz_get_dashboard
+2026-11-01T04:47:25.016857Z  INFO chat_completions{otel.kind="server"}: aura::builder:   Adding dynamic STDIO tool: signoz_get_field_keys
+2026-11-01T04:47:25.017532Z  INFO chat_completions{otel.kind="server"}: aura::builder:   Adding dynamic STDIO tool: signoz_get_field_values
+2026-11-01T04:47:25.018162Z  INFO chat_completions{otel.kind="server"}: aura::builder:   Adding dynamic STDIO tool: signoz_get_org_overview
+2026-11-01T04:47:25.018498Z  INFO chat_completions{otel.kind="server"}: aura::builder:   Adding dynamic STDIO tool: signoz_get_service_top_operations
+2026-11-01T04:47:25.018790Z  INFO chat_completions{otel.kind="server"}: aura::builder:   Adding dynamic STDIO tool: signoz_get_top_metrics
+2026-11-01T04:47:25.025127Z  INFO chat_completions{otel.kind="server"}: aura::builder:   Adding dynamic STDIO tool: signoz_get_trace_details
+2026-11-01T04:47:25.026035Z  INFO chat_completions{otel.kind="server"}: aura::builder:   Adding dynamic STDIO tool: signoz_get_view
+2026-11-01T04:47:25.026715Z  INFO chat_completions{otel.kind="server"}: aura::builder:   Adding dynamic STDIO tool: signoz_list_ai_attribute_mappings
+2026-11-01T04:47:25.027169Z  INFO chat_completions{otel.kind="server"}: aura::builder:   Adding dynamic STDIO tool: signoz_list_alert_rules
+2026-11-01T04:47:25.028068Z  INFO chat_completions{otel.kind="server"}: aura::builder:   Adding dynamic STDIO tool: signoz_list_alerts
+2026-11-01T04:47:25.028464Z  INFO chat_completions{otel.kind="server"}: aura::builder:   Adding dynamic STDIO tool: signoz_list_dashboard_templates
+2026-11-01T04:47:25.029856Z  INFO chat_completions{otel.kind="server"}: aura::builder:   Adding dynamic STDIO tool: signoz_list_dashboards
+2026-11-01T04:47:25.030916Z  INFO chat_completions{otel.kind="server"}: aura::builder:   Adding dynamic STDIO tool: signoz_list_metrics
+2026-11-01T04:47:25.032370Z  INFO chat_completions{otel.kind="server"}: aura::builder:   Adding dynamic STDIO tool: signoz_list_notification_channels
+2026-11-01T04:47:25.032995Z  INFO chat_completions{otel.kind="server"}: aura::builder:   Adding dynamic STDIO tool: signoz_list_services
+2026-11-01T04:47:25.033232Z  INFO chat_completions{otel.kind="server"}: aura::builder:   Adding dynamic STDIO tool: signoz_list_views
+2026-11-01T04:47:25.033475Z  INFO chat_completions{otel.kind="server"}: aura::builder:   Adding dynamic STDIO tool: signoz_query_metrics
+2026-11-01T04:47:25.034137Z  INFO chat_completions{otel.kind="server"}: aura::builder:   Adding dynamic STDIO tool: signoz_search_docs
+2026-11-01T04:47:25.035222Z  INFO chat_completions{otel.kind="server"}: aura::builder:   Adding dynamic STDIO tool: signoz_search_logs
+2026-11-01T04:47:25.038345Z  INFO chat_completions{otel.kind="server"}: aura::builder:   Adding dynamic STDIO tool: signoz_search_traces
+2026-11-01T04:47:25.097269Z  INFO agent.stream: rig::agent::prompt_request::streaming: Current conversation depth: 1/10
+2026-11-01T04:47:25.223451Z  INFO agent.stream: aura::streaming_request_hook: Token usage captured request_id=req_bacc544597264f698d1af1c15386cbd1 prompt_tokens=10 completion_tokens=5 total_tokens=15
+2026-11-01T04:47:25.225605Z  INFO agent.stream: rig::agent::prompt_request::streaming: Agent multi-turn stream finished
+2026-11-01T04:47:25.226945Z  INFO agent.stream: aura_web_server::streaming::handlers: Multi-turn streaming complete: 38 chars
+2026-11-01T04:47:25.232989Z  INFO agent.stream: aura_web_server::streaming::handlers: Stream ended normally
+2026-11-01T04:47:25.248010Z  INFO chat_completions{otel.kind="server"}:serve_inner: rmcp::service: task cancelled
+2026-11-01T04:47:25.289627Z  INFO aura::mcp::manager: Initializing MCP servers (2 configured) as McpUserAgent("aura/0.2.18-nightly.9")
+2026-11-01T04:47:25.294274Z  INFO aura::mcp::manager: Schema sanitization: ENABLED (OpenAI compatibility)
+2026-11-01T04:47:25.297501Z  INFO aura::mcp::manager: Connecting to MCP server: pagerduty
+2026-11-01T04:47:25.300551Z  INFO aura::mcp::manager:   Connecting to HTTP streamable server at: https://mcp.pagerduty.com/mcp
+2026-11-01T04:47:25.300847Z  INFO aura::mcp::manager:   Forwarding 1 headers to MCP client
+2026-11-01T04:47:25.302037Z  INFO aura::mcp::client: Creating streamable HTTP MCP client for: https://mcp.pagerduty.com/mcp
+2026-11-01T04:47:25.820047Z  INFO chat_completions{otel.kind="server"}:serve_inner: rmcp::transport::child_process: Child exited gracefully exit status: 0
+2026-11-01T04:47:25.820702Z  INFO chat_completions{otel.kind="server"}:serve_inner: rmcp::service: serve finished quit_reason=Cancelled
+2026-11-01T04:47:26.363438Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when Client(reqwest::Error { kind: Status(401, None), url: "https://mcp.pagerduty.com/mcp" })
+2026-11-01T04:47:26.364807Z  WARN aura::mcp::manager: pagerduty - Connection failed: MCP initialization error: HTTP MCP server 'pagerduty' authentication failed (401 Unauthorized). Check that your headers, forwarded headers, and/or credentials are correct.
+2026-11-01T04:47:26.365024Z  INFO aura::mcp::manager: Connecting to MCP server: signoz
+2026-11-01T04:47:26.365181Z  INFO aura::mcp::manager:   Spawning STDIO server: ["docker"] ["run", "-i", "--rm", "-e", "SIGNOZ_URL", "-e", "SIGNOZ_API_KEY", "signoz/signoz-mcp-server:v0.17.0"]
+2026-11-01T04:47:28.274404Z  INFO serve_inner: rmcp::service: Service initialized as client peer_info=Some(InitializeResult { protocol_version: ProtocolVersion("2025-03-26"), capabilities: ServerCapabilities { experimental: None, logging: None, completions: None, prompts: Some(PromptsCapability { list_changed: None }), resources: Some(ResourcesCapability { subscribe: None, list_changed: None }), tools: Some(ToolsCapability { list_changed: None }) }, server_info: Implementation { name: "SigNozMCP", title: None, version: "v0.17.0", icons: None, website_url: None }, instructions: Some("Use SigNoz tools to investigate metrics, logs, traces, and exceptions, including the LLM apps and AI agents the user runs (model calls, tokens, cost, tool calls, prompts); questions about those mean the user's app in SigNoz, not this chat. Manage dashboards, alerts, and saved views, and consult SigNoz docs. Start with the user's signal; if none is clear, ask whether to use metrics, traces, or logs.\n\n## Rules\n\n1. **Query once when possible.** Fetch more only if the first result is insufficient or the user asks. Never repeat overlapping queries.\n\n2. **Prefer resource attributes in filters.** Use service.name, k8s.namespace.name, or host.name when available. If none was supplied, call signoz_get_field_keys with fieldContext=resource, optionally signoz_get_field_values, then ask the user to choose. Keys vary by workspace/signal; logs may lack standard resource fields. On \"key not found\", discover valid keys, then retry with an existing key or remove that condition. Never retry the invalid filter.\n\n3. **Match operators to intent and type.** Use EXISTS/NOT EXISTS for presence, = for exact matches, IN/NOT IN for sets, and LIKE/ILIKE/CONTAINS/REGEXP for string patterns. int64 also supports >, >=, <, and <=; bool supports =, !=, EXISTS, and NOT EXISTS.\n\n4. **Guard negative filters.** !=, NOT LIKE, NOT IN, NOT CONTAINS, and NOT REGEXP also match missing fields. Require presence when excluding a value, for example: service.name EXISTS AND service.name != 'redis'.\n\n5. **Convert timestamps programmatically.** SigNoz start/end and time-series timestamps are Unix milliseconds. Never convert them mentally; use a date/time function before presenting them.\n\n6. **Use returned webUrl values verbatim.** Resource results include SigNoz deep links. Never construct links from IDs or the instance URL.\n\n7. **Prepare mutations with reads.** Reuse reads from the same still-current prepared operation; do not repeat them. Otherwise resolve names/IDs and fetch replacement objects. Refresh if state may have changed; preserve unchanged fields.\n") })
+2026-11-01T04:47:28.282337Z  INFO aura::mcp::manager:   STDIO connection established, discovering tools
+2026-11-01T04:47:28.417401Z  INFO aura::mcp::client: Discovered 46 tools from server: stdio://signoz
+2026-11-01T04:47:28.421492Z  INFO aura::mcp::manager:   Discovered 46 tools from STDIO server 'signoz'
+2026-11-01T04:47:28.429563Z  INFO aura::mcp::manager:   STDIO connection successful
+2026-11-01T04:47:28.433599Z  INFO aura::mcp::manager: signoz - Connected successfully, 46 tools discovered
+2026-11-01T04:47:28.435131Z  INFO aura::mcp::manager: MCP initialization complete:
+2026-11-01T04:47:28.437312Z  INFO aura::mcp::manager:   - Total tools available: 46
+2026-11-01T04:47:28.437466Z  INFO aura::mcp::manager:   - Successful connections: 1/2
+2026-11-01T04:47:28.437571Z  WARN aura::mcp::manager:   - Failed connections: 1
+2026-11-01T04:47:28.443318Z  INFO aura::mcp::client: Forcefully closing MCP connection to: stdio://signoz
+2026-11-01T04:47:28.443545Z  INFO aura::mcp::client: Cancelled 0 request(s) and closed MCP connection for HTTP request aura-info
+2026-11-01T04:47:28.453343Z  INFO serve_inner: rmcp::service: task cancelled
+2026-11-01T04:47:28.472136Z  INFO aura_web_server::server: Received SIGTERM, initiating graceful shutdown
+2026-11-01T04:47:28.472525Z  INFO aura_web_server::server: Allowing 2s for in-flight requests to complete
+2026-11-01T04:47:28.472776Z  INFO aura_web_server::server: shutdown complete clean_shutdown=true unaborted_tasks=false

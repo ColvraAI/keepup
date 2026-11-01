@@ -1,0 +1,96 @@
+From b07b804837108eda0326abdac9e843eae055c142 Mon Sep 17 00:00:00 2001
+From: "keepup[bot]" <keepup[bot]@users.noreply.github.com>
+Date: Fri, 25 Sep 2026 12:00:00 +0000
+Subject: [PATCH 1/2] feat(examples): add sentry incident response example
+ config
+
+The integrations table doesn't list Sentry, so an incident agent has no
+example to follow for reading errors and stack traces there. Apply the
+PagerDuty triage pattern to Sentry's official hosted MCP server. The
+token stays in the environment, and skills=inspect leaves out the
+tools that update issues.
+
+Replay date: 2026-09-25, the day Sentry MCP v0.42.0 shipped.
+Source: https://github.com/getsentry/toolkit/releases/tag/0.42.0
+---
+ README.md                                     |  1 +
+ .../complete/incident-response-sentry.toml    | 58 +++++++++++++++++++
+ 2 files changed, 59 insertions(+)
+ create mode 100644 examples/complete/incident-response-sentry.toml
+
+diff --git a/README.md b/README.md
+index deb8e6c7..81cdc158 100644
+--- a/README.md
++++ b/README.md
+@@ -103,6 +103,7 @@ Through compatible [MCP](https://modelcontextprotocol.io) servers and built-in i
+ | [PagerDuty](https://www.youtube.com/watch?v=TERHoRzT8cE) | Investigate incidents, on-call schedules, and escalations |
+ | [Prometheus](https://www.youtube.com/watch?v=cw34mXc4XgM) | Query metrics and alert status |
+ | [Qdrant](https://www.youtube.com/watch?v=cw34mXc4XgM) | Retrieve runbooks and reference material from vector collections |
++| Sentry | Search issues and errors, read stack traces and events, and find the release that introduced a problem |
+ | [Slack](https://www.youtube.com/watch?v=9hWlh-xCzhQ) | Read incident channels and post investigation updates |
+ | [Temporal](https://www.youtube.com/watch?v=kuUsojClQcA) | Run agent investigations as steps in durable workflows |
+ | [Windows Server](https://www.youtube.com/watch?v=7nFvKJpp9Sk) | Inspect services, drives, processes, and resource usage |
+diff --git a/examples/complete/incident-response-sentry.toml b/examples/complete/incident-response-sentry.toml
+new file mode 100644
+index 00000000..0de4b32d
+--- /dev/null
++++ b/examples/complete/incident-response-sentry.toml
+@@ -0,0 +1,58 @@
++# Incident response agent — PagerDuty + Sentry.
++# Triages alerts, searches errors, and follows them to stack traces and releases.
++#
++# Prerequisites:
++#   export OPENAI_API_KEY="sk-..."
++#   export PAGERDUTY_API_TOKEN="..."
++#   export SENTRY_ACCESS_TOKEN="..."   # user auth token: org:read, project:read, team:read, event:read
++#
++# Usage:
++#   CONFIG_PATH=examples/complete/incident-response-sentry.toml cargo run --bin aura -- webserver
++
++[mcp]
++sanitize_schemas = true
++
++# PagerDuty — incident and on-call management
++[mcp.servers.pagerduty]
++transport = "http_streamable"
++url = "https://mcp.pagerduty.com/mcp"
++description = "PagerDuty incident management, on-call schedules, and escalation"
++
++[mcp.servers.pagerduty.headers]
++Authorization = "Token {{ env.PAGERDUTY_API_TOKEN | default: '' }}"
++
++# Sentry — errors, stack traces, and releases
++# Sentry's hosted server. skills=inspect leaves out the tools that update issues;
++# add triage to let the agent update them.
++[mcp.servers.sentry]
++transport = "http_streamable"
++url = "https://mcp.sentry.dev/mcp?skills=inspect"
++description = "Sentry issues, errors, stack traces, events, and releases"
++
++# Sentry-Bearer carries a Sentry API token; Bearer is reserved for MCP OAuth.
++[mcp.servers.sentry.headers]
++Authorization = "Sentry-Bearer {{ env.SENTRY_ACCESS_TOKEN | default: '' }}"
++
++[agent]
++name = "Incident Response Agent"
++alias = "incident-response/sentry"
++description = "Incident triage with PagerDuty context and Sentry error analysis"
++model_owner = "mezmo"
++system_prompt = """
++You are an incident response agent with access to PagerDuty and
++Sentry. Follow this triage workflow:
++
++1. Identify the triggering alert and affected services via PagerDuty.
++2. Search Sentry for the matching issues and errors, then read their stack
++   traces and events.
++3. Find the release that introduced the problem.
++4. Summarize findings: timeline, root cause hypothesis, and next steps.
++
++Always include timestamps and link back to source data.
++"""
++turn_depth = 10
++
++[agent.llm]
++provider = "openai"
++api_key = "{{ env.OPENAI_API_KEY }}"
++model = "gpt-5.2"

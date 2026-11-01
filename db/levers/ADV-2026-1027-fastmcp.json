@@ -1,0 +1,44 @@
+{
+  "id": "ADV-2026-1027-fastmcp",
+  "name": "An MCP server for this API, with FastMCP or the official SDK",
+  "pattern": "PAT-http-api-no-mcp",
+  "kind": "library",
+  "providers": [],
+  "effects": [
+    "new capability"
+  ],
+  "gain": "Other people's agents could call this product through MCP. The gain is a new capability, with no number to state.",
+  "proof": "adoption only",
+  "source": "https://pypi.org/project/fastmcp/",
+  "how": "Only where an agent would plausibly call this API: expose a few read-only endpoints first, with FastMCP in Python or the official MCP SDK in TypeScript. Never expose admin or write endpoints in the first version.",
+  "replaces": "An HTTP API that agents can only reach through hand-written tools.",
+  "trade_offs": [
+    "A new surface to secure, version and support.",
+    "It gives nothing until someone actually points an agent at it.",
+    "Worth nothing for an API no agent would call, which is why the pattern is information only."
+  ],
+  "needs": "Python for FastMCP (4.1.4, 27 Oct 2026). For TypeScript, @modelcontextprotocol/sdk 1.32.2 on npm; the repo says v2 is the stable line and v1.x still gets fixes.",
+  "price": "Free.",
+  "checked": "2026-11-01",
+  "checked_by": "agent",
+  "usage_signal": "Not visible in the bill",
+  "gain_model": {
+    "formula": "no money figure: the call stops working or a capability is missing",
+    "inputs": []
+  },
+  "test_recipe": {
+    "what_to_compare": "tests pass on the change",
+    "samples": 20,
+    "can_run_with": []
+  },
+  "verify_rule": "The old id or parameter is gone and calls succeed over 7 days",
+  "change_recipe": {
+    "kind": "pull request, off by default",
+    "how": "Only where an agent would plausibly call this API: expose a few read-only endpoints first, with FastMCP in Python or the official MCP SDK in TypeScript. Never expose admin or write endpoints in the first version.",
+    "left_off": "Nothing else changes; the new path sits behind a setting until a person turns it on"
+  },
+  "audience": "product",
+  "gain_independent": null,
+  "gain_vendor": null,
+  "tier": "long_tail"
+}

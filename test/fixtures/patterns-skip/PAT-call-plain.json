@@ -1,0 +1,11 @@
+{
+  "id": "PAT-call-plain",
+  "name": "A call, everywhere",
+  "find": [{ "regex": "client\\.messages\\.create" }],
+  "skip_if_near": [],
+  "files": ["**/*.js"],
+  "why": "The same find as PAT-call-with-skip-in-file, without the field.",
+  "status": "live",
+  "effect": ["cheaper"],
+  "live_from": "v0.1"
+}

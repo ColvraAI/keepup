@@ -1,0 +1,49 @@
+/* The product: home and a repo's page. */
+.home, .repo { display: grid; gap: var(--s-5); max-width: 980px; }
+.add-repo { display: grid; gap: var(--s-2); }
+.add-repo .live__form input { font-size: var(--t-m, 1rem); }
+.repos__list { list-style: none; margin: 0; padding: 0; display: grid; }
+.repos__row { display: grid; grid-template-columns: minmax(0, 2fr) 70px 110px 80px 110px 120px; gap: var(--s-3); align-items: baseline; padding: var(--s-2) 0; border-top: 1px solid var(--rule); }
+.repos__name { font-weight: 600; overflow-wrap: anywhere; }
+.repos__counts { white-space: nowrap; }
+.repo__head { display: grid; gap: var(--s-1); }
+.repo__one { max-width: 70ch; }
+.repo__jobs { margin: var(--s-2) 0 0; padding-left: var(--s-4); columns: 2; }
+.findings { list-style: none; margin: var(--s-2) 0 0; padding: 0; display: grid; gap: var(--s-5); }
+.finding { display: grid; gap: var(--s-2); padding-top: var(--s-3); border-top: 1px solid var(--rule); }
+.finding__head { display: flex; gap: var(--s-2); align-items: baseline; }
+.finding__rank { color: var(--ink-3); }
+.finding__tags { display: flex; flex-wrap: wrap; gap: var(--s-1); margin: 0; }
+.finding__why { max-width: 72ch; margin: 0; }
+.finding__places, .finding__sources { display: flex; flex-wrap: wrap; gap: var(--s-1) var(--s-3); margin: 0; overflow-wrap: anywhere; }
+.change { display: grid; gap: var(--s-2); justify-items: start; }
+.change > * { max-width: 100%; }
+.change__result { display: grid; gap: var(--s-2); width: 100%; min-width: 0; }
+.change__result p { margin: 0; }
+.change__list { margin: 0; padding-left: var(--s-4); }
+.change__syntax { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s-1); }
+.change__open { display: grid; gap: var(--s-1); justify-items: start; }
+.repo__held-list { list-style: none; margin: var(--s-2) 0 0; padding: 0; display: grid; gap: var(--s-1); max-height: 420px; overflow-y: auto; }
+@media (max-width: 720px) {
+  .repos__row { grid-template-columns: 1fr 1fr; }
+  .repos__name { grid-column: 1 / -1; }
+  .repo__jobs { columns: 1; }
+}
+
+.repo__lead { margin-block: var(--s-3); padding: var(--s-3); background: var(--paper-2); border-radius: 8px; display: grid; gap: var(--s-1); }
+.repo__volume { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-1); }
+.repo__volume input { width: 9em; padding: 2px 6px; font: inherit; color: var(--ink); background: var(--paper); border: 1px solid var(--rule-strong); border-radius: 4px; }
+.finding__value { margin-block: var(--s-1); display: grid; gap: 2px; }
+.finding__speed { margin-block: var(--s-1) 0; }
+.repo__also { margin-block: var(--s-3); }
+.repo__also summary { cursor: pointer; color: var(--ink-2); }
+.repo__team-list { list-style: none; margin: var(--s-2) 0 0; padding: 0; display: grid; gap: var(--s-2); }
+.repo__install { display: block; margin-top: 2px; padding: 4px 6px; background: var(--paper-2); border-radius: 4px; overflow-wrap: anywhere; }
+.measure { margin-block: var(--s-2); display: grid; gap: var(--s-1); }
+.measure__rows { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s-1); }
+
+.roi__options { list-style: none; margin: 0 0 0.5rem; padding: 0; display: grid; gap: 0.5rem; }
+.roi__options p { margin: 0.125rem 0 0; }
+.roi__inputs { display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center; margin-bottom: 0.5rem; }
+.roi__inputs select, .roi__inputs input { max-width: 100%; }
+.roi__inputs input { width: 7rem; }

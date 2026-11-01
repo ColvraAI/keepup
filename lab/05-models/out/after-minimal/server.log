@@ -1,0 +1,37 @@
+2026-11-01T05:17:03.096062Z  INFO aura_web_server::server: Starting Aura Web Server v0.2.12
+2026-11-01T05:17:03.098870Z  INFO aura_web_server::server: Loading configuration from: /lab-work/05-models/run/configs/after-minimal.toml
+2026-11-01T05:17:03.109908Z  INFO aura_web_server::server: Loaded agent 'Claude Assistant' (anthropic/claude-sonnet-5-5)
+2026-11-01T05:17:03.112007Z  INFO aura_web_server::server: Session store backend: memory
+2026-11-01T05:17:03.113071Z  WARN aura::hitl::signing: HITL webhook HMAC verification DISABLED: AURA_HITL_WEBHOOK_SECRET is not set; webhook traffic is unsigned and unverified
+2026-11-01T05:17:03.113617Z  INFO aura_web_server::server: Starting server on 127.0.0.1:18080 (shutdown_timeout=30s)
+2026-11-01T05:17:04.116498Z  INFO chat_completions{otel.kind="server"}: aura::builder:   Max turn depth: 5 (tool calls per turn)
+2026-11-01T05:17:04.117370Z  INFO chat_completions{otel.kind="server"}: aura::builder: Initializing Anthropic provider
+2026-11-01T05:17:04.120225Z  INFO chat_completions{otel.kind="server"}: aura::builder: Anthropic client initialized successfully
+2026-11-01T05:17:04.127092Z TRACE agent.stream: rig::completions: Anthropic completion request: {
+  "max_tokens": 64000,
+  "messages": [
+    {
+      "content": [
+        {
+          "text": "Name the capital of France in one word.",
+          "type": "text"
+        }
+      ],
+      "role": "user"
+    }
+  ],
+  "model": "claude-sonnet-5-5",
+  "stream": true,
+  "system": [
+    {
+      "text": "You are a helpful assistant.",
+      "type": "text"
+    }
+  ]
+}
+2026-11-01T05:17:05.428086Z  INFO agent.stream: aura::streaming_request_hook: Token usage captured request_id=req_373ec349793a482ca2d4d297a3b9b9dd prompt_tokens=30 completion_tokens=5 total_tokens=35
+2026-11-01T05:17:05.429660Z  INFO agent.stream: aura_web_server::streaming::handlers: Multi-turn streaming complete: 5 chars
+2026-11-01T05:17:05.429936Z  INFO agent.stream: aura_web_server::streaming::handlers: Stream ended normally
+2026-11-01T05:17:05.453540Z  INFO aura_web_server::server: Received SIGTERM, initiating graceful shutdown
+2026-11-01T05:17:05.453859Z  INFO aura_web_server::server: Allowing 30s for in-flight requests to complete
+2026-11-01T05:17:05.454074Z  INFO aura_web_server::server: All in-flight requests completed, shutting down early

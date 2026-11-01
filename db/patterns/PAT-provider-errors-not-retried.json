@@ -1,0 +1,47 @@
+{
+  "version": "1",
+  "id": "PAT-provider-errors-not-retried",
+  "name": "Provider errors aren't retried",
+  "find": [
+    {
+      "regex": "\\b(?:max_retries\\s*=\\s*0|maxRetries\\s*:\\s*0)\\b"
+    },
+    {
+      "regex": "fetch\\(\\s*[\\\"'`]https://api\\.(?:openai|anthropic)\\.com/v1/(?:chat/completions|messages|responses)"
+    }
+  ],
+  "skip_if_near": [
+    "[rR][eE][tT][rR][yY]|[rR][eE][tT][rR][iI][eE][sS]|[bB][aA][cC][kK][oO][fF][fF]"
+  ],
+  "skip_if_in_file": [],
+  "files": [
+    "**/*.py",
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.js",
+    "**/*.jsx",
+    "**/*.mjs",
+    "**/*.cjs"
+  ],
+  "skip_files": [
+    "**/__tests__/**",
+    "**/test/**",
+    "**/tests/**",
+    "**/testdata/**",
+    "**/fixtures/**",
+    "**/examples/**",
+    "**/samples/**",
+    "**/docs/**",
+    "**/node_modules/**",
+    "**/vendor/**",
+    "**/dist/**",
+    "**/*.test.*",
+    "**/*.spec.*"
+  ],
+  "why": "A rate limit or overload becomes a user-facing failure. It doesn't fit code with its own retry around the call.",
+  "status": "info",
+  "effect": [
+    "keeps working"
+  ],
+  "live_from": "v0.3"
+}

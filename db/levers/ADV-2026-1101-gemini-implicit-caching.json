@@ -1,0 +1,86 @@
+{
+  "id": "ADV-2026-1101-gemini-implicit-caching",
+  "name": "Keep Gemini prompts cacheable: stable text first",
+  "pattern": "PAT-prompt-caching-off",
+  "kind": "api-feature",
+  "providers": [
+    "google"
+  ],
+  "effects": [
+    "cheaper",
+    "faster"
+  ],
+  "gain": "Google's words: implicit caching is on by default on Gemini 2.5 and newer, and savings are passed on when a request hits the cache (vendor claim). On gemini-3.6-flash, cached input is listed at $0.075 against $0.75 per 1M tokens through 31 Dec 2026.",
+  "proof": "vendor claim",
+  "source": "https://ai.google.dev/gemini-api/docs/caching",
+  "how": "Nothing to switch on. Put large, common content at the start of the prompt, send similar prefixes close together, and read total_cached_tokens in usage.",
+  "replaces": "A changing value at the start of a long prompt.",
+  "trade_offs": [
+    "The minimum is 4,096 tokens on Gemini 3.6 Flash and 3.8 Flash, and 2,048 on 2.5.",
+    "Explicit caching is not supported in the Interactions API or for Gemini 4 Argon and onward.",
+    "gemini-3.6-flash prices double on 1 Jan 2027."
+  ],
+  "needs": "Nothing new. PAT-prompt-caching-off does not detect this; show it only when the judge sees a changing value at the start of a long prompt.",
+  "checked": "2026-11-01",
+  "checked_by": "agent",
+  "usage_signal": "Usage and Cost API: cached input tokens at or near zero on a model with large input",
+  "gain_model": {
+    "formula": "input_tokens * input_price * hit_rate * (1 - read_multiplier) - writes * input_price * (write_multiplier - 1)",
+    "inputs": [
+      {
+        "name": "input_tokens",
+        "value": null,
+        "source": "the product's usage data or the bill",
+        "assumed": false
+      },
+      {
+        "name": "input_price",
+        "value": null,
+        "source": "the product's usage data or the bill",
+        "assumed": false
+      },
+      {
+        "name": "hit_rate",
+        "value": null,
+        "source": "the product's usage data or the bill",
+        "assumed": false
+      },
+      {
+        "name": "read_multiplier",
+        "value": null,
+        "source": "the product's usage data or the bill",
+        "assumed": false
+      },
+      {
+        "name": "write_multiplier",
+        "value": 0,
+        "source": "Implicit caching is on by default, with no write charge named on https://ai.google.dev/gemini-api/docs/caching",
+        "assumed": false
+      },
+      {
+        "name": "writes",
+        "value": null,
+        "source": "the product's usage data or the bill",
+        "assumed": false
+      }
+    ]
+  },
+  "test_recipe": {
+    "what_to_compare": "input cost and latency, identical answers",
+    "samples": 200,
+    "can_run_with": [
+      "ANTHROPIC_API_KEY",
+      "OPENAI_API_KEY"
+    ]
+  },
+  "verify_rule": "Cached-read share of input tokens on that model over 14 days",
+  "change_recipe": {
+    "kind": "pull request with tests",
+    "how": "Nothing to switch on. Put large, common content at the start of the prompt, send similar prefixes close together, and read total_cached_tokens in usage.",
+    "left_off": "Nothing else changes; the new path sits behind a setting until a person turns it on"
+  },
+  "audience": "product",
+  "gain_independent": null,
+  "gain_vendor": "Google's words: implicit caching is on by default on Gemini 2.5 and newer, and savings are passed on when a request hits the cache (vendor claim). On gemini-3.6-flash, cached input is listed at $0.075 against $0.75 per 1M tokens through 31 Dec 2026.",
+  "tier": "huge"
+}

@@ -1,0 +1,31 @@
+{
+  "passages": 6,
+  "queries": 1,
+  "dim": 768,
+  "segmentMs": [
+    {
+      "passages": 6,
+      "ms": 77888.485328
+    }
+  ],
+  "queryMs": 980.905917,
+  "loadMs": [
+    7929.425295
+  ],
+  "peakRssKb": 1775404,
+  "sessions": 1,
+  "model": "onnx-community/embeddinggemma-2-ONNX",
+  "machine": {
+    "node": "v18.20.8",
+    "arch": "arm64",
+    "cpus": 8,
+    "totalMemMb": 3919,
+    "transformers": "4.3.2"
+  },
+  "prefixes": {
+    "passage": "title: none | text: ",
+    "query": "task: search result | query: "
+  },
+  "batch": 5,
+  "chunkChars": 2000
+}

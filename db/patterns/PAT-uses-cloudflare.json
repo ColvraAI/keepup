@@ -1,0 +1,42 @@
+{
+  "version": "1",
+  "id": "PAT-uses-cloudflare",
+  "name": "The product uses Cloudflare",
+  "find": [
+    {
+      "regex": "^\\s*import .* from [\\\"']cloudflare[:\\\"'/]"
+    }
+  ],
+  "skip_if_near": [],
+  "skip_if_in_file": [],
+  "files": [
+    "**/*.py",
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.js",
+    "**/*.jsx",
+    "**/*.mjs",
+    "**/*.cjs"
+  ],
+  "skip_files": [
+    "**/__tests__/**",
+    "**/test/**",
+    "**/tests/**",
+    "**/testdata/**",
+    "**/fixtures/**",
+    "**/examples/**",
+    "**/samples/**",
+    "**/docs/**",
+    "**/node_modules/**",
+    "**/vendor/**",
+    "**/dist/**",
+    "**/*.test.*",
+    "**/*.spec.*"
+  ],
+  "why": "Cloudflare is in the code, so its own MCP server lets the team's coding agent read that service. It's a team tool and never a pull request.",
+  "status": "info",
+  "effect": [
+    "new capability"
+  ],
+  "live_from": "v0.3"
+}

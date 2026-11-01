@@ -1,0 +1,71 @@
+{
+  "schema": 1,
+  "id": "05",
+  "spec": "docs/prs/05-aura-retired-claude-models.md",
+  "upstream": "mezmo/aura",
+  "fork": "aura",
+  "baseCommit": "5a5efba014081aa59ebc31d6d745b680d1dec1ba",
+  "baseBranch": "replay/5a5efba",
+  "ciWorkflow": "lab/ci/aura.yml",
+  "branch": "keepup/2026-09-01-retired-claude-models",
+  "lab": "lab/05-models",
+  "source": "Claude Platform release notes",
+  "sourceUrl": "https://platform.claude.com/docs/en/release-notes/overview",
+  "where": [
+    { "path": "examples/minimal/anthropic.toml", "line": 14 },
+    { "path": "examples/complete/reasoning-models.toml", "line": 61 }
+  ],
+  "founderLine": "Anyone who runs your Claude examples as written gets an error instead of an answer, or soon will, because they name models Anthropic has retired or is about to retire.",
+  "effect": ["keeps working"],
+  "effort": "Hours",
+  "whyItFits": "examples/minimal/anthropic.toml:14 uses claude-sonnet-4-20250514. Anthropic has retired it, so requests return an error. This is the minimal Anthropic example. examples/complete/reasoning-models.toml is AURA's example for Claude's thinking settings, so its model and those settings have to stay valid.",
+  "risks": "Only example TOML files change: no Rust, no defaults, and nothing a running deployment reads unless it copied these files. The new models think by default, so these examples spend output tokens on thinking that AURA doesn't show. rig's Anthropic parser has no case for a redacted_thinking block, which Anthropic says the API might return when thinking is on, so such a reply would reach the user as an error; an example can't guard against that, and the fix belongs in the rig fork. On a worker that calls tools, rig's stream parser also discards a thinking block with empty text, signature included (rig/rig-core/src/providers/anthropic/streaming.rs:393 at the rev this base pins, and the same check at 097d08d), and these models return their blocks empty by default. So rig drops the empty thinking block from the worker's next request, against Anthropic's rule to pass thinking blocks back unchanged in tool-use loops, including empty ones, and the worker's follow-up turns lose its reasoning until the rig fork round-trips empty blocks with their signatures. Anthropic says adaptive thinking doesn't need a turn to start with a thinking block, and that the API might disable thinking when the history is incompatible, so this may never show up as an error. An example can't guard against this either. Older Claude ids stay as they are where they use another provider or are commented out: examples/minimal/bedrock.toml:21, examples/minimal/openrouter.toml:22, examples/reference.toml:226, 235 and 249, examples/quickstart-orchestration-math/config.toml:46, .env.example:21 and deployment/helm/aura/values.yaml:119. That's every id outside crates/ at the base commit. Under crates/ they're in tests and one doc comment, plus the CLI's curated list at crates/aura-cli/src/init/provider.rs:85, and none of those change. examples/minimal/openrouter.toml:22 is live, not commented out, and names anthropic/claude-sonnet-4, which OpenRouter no longer lists (its model list, read on 1 Nov 2026), so that example is left for a follow-up.",
+  "rollback": "Revert this pull request's commits; they touch only the two example TOML files.",
+  "proof": {
+    "vendor": {
+      "claim": "Claude Sonnet 4 retired on 15 Jun 2026 and requests to it return an error; Claude Sonnet 5.5 launched on 28 Sep 2026; Claude Sonnet 4.5's retirement on 30 Nov 2026 was announced on 30 Sep 2026",
+      "url": "https://platform.claude.com/docs/en/release-notes/overview"
+    },
+    "independent": null
+  },
+  "sources": [
+    "https://platform.claude.com/docs/en/release-notes/overview",
+    "https://platform.claude.com/docs/en/about-claude/model-deprecations",
+    "https://platform.claude.com/docs/en/models/sonnet-5-5/migration-guide",
+    "https://platform.claude.com/docs/en/models/sonnet-5-5/overview",
+    "https://platform.claude.com/docs/en/build-with-claude/thinking",
+    "https://github.com/mezmo/rig/blob/5b0238a1d74e1d7c68034384b69e17f62890d517/rig/rig-core/src/extractor.rs#L234",
+    "https://github.com/mezmo/rig/blob/5b0238a1d74e1d7c68034384b69e17f62890d517/rig/rig-core/src/providers/anthropic/streaming.rs#L393-L394",
+    "https://github.com/mezmo/aura/releases/tag/v0.2.12",
+    "https://openrouter.ai/api/v1/models"
+  ],
+  "stages": [
+    {
+      "date": "2026-09-01",
+      "patches": ["patches/0001-fix-examples-move-the-anthropic-example-off-a-retire.patch"],
+      "title": "Example on a retired Claude model fails today · move to claude-sonnet-5",
+      "titleUnmeasured": null,
+      "whatShipped": "Anthropic retired claude-sonnet-4-20250514 on the Claude API on 15 Jun 2026, so every request to it returns an error. Claude Sonnet 5 (claude-sonnet-5, launched 30 Jun 2026) is the current Sonnet on 1 Sep.",
+      "whatThisChanges": "examples/minimal/anthropic.toml:14 moves to claude-sonnet-5. It's one line, with no code change. The model's own default applies: adaptive thinking is on.",
+      "comment": null
+    },
+    {
+      "date": "2026-09-28",
+      "patches": ["patches/0002-fix-examples-move-the-anthropic-example-to-claude-so.patch"],
+      "title": "Example on a retired Claude model fails today · move to claude-sonnet-5-5",
+      "titleUnmeasured": null,
+      "whatShipped": "Anthropic launched Claude Sonnet 5.5 (claude-sonnet-5-5) on 28 Sep 2026. It returns a 400 error for forced tool use, tool_choice any or tool.",
+      "whatThisChanges": "examples/minimal/anthropic.toml:14 moves to claude-sonnet-5-5, one more line. Forced tool use was checked: AURA's crates never set tool_choice. The rig fork was checked at the rev this base pins (5b0238a1) and the rev AURA moved to on 8 Sep (097d08d): at both, the only forced tool use is rig's Extractor (rig/rig-core/src/extractor.rs:234), which AURA never builds, and the Anthropic streaming path sends tool_choice auto.",
+      "comment": "Updated 28 Sep: Claude Sonnet 5.5 shipped, so the minimal example moves to it. AURA doesn't force tool use, so the model's new 400 error doesn't apply."
+    },
+    {
+      "date": "2026-09-30",
+      "patches": ["patches/0003-fix-examples-move-the-reasoning-example-to-claude-so.patch"],
+      "title": "Example on a retired Claude model fails today, another retires 30 Nov · move to claude-sonnet-5-5",
+      "titleUnmeasured": null,
+      "whatShipped": "Anthropic announced on 30 Sep 2026 that Claude Sonnet 4.5 (claude-sonnet-4-5-20250929) retires on the Claude API on 30 Nov 2026, and recommends Claude Sonnet 5.5.",
+      "whatThisChanges": "The deep-analysis worker in examples/complete/reasoning-models.toml moves to claude-sonnet-5-5. Changing the model id alone would break it: Sonnet 5.5 returns a 400 error for a thinking budget, so budget_tokens is gone, and temperature is removed as the migration guide says. It now sends thinking type adaptive and output_config effort high, and the file's comments say so. Thinking text stays hidden, Sonnet 5.5's default, and that has a cost on a worker that calls tools: rig discards the empty thinking block, so the worker's follow-up turns lose its reasoning until the rig fork round-trips empty blocks with their signatures. Don't set display to summarized to get around it yet: against the lab's fake provider, AURA's v0.2.12 release binary sent the summary back doubled on the worker's next turn, and Anthropic documents a 400 error for changed thinking blocks. The file's coordinator and fast worker stay on OpenAI, so it still needs both keys.",
+      "comment": "Updated 30 Sep: Claude Sonnet 4.5 retires on 30 Nov, so the reasoning example moves to Sonnet 5.5, with adaptive thinking at high effort in place of its budget and temperature. On a worker that calls tools, rig still drops the empty thinking block, so the worker's follow-up turns lose its reasoning; Risks in the description says more."
+    }
+  ]
+}

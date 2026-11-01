@@ -1,0 +1,338 @@
+.connect__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: var(--s-7);
+  align-items: start;
+}
+
+.connect__left {
+  display: grid;
+  gap: var(--s-5);
+}
+
+.connect__action {
+  display: grid;
+  gap: var(--s-3);
+  justify-items: start;
+}
+
+.connect__repo {
+  font-size: var(--t-m);
+}
+
+.permissions {
+  display: grid;
+  gap: var(--s-3);
+}
+
+.permissions__list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  border-top: 1px solid var(--ink);
+}
+
+.permissions__list li {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--s-2);
+  align-items: center;
+  padding: var(--s-2) var(--s-3) var(--s-2) 0;
+  border-bottom: 1px solid var(--rule);
+  font-size: var(--t-s);
+}
+
+.permissions__list li:nth-child(odd) {
+  border-right: 1px solid var(--rule);
+}
+
+/* Weight, not ink: a founder's first look shouldn't read "write, write, write". */
+.permissions__list li[data-level='write'] .chip {
+  font-weight: 600;
+  color: var(--ink);
+  border-color: var(--ink-3);
+}
+
+.permissions__list li:nth-child(even) {
+  padding-left: var(--s-3);
+  padding-right: 0;
+}
+
+.connect__right {
+  display: grid;
+  gap: var(--s-4);
+}
+
+.connect__preview {
+  display: grid;
+  gap: var(--s-4);
+}
+
+.connect__names {
+  columns: 2;
+  column-gap: var(--s-5);
+  counter-reset: step;
+  color: var(--ink-2);
+}
+
+.connect__names li {
+  break-inside: avoid;
+  padding: var(--s-1) 0;
+  font-size: var(--t-s);
+  line-height: 1.25;
+}
+
+.steps li {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr) 5.2em;
+  gap: var(--s-3);
+  padding: var(--s-2) 0;
+  border-bottom: 1px solid var(--rule);
+  font-size: var(--t-s);
+  align-items: baseline;
+  animation: step-in 120ms ease-out both;
+}
+
+.steps__name {
+  font-weight: 600;
+  line-height: 1.22;
+}
+
+.steps__detail {
+  color: var(--ink-2);
+  font-size: var(--t-xs);
+  line-height: 1.3;
+  overflow-wrap: break-word;
+}
+
+.is-present .connect__grid {
+  grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+  gap: var(--s-6);
+}
+
+.is-present .connect .screen__head {
+  margin-bottom: var(--s-4);
+}
+
+.is-present .steps li {
+  padding: 3px 0;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr) 7.6em;
+  gap: var(--s-2);
+}
+
+.is-present .steps__ms {
+  white-space: nowrap;
+}
+
+.is-present .connect .safety {
+  font-size: var(--t-b);
+}
+
+.is-present .evidence li:nth-child(n + 4) {
+  display: none;
+}
+
+.steps__ms {
+  text-align: right;
+  color: var(--ink-3);
+  font-size: var(--t-xs);
+}
+
+@keyframes step-in {
+  from {
+    opacity: 0;
+    transform: translateY(3px);
+  }
+}
+
+.evidence {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--s-3);
+  animation: step-in 160ms ease-out both;
+}
+
+.evidence li {
+  padding: 2px 0;
+  line-height: 1.25;
+  font-size: var(--t-xs);
+  overflow-wrap: break-word;
+}
+
+.evidence .eyebrow {
+  margin-bottom: var(--s-2);
+  color: var(--ink);
+}
+
+/* The first paper frame after the noise: almost nothing on it. */
+.connect--first {
+  position: relative;
+  display: grid;
+}
+
+.connect-first__switch {
+  position: absolute;
+  top: var(--s-5);
+  right: var(--gutter);
+}
+
+.connect-first {
+  display: grid;
+  align-content: center;
+  min-height: calc(var(--stage-h, 100dvh) - 140px);
+}
+
+.connect-first__center {
+  display: grid;
+  gap: var(--s-4);
+  justify-items: start;
+  max-width: 1320px;
+  animation: fade-in 420ms ease-out both;
+}
+
+.connect-first__name {
+  display: flex;
+  align-items: center;
+  gap: 0.34em;
+  font-size: var(--t-xxl);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.connect-first__name i {
+  width: 0.34em;
+  height: 0.34em;
+  border-radius: 50%;
+  background: var(--blue);
+}
+
+.connect-first__slug {
+  font-size: var(--t-b);
+  color: var(--ink-3);
+}
+
+.connect-first__btn {
+  margin: var(--s-4) 0;
+  font-size: var(--t-m);
+}
+
+.connect-first__safety {
+  font-size: var(--t-m);
+  line-height: 1.3;
+  color: var(--ink-2);
+  max-width: 44em;
+  text-wrap: pretty;
+}
+
+.connect-first__asks {
+  position: absolute;
+  left: var(--gutter);
+  bottom: 48px;
+  font-size: var(--t-xs);
+  color: var(--ink-3);
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+}
+
+.connect-first__panel {
+  position: absolute;
+  left: var(--gutter);
+  right: var(--gutter);
+  bottom: 100px;
+  background: var(--paper);
+  padding-top: var(--s-3);
+  border-top: 1px solid var(--rule-strong);
+}
+
+.connect__note {
+  line-height: 1.3;
+}
+
+@media (max-width: 860px) {
+  .connect__grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--s-5);
+  }
+
+  .steps li {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .steps__detail {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+
+  .permissions__list {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .permissions__list li:nth-child(odd) {
+    border-right: 0;
+  }
+
+  .permissions__list li:nth-child(even) {
+    padding-left: 0;
+  }
+}
+
+/* Present: the steps are the one moving thing, the counters climb beside them. */
+.connect--reading .connect__note {
+  margin-bottom: var(--s-4);
+  font-size: var(--t-xs);
+  color: var(--ink-2);
+}
+
+.reading {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 420px;
+  gap: var(--s-7);
+  align-items: start;
+}
+
+.reading__steps li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--s-4);
+  padding: 7px 0;
+  border-bottom: 1px solid var(--rule);
+  font-size: var(--t-b);
+  line-height: 1.2;
+  align-items: baseline;
+  animation: step-in 120ms ease-out both;
+}
+
+.reading__name {
+  font-weight: 600;
+}
+
+.reading__detail {
+  color: var(--ink-2);
+}
+
+.reading__counters {
+  display: grid;
+  gap: var(--s-6);
+}
+
+.reading__counter {
+  display: grid;
+  gap: var(--s-1);
+  transition: opacity 160ms ease;
+}
+
+.reading__counter[data-on='false'] {
+  opacity: 0.25;
+}
+
+.reading__value {
+  font-size: var(--t-xxl);
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  line-height: 1;
+}
+
+.reading__label {
+  font-size: var(--t-m);
+  color: var(--ink-2);
+}

@@ -1,0 +1,47 @@
+{
+  "version": "1",
+  "id": "PAT-hand-rolled-tool-loop",
+  "name": "A hand-written tool loop",
+  "find": [
+    {
+      "regex": "\\bstop_reason\\s*={2,3}\\s*[\\\"']tool_use[\\\"']"
+    },
+    {
+      "regex": "\\bfinish_reason\\s*={2,3}\\s*[\\\"']tool_calls[\\\"']"
+    }
+  ],
+  "skip_if_near": [
+    "[lL][aA][nN][gG][gG][rR][aA][pP][hH]|[pP][yY][dD][aA][nN][tT][iI][cC]_[aA][iI]"
+  ],
+  "skip_if_in_file": [],
+  "files": [
+    "**/*.py",
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.js",
+    "**/*.jsx",
+    "**/*.mjs",
+    "**/*.cjs"
+  ],
+  "skip_files": [
+    "**/__tests__/**",
+    "**/test/**",
+    "**/tests/**",
+    "**/testdata/**",
+    "**/fixtures/**",
+    "**/examples/**",
+    "**/samples/**",
+    "**/docs/**",
+    "**/node_modules/**",
+    "**/vendor/**",
+    "**/dist/**",
+    "**/*.test.*",
+    "**/*.spec.*"
+  ],
+  "why": "Code checks the stop reason and dispatches tools itself. An agent SDK owns that loop, but no gain is measured, so this is brief-only.",
+  "status": "info",
+  "effect": [
+    "keeps working"
+  ],
+  "live_from": "v0.3"
+}

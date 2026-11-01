@@ -1,0 +1,41 @@
+{
+  "id": "ADV-2026-1101-langfuse",
+  "name": "Langfuse tracing",
+  "pattern": "PAT-no-tracing",
+  "kind": "tracing",
+  "providers": [],
+  "effects": [
+    "better answers"
+  ],
+  "gain": "Shows cost and latency per call. No gain number of its own.",
+  "proof": "adoption only",
+  "source": "https://langfuse.com/docs/observability/overview",
+  "how": "Wrap the client with Langfuse's tracing",
+  "replaces": "Nothing recording calls.",
+  "trade_offs": [
+    "Prompts leave the app unless self-hosted."
+  ],
+  "needs": "A Langfuse project.",
+  "checked": "2026-11-01",
+  "checked_by": "agent",
+  "usage_signal": "Not visible in the bill",
+  "gain_model": {
+    "formula": "no direct money; it supplies per-call cost and latency",
+    "inputs": []
+  },
+  "test_recipe": {
+    "what_to_compare": "traces appear for each AI call",
+    "samples": 20,
+    "can_run_with": []
+  },
+  "verify_rule": "Traces arrive for a sample of calls over 7 days",
+  "change_recipe": {
+    "kind": "pull request, off by default",
+    "how": "Wrap the client with Langfuse's tracing",
+    "left_off": "Nothing else changes; the new path sits behind a setting until a person turns it on"
+  },
+  "audience": "product",
+  "gain_independent": null,
+  "gain_vendor": null,
+  "tier": "long_tail"
+}

@@ -1,0 +1,68 @@
+{
+  "id": "ADV-2026-1101-letta-memory",
+  "name": "Letta for per-user memory",
+  "pattern": "PAT-hand-rolled-memory",
+  "kind": "memory",
+  "providers": [],
+  "effects": [
+    "cheaper"
+  ],
+  "gain": "Projected only: cheaper and faster, not more accurate.",
+  "proof": "projected",
+  "source": "https://www.letta.com/blog/benchmarking-ai-agent-memory",
+  "how": "Replace re-sent history with a Letta agent's memory",
+  "replaces": "Re-sending the whole conversation.",
+  "trade_offs": [
+    "Letta's own test found a plain filesystem agent scored 74.0%, so accuracy isn't the reason."
+  ],
+  "needs": "Per-user ids.",
+  "gain_independent": "Letta's benchmark: a filesystem agent scored 74.0% on LoCoMo.",
+  "checked": "2026-11-01",
+  "checked_by": "agent",
+  "usage_signal": "Input tokens per turn grow with conversation length",
+  "gain_model": {
+    "formula": "turns * history_tokens_removed * input_price - memory_service_cost",
+    "inputs": [
+      {
+        "name": "turns",
+        "value": null,
+        "source": "the product's usage data or the bill",
+        "assumed": false
+      },
+      {
+        "name": "history_tokens_removed",
+        "value": null,
+        "source": "the product's usage data or the bill",
+        "assumed": false
+      },
+      {
+        "name": "input_price",
+        "value": null,
+        "source": "the product's usage data or the bill",
+        "assumed": false
+      },
+      {
+        "name": "memory_service_cost",
+        "value": null,
+        "source": "the product's usage data or the bill",
+        "assumed": false
+      }
+    ]
+  },
+  "test_recipe": {
+    "what_to_compare": "token cost and latency on real multi-session users; accuracy is not assumed to rise",
+    "samples": 100,
+    "can_run_with": [
+      "MEM0_API_KEY"
+    ]
+  },
+  "verify_rule": "Input tokens per turn over 30 days",
+  "change_recipe": {
+    "kind": "pull request, off by default",
+    "how": "Replace re-sent history with a Letta agent's memory",
+    "left_off": "Nothing else changes; the new path sits behind a setting until a person turns it on"
+  },
+  "audience": "product",
+  "gain_vendor": null,
+  "tier": "long_tail"
+}

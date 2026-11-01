@@ -1,0 +1,55 @@
+{
+  "summary": "693 of 698 repo tests pass in the sandbox on Node 18, 5 fail: 3 in ffmpeg/index.test.js because the sandbox image has no ffmpeg binary, 1 in modelPricing/index.test.js because it waits a fixed 25 ms for file writes, which a busy machine can miss, 1 unexplained (ModelPricing cache mechanics serves pricing from the disk cache without refetching when fresh), and every linter and check passed.",
+  "commit": "959a715299024e6f5822fc3d82373a3e90008f5b",
+  "ran_on": "2026-11-01",
+  "command": "yarn setup:envs >/dev/null; yarn prisma:setup >/dev/null 2>&1; yarn -s jest --json --outputFile=/lab-work/02-whisper/repo-tests/jest.json >/dev/null 2>&1; echo \"jest=$?\" >/lab-work/02-whisper/repo-tests/checks.txt; (cd server && yarn -s lint:check >/dev/null 2>&1; echo \"server lint=$?\" >>/lab-work/02-whisper/repo-tests/checks.txt); (cd collector && yarn -s lint:check >/dev/null 2>&1; echo \"collector lint=$?\" >>/lab-work/02-whisper/repo-tests/checks.txt); (cd frontend && yarn -s lint:check >/dev/null 2>&1; echo \"frontend lint=$?\" >>/lab-work/02-whisper/repo-tests/checks.txt); (cd frontend/src/locales && node verifyTranslations.mjs >/dev/null 2>&1; echo \"check-translations=$?\" >>/lab-work/02-whisper/repo-tests/checks.txt); (cd extras/scripts && node verifyPackageVersions.mjs >/dev/null 2>&1; echo \"check-package-versions=$?\" >>/lab-work/02-whisper/repo-tests/checks.txt)",
+  "tests": {
+    "total": 698,
+    "passed": 693,
+    "failed": 5
+  },
+  "failed_tests": [
+    {
+      "file": "server/__tests__/utils/helpers/modelPricing/index.test.js",
+      "test": "ModelPricing cache mechanics fetches the remote pricing data and writes the disk cache",
+      "message": "Error: expect(received).toBe(expected) // Object.is equality"
+    },
+    {
+      "file": "server/__tests__/utils/helpers/modelPricing/index.test.js",
+      "test": "ModelPricing cache mechanics serves pricing from the disk cache without refetching when fresh",
+      "message": "Error: expect(jest.fn()).not.toHaveBeenCalled()"
+    },
+    {
+      "file": "collector/__tests__/utils/WhisperProviders/ffmpeg/index.test.js",
+      "test": "FFMPEGWrapper should find ffmpeg executable",
+      "message": "Error: FFMPEG binary not found."
+    },
+    {
+      "file": "collector/__tests__/utils/WhisperProviders/ffmpeg/index.test.js",
+      "test": "FFMPEGWrapper should validate ffmpeg executable",
+      "message": "Error: FFMPEG binary not found."
+    },
+    {
+      "file": "collector/__tests__/utils/WhisperProviders/ffmpeg/index.test.js",
+      "test": "FFMPEGWrapper should convert audio file to wav format",
+      "message": "Error: FFMPEG binary not found."
+    }
+  ],
+  "checks": {
+    "jest": 1,
+    "server lint": 0,
+    "collector lint": 0,
+    "frontend lint": 0,
+    "check-translations": 0,
+    "check-package-versions": 0
+  },
+  "intermittent": [
+    {
+      "file": "server/__tests__/utils/helpers/modelPricing/index.test.js",
+      "test": "ModelPricing cache mechanics fetches the remote pricing data and writes the disk cache",
+      "label": "A ModelPricing test",
+      "because": "it waits a fixed 25 ms for file writes, which a busy machine can miss",
+      "seen": "It failed in an earlier full run of this commit and passed in others. pricing-under-load.txt shows it failing under CPU load, with the .etag file still empty."
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "oldPackage": {
+    "recallAt5": 0.8475,
+    "mrrAt10": 0.7528630952380954,
+    "queries": 200,
+    "passages": 1000
+  },
+  "oldDocumentsNewQueries": {
+    "recallAt5": 0.8475,
+    "mrrAt10": 0.7526130952380953,
+    "queries": 200,
+    "passages": 1000
+  }
+}

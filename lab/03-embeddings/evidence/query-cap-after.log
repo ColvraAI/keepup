@@ -1,0 +1,15 @@
+{"language":"en","chars":2000,"sentChars":2029,"tokens":352,"tokenizerLimit":1e+30}
+{"language":"en","chars":2000,"dims":768,"ms":2782,"loadedMb":409,"peakMb":459}
+[2000 en] exit 0
+{"language":"en","chars":8000,"sentChars":2029,"tokens":352,"tokenizerLimit":1e+30}
+{"language":"en","chars":8000,"dims":768,"ms":5215,"loadedMb":412,"peakMb":463}
+[8000 en] exit 0
+{"language":"en","chars":60000,"sentChars":2029,"tokens":352,"tokenizerLimit":1e+30}
+{"language":"en","chars":60000,"dims":768,"ms":5809,"loadedMb":419,"peakMb":470}
+[60000 en] exit 0
+{"language":"zh","chars":2000,"sentChars":2029,"tokens":1343,"tokenizerLimit":1e+30}
+{"language":"zh","chars":2000,"dims":768,"ms":11528,"loadedMb":414,"peakMb":755}
+[2000 zh] exit 0
+{"language":"zh","chars":16000,"sentChars":2029,"tokens":1343,"tokenizerLimit":1e+30}
+{"language":"zh","chars":16000,"dims":768,"ms":10426,"loadedMb":428,"peakMb":807}
+[16000 zh] exit 0

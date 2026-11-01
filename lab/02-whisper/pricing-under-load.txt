@@ -1,0 +1,72 @@
+# ModelPricing's own test file, run in the sandbox on Node 18 at 959a715299024e6f5822fc3d82373a3e90008f5b,
+# on 2026-11-01: three times on an idle sandbox, then twelve times with 24 busy loops running beside it.
+# The first line is `which ffmpeg` in the same sandbox, whose exit code 1 means it isn't there.
+# Each run prints jest's Tests line, then the unique failure lines, sorted and capped at 8 per run.
+#
+# which ffmpeg; echo "which-ffmpeg exit=$?"
+# T=server/__tests__/utils/helpers/modelPricing/index.test.js
+# one() { out=$(yarn -s jest "$T" --silent 2>&1); echo "$1 $(echo "$out" | grep -E "^Tests:")"; echo "$out" | grep -E "●|Expected|Received|expect\(" | sed "s/\x1b\[[0-9;]*m//g" | sort -u | head -8; }
+# for r in 1 2 3; do one idle-$r; done
+# for i in $(seq 1 24); do (while :; do :; done) & done
+# for r in 1 2 3 4 5 6 7 8 9 10 11 12; do one load-$r; done
+# kill $(jobs -p) 2>/dev/null
+which-ffmpeg exit=1
+idle-1 Tests:       41 passed, 41 total
+idle-2 Tests:       41 passed, 41 total
+idle-3 Tests:       41 passed, 41 total
+load-1 Tests:       41 passed, 41 total
+load-2 Tests:       1 failed, 40 passed, 41 total
+      63 |       expect(fs.existsSync(path.join(cacheDir, ".cached_at"))).toBe(true);
+      67 |       expect(pricing.isCacheStale).toBe(false);
+    > 64 |       expect(fs.readFileSync(path.join(cacheDir, ".etag"), "utf8")).toBe(
+    Expected: "\"abc123\""
+    Received: ""
+    expect(received).toBe(expected) // Object.is equality
+  ● ModelPricing › cache mechanics › fetches the remote pricing data and writes the disk cache
+load-3 Tests:       41 passed, 41 total
+load-4 Tests:       41 passed, 41 total
+load-5 Tests:       2 failed, 39 passed, 41 total
+      276 |       expect(
+      63 |       expect(fs.existsSync(path.join(cacheDir, ".cached_at"))).toBe(true);
+      67 |       expect(pricing.isCacheStale).toBe(false);
+    > 275 |       expect(global.fetch).toHaveBeenCalled();
+    > 64 |       expect(fs.readFileSync(path.join(cacheDir, ".etag"), "utf8")).toBe(
+    Expected number of calls: >= 1
+    Expected: "\"abc123\""
+    Received number of calls:    0
+load-6 Tests:       1 failed, 40 passed, 41 total
+      63 |       expect(fs.existsSync(path.join(cacheDir, ".cached_at"))).toBe(true);
+      67 |       expect(pricing.isCacheStale).toBe(false);
+    > 64 |       expect(fs.readFileSync(path.join(cacheDir, ".etag"), "utf8")).toBe(
+    Expected: "\"abc123\""
+    Received: ""
+    expect(received).toBe(expected) // Object.is equality
+  ● ModelPricing › cache mechanics › fetches the remote pricing data and writes the disk cache
+load-7 Tests:       41 passed, 41 total
+load-8 Tests:       41 passed, 41 total
+load-9 Tests:       41 passed, 41 total
+load-10 Tests:       1 failed, 40 passed, 41 total
+      63 |       expect(fs.existsSync(path.join(cacheDir, ".cached_at"))).toBe(true);
+      67 |       expect(pricing.isCacheStale).toBe(false);
+    > 64 |       expect(fs.readFileSync(path.join(cacheDir, ".etag"), "utf8")).toBe(
+    Expected: "\"abc123\""
+    Received: ""
+    expect(received).toBe(expected) // Object.is equality
+  ● ModelPricing › cache mechanics › fetches the remote pricing data and writes the disk cache
+load-11 Tests:       1 failed, 40 passed, 41 total
+    > 193 |       expect(pricing.isCacheStale).toBe(false);
+    Expected: false
+    Received: true
+    expect(received).toBe(expected) // Object.is equality
+  ● ModelPricing › cache mechanics › walks the full retrieval lifecycle: cold fetch, warm cache, revalidation, upstream change
+load-12 Tests:       3 failed, 38 passed, 41 total
+      63 |       expect(fs.existsSync(path.join(cacheDir, ".cached_at"))).toBe(true);
+      67 |       expect(pricing.isCacheStale).toBe(false);
+      91 |       expect(
+    > 64 |       expect(fs.readFileSync(path.join(cacheDir, ".etag"), "utf8")).toBe(
+    > 90 |       expect(fetchSpy).not.toHaveBeenCalled();
+    Expected number of calls: 0
+    Expected: "\"abc123\""
+    Expected: {"inputCost": 2.5, "outputCost": 0, "totalCost": 2.5}
+done
+exit=0

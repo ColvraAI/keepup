@@ -1,0 +1,87 @@
+{
+  "id": "ADV-2026-1007-anthropic-prompt-caching",
+  "name": "Turn on Claude's prompt caching",
+  "pattern": "PAT-prompt-caching-off",
+  "kind": "api-feature",
+  "providers": [
+    "anthropic"
+  ],
+  "effects": [
+    "cheaper",
+    "faster"
+  ],
+  "gain": "Anthropic's listed prices: a cache read costs 0.1x the input price, 0.05x on Sonnet 5.5 and Opus 5.5, and 0.025x on Fable 5.1. A write costs 1.25x for 5 minutes or 2x for 1 hour. The saving on this product depends on how often its prefix repeats, which code can't show.",
+  "proof": "vendor claim",
+  "source": "https://platform.claude.com/docs/en/build-with-claude/prompt-caching",
+  "how": "Add one top-level cache_control field for automatic caching, or set the product's existing switch on. Read cache_read_input_tokens to confirm hits before calling it a saving.",
+  "replaces": "A long system prompt and tool list re-sent at full price every turn.",
+  "trade_offs": [
+    "A write costs more than plain input, so a prompt that never repeats within the lifetime costs more, not less.",
+    "Prompts under the minimum are silently not cached: 512 tokens on the newest models, 1,024 on Sonnet 4.6 and Opus 4.8, 4,096 on Haiku 4.5.",
+    "Automatic caching returns a 400 on the legacy Bedrock integration for Opus 4.6 and earlier."
+  ],
+  "needs": "Nothing new.",
+  "price": "Sonnet 5.5: $2 input, $2.50 5-minute write, $4 1-hour write, $0.10 cache read per 1M tokens.",
+  "checked": "2026-11-01",
+  "checked_by": "agent",
+  "usage_signal": "Usage and Cost API: cached input tokens at or near zero on a model with large input",
+  "gain_model": {
+    "formula": "input_tokens * input_price * hit_rate * (1 - read_multiplier) - writes * input_price * (write_multiplier - 1)",
+    "inputs": [
+      {
+        "name": "input_tokens",
+        "value": null,
+        "source": "the product's usage data or the bill",
+        "assumed": false
+      },
+      {
+        "name": "input_price",
+        "value": 2,
+        "source": "Sonnet 5.5, per 1M tokens: https://platform.claude.com/docs/en/build-with-claude/prompt-caching",
+        "assumed": false
+      },
+      {
+        "name": "hit_rate",
+        "value": null,
+        "source": "the product's usage data or the bill",
+        "assumed": false
+      },
+      {
+        "name": "read_multiplier",
+        "value": null,
+        "source": "the product's usage data or the bill",
+        "assumed": false
+      },
+      {
+        "name": "write_multiplier",
+        "value": 1.25,
+        "source": "https://platform.claude.com/docs/en/build-with-claude/prompt-caching",
+        "assumed": false
+      },
+      {
+        "name": "writes",
+        "value": null,
+        "source": "the product's usage data or the bill",
+        "assumed": false
+      }
+    ]
+  },
+  "test_recipe": {
+    "what_to_compare": "input cost and latency, identical answers",
+    "samples": 200,
+    "can_run_with": [
+      "ANTHROPIC_API_KEY",
+      "OPENAI_API_KEY"
+    ]
+  },
+  "verify_rule": "Cached-read share of input tokens on that model over 14 days",
+  "change_recipe": {
+    "kind": "pull request with tests",
+    "how": "Add one top-level cache_control field for automatic caching, or set the product's existing switch on. Read cache_read_input_tokens to confirm hits before calling it a saving.",
+    "left_off": "Nothing else changes; the new path sits behind a setting until a person turns it on"
+  },
+  "audience": "product",
+  "gain_independent": "Deriv's engineers, on their own production agent: an 85.8% cache-hit rate cut input-token costs 77%, after restructuring prompts. That's input tokens only, and the post's dollar figures are illustrative; it doesn't say which provider that agent runs on.",
+  "gain_vendor": "Anthropic's listed prices: a cache read costs 0.1x the input price, 0.05x on Sonnet 5.5 and Opus 5.5, and 0.025x on Fable 5.1. A write costs 1.25x for 5 minutes or 2x for 1 hour. The saving on this product depends on how often its prefix repeats, which code can't show.",
+  "tier": "huge"
+}

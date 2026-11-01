@@ -1,0 +1,53 @@
+event: aura.session_info
+data: {"model":"openai/gpt-5.2","session_id":"cs_55b26061cd054f00991f2ecd7e0d2d70","trace_id":"4000000002"}
+
+event: aura.mcp_status
+data: {"servers":[{"server_name":"pagerduty","transport":"http_streamable","status":"failed","tools_count":0,"reason":"Connection failed: MCP initialization error: HTTP MCP server 'pagerduty' authentication failed (401 Unauthorized). Check that your headers, forwarded headers, and/or credentials are correct."},{"server_name":"signoz","transport":"stdio","status":"connected","tools_count":46}],"session_id":"cs_55b26061cd054f00991f2ecd7e0d2d70","trace_id":"4000000002"}
+
+: heartbeat
+
+: heartbeat
+
+: heartbeat
+
+: heartbeat
+
+: heartbeat
+
+data: {"id":"chatcmpl-10d65c67-9a7c-428d-9b5d-a6e97b79f4e1","object":"chat.completion.chunk","created":1793509197,"model":"openai/gpt-5.2","choices":[{"index":0,"delta":{"tool_calls":[{"index":0,"id":"call_fake_0","type":"function","function":{"name":"signoz_search_docs","arguments":"{\"searchText\":\"logs\"}"}}]}}]}
+
+event: aura.tool_requested
+data: {"tool_id":"call_fake_0","tool_name":"signoz_search_docs","arguments":{"searchText":"logs"},"agent_id":"main","session_id":"cs_55b26061cd054f00991f2ecd7e0d2d70","trace_id":"4000000002"}
+
+event: aura.tool_start
+data: {"tool_id":"call_fake_0","tool_name":"signoz_search_docs","progress_token":1,"agent_id":"main","session_id":"cs_55b26061cd054f00991f2ecd7e0d2d70","trace_id":"4000000002"}
+
+event: aura.tool_complete
+data: {"tool_id":"call_fake_0","tool_name":"signoz_search_docs","duration_ms":104,"success":true,"result":"{\n  \"query\": \"logs\",\n  \"results\": [\n    {\n      \"score\": 4.023851288658761,\n      \"section_breadcrumb\": \"Logs Management > Reference\",\n      \"section_slug\": \"logs-management\",\n      \"snippet\": \"… <mark>Logs</mark> Reference\\n\\nReference documentation for <mark>Logs</mark> Management in SigNoz — log processors, available quick filters, <mark>Logs</mark> API, and long-term storage configurati...\",\n      \"title\": \"Logs Reference\",\n      \"url\": \"https://signoz.io/docs/logs-management/reference/\"\n    },\n    {\n      \"score\": 3.992256368952803,\n      \"section_breadcrumb\": \"SigNoz APIs > Logs API > Search Logs\",\n      \"section_slug\": \"signoz-apis\",\n      \"snippet\": \"…ch <mark>Logs</mark>\\n\\nAPI reference for searching <mark>logs</mark> in SigNoz with attribute filters and pagination.\\n\\nTags: SigNoz Cloud, Self-Host\\n\\nThis section provides example of how to search ...\",\n      \"title\": \"Search Logs\",\n      \"url\": \"https://signoz.io/docs/logs-management/logs-api/search-logs/\"\n    },\n    {\n      \"score\": 3.9871180490696823,\n      \"section_breadcrumb\": \"SigNoz APIs > Logs API > Aggregate Logs\",\n      \"section_slug\": \"signoz-apis\",\n      \"snippet\": \"…egate <mark>Logs</mark>\\n\\nAPI reference for aggregating log data in SigNoz, including grouping and counting operations.\\n\\nTags: SigNoz Cloud, Self-Host\\n\\nThis section demonstrates how to perform aggr...\",\n      \"title\": \"Aggregate Logs\",\n      \"url\": \"https://signoz.io/docs/logs-management/logs-api/aggregate-logs/\"\n    },\n    {\n      \"score\": 3.909544355291743,\n      \"section_breadcrumb\": \"Logs Management > Troubleshooting\",\n      \"section_slug\": \"logs-management\",\n      \"snippet\": \"… <mark>Logs</mark> Troubleshooting\\n\\nTroubleshoot common SigNoz log management issues including log ingestion, parsing, and query problems.\\n\\nTags: SigNoz Cloud, Self-Host\\n\\n[<mark>Logs</mark> Manage...\",\n      \"title\": \"Logs Troubleshooting\",\n      \"url\": \"https://signoz.io/docs/logs-management/troubleshooting/troubleshooting/\"\n    },\n    {\n      \"score\": 3.847379027673141,\n      \"section_breadcrumb\": \"Logs Management > Reference > Logs API\",\n      \"section_slug\": \"logs-management\",\n      \"snippet\": \"… <mark>Logs</mark> API\\n\\nAPI reference for querying and analyzing log data in SigNoz.\\n\\nTags: SigNoz Cloud, Self-Host\\n\\n## Overview\\n\\nThe SigNoz <mark>Logs</mark> API is a robust interface which enabl...\",\n      \"title\": \"Logs API\",\n      \"url\": \"https://signoz.io/docs/logs-management/logs-api/overview/\"\n    },\n    {\n      \"score\": 3.8121145322434535,\n      \"section_breadcrumb\": \"Logs Management > Working with Log Explorer > User Guides > Fields in Logs\",\n      \"section_slug\": \"logs-management\",\n      \"snippet\": \"…ds in <mark>Logs</mark>\\n\\nLearn how log fields work in SigNoz, including attribute parsing, transformations, and sensitive data masking using the OpenTelemetry Collector.\\n\\nTags: SigNoz Cloud, Self-...\",\n      \"title\": \"Fields in Logs\",\n      \"url\": \"https://signoz.io/docs/userguide/logs_fields/\"\n    },\n    {\n      \"score\": 3.765312474501505,\n      \"section_breadcrumb\": \"Logs Management > Working with Log Explorer\",\n      \"section_slug\": \"logs-management\",\n      \"snippet\": \"… <mark>Logs</mark> Explorer\\n\\nLearn how to use the SigNoz <mark>Logs</mark> Explorer to search, filter, and analyze your log data with powerful query capabilities.\\n\\nTags: SigNoz Cloud, Self-Host\\n\\nT...\",\n      \"title\": \"Logs Explorer\",\n      \"url\": \"https://signoz.io/docs/userguide/logs_query_builder/\"\n    },\n    {\n      \"score\": 3.692561692233088,\n      \"section_breadcrumb\": \"Logs Management > Reference > Log Processors\",\n      \"section_slug\": \"logs-management\",\n      \"snippet\": \"…t\\n\\nEvery pipeline includes a chain of processors that define the transformations it will apply to <mark>logs</mark>. When a log matches a pipeline&#39;s filter, it is transformed by each processor...\",\n      \"title\": \"Log Processors\",\n      \"url\": \"https://signoz.io/docs/logs-pipelines/processors/\"\n    },\n    {\n      \"sco... [truncated]","agent_id":"main","session_id":"cs_55b26061cd054f00991f2ecd7e0d2d70","trace_id":"4000000002"}
+
+data: {"id":"chatcmpl-10d65c67-9a7c-428d-9b5d-a6e97b79f4e1","object":"chat.completion.chunk","created":1793509197,"model":"openai/gpt-5.2","choices":[{"index":0,"delta":{"tool_calls":[{"index":1,"id":"call_fake_1","type":"function","function":{"name":"signoz_list_services","arguments":"{}"}}]}}]}
+
+event: aura.tool_requested
+data: {"tool_id":"call_fake_1","tool_name":"signoz_list_services","arguments":{},"agent_id":"main","session_id":"cs_55b26061cd054f00991f2ecd7e0d2d70","trace_id":"4000000002"}
+
+event: aura.tool_start
+data: {"tool_id":"call_fake_1","tool_name":"signoz_list_services","progress_token":2,"agent_id":"main","session_id":"cs_55b26061cd054f00991f2ecd7e0d2d70","trace_id":"4000000002"}
+
+event: aura.tool_complete
+data: {"tool_id":"call_fake_1","tool_name":"signoz_list_services","duration_ms":1114,"success":false,"error":"ToolError: {\n  \"code\": \"UPSTREAM_ERROR\"\n}","agent_id":"main","session_id":"cs_55b26061cd054f00991f2ecd7e0d2d70","trace_id":"4000000002"}
+
+data: {"id":"chatcmpl-10d65c67-9a7c-428d-9b5d-a6e97b79f4e1","object":"chat.completion.chunk","created":1793509197,"model":"openai/gpt-5.2","choices":[{"index":0,"delta":{"role":"assistant","content":"\n\nFake answer from the dry-run provider."}}]}
+
+event: aura.tool_usage
+data: {"tool_ids":["call_fake_0","call_fake_1"],"prompt_tokens":10,"completion_tokens":5,"total_tokens":15,"agent_id":"main","session_id":"cs_55b26061cd054f00991f2ecd7e0d2d70","trace_id":"4000000002"}
+
+event: aura.usage
+data: {"prompt_tokens":30,"completion_tokens":15,"total_tokens":45,"session_id":"cs_55b26061cd054f00991f2ecd7e0d2d70","trace_id":"4000000002"}
+
+event: aura.context_usage
+data: {"context_tokens":10,"response_tokens":5,"agent_id":"main","session_id":"cs_55b26061cd054f00991f2ecd7e0d2d70","trace_id":"4000000002"}
+
+data: {"id":"chatcmpl-10d65c67-9a7c-428d-9b5d-a6e97b79f4e1","object":"chat.completion.chunk","created":1793509197,"model":"openai/gpt-5.2","choices":[{"index":0,"delta":{},"finish_reason":"stop"}],"usage":{"prompt_tokens":30,"completion_tokens":15,"total_tokens":45}}
+
+data: [DONE]
+

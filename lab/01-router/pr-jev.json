@@ -1,0 +1,51 @@
+{
+  "schema": 1,
+  "id": "01-jev",
+  "spec": "docs/prs/01-anythingllm-router-decision-model.md",
+  "upstream": "Mintplex-Labs/anything-llm",
+  "fork": "anything-llm",
+  "baseCommit": "ead123f07befc7167d05f160dade56aed5fa7c10",
+  "baseBranch": "replay/ead123f0-jev",
+  "ciWorkflow": null,
+  "branch": "keepup/2026-10-22-router-jev",
+  "lab": "lab/01-router",
+  "resultFile": "result-jev.md",
+  "source": "npm, @tanstack/ai-typesafe",
+  "sourceUrl": "https://www.npmjs.com/package/@tanstack/ai-typesafe",
+  "where": [
+    { "path": "server/utils/agents/aibitat/plugins/router-classifier.js", "line": 71 },
+    { "path": "server/utils/agents/aibitat/plugins/router-classifier.js", "line": 24 },
+    { "path": "server/utils/router/index.js", "line": 469 }
+  ],
+  "founderLine": "Your model router can pick a model with a small decision model that runs on its own TypeSafe key, and today's agent stays as the fallback.",
+  "effect": ["cheaper", "faster"],
+  "effort": "A day",
+  "whyItFits": "classifyWithLLM() starts a headless agent with the router's fallback model, and that agent's only job is to call select_category with one category from a fixed list. TypeSafe's Jev is built for that job: one answer from a fixed list, with a probability for each option, and it needs only a TypeSafe key.",
+  "risks": "TypeSafe is a new vendor, so each classified message goes to it, and the answer is probabilistic. TypeSafe's docs also warn that a \"none of the above\" option may not work well in many use cases. The setting is off by default. When it's on, classifyWithLLM() is unchanged and still answers when the chosen category's probability is under 0.70, when the call fails, when the API returns a category it wasn't offered, or when there is no TYPESAFE_API_KEY. A \"none\" at 0.70 or above is final and means no rule matched; a \"none\" under 0.70 goes to the agent.",
+  "rollback": "Set ROUTER_CLASSIFIER=agent, or remove the setting.",
+  "proof": {
+    "vendor": { "claim": "Send state and typed questions; get structured answers your code can use directly", "url": "https://docs.typesafe.ai/introduction" },
+    "independent": null
+  },
+  "sources": [
+    "https://www.npmjs.com/package/@tanstack/ai-typesafe",
+    "https://docs.typesafe.ai/api/system-one",
+    "https://docs.typesafe.ai/primitives/choice",
+    "https://docs.typesafe.ai/models"
+  ],
+  "sourcedNumbers": [
+    { "text": "0.70", "source": "lab/01-router/patches-jev/0001-feat-route-messages-with-TypeSafe-Jev-behind-a-setti.patch" },
+    { "text": "1.0", "source": "https://www.npmjs.com/package/@tanstack/ai-typesafe" }
+  ],
+  "stages": [
+    {
+      "date": "2026-10-22",
+      "patches": ["patches-jev/0001-feat-route-messages-with-TypeSafe-Jev-behind-a-setti.patch"],
+      "title": "Route messages with Jev · {{lab.title_number}}",
+      "titleUnmeasured": "Route messages with Jev",
+      "whatShipped": "@tanstack/ai-typesafe, the TanStack AI adapter for TypeSafe's Jev model, reached 1.0 on 22 Oct. Jev answers typed questions with a probability for each option.",
+      "whatThisChanges": "Adds classifyWithJev() and classifyMessage() in server/utils/agents/aibitat/plugins/router-classifier.js, calling TypeSafe's API over plain HTTP with no new dependency, and server/utils/router/index.js now calls classifyMessage(). classifyWithLLM() isn't edited. Adds ROUTER_CLASSIFIER and TYPESAFE_API_KEY to server/.env.example and docker/.env.example, and keeps both across settings saves in server/utils/helpers/updateENV.js. The default stays agent, so nothing changes until a person switches it on. Its base stays ead123f0 rather than the last upstream commit before 22 Oct, as a recorded exception: it's the same change re-planned for a Claude-only product, on PR 01's base.",
+      "comment": null
+    }
+  ]
+}

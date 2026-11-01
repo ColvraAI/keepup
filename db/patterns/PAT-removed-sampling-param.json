@@ -1,0 +1,63 @@
+{
+  "version": 1,
+  "id": "PAT-removed-sampling-param",
+  "name": "temperature, top_p or top_k sent on a Claude request",
+  "find": [
+    {
+      "regex": "^(?!\\s*(?:#|//|\\*|/\\*|--|\"\"\"|''')).*\\b(?:temperature|top_p|top_k)(?:=|:\\s*)(?!float\\b|int\\b|number\\b|Optional\\b|None\\b|undefined\\b|null\\b)[\\w.]+,?\\s*(?:#.*|//.*)?$",
+      "note": "anthropic: returns a 400 on API version 2026-10-21, even at the default; on 2023-06-01 it returns a 400 for non-default values on Claude 4.7 and later. Source: https://platform.claude.com/docs/en/api/migration-2026-10-21"
+    }
+  ],
+  "skip_if_near": [
+    "modelSupportsTemperature",
+    "supports_?[Tt]emperature",
+    "NO_TEMP",
+    "resolveTemperature",
+    "#\\[cfg\\(test\\)\\]",
+    "\\bdescribe\\(",
+    "\\bdef test_"
+  ],
+  "files": [
+    "**/*anthropic*.py",
+    "**/*anthropic*.ts",
+    "**/*anthropic*.js",
+    "**/*claude*.py",
+    "**/*claude*.ts",
+    "**/*claude*.js",
+    "**/anthropic/**/*.py",
+    "**/anthropic/**/*.ts",
+    "**/anthropic/**/*.js",
+    "**/claude/**/*.py",
+    "**/claude/**/*.ts",
+    "**/claude/**/*.js"
+  ],
+  "skip_files": [
+    "**/__tests__/**",
+    "**/test/**",
+    "**/tests/**",
+    "**/testdata/**",
+    "**/fixtures/**",
+    "**/spec/**",
+    "**/e2e/**",
+    "**/*.test.*",
+    "**/*.spec.*",
+    "**/*_test.*",
+    "**/test_*",
+    "**/test-*",
+    "**/conftest.py",
+    "**/samples/**",
+    "**/sample/**",
+    "**/examples/**",
+    "**/example/**",
+    "**/docs/**",
+    "**/website/**",
+    "**/cookbook/**",
+    "**/cookbooks/**"
+  ],
+  "why": "Anthropic removed these parameters in API version 2026-10-21, and the SDK majors that send that version no longer have them. The detector only looks in files named for Claude, since a line can't say which provider it talks to.",
+  "status": "live",
+  "effect": [
+    "keeps working"
+  ],
+  "live_from": "v0.2"
+}

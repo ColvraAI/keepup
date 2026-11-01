@@ -1,0 +1,12 @@
+{
+  "note": "A library that moved to a new package name. Only moves a person can read on the old package's own page. keepup tells a judge where a library went, so a finding that needs it moved can name the destination.",
+  "moves": [
+    {
+      "from": "@xenova/transformers",
+      "to": "@huggingface/transformers",
+      "ecosystem": "npm",
+      "source": "https://www.npmjs.com/package/@xenova/transformers",
+      "checked": "2026-11-01"
+    }
+  ]
+}

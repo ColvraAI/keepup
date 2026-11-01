@@ -1,0 +1,42 @@
+{
+  "id": "ADV-2026-1101-plugin-supabase",
+  "name": "The supabase plugin from the official Claude Code marketplace",
+  "pattern": "PAT-uses-supabase",
+  "kind": "install",
+  "providers": [],
+  "effects": [
+    "new capability"
+  ],
+  "gain": "Supabase tools in a session. No gain measured.",
+  "proof": "adoption only",
+  "source": "https://raw.githubusercontent.com/anthropics/claude-plugins-official/main/.claude-plugin/marketplace.json",
+  "how": "claude plugin install supabase@claude-plugins-official",
+  "replaces": "Doing this by hand in each session.",
+  "trade_offs": [
+    "It runs with your permissions, so read what it does first."
+  ],
+  "needs": "Claude Code.",
+  "install": "claude plugin install supabase@claude-plugins-official",
+  "audience": "team",
+  "checked": "2026-11-01",
+  "checked_by": "agent",
+  "usage_signal": "Not visible in the bill",
+  "gain_model": {
+    "formula": "no money figure: developer time, unmeasured",
+    "inputs": []
+  },
+  "test_recipe": {
+    "what_to_compare": "a developer tries it on one task",
+    "samples": 1,
+    "can_run_with": []
+  },
+  "verify_rule": "Whether the team keeps it installed after 30 days",
+  "change_recipe": {
+    "kind": "written steps",
+    "how": "claude plugin install supabase@claude-plugins-official",
+    "left_off": "Never a pull request: a brief line"
+  },
+  "gain_independent": null,
+  "gain_vendor": null,
+  "tier": "long_tail"
+}

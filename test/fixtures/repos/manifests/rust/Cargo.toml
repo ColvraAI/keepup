@@ -1,0 +1,11 @@
+[workspace]
+members = ["crates/core"]
+
+[workspace.dependencies]
+rig-core = { git = "https://github.com/example/rig.git", rev = "097d08d", default-features = false }
+rmcp = { version = "0.12.0", features = ["client"] }
+serde = "1.0"
+
+[dependencies.tokio]
+version = "1.40"
+features = ["full"]

@@ -1,0 +1,24 @@
+{
+  "check": "nomic",
+  "node": "v18.20.8",
+  "model": "Xenova/nomic-embed-text-v1",
+  "chunkChars": 16000,
+  "tokens": {
+    "texts": 75,
+    "differing": 0
+  },
+  "chunks": {
+    "n": 50,
+    "oldDim": 768,
+    "newDim": 768,
+    "minCosine": 0.9856600374659495,
+    "meanCosine": 0.9897443504508818
+  },
+  "queries": {
+    "n": 25,
+    "oldDim": 768,
+    "newDim": 768,
+    "minCosine": 0.9767087949321039,
+    "meanCosine": 0.9865313306674388
+  }
+}

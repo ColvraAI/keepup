@@ -1,0 +1,86 @@
+{
+  "id": "ADV-2026-0709-openai-prompt-caching",
+  "name": "Keep OpenAI prompts cacheable: stable text first",
+  "pattern": "PAT-prompt-caching-off",
+  "kind": "api-feature",
+  "providers": [
+    "openai"
+  ],
+  "effects": [
+    "cheaper",
+    "faster"
+  ],
+  "gain": "OpenAI's words: cached input is \"discounted up to 95%\". On GPT-5.6 and later a read costs 0.1x input, 0.05x on GPT-6.1 Sol and Terra, and a write 1.25x for 30 minutes (vendor claim).",
+  "proof": "vendor claim",
+  "source": "https://developers.openai.com/api/docs/guides/prompt-caching",
+  "how": "Caching is on by default, so nothing needs switching on. Put instructions and tools first and anything that changes last, then check the cached tokens in usage. Use the 12-hour lifetime only where requests are hours apart.",
+  "replaces": "A changing value such as a date or user name at the start of the prompt, which stops the prefix matching.",
+  "trade_offs": [
+    "On GPT-5.6 and later a write costs more than plain input, so a prefix that never repeats costs more.",
+    "A prefix needs at least 1,024 tokens on GPT-5.6 and later.",
+    "A 12-hour write costs 2.5x input."
+  ],
+  "needs": "Nothing new. PAT-prompt-caching-off does not detect this; show it only when the judge sees a changing value at the start of a long prompt.",
+  "checked": "2026-11-01",
+  "checked_by": "agent",
+  "usage_signal": "Usage and Cost API: cached input tokens at or near zero on a model with large input",
+  "gain_model": {
+    "formula": "input_tokens * input_price * hit_rate * (1 - read_multiplier) - writes * input_price * (write_multiplier - 1)",
+    "inputs": [
+      {
+        "name": "input_tokens",
+        "value": null,
+        "source": "the product's usage data or the bill",
+        "assumed": false
+      },
+      {
+        "name": "input_price",
+        "value": null,
+        "source": "the product's usage data or the bill",
+        "assumed": false
+      },
+      {
+        "name": "hit_rate",
+        "value": null,
+        "source": "the product's usage data or the bill",
+        "assumed": false
+      },
+      {
+        "name": "read_multiplier",
+        "value": 0.1,
+        "source": "The guide lists 0.1x and 0.05x reads, by model: https://developers.openai.com/api/docs/guides/prompt-caching",
+        "assumed": false
+      },
+      {
+        "name": "write_multiplier",
+        "value": 1.25,
+        "source": "The guide lists 1.25x and 2.5x writes: https://developers.openai.com/api/docs/guides/prompt-caching",
+        "assumed": false
+      },
+      {
+        "name": "writes",
+        "value": null,
+        "source": "the product's usage data or the bill",
+        "assumed": false
+      }
+    ]
+  },
+  "test_recipe": {
+    "what_to_compare": "input cost and latency, identical answers",
+    "samples": 200,
+    "can_run_with": [
+      "ANTHROPIC_API_KEY",
+      "OPENAI_API_KEY"
+    ]
+  },
+  "verify_rule": "Cached-read share of input tokens on that model over 14 days",
+  "change_recipe": {
+    "kind": "pull request with tests",
+    "how": "Caching is on by default, so nothing needs switching on. Put instructions and tools first and anything that changes last, then check the cached tokens in usage. Use the 12-hour lifetime only where requests are hours apart.",
+    "left_off": "Nothing else changes; the new path sits behind a setting until a person turns it on"
+  },
+  "audience": "product",
+  "gain_independent": "Deriv's engineers, on their own production agent: an 85.8% cache-hit rate cut input-token costs 77%, after restructuring prompts. That's input tokens only, and the post's dollar figures are illustrative; it doesn't say which provider that agent runs on.",
+  "gain_vendor": "OpenAI's words: cached input is \"discounted up to 95%\". On GPT-5.6 and later a read costs 0.1x input, 0.05x on GPT-6.1 Sol and Terra, and a write 1.25x for 30 minutes (vendor claim).",
+  "tier": "huge"
+}

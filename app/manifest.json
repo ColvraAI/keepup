@@ -1,0 +1,20 @@
+{
+  "name": "keepup-ai",
+  "url": "https://github.com",
+  "description": "The keepup demo: replay pull requests and a weekly brief on the demo org's own forks. Nothing runs on a repo anywhere else: this demo only writes to its own org, and never to upstream repos.",
+  "public": true,
+  "hook_attributes": { "url": "https://github.com", "active": false },
+  "request_oauth_on_install": false,
+  "setup_on_update": false,
+  "default_events": [],
+  "default_permissions": {
+    "metadata": "read",
+    "contents": "write",
+    "pull_requests": "write",
+    "issues": "write",
+    "workflows": "write",
+    "actions": "read",
+    "checks": "read",
+    "statuses": "read"
+  }
+}

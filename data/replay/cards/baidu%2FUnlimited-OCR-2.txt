@@ -1,0 +1,44 @@
+Unlimited OCR Works 2 
+ Pioneering the OCR-3.0 Era: From Long- to Unlimited-Horizon Parsing. 
+## Release
+- [2026/10/28] Thanks to the ms-swift community for supporting training of **Unlimited OCR 2**.
+- [2026/10/27] 📊 We release **MarathonDocBench**, a new benchmark for ultra-long document parsing.
+- [2026/10/27] 🤝 Thanks to the ModelScope community for their support. Our model is now available at ModelScope.
+- [2026/10/27] 🤝 Thanks to the Baidu Cloud team for their support. Our model is now available on Baidu Cloud.
+- [2026/10/27] 🤝 Thanks to AK for creating a new demo for us. Try it at Unlimited-OCR-2.
+- [2026/10/27] 🚀 We release **Unlimited OCR 2**, achieving unlimited-horizon parsing with SR-SWA.
+- [2026/07/21] 🤝 Thanks to the ms-swift community for their support, our model now supports training with ms-swift.
+- [2026/07/03] 🤝 Thanks to the Baidu Cloud team for their support. Our model is now available on Baidu Cloud.
+- [2026/06/28] 🤝 Thanks to the vLLM community and Tianyu Guo for their support, our model now supports vLLM inference.
+- [2026/06/24] 🤝 Thanks to AK for creating a demo for us. It is now available at Hugging Face Spaces.
+- [2026/06/23] 📄 Our paper is now available on arXiv.
+- [2026/06/23] 🤝 Thanks to the ModelScope community for their support. Our model is now available at ModelScope.
+- [2026/06/22] 🚀 We present Unlimited-OCR, aiming to push Deepseek-OCR one step further.
+## What's New in 2
+* Sparse Reference Sliding Window Attention (SR-SWA): Compresses text-visual attention interactions from ultra-long sequences down to a fixed-size set of working references (e.g., 512 tokens). This bounds computational complexity, keeping per-step decoding latency and memory footprint nearly constant regardless of document length.
+* From Long- to Unlimited-Horizon Parsing: Powered by SR-SWA, Unlimited-OCR 2 achieves true, unbounded document parsing within a finite context window—effectively eliminating quadratic attention scaling and memory bottlenecks as documents grow.
+* Ultra-Long Document Parsing SOTA: Achieves state-of-the-art performance across both dozens-of-pages benchmarks (e.g., MPDocBench) and extreme hundred-page benchmarks (e.g., MarathonDocBench).
+## Inference
+> Unlimited OCR 2 supports **Transformers** (native, for quick tests) and **SGLang** (recommended for serving).
+### Transformers
+Tested with Python 3.10, `torch==2.13.0`, `transformers==4.52.1`, `huggingface-hub==0.36.0`, `tokenizers==0.21.4`, on an NVIDIA A800-80GB:
+```shell
+pip install torch==2.13.0 torchvision pillow transformers==4.52.1 huggingface-hub==0.36.0 \
+ tokenizers==0.21.4 addict==2.4.0 einops==0.8.2 easydict==1.13
+```
+Load the model once:
+```python
+import torch
+from transformers import AutoModel, AutoTokenizer
+model_name = "baidu/Unlimited-OCR-2"
+tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=True)
+model = AutoModel.from_pretrained(model_name, trust_remote_code=True, use_safetensors=True,
+ torch_dtype=torch.bfloat16).eval().cuda()
+```
+**Multi-page inference** (`infer_multi`). All pages of a document are parsed in one request, so the model can use cross-page context. Pass the page images in page order:
+```python
+pages = [f"your_doc/page_{i}.jpg" for i in range(1, 8)]
+text, num_tokens = model.infer_multi(tokenizer, image_files=pages,
+ output_path="output/multi", save_results=True)
+```
+The prompt is built automatically as `" " * num_pages + "Multi page parsing."`, and each page is encoded as one global view (base mo

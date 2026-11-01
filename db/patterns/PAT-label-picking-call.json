@@ -1,0 +1,101 @@
+{
+  "version": 1,
+  "id": "PAT-label-picking-call",
+  "name": "A chat call that only picks a label, a yes or no, or a score",
+  "find": [
+    {
+      "regex": "^(?!\\s*(?:#|//|\\*|/\\*|--|\"\"\"|''')).*\\byou are an? [\\w\\s-]{0,40}(?:classifier|categori[sz]er|router)\\b",
+      "flags": "i",
+      "note": "A system prompt whose only job is to classify or route"
+    },
+    {
+      "regex": "^(?!\\s*(?:#|//|\\*|/\\*|--|\"\"\"|'''))(?!.*\\bhelp\\s*=).*\\bclassify (?:the|this|each|every|following|user|incoming|given)\\b.{0,80}(?:\\b(?:as|into|one of|category|categories|label|labels|intent|sentiment|guidelines)\\b)",
+      "flags": "i",
+      "note": "A prompt that says classify"
+    },
+    {
+      "regex": "^(?!\\s*(?:#|//|\\*|/\\*|--|\"\"\"|'''))(?!.*\\bhelp\\s*=).*\\bcategori[sz]e (?:the|this|each|every|following|user|given)\\b.{0,80}(?:\\b(?:as|into|one of|category|categories|label)\\b)",
+      "flags": "i",
+      "note": "A prompt that says categorize"
+    },
+    {
+      "regex": "^(?!\\s*(?:#|//|\\*|/\\*|--|\"\"\"|''')).*\\bone of the following (?:categories|labels|classes|intents|types|options)\\b",
+      "flags": "i",
+      "note": "A prompt that lists fixed answers"
+    },
+    {
+      "regex": "^(?!\\s*(?:#|//|\\*|/\\*|--|\"\"\"|''')).*\\b(?:respond|reply)(?: only)?(?: with)?(?: only| just)? (?:with )?(?:one word|a single word|a single (?:category|label)|one of\\b)|\\banswer(?: only)?(?: with)?(?: only| just)? (?:with )?(?:one word|a single word|a single (?:category|label))",
+      "flags": "i",
+      "note": "A prompt that demands one word or one choice"
+    },
+    {
+      "regex": "^(?!\\s*(?:#|//|\\*|/\\*|--|\"\"\"|''')).*\\b(?:respond|reply|answer)(?: only| just)?(?: with)?(?: only| just)? ['\"\\\\`]+(?:yes|true)['\"\\\\`]+(?: or ['\"\\\\`]+(?:no|false)\\b| if\\b.{0,80}\\b(?:no|false)\\b)|\\b(?:respond|reply|answer|return|output)(?: only| just)?(?: with)?(?: only| just)? (?:yes|true) or (?:no|false)\\b",
+      "flags": "i",
+      "note": "A prompt that asks for yes or no"
+    },
+    {
+      "regex": "^(?!\\s*(?:#|//|\\*|/\\*|--|\"\"\"|''')).*\\b(?:return|output)(?: only)? one of\\b",
+      "flags": "i",
+      "note": "A prompt that asks for one of a fixed set"
+    },
+    {
+      "regex": "^(?!\\s*(?:#|//|\\*|/\\*|--|\"\"\"|''')).*\\b(?:rate|score)\\b.{0,90}\\bon a scale (?:of|from) \\d|\\bfinal score as a single number between\\b",
+      "flags": "i",
+      "note": "A prompt that asks for a score from a scale"
+    },
+    {
+      "regex": "\\b(?:name|function|tool)[\"']?\\s*[:=]\\s*[\"'](?:select|pick|choose|classify|route)_(?:\\w*_)?(?:category|label|intent|route|class)\\b",
+      "note": "A tool whose only job is to return one label"
+    },
+    {
+      "regex": "\\b(?:async\\s+)?(?:function|def)\\s+_?classify\\w*(?:LLM|GPT|WithAI|WithModel|Intent|_with_llm|_with_ai|_intent)\\b",
+      "note": "A function named for classifying with a model"
+    }
+  ],
+  "skip_if_near": [
+    "\\btypesafe\\b",
+    "\\bjev-(?:latest|preview|\\d)",
+    "/v1/decisions",
+    "decisions\\.create",
+    "system_one\\("
+  ],
+  "files": [
+    "**/*.py",
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.js",
+    "**/*.jsx",
+    "**/*.mjs",
+    "**/*.cjs"
+  ],
+  "skip_files": [
+    "**/__tests__/**",
+    "**/test/**",
+    "**/tests/**",
+    "**/testdata/**",
+    "**/fixtures/**",
+    "**/spec/**",
+    "**/e2e/**",
+    "**/*.test.*",
+    "**/*.spec.*",
+    "**/*_test.*",
+    "**/test_*",
+    "**/test-*",
+    "**/conftest.py",
+    "**/samples/**",
+    "**/sample/**",
+    "**/examples/**",
+    "**/example/**",
+    "**/docs/**",
+    "**/website/**",
+    "**/cookbook/**",
+    "**/cookbooks/**"
+  ],
+  "why": "A full chat call to pick one answer from a fixed list costs more and takes longer than a decision model built for it. It doesn't fit open-ended text, labels built at runtime from user data, or maths and dates.",
+  "status": "live",
+  "effect": [
+    "cheaper",
+    "faster"
+  ],
+  "live_from": "v0.1"
+}

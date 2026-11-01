@@ -1,0 +1,72 @@
+{
+  "version": 1,
+  "id": "PAT-hand-rolled-memory",
+  "name": "Per-user memory hand-rolled in a message list",
+  "find": [
+    {
+      "regex": "^(?!\\s*(?:#|//|\\*|/\\*|--|\"\"\"|''')).*\\b(?:chatHistory|chat_history|conversationHistory|conversation_history|messageHistory|message_history)\\.slice\\(\\s*-\\s*(?:\\d\\d+|[A-Z_]{3,}|\\w*(?:max|limit|window)\\w*)\\s*\\)",
+      "note": "Keeps only the last N messages"
+    },
+    {
+      "regex": "^(?!\\s*(?:#|//|\\*|/\\*|--|\"\"\"|''')).*\\b(?:chat_history|conversation_history|message_history)\\[\\s*-\\s*(?:\\d\\d+|[A-Z_]{3,}|\\w*(?:max|limit|window)\\w*)\\s*:\\s*\\]",
+      "note": "Keeps only the last N messages"
+    },
+    {
+      "regex": "^(?!\\s*(?:#|//|\\*|/\\*|--|\"\"\"|''')).*\\b(?:max_chat_history|MAX_CHAT_HISTORY|maxChatHistory|max_history_messages|MAX_HISTORY_MESSAGES|MAX_HISTORY_TURNS|max_history_turns|trim_messages|truncate_history|summarize_history|summarize_conversation|summarizeHistory|summarizeConversation)\\b",
+      "note": "Trims or summarizes history by hand"
+    },
+    {
+      "regex": "^(?!\\s*(?:#|//|\\*|/\\*|--|\"\"\"|''')).*\\bsummari[sz]e (?:the|this) conversation\\b",
+      "flags": "i",
+      "note": "A prompt that summarizes the conversation to remember it"
+    }
+  ],
+  "skip_if_near": [
+    "\\bmem0\\b",
+    "\\bmem0ai\\b",
+    "letta_client",
+    "\\bfrom letta\\b",
+    "@letta-ai",
+    "\\bzep_cloud\\b",
+    "@getzep",
+    "#\\[cfg\\(test\\)\\]",
+    "\\bdescribe\\(",
+    "\\bdef test_"
+  ],
+  "files": [
+    "**/*.py",
+    "**/*.ts",
+    "**/*.js",
+    "**/*.mjs"
+  ],
+  "skip_files": [
+    "**/__tests__/**",
+    "**/test/**",
+    "**/tests/**",
+    "**/testdata/**",
+    "**/fixtures/**",
+    "**/spec/**",
+    "**/e2e/**",
+    "**/*.test.*",
+    "**/*.spec.*",
+    "**/*_test.*",
+    "**/test_*",
+    "**/test-*",
+    "**/conftest.py",
+    "**/samples/**",
+    "**/sample/**",
+    "**/examples/**",
+    "**/example/**",
+    "**/docs/**",
+    "**/website/**",
+    "**/cookbook/**",
+    "**/cookbooks/**"
+  ],
+  "why": "Trimming or summarizing a message list by hand loses what a returning user told the product. It only matters for products whose users come back across sessions, and the gain is projected, never measured here.",
+  "status": "info",
+  "effect": [
+    "cheaper",
+    "faster"
+  ],
+  "live_from": "v0.2"
+}

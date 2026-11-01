@@ -1,0 +1,10 @@
+OPENAI_API_KEY = "sk-FAKEfakeFAKEfakeFAKEfake0123456789"
+ANTHROPIC = "sk-ant-api03-FAKEfakeFAKEfake0123456789"
+GH = "ghp_FAKEfakeFAKEfakeFAKEfakeFAKEfake0123"
+GHO = "gho_FAKEfakeFAKEfakeFAKEfakeFAKEfake0123"
+PAT = "github_pat_FAKEfake0123_FAKEfakeFAKEfakeFAKEfake"
+SLACK = "xoxb-FAKE-FAKE-fakefakefake"
+GOOGLE = "AIzaFAKEfakeFAKEfakeFAKEfakeFAKEfake012"
+AWS = "AKIAIOSFODNN7EXAMPLE"
+PAYMENT_SECRET = "c2VjcmV0LXZhbHVlLWZha2UtMDEyMzQ1"
+reply = json.loads(res.content)  # sk-FAKEfakeFAKEfakeFAKEfake0123456789

@@ -1,0 +1,16 @@
+[NativeEmbedder] Initialized onnx-community/embeddinggemma-2-ONNX
+Unable to fetch model file metadata for total progress tracking: Error: simulated failure of the external data download
+/lab/03-embeddings/harness/hf-unreachable.cjs:105
+    if (String(url?.url ?? url).includes(".onnx_data")) throw new Error("simulated failure of the external data download");
+                                                              ^
+
+Error: simulated failure of the external data download
+    at global.fetch (/lab/03-embeddings/harness/hf-unreachable.cjs:105:63)
+    at getFile (file:///tmp/t431/package/dist/transformers.node.mjs:7429:16)
+    at loadResourceFile (file:///tmp/t431/package/dist/transformers.node.mjs:7566:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async getModelFile (file:///tmp/t431/package/dist/transformers.node.mjs:7703:10)
+    at async file:///tmp/t431/package/dist/transformers.node.mjs:23655:24
+
+Node.js v18.20.8
+external-data exit 1

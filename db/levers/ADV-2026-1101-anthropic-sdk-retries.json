@@ -1,0 +1,59 @@
+{
+  "id": "ADV-2026-1101-anthropic-sdk-retries",
+  "name": "Anthropic's documented retry cases",
+  "pattern": "PAT-provider-errors-not-retried",
+  "kind": "sdk-feature",
+  "providers": [
+    "anthropic"
+  ],
+  "effects": [
+    "keeps working"
+  ],
+  "gain": "Fewer user-facing failures on 429 and 529. Not measured.",
+  "proof": "adoption only",
+  "source": "https://platform.claude.com/docs/en/api/errors",
+  "how": "Leave SDK retries on and back off on 429 and 529",
+  "replaces": "A failed call reaching the user.",
+  "trade_offs": [
+    "Retries add latency."
+  ],
+  "needs": "The Anthropic API.",
+  "checked": "2026-11-01",
+  "checked_by": "agent",
+  "usage_signal": "429 and 529 or 503 counts in logs",
+  "gain_model": {
+    "formula": "failed_calls * revenue_or_retry_cost_per_call",
+    "inputs": [
+      {
+        "name": "failed_calls",
+        "value": null,
+        "source": "the product's usage data or the bill",
+        "assumed": false
+      },
+      {
+        "name": "revenue_or_retry_cost_per_call",
+        "value": null,
+        "source": "the product's usage data or the bill",
+        "assumed": false
+      }
+    ]
+  },
+  "test_recipe": {
+    "what_to_compare": "success rate under replayed rate limits",
+    "samples": 50,
+    "can_run_with": [
+      "ANTHROPIC_API_KEY",
+      "OPENAI_API_KEY"
+    ]
+  },
+  "verify_rule": "User-facing AI errors over 14 days",
+  "change_recipe": {
+    "kind": "pull request with tests",
+    "how": "Leave SDK retries on and back off on 429 and 529",
+    "left_off": "Nothing else changes; the new path sits behind a setting until a person turns it on"
+  },
+  "audience": "product",
+  "gain_independent": null,
+  "gain_vendor": null,
+  "tier": "long_tail"
+}

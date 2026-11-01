@@ -1,0 +1,261 @@
+/* What we understood */
+.profile {
+  display: grid;
+  gap: var(--s-5);
+}
+
+.profile__one {
+  font-size: var(--t-l);
+  line-height: 1.22;
+  letter-spacing: -0.012em;
+  font-weight: 500;
+  max-width: 50ch;
+  text-wrap: pretty;
+}
+
+.profile__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  gap: var(--s-6);
+}
+
+.profile__jobs .eyebrow,
+.profile__side .eyebrow {
+  margin-bottom: var(--s-2);
+}
+
+.profile__jobs li {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: var(--s-3);
+  padding: var(--s-2) 0;
+  border-top: 1px solid var(--rule);
+  align-items: baseline;
+}
+
+.profile__job {
+  font-weight: 600;
+  font-size: var(--t-s);
+  line-height: 1.25;
+}
+
+.profile__where {
+  font-size: var(--t-xs);
+  line-height: 1.25;
+}
+
+.profile__side {
+  display: grid;
+  gap: var(--s-4);
+  align-content: start;
+}
+
+.plain-list li {
+  padding: var(--s-1) 0;
+  font-size: var(--t-s);
+  line-height: 1.28;
+  color: var(--ink-2);
+  border-top: 1px solid var(--rule);
+}
+
+.payoff {
+  margin-top: var(--s-7);
+  display: grid;
+  gap: var(--s-4);
+}
+
+.payoff__canvas {
+  display: block;
+  width: 100%;
+  height: clamp(120px, 18vh, 200px);
+}
+
+.is-present .payoff {
+  margin-top: 0;
+  gap: var(--s-3);
+}
+
+/* Present mode: the collapse has the whole stage to itself. */
+.payoff__canvas--stage {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 30;
+  background: var(--paper);
+}
+
+.is-present .understood .screen__head {
+  margin-bottom: var(--s-3);
+}
+
+.is-present .payoff__list li {
+  padding: var(--s-1) 0;
+}
+
+.payoff__line {
+  font-size: var(--t-xl);
+  line-height: 1.06;
+  letter-spacing: -0.024em;
+  font-weight: 600;
+  text-wrap: balance;
+}
+
+.payoff__fit {
+  color: var(--blue-ink);
+}
+
+.payoff__list li {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: var(--s-3);
+  padding: var(--s-2) 0;
+  border-top: 1px solid var(--rule);
+  align-items: baseline;
+}
+
+.payoff__list i {
+  width: 0.6em;
+  height: 0.6em;
+  border-radius: 50%;
+  background: var(--blue);
+  display: block;
+  align-self: center;
+}
+
+.payoff__pr {
+  text-decoration: none;
+}
+
+/* Each survivor arrives from the collapse's last frame, and its row fades in behind it. */
+.payoff__list[data-travel='true'] i {
+  animation: dot-travel 560ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  animation-delay: calc(var(--row) * var(--stagger));
+}
+
+.payoff__list[data-travel='true'] li > span {
+  animation: fade-in 260ms ease-out both;
+  animation-delay: calc(var(--row) * var(--stagger) + 240ms);
+}
+
+@keyframes dot-travel {
+  from {
+    transform: translate(var(--from-x, 0), var(--from-y, 0)) scale(2.2);
+  }
+}
+
+/* Refusals carry as much weight as what fit: they are what keeps it installed. */
+.refusals {
+  display: grid;
+  gap: var(--s-2);
+  padding-top: var(--s-3);
+  border-top: 1px solid var(--ink);
+}
+
+.refusals__head {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--s-2) var(--s-4);
+}
+
+.refusals__dots {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.refusals__dots i {
+  display: block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 1.5px solid var(--ink-3);
+}
+
+.refusals__count {
+  font-size: var(--t-b);
+  font-weight: 600;
+}
+
+.refusals__list li {
+  font-size: var(--t-s);
+  line-height: 1.3;
+  color: var(--ink-2);
+  padding: 2px 0;
+}
+
+.refusals__list strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.is-present .payoff[data-settled='true'] .small {
+  font-size: var(--t-xs);
+  line-height: 1.25;
+}
+
+.is-present .understood .screen__head {
+  margin-bottom: var(--s-3);
+}
+
+.is-present .profile__one {
+  max-width: 62ch;
+}
+
+.is-present .refusals__dots i {
+  width: 11px;
+  height: 11px;
+}
+
+.payoff__title {
+  font-size: var(--t-b);
+  font-weight: 500;
+  line-height: 1.25;
+}
+
+.payoff__meta {
+  display: flex;
+  gap: var(--s-2);
+  align-items: baseline;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+
+@media (max-width: 860px) {
+  .profile__grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--s-5);
+  }
+
+  .profile__jobs li,
+  .payoff__list li {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--s-1);
+  }
+
+  .payoff__list li {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .payoff__meta {
+    grid-column: 2;
+    justify-content: flex-start;
+  }
+}
+
+.payoff__origins {
+  font-size: var(--t-xs);
+  color: var(--ink-2);
+  line-height: 1.3;
+}
+
+.payoff__effort {
+  color: var(--ink-3);
+  white-space: nowrap;
+}
+
+.refusals__exception {
+  color: var(--amber);
+}

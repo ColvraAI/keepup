@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "id": "PAT-own-skill-format",
+  "name": "Agent skills loaded in the product's own format, not the open SKILL.md one",
+  "find": [
+    {
+      "regex": "\\b(?:path|os\\.path|Path|filepath)\\b.*[\"'`/]agent[-_]skills[\"'`/]",
+      "note": "A folder of agent skills on disk"
+    },
+    {
+      "regex": "\\b(?:skills?[-_]?(?:dir|directory|folder|root)|SKILLS?_(?:DIR|PATH|FOLDER|ROOT))\\b\\s*(?::\\s*&?str\\s*)?(?::=|=)",
+      "flags": "i",
+      "note": "A setting for where skills live"
+    }
+  ],
+  "skip_if_near": [],
+  "skip_if_in_file": ["SKILL\\.md", "agentskills"],
+  "files": ["**/*.py", "**/*.ts", "**/*.js", "**/*.mjs", "**/*.cjs", "**/*.rs", "**/*.go"],
+  "skip_files": ["**/__tests__/**", "**/test/**", "**/tests/**", "**/*.test.*", "**/*.spec.*", "**/samples/**", "**/examples/**", "**/frontend/**"],
+  "why": "A product whose agents take skills in its own manifest can't load the skills people publish in the open SKILL.md format. It fits only if the product really has a skills feature users add to and the format is its own: a repo with SKILL.md support elsewhere is a false alarm, which the line alone can't show, so the judge must read the README and the code. Seen on 39 real repos: 3 repos fire, and only one of them is a real hit, so this detector is under the 85% bar on its own and leans on the judge. A person should decide whether it stays live.",
+  "status": "live",
+  "effect": ["new capability"],
+  "live_from": "v0.2"
+}

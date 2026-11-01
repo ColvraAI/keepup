@@ -1,0 +1,26 @@
+# keepup demo: AURA runs its tests from a Jenkinsfile, which a fork can't use.
+# This runs the repo's own config tests, including the one that parses every shipped example.
+name: keepup CI
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  config-tests:
+    name: cargo test -p aura-config
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install the toolchain from rust-toolchain.toml
+        run: rustup show active-toolchain || rustup toolchain install
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('Cargo.lock') }}
+      - run: cargo test -p aura-config --locked

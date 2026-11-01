@@ -1,0 +1,3 @@
+#!/bin/sh
+# First on PATH inside the sandbox, so an example's `docker run` reaches the host's Docker.
+exec node "$(dirname "$0")/../docker-shim.cjs" "$@"

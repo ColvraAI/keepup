@@ -1,0 +1,66 @@
+{
+  "id": "ADV-2026-0909-instructor",
+  "name": "Instructor for Python products on many providers",
+  "pattern": "PAT-hand-parsed-json",
+  "kind": "library",
+  "providers": [],
+  "effects": [
+    "better answers",
+    "keeps working"
+  ],
+  "gain": "A typed Pydantic object back from several providers, with retries on validation errors. No measured number here.",
+  "proof": "adoption only",
+  "source": "https://pypi.org/project/instructor/",
+  "how": "Create the client with instructor.from_provider and pass response_model=YourModel. Keep the old parser as a fallback until a test shows the same keys come back.",
+  "replaces": "json.loads and hand-written retries around a chat call in Python.",
+  "trade_offs": [
+    "It adds a dependency between the product and its provider, where the provider's own structured outputs add none.",
+    "A retry on a failed extraction is another paid model call."
+  ],
+  "needs": "Python and Pydantic. Version 1.17.0, MIT, released 9 Sep 2026.",
+  "price": "Free, MIT licence.",
+  "checked": "2026-11-01",
+  "checked_by": "agent",
+  "usage_signal": "Retries and output tokens on calls that are re-sent after a parse failure",
+  "gain_model": {
+    "formula": "parse_failure_rate * calls * cost_per_call = money lost to retries",
+    "inputs": [
+      {
+        "name": "parse_failure_rate",
+        "value": null,
+        "source": "the product's usage data or the bill",
+        "assumed": false
+      },
+      {
+        "name": "calls",
+        "value": null,
+        "source": "the product's usage data or the bill",
+        "assumed": false
+      },
+      {
+        "name": "cost_per_call",
+        "value": null,
+        "source": "the product's usage data or the bill",
+        "assumed": false
+      }
+    ]
+  },
+  "test_recipe": {
+    "what_to_compare": "parse failures and schema errors, before and after",
+    "samples": 200,
+    "can_run_with": [
+      "OPENAI_API_KEY",
+      "ANTHROPIC_API_KEY"
+    ]
+  },
+  "verify_rule": "Parse-error logs and retried calls over 14 days after merge",
+  "change_recipe": {
+    "kind": "pull request, off by default",
+    "how": "Create the client with instructor.from_provider and pass response_model=YourModel. Keep the old parser as a fallback until a test shows the same keys come back.",
+    "left_off": "Nothing else changes; the new path sits behind a setting until a person turns it on"
+  },
+  "audience": "product",
+  "gain_independent": null,
+  "gain_vendor": null,
+  "tier": "long_tail"
+}

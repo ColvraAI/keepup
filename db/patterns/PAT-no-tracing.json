@@ -1,0 +1,45 @@
+{
+  "version": "1",
+  "id": "PAT-no-tracing",
+  "name": "An AI call with no tracing",
+  "find": [
+    {
+      "regex": "\\b(?:chat\\.completions\\.create|messages\\.create|generateText|streamText|generateObject)\\s*\\("
+    }
+  ],
+  "skip_if_near": [],
+  "skip_if_in_file": [
+    "[lL][aA][nN][gG][fF][uU][sS][eE]|[tT][rR][aA][cC][eE][aA][bB][lL][eE]|[oO][pP][eE][nN][tT][eE][lL][eE][mM][eE][tT][rR][yY]|[oO][pP][eE][nN][iI][nN][fF][eE][rR][eE][nN][cC][eE]|[hH][eE][lL][iI][cC][oO][nN][eE]|[pP][hH][oO][eE][nN][iI][xX]|@[oO][bB][sS][eE][rR][vV][eE]|[lL][oO][gG][fF][iI][rR][eE]"
+  ],
+  "files": [
+    "**/*.py",
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.js",
+    "**/*.jsx",
+    "**/*.mjs",
+    "**/*.cjs"
+  ],
+  "skip_files": [
+    "**/__tests__/**",
+    "**/test/**",
+    "**/tests/**",
+    "**/testdata/**",
+    "**/fixtures/**",
+    "**/examples/**",
+    "**/samples/**",
+    "**/docs/**",
+    "**/node_modules/**",
+    "**/vendor/**",
+    "**/dist/**",
+    "**/*.test.*",
+    "**/*.spec.*"
+  ],
+  "why": "Without traces nobody can see what a call cost or why it failed. Absence is a repo-wide fact, so it stays info and is raised once.",
+  "status": "info",
+  "effect": [
+    "better answers"
+  ],
+  "live_from": "v0.3",
+  "absence": true
+}

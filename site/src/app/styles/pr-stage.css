@@ -1,0 +1,178 @@
+/* Present mode: the patch first, what's missing in one line, the diff filling the rest of the stage. */
+.is-present .pr-screen {
+  display: flex;
+  flex-direction: column;
+  height: var(--stage-h);
+  gap: var(--s-3);
+}
+
+.pr-stage__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.pr-stage {
+  display: grid;
+  gap: var(--s-2);
+  justify-items: start;
+}
+
+.pr-stage__title {
+  font-size: var(--t-xl);
+  font-weight: 600;
+  letter-spacing: -0.024em;
+  line-height: 1.06;
+  text-wrap: balance;
+  max-width: 34em;
+}
+
+.pr-stage__facts {
+  font-size: var(--t-l);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+}
+
+.pr-stage__state {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-2) var(--s-4);
+}
+
+.pr-stage__state .chip {
+  font-size: var(--t-b);
+}
+
+.pr-stage__lab {
+  font-size: var(--t-m);
+  line-height: 1.2;
+  color: var(--ink-2);
+}
+
+.pr-stage__rollback {
+  font-size: var(--t-m);
+  line-height: 1.25;
+}
+
+.pr-stage__rollback strong {
+  font-weight: 600;
+}
+
+.pr-stage__table {
+  margin-top: var(--s-2);
+  font-size: var(--t-b);
+}
+
+.pr-stage__hint:empty {
+  display: none;
+}
+
+.pr-stage__bottom {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 8fr);
+  gap: var(--s-5);
+  border-top: 1px solid var(--ink);
+  padding-top: var(--s-3);
+}
+
+.pr-stage__left {
+  display: grid;
+  gap: var(--s-3);
+  align-content: start;
+  min-height: 0;
+}
+
+.is-present .pr-diff-col {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.is-present .pr-stage__bottom .diff {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.is-present .pr-stage__bottom .diff-files {
+  flex: none;
+  max-height: calc(2 * (1.35em + 4px));
+}
+
+.is-present .pr-stage__bottom .diff-body {
+  flex: 1;
+  min-height: 0;
+  max-height: none;
+}
+
+.is-present .pr-founder {
+  font-size: var(--t-b);
+  line-height: 1.28;
+}
+
+.present-detail .pr-where:nth-child(n + 2) {
+  display: block;
+}
+
+.is-present .moment .diff-body {
+  max-height: none;
+}
+
+.pr-stage__scope {
+  font-size: var(--t-b);
+  font-weight: 500;
+  color: var(--ink-2);
+}
+
+.pr-stage__measured {
+  display: grid;
+  gap: var(--s-1);
+  width: 100%;
+  margin-top: var(--s-1);
+}
+
+.pr-stage__measured figcaption {
+  font-size: var(--t-xs);
+  color: var(--ink-2);
+}
+
+.pr-stage__measured figcaption b {
+  color: var(--green);
+  font-weight: 600;
+}
+
+.pr-stage__absent td {
+  color: var(--ink-3);
+}
+
+.is-present .pr-stage__lab {
+  font-size: var(--t-b);
+}
+
+/* The card is as tall as what it holds: a one-line patch doesn't get a big empty box. */
+.is-present .pr-stage__bottom .diff {
+  flex: 0 1 auto;
+}
+
+.is-present .pr-stage__bottom .diff-body {
+  flex: 0 1 auto;
+}
+
+.is-present .pr-stage__bottom .diff-files {
+  max-height: none;
+}
+
+.diff-files__more {
+  color: var(--blue-ink);
+  padding: 2px 0;
+}
+
+.diff-scope {
+  font-weight: 600;
+  color: var(--ink);
+}

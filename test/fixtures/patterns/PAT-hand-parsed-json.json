@@ -1,0 +1,14 @@
+{
+  "id": "PAT-hand-parsed-json",
+  "name": "Model text parsed as JSON by hand",
+  "find": [
+    { "regex": "JSON\\.parse\\([^)]*(content|completion|choices)", "note": "JSON.parse on a model reply" },
+    { "regex": "json\\.loads\\([^)]*(content|completion|choices)" }
+  ],
+  "skip_if_near": ["json_schema", "with_structured_output"],
+  "files": ["*.ts", "*.js", "*.py"],
+  "why": "Structured outputs replace hand parsing.",
+  "status": "live",
+  "effect": ["better answers", "keeps working"],
+  "live_from": "v0.1"
+}

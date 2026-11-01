@@ -1,0 +1,12 @@
+{
+  "id": "PAT-call-with-skip-in-file",
+  "name": "A call in a file with no cache setting",
+  "find": [{ "regex": "client\\.messages\\.create" }],
+  "skip_if_near": [],
+  "skip_if_in_file": ["\\bCACHE_CONTROL\\b", "(?i)promptcache"],
+  "files": ["**/*.js"],
+  "why": "Fixture for skip_if_in_file.",
+  "status": "live",
+  "effect": ["cheaper"],
+  "live_from": "v0.1"
+}

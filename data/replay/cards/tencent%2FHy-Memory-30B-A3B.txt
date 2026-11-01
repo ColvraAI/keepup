@@ -1,0 +1,29 @@
+Hy-Memory-30B-A3B 
+ Tencent Hunyuan 
+---
+## Model Introduction
+**Hy-Memory-30B-A3B** is a compact long-term-memory writer model (~3B active parameters) developed by Tencent Hunyuan to execute the write path inside external memory frameworks. It directly replaces the general-purpose LLM inside **Mem0**, **MemOS**, and **Hy-Memory** (covering Chat, Working, and Coding scenarios), deciding what information to retain, how precisely to represent it, and how new evidence should update the persistent memory bank. The model is trained in two stages—Memory On-Policy Distillation (OPD) followed by Attributed Memory Reinforcement Learning—and transfers directly to unseen memory frameworks such as **EverMemOS**.
+ Cross-harness macro-average scores on the fixed 20% benchmark matrix. Each harness score averages six metrics equally; Overall averages the four harnesses equally. EverMemOS is held out from training. 
+---
+## Two-Stage Training
+ Figure 1: Hy-Memory-30B-A3B is trained inside the same deployed harness configurations in both stages. OPD supplies dense teacher supervision on student-written state chains; RL examines the resulting banks, assigns chunk-level credit, and carries the selected bank across windows. In the rollout grid, each cell is the bank after chunk t of rollout i, shaded by its chunk score s_i[t]. Advantages are normalized within each column (dashed: one chunk-level group), so the best rollout can differ from chunk to chunk. The outlined cell is the final bank with the highest sum_t s_i[t], which becomes the parent of the next window. 
+---
+## Experiments
+### Evaluation Principles
+The evaluation changes only the memory writer. For each comparison, the harness version and prompts are fixed, retrieval configuration is fixed, and the answer model, judge, and other framework-side components are held fixed. Throughout this report, every reference to a DeepSeek Flash endpoint denotes **DeepSeek V4.1 Flash**. Decoding settings are matched where APIs permit, each writer builds its own bank from an empty state, and test examples and scoring rules are identical.
+For computational efficiency, every benchmark in the main four-harness matrix is evaluated on a fixed 20% subsample. Each harness score is the equal-weight average of six metrics: **LoCoMo Judge**, **LongMemEval (LME)**, **PersonaMem-v2 (PM-v2)**, **Travel SPS**, **Shopping PS**, and **Code Memory Bench (CMB)**. CMB is itself the equal-weight average of two repository QA evaluations. The overall score is the equal-weight average of the four harness scores.
+### Final Cross-Harness Results
+| Memory writer | Mem0 | Hy-Mem. | MemOS | EverMem. | Avg. |
+| :--- | ---: | ---: | ---: | ---: | ---: |
+| **Hy-Memory-30B-A3B** | **54.02** | **60.55** | **50.51** | **56.89** | **55.49** |
+| Claude Opus 5 | 53.43 | 60.53 | 50.50 | 54.04 | 54.62 |
+| DeepSeek V4.1 Flash | 49.73 | 60.20 | 49.17 | 55.47 | 53.64 |
+| Hy3 | 45.99 | 58.06 | 50.19 | 52.30 | 51.63 |
+| Qwen3.6-35B-A3B | 47.51 | 55.87 | 47.36 | 50.75 | 50.37 |
+| Hy3-A3B Base | 40.20 | 50.39 | 49.05 | 50.98 | 47.66 |
+| Qwen3-30B-A3B | 39.81 | 45.67 | 45.44 | 46.57 | 44.37 |
+*Table 1: Six-metric means on fixed 20% benchmark subsamples. The macro average weights the four harnesses equally.*
+### Detailed Benchmark Results
+Tables 2–5 report the six benchmark scores used to compute each harness mean in Table 1 on the same fixed 20% benchmark subsamples.
+#### Table 2: Detailed results on the Mem0 harness
+| Writer | LoCoMo | LME | PM-v2 | Travel | S

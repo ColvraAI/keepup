@@ -1,0 +1,45 @@
+{
+  "id": "ADV-2026-1101-openai-agents-sdk",
+  "name": "OpenAI Agents SDK for a hand-written loop",
+  "pattern": "PAT-hand-rolled-tool-loop",
+  "kind": "agent-framework",
+  "providers": [
+    "openai"
+  ],
+  "effects": [
+    "keeps working"
+  ],
+  "gain": "No gain measured; brief line only.",
+  "proof": "adoption only",
+  "source": "https://github.com/openai/openai-agents-python",
+  "how": "pip install openai-agents",
+  "replaces": "A hand-written tool dispatch loop.",
+  "trade_offs": [
+    "A new dependency owns the loop."
+  ],
+  "needs": "A test set first.",
+  "checked": "2026-11-01",
+  "checked_by": "agent",
+  "usage_signal": "Not visible in the bill",
+  "gain_model": {
+    "formula": "no gain model: nothing has measured a gain",
+    "inputs": []
+  },
+  "test_recipe": {
+    "what_to_compare": "tool-call success on the product's test set",
+    "samples": 50,
+    "can_run_with": [
+      "ANTHROPIC_API_KEY"
+    ]
+  },
+  "verify_rule": "Test set pass rate; never auto-applied",
+  "change_recipe": {
+    "kind": "pull request with tests",
+    "how": "pip install openai-agents",
+    "left_off": "Never a pull request: a brief line"
+  },
+  "audience": "product",
+  "gain_independent": null,
+  "gain_vendor": null,
+  "tier": "long_tail"
+}

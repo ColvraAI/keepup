@@ -1,0 +1,28 @@
+{
+  "scenario": "after-minilm",
+  "node": "v18.20.8",
+  "transformers": "4.3.2",
+  "minilm": {
+    "model": "Xenova/all-MiniLM-L6-v2",
+    "outcome": "loaded"
+  },
+  "gemma": {
+    "model": "onnx-community/embeddinggemma-2-ONNX",
+    "outcome": "rejected",
+    "message": "Could not locate file: \"https://cdn.anythingllm.com/support/models/onnx-community/embeddinggemma-2-ONNX/config.json\"."
+  },
+  "requests": [
+    "https://huggingface.co/Xenova/all-MiniLM-L6-v2/resolve/main/config.json -> fetch failed",
+    "https://cdn.anythingllm.com/support/models/Xenova/all-MiniLM-L6-v2/config.json -> 200",
+    "https://cdn.anythingllm.com/support/models/Xenova/all-MiniLM-L6-v2/tokenizer_config.json -> 206",
+    "https://cdn.anythingllm.com/support/models/Xenova/all-MiniLM-L6-v2/tokenizer.json -> 206",
+    "https://cdn.anythingllm.com/support/models/Xenova/all-MiniLM-L6-v2/onnx/model_quantized.onnx -> 206",
+    "https://cdn.anythingllm.com/support/models/Xenova/all-MiniLM-L6-v2/tokenizer_config.json -> 200",
+    "https://cdn.anythingllm.com/support/models/Xenova/all-MiniLM-L6-v2/tokenizer.json -> 200",
+    "https://cdn.anythingllm.com/support/models/Xenova/all-MiniLM-L6-v2/onnx/model_quantized.onnx -> 200",
+    "https://cdn.anythingllm.com/support/models/Xenova/all-MiniLM-L6-v2/tokenizer.json -> 206",
+    "https://cdn.anythingllm.com/support/models/Xenova/all-MiniLM-L6-v2/tokenizer_config.json -> 206",
+    "https://cdn.anythingllm.com/support/models/onnx-community/embeddinggemma-2-ONNX/config.json -> 404",
+    "https://cdn.anythingllm.com/support/models/onnx-community/embeddinggemma-2-ONNX/config.json -> 404"
+  ]
+}

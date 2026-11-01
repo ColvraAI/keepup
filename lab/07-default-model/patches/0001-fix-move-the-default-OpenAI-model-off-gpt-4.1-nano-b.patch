@@ -1,0 +1,285 @@
+From 31a698824474de37d1d2f14dafbfde3cd51ad8a5 Mon Sep 17 00:00:00 2001
+From: "keepup[bot]" <keepup[bot]@users.noreply.github.com>
+Date: Tue, 1 Sep 2026 12:00:00 +0000
+Subject: [PATCH] fix: move the default OpenAI model off gpt-4.1-nano before it
+ shuts down
+
+OpenAI's deprecations page says gpt-4.1-nano shuts down on 23 Oct 2026, in a
+notice from 22 Apr 2026, and names gpt-5.6-luna as the substitute. OpenAI
+released gpt-5.6-luna on 9 Jul 2026. When nothing is set, the server falls back
+to gpt-4.1-nano for settings, chats and agents, so those chats stop working on
+that date. Each of those defaults now names the substitute.
+
+OPEN_MODEL_PREF and a workspace's model still win, so nothing a person chose
+changes. Commented sample lines and a settings placeholder also name the old
+model; they set nothing, so they stay.
+
+Replay date: 1 Sep 2026
+Source: https://developers.openai.com/api/docs/deprecations
+Source: https://developers.openai.com/api/docs/changelog (9 Jul 2026 entry)
+---
+ .../AiProviders/openAi/defaultModel.test.js   | 153 ++++++++++++++++++
+ server/models/systemSettings.js               |   2 +-
+ server/utils/AiProviders/openAi/index.js      |   2 +-
+ .../agents/aibitat/providers/genericOpenAi.js |   2 +-
+ .../utils/agents/aibitat/providers/openai.js  |   4 +-
+ server/utils/agents/ephemeral.js              |   2 +-
+ server/utils/agents/index.js                  |   4 +-
+ 7 files changed, 161 insertions(+), 8 deletions(-)
+ create mode 100644 server/__tests__/utils/AiProviders/openAi/defaultModel.test.js
+
+diff --git a/server/__tests__/utils/AiProviders/openAi/defaultModel.test.js b/server/__tests__/utils/AiProviders/openAi/defaultModel.test.js
+new file mode 100644
+index 00000000..99fd06fd
+--- /dev/null
++++ b/server/__tests__/utils/AiProviders/openAi/defaultModel.test.js
+@@ -0,0 +1,153 @@
++/* eslint-env jest */
++// gpt-4.1-nano shuts down on 23 Oct 2026, and OpenAI names gpt-5.6-luna as its
++// substitute: https://developers.openai.com/api/docs/deprecations
++// Each place that falls back to a default has to use the substitute when
++// nothing is set, and has to leave alone whatever a person did set.
++process.env.STORAGE_DIR = require("os").tmpdir();
++
++const mockAibitatConfigs = [];
++jest.mock("../../../../utils/prisma", () => ({}));
++jest.mock("../../../../models/workspaceChats", () => ({
++  WorkspaceChats: { where: jest.fn().mockResolvedValue([]) },
++}));
++jest.mock("../../../../utils/agents/aibitat/plugins", () => ({}));
++jest.mock("../../../../utils/agents/defaults", () => ({
++  USER_AGENT: { name: "user" },
++  WORKSPACE_AGENT: { name: "workspace" },
++  resolveAgentSkill: jest.fn(),
++}));
++jest.mock("../../../../utils/agents/imported", () => jest.fn());
++jest.mock("../../../../utils/agentFlows", () => ({ AgentFlows: {} }));
++jest.mock("../../../../utils/MCP", () => jest.fn());
++jest.mock("../../../../utils/agents/aibitat", () =>
++  jest.fn(function FakeAibitat(config) {
++    mockAibitatConfigs.push(config);
++    throw new Error("stop once the config is known");
++  })
++);
++
++const { OpenAiLLM } = require("../../../../utils/AiProviders/openAi");
++const { SystemSettings } = require("../../../../models/systemSettings");
++const OpenAIProvider = require("../../../../utils/agents/aibitat/providers/openai");
++const GenericOpenAiProvider = require("../../../../utils/agents/aibitat/providers/genericOpenAi");
++const { AgentHandler } = require("../../../../utils/agents");
++const { EphemeralAgentHandler } = require("../../../../utils/agents/ephemeral");
++
++const DEFAULT_MODEL = "gpt-5.6-luna";
++const CHOSEN_IN_ENV = "model-from-env";
++const CHOSEN_IN_WORKSPACE = "model-from-workspace";
++const EMBEDDER = {};
++
++async function modelGivenToAibitat(handler) {
++  mockAibitatConfigs.length = 0;
++  await expect(handler.createAIbitat()).rejects.toThrow("stop once");
++  return mockAibitatConfigs[0].model;
++}
++
++function agentHandler(model) {
++  const handler = new AgentHandler({ uuid: "test" });
++  handler.invocation = { workspace_id: 1 };
++  handler.provider = "openai";
++  handler.model = model;
++  return handler;
++}
++
++function ephemeralHandler(model) {
++  const handler = new EphemeralAgentHandler({ uuid: "test", prompt: "hi" });
++  handler.provider = "openai";
++  handler.model = model;
++  return handler;
++}
++
++describe("the default OpenAI model", () => {
++  const ORIGINAL_ENV = process.env;
++
++  beforeEach(() => {
++    process.env = { ...ORIGINAL_ENV, OPEN_AI_KEY: "test-key" };
++    delete process.env.OPEN_MODEL_PREF;
++  });
++
++  afterAll(() => {
++    process.env = ORIGINAL_ENV;
++  });
++
++  describe("OpenAiLLM, which chats use", () => {
++    it("uses the substitute when no model is set", () => {
++      expect(new OpenAiLLM(EMBEDDER).model).toBe(DEFAULT_MODEL);
++    });
++
++    it("sends the substitute, with the temperature the provider allows it", async () => {
++      const llm = new OpenAiLLM(EMBEDDER);
++      const create = jest.fn().mockResolvedValue({ output_text: "hi" });
++      llm.openai = { responses: { create } };
++      await llm.getChatCompletion([], { temperature: 0.7 });
++      expect(create.mock.calls[0][0].model).toBe(DEFAULT_MODEL);
++      expect(create.mock.calls[0][0].temperature).toBe(1);
++    });
++
++    it("keeps OPEN_MODEL_PREF when it is set", () => {
++      process.env.OPEN_MODEL_PREF = CHOSEN_IN_ENV;
++      expect(new OpenAiLLM(EMBEDDER).model).toBe(CHOSEN_IN_ENV);
++    });
++
++    it("keeps a workspace's model over OPEN_MODEL_PREF", () => {
++      process.env.OPEN_MODEL_PREF = CHOSEN_IN_ENV;
++      expect(new OpenAiLLM(EMBEDDER, CHOSEN_IN_WORKSPACE).model).toBe(
++        CHOSEN_IN_WORKSPACE
++      );
++    });
++  });
++
++  describe("SystemSettings, which the settings screen reads", () => {
++    it("reports the substitute when no model is set", () => {
++      expect(SystemSettings.llmPreferenceKeys().OpenAiModelPref).toBe(
++        DEFAULT_MODEL
++      );
++    });
++
++    it("reports OPEN_MODEL_PREF when it is set", () => {
++      process.env.OPEN_MODEL_PREF = CHOSEN_IN_ENV;
++      expect(SystemSettings.llmPreferenceKeys().OpenAiModelPref).toBe(
++        CHOSEN_IN_ENV
++      );
++    });
++  });
++
++  describe("the agent providers", () => {
++    it.each([
++      ["OpenAIProvider", OpenAIProvider],
++      ["GenericOpenAiProvider", GenericOpenAiProvider],
++    ])("%s uses the substitute unless given a model", (_name, Provider) => {
++      expect(new Provider({}).model).toBe(DEFAULT_MODEL);
++      expect(new Provider({ model: CHOSEN_IN_WORKSPACE }).model).toBe(
++        CHOSEN_IN_WORKSPACE
++      );
++    });
++  });
++
++  describe("AgentHandler.providerDefault", () => {
++    it("uses the substitute when no model is set", () => {
++      expect(agentHandler(null).providerDefault("openai")).toBe(DEFAULT_MODEL);
++    });
++
++    it("keeps OPEN_MODEL_PREF when it is set", () => {
++      process.env.OPEN_MODEL_PREF = CHOSEN_IN_ENV;
++      expect(agentHandler(null).providerDefault("openai")).toBe(CHOSEN_IN_ENV);
++    });
++  });
++
++  describe.each([
++    ["AgentHandler", agentHandler],
++    ["EphemeralAgentHandler", ephemeralHandler],
++  ])("%s.createAIbitat", (_name, build) => {
++    it("uses the substitute when the handler has no model", async () => {
++      expect(await modelGivenToAibitat(build(null))).toBe(DEFAULT_MODEL);
++    });
++
++    it("keeps the handler's model when it has one", async () => {
++      expect(await modelGivenToAibitat(build(CHOSEN_IN_WORKSPACE))).toBe(
++        CHOSEN_IN_WORKSPACE
++      );
++    });
++  });
++});
+diff --git a/server/models/systemSettings.js b/server/models/systemSettings.js
+index 3eb67247..8884ba14 100644
+--- a/server/models/systemSettings.js
++++ b/server/models/systemSettings.js
+@@ -875,7 +875,7 @@ const SystemSettings = {
+     return {
+       // OpenAI Keys
+       OpenAiKey: !!process.env.OPEN_AI_KEY,
+-      OpenAiModelPref: process.env.OPEN_MODEL_PREF || "gpt-4.1-nano",
++      OpenAiModelPref: process.env.OPEN_MODEL_PREF || "gpt-5.6-luna",
+ 
+       // Azure + OpenAI Keys
+       AzureOpenAiEndpoint: process.env.AZURE_OPENAI_ENDPOINT,
+diff --git a/server/utils/AiProviders/openAi/index.js b/server/utils/AiProviders/openAi/index.js
+index 3aec1058..a2f6f85c 100644
+--- a/server/utils/AiProviders/openAi/index.js
++++ b/server/utils/AiProviders/openAi/index.js
+@@ -21,7 +21,7 @@ class OpenAiLLM {
+       apiKey: process.env.OPEN_AI_KEY,
+     });
+     this.model =
+-      modelPreference || process.env.OPEN_MODEL_PREF || "gpt-4.1-nano";
++      modelPreference || process.env.OPEN_MODEL_PREF || "gpt-5.6-luna";
+     this.limits = {
+       history: this.promptWindowLimit() * 0.15,
+       system: this.promptWindowLimit() * 0.15,
+diff --git a/server/utils/agents/aibitat/providers/genericOpenAi.js b/server/utils/agents/aibitat/providers/genericOpenAi.js
+index 3fd72601..a8adb982 100644
+--- a/server/utils/agents/aibitat/providers/genericOpenAi.js
++++ b/server/utils/agents/aibitat/providers/genericOpenAi.js
+@@ -21,7 +21,7 @@ class GenericOpenAiProvider extends InheritMultiple([Provider, UnTooled]) {
+   constructor(config = {}) {
+     super();
+     this.providerTag = "generic-openai";
+-    const { model = "gpt-4.1-nano" } = config;
++    const { model = "gpt-5.6-luna" } = config;
+     const client = new OpenAI({
+       baseURL: process.env.GENERIC_OPEN_AI_BASE_PATH,
+       apiKey: process.env.GENERIC_OPEN_AI_API_KEY ?? null,
+diff --git a/server/utils/agents/aibitat/providers/openai.js b/server/utils/agents/aibitat/providers/openai.js
+index 21cd8253..22327f1e 100644
+--- a/server/utils/agents/aibitat/providers/openai.js
++++ b/server/utils/agents/aibitat/providers/openai.js
+@@ -6,7 +6,7 @@ const { safeJsonParse } = require("../../../http");
+ 
+ /**
+  * The agent provider for the OpenAI API.
+- * By default, the model is set to 'gpt-4.1-nano'.
++ * By default, the model is set to 'gpt-5.6-luna'.
+  */
+ class OpenAIProvider extends Provider {
+   model;
+@@ -15,7 +15,7 @@ class OpenAIProvider extends Provider {
+       options = {
+         apiKey: process.env.OPEN_AI_KEY,
+       },
+-      model = "gpt-4.1-nano",
++      model = "gpt-5.6-luna",
+     } = config;
+ 
+     const client = new OpenAI(options);
+diff --git a/server/utils/agents/ephemeral.js b/server/utils/agents/ephemeral.js
+index e9c63db5..993cb832 100644
+--- a/server/utils/agents/ephemeral.js
++++ b/server/utils/agents/ephemeral.js
+@@ -513,7 +513,7 @@ class EphemeralAgentHandler extends AgentHandler {
+   ) {
+     this.aibitat = new AIbitat({
+       provider: this.provider ?? "openai",
+-      model: this.model ?? "gpt-4.1-nano",
++      model: this.model ?? "gpt-5.6-luna",
+       chats: await this.#chatHistory(20),
+       handlerProps: {
+         invocation: {
+diff --git a/server/utils/agents/index.js b/server/utils/agents/index.js
+index 9fe08059..09742466 100644
+--- a/server/utils/agents/index.js
++++ b/server/utils/agents/index.js
+@@ -315,7 +315,7 @@ class AgentHandler {
+   providerDefault(provider = this.provider) {
+     switch (provider) {
+       case "openai":
+-        return process.env.OPEN_MODEL_PREF ?? "gpt-4.1-nano";
++        return process.env.OPEN_MODEL_PREF ?? "gpt-5.6-luna";
+       case "anthropic":
+         return process.env.ANTHROPIC_MODEL_PREF ?? "claude-sonnet-4-6";
+       case "lmstudio":
+@@ -854,7 +854,7 @@ class AgentHandler {
+     this.#args = args;
+     this.aibitat = new AIbitat({
+       provider: this.provider ?? "openai",
+-      model: this.model ?? "gpt-4.1-nano",
++      model: this.model ?? "gpt-5.6-luna",
+       chats: await this.#chatHistory(20),
+       handlerProps: {
+         invocation: this.invocation,

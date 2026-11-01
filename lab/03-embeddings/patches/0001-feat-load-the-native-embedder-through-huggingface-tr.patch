@@ -1,0 +1,752 @@
+From 5c8ea19cd6814266410a5d91a5f6019f0dd3db3f Mon Sep 17 00:00:00 2001
+From: "keepup[bot]" <keepup[bot]@users.noreply.github.com>
+Date: Sun, 4 Oct 2026 12:00:00 +0000
+Subject: [PATCH 1/3] feat: load the native embedder through
+ @huggingface/transformers
+
+@xenova/transformers has had no release since 29 May 2024, and the ONNX
+build of EmbeddingGemma 2, whose Hugging Face repo was created on 4 Oct 2026,
+targets its maintained successor. Move only the native embedder for now, at
+4.3.0, the latest release on that date. The reranker and local Whisper stay
+on the old package, so the collector's dependencies do not change.
+
+Every existing model now names dtype "q8": that is the quantized file the
+old package loaded by default, so existing downloads keep being used.
+
+The new package's pipeline() drops cache_dir for some of its file lookups,
+and those go to the network unless env.cacheDir holds the file. Set it to our
+cache, so a downloaded model still loads with Hugging Face unreachable, as it
+does on the old package.
+
+server/.yarnrc skips onnxruntime-node's install step. On linux/x64 it
+downloads CUDA files from NuGet that the embedder never uses, because it runs
+on the CPU, and yarn install fails if NuGet can't be reached.
+
+sharp is pinned to 0.34.5 under the new package. sharp 0.35 requires Node
+20.9, and yarn refuses to install it on the Node 18 used by CI and Docker.
+
+Replay date: 4 Oct 2026. Source:
+https://huggingface.co/onnx-community/embeddinggemma-2-ONNX
+---
+ server/.yarnrc                                |   2 +
+ .../EmbeddingEngines/native/index.test.js     | 122 +++++++
+ server/package.json                           |   2 +
+ .../EmbeddingEngines/native/constants.js      |   6 +
+ server/utils/EmbeddingEngines/native/index.js |  22 +-
+ server/yarn.lock                              | 315 +++++++++++++++++-
+ 6 files changed, 462 insertions(+), 7 deletions(-)
+ create mode 100644 server/.yarnrc
+ create mode 100644 server/__tests__/utils/EmbeddingEngines/native/index.test.js
+
+diff --git a/server/.yarnrc b/server/.yarnrc
+new file mode 100644
+index 00000000..c2cf65dd
+--- /dev/null
++++ b/server/.yarnrc
+@@ -0,0 +1,2 @@
++# The native embedder runs on the CPU, so never download onnxruntime-node's CUDA files from NuGet.
++onnxruntime-node-install skip
+diff --git a/server/__tests__/utils/EmbeddingEngines/native/index.test.js b/server/__tests__/utils/EmbeddingEngines/native/index.test.js
+new file mode 100644
+index 00000000..00003c42
+--- /dev/null
++++ b/server/__tests__/utils/EmbeddingEngines/native/index.test.js
+@@ -0,0 +1,122 @@
++/* eslint-env jest */
++const fs = require("fs");
++const os = require("os");
++const path = require("path");
++const {
++  SUPPORTED_NATIVE_EMBEDDING_MODELS,
++} = require("../../../../utils/EmbeddingEngines/native/constants");
++
++const DEFAULT_MODEL = "Xenova/all-MiniLM-L6-v2";
++
++// A tiny stand-in for the feature-extraction pipeline, so CI never downloads a model.
++function fakeTransformers(dimension) {
++  const extractor = jest.fn(async (chunk) => ({
++    length: chunk.length,
++    tolist: () => chunk.map(() => new Array(dimension).fill(0.5)),
++  }));
++  return {
++    extractor,
++    transformers: {
++      env: { remoteHost: "https://huggingface.co/" },
++      pipeline: jest.fn(async () => extractor),
++    },
++  };
++}
++
++describe("NativeEmbedder", () => {
++  const ORIGINAL_ENV = process.env;
++  let NativeEmbedder;
++  let storageDir;
++
++  function loadWith(fake) {
++    return jest
++      .spyOn(NativeEmbedder, "_loadTransformers")
++      .mockResolvedValue(fake.transformers);
++  }
++
++  beforeEach(() => {
++    // Pipelines are kept per model on the class, so each test needs a fresh one.
++    jest.resetModules();
++    ({ NativeEmbedder } = require("../../../../utils/EmbeddingEngines/native"));
++    storageDir = fs.mkdtempSync(path.join(os.tmpdir(), "native-embedder-"));
++    process.env = { ...ORIGINAL_ENV, STORAGE_DIR: storageDir };
++    delete process.env.EMBEDDING_MODEL_PREF;
++    jest.spyOn(console, "log").mockImplementation(() => {});
++  });
++
++  afterEach(() => {
++    process.env = ORIGINAL_ENV;
++    jest.restoreAllMocks();
++    fs.rmSync(storageDir, { recursive: true, force: true });
++  });
++
++  it("keeps all-MiniLM-L6-v2 as the default model", () => {
++    expect(NativeEmbedder.defaultModel).toBe(DEFAULT_MODEL);
++    expect(new NativeEmbedder().model).toBe(DEFAULT_MODEL);
++  });
++
++  it.each(Object.keys(SUPPORTED_NATIVE_EMBEDDING_MODELS))(
++    "%s has a well-formed entry",
++    (id) => {
++      const entry = SUPPORTED_NATIVE_EMBEDDING_MODELS[id];
++      expect(entry.maxConcurrentChunks).toBeGreaterThan(0);
++      expect(entry.embeddingMaxChunkLength).toBeGreaterThan(0);
++      expect(typeof entry.chunkPrefix).toBe("string");
++      expect(typeof entry.queryPrefix).toBe("string");
++      expect(entry.dtype).toEqual(expect.any(String));
++      expect(entry.apiInfo.id).toBe(id);
++      for (const field of ["name", "description", "lang", "size"])
++        expect(entry.apiInfo[field]).toEqual(expect.any(String));
++      expect(entry.apiInfo.modelCard).toMatch(/^https:\/\/huggingface\.co\//);
++    }
++  );
++
++  it("lists every supported model for the embedder picker", () => {
++    expect(NativeEmbedder.availableModels().map((m) => m.id)).toEqual(
++      Object.keys(NativeEmbedder.supportedModels)
++    );
++  });
++
++  it("loads the same quantized weights as before the package change", async () => {
++    const fake = fakeTransformers(384);
++    loadWith(fake);
++    process.env.EMBEDDING_MODEL_PREF = DEFAULT_MODEL;
++
++    const vector = await new NativeEmbedder().embedTextInput("hello");
++
++    const [task, model, options] = fake.transformers.pipeline.mock.calls[0];
++    expect(task).toBe("feature-extraction");
++    expect(model).toBe(DEFAULT_MODEL);
++    expect(options.dtype).toBe("q8");
++    expect(options.cache_dir).toBe(path.resolve(storageDir, "models"));
++    expect(options.config).toBeUndefined();
++    expect(vector).toHaveLength(384);
++  });
++
++  it("looks for model files in our cache, so a downloaded model loads with no network", async () => {
++    const fake = fakeTransformers(384);
++    loadWith(fake);
++    process.env.EMBEDDING_MODEL_PREF = DEFAULT_MODEL;
++
++    await new NativeEmbedder().embedderClient();
++
++    expect(fake.transformers.env.cacheDir).toBe(
++      path.resolve(storageDir, "models")
++    );
++  });
++
++  it("only logs download progress for a single file", async () => {
++    const fake = fakeTransformers(384);
++    loadWith(fake);
++    process.env.EMBEDDING_MODEL_PREF = "Xenova/nomic-embed-text-v1";
++
++    await new NativeEmbedder().embedderClient();
++
++    const { progress_callback } = fake.transformers.pipeline.mock.calls[0][2];
++    console.log.mockClear();
++    progress_callback({ status: "progress_total", progress: 10 });
++    expect(console.log).not.toHaveBeenCalled();
++    progress_callback({ status: "progress", file: "model.onnx", progress: 10 });
++    expect(console.log).toHaveBeenCalledTimes(1);
++  });
++});
+diff --git a/server/package.json b/server/package.json
+index 3ed4919f..222506a4 100644
+--- a/server/package.json
++++ b/server/package.json
+@@ -23,6 +23,7 @@
+     "@anthropic-ai/sdk": "^0.39.0",
+     "@breejs/later": "4.2.0",
+     "@datastax/astra-db-ts": "^0.1.3",
++    "@huggingface/transformers": "4.3.0",
+     "@ladjs/graceful": "^3.2.2",
+     "@lancedb/lancedb": "0.15.0",
+     "@langchain/anthropic": "0.1.16",
+@@ -102,6 +103,7 @@
+   },
+   "resolutions": {
+     "**/graphql-request/form-data": "3.0.4",
++    "@huggingface/transformers/sharp": "0.34.5",
+     "form-data": "4.0.4"
+   },
+   "devDependencies": {
+diff --git a/server/utils/EmbeddingEngines/native/constants.js b/server/utils/EmbeddingEngines/native/constants.js
+index 76c4d96c..4bf1b3e0 100644
+--- a/server/utils/EmbeddingEngines/native/constants.js
++++ b/server/utils/EmbeddingEngines/native/constants.js
+@@ -1,3 +1,6 @@
++// dtype picks the ONNX weights to load. @xenova/transformers loaded the quantized
++// weights by default (onnx/model_quantized.onnx), which is "q8" on @huggingface/transformers.
++// Without a dtype it would download the full precision weights in Node.js.
+ const SUPPORTED_NATIVE_EMBEDDING_MODELS = {
+   "Xenova/all-MiniLM-L6-v2": {
+     maxConcurrentChunks: 25,
+@@ -8,6 +11,7 @@ const SUPPORTED_NATIVE_EMBEDDING_MODELS = {
+     embeddingMaxChunkLength: 1_000,
+     chunkPrefix: "",
+     queryPrefix: "",
++    dtype: "q8",
+     apiInfo: {
+       id: "Xenova/all-MiniLM-L6-v2",
+       name: "all-MiniLM-L6-v2",
+@@ -27,6 +31,7 @@ const SUPPORTED_NATIVE_EMBEDDING_MODELS = {
+     embeddingMaxChunkLength: 16_000,
+     chunkPrefix: "search_document: ",
+     queryPrefix: "search_query: ",
++    dtype: "q8",
+     apiInfo: {
+       id: "Xenova/nomic-embed-text-v1",
+       name: "nomic-embed-text-v1",
+@@ -46,6 +51,7 @@ const SUPPORTED_NATIVE_EMBEDDING_MODELS = {
+     embeddingMaxChunkLength: 1_000,
+     chunkPrefix: "passage: ",
+     queryPrefix: "query: ",
++    dtype: "q8",
+     apiInfo: {
+       id: "MintplexLabs/multilingual-e5-small",
+       name: "multilingual-e5-small",
+diff --git a/server/utils/EmbeddingEngines/native/index.js b/server/utils/EmbeddingEngines/native/index.js
+index 763b7b9a..c7974f9a 100644
+--- a/server/utils/EmbeddingEngines/native/index.js
++++ b/server/utils/EmbeddingEngines/native/index.js
+@@ -7,8 +7,8 @@ const { SUPPORTED_NATIVE_EMBEDDING_MODELS } = require("./constants");
+ class NativeEmbedder {
+   static defaultModel = "Xenova/all-MiniLM-L6-v2";
+ 
+-  // ONNX sessions cannot be freed on onnxruntime-node 1.14 (dispose() is a
+-  // no-op), so we must only ever create one pipeline per model.
++  // ONNX sessions could not be freed on onnxruntime-node 1.14 (dispose() is a
++  // no-op), which the reranker still uses. We keep one pipeline per model.
+   /** @type {Map<string, any>} */
+   static #pipelines = new Map();
+   /** @type {Map<string, Promise<any>>} */
+@@ -19,6 +19,7 @@ class NativeEmbedder {
+    * @type {Record<string, {
+    *   chunkPrefix: string;
+    *   queryPrefix: string;
++   *   dtype: string;
+    *   apiInfo: {
+    *     id: string;
+    *     name: string;
+@@ -61,6 +62,14 @@ class NativeEmbedder {
+     console.log(`\x1b[36m[${this.className}]\x1b[0m ${text}`, ...args);
+   }
+ 
++  /**
++   * Convert ESM to CommonJS via import so we can load this library.
++   * @returns {Promise<typeof import("@huggingface/transformers")>}
++   */
++  static _loadTransformers() {
++    return import("@huggingface/transformers");
++  }
++
+   /**
+    * Get the selected model from the environment variable.
+    * @returns {string}
+@@ -137,9 +146,11 @@ class NativeEmbedder {
+ 
+   async #fetchWithHost(hostOverride = null) {
+     try {
+-      // Convert ESM to CommonJS via import so we can load this library.
+       const pipeline = (...args) =>
+-        import("@xenova/transformers").then(({ pipeline, env }) => {
++        NativeEmbedder._loadTransformers().then(({ pipeline, env }) => {
++          // pipeline() does not pass cache_dir to all of its file lookups. Those use env.cacheDir,
++          // and would go to the network for files we already have.
++          env.cacheDir = this.cacheDir;
+           if (!this.modelDownloaded) {
+             // if model is not downloaded, we will log where we are fetching from.
+             if (hostOverride) {
+@@ -153,11 +164,12 @@ class NativeEmbedder {
+       return {
+         pipeline: await pipeline("feature-extraction", this.model, {
+           cache_dir: this.cacheDir,
++          dtype: this.modelInfo.dtype,
+           ...(!this.modelDownloaded
+             ? {
+                 // Show download progress if we need to download any files
+                 progress_callback: (data) => {
+-                  if (!data.hasOwnProperty("progress")) return;
++                  if (data.status !== "progress") return;
+                   console.log(
+                     `\x1b[36m[NativeEmbedder - Downloading model]\x1b[0m ${
+                       data.file
+diff --git a/server/yarn.lock b/server/yarn.lock
+index eec04bd4..610706f0 100644
+--- a/server/yarn.lock
++++ b/server/yarn.lock
+@@ -316,6 +316,13 @@
+     bson "^6.2.0"
+     winston "^3.7.2"
+ 
++"@emnapi/runtime@^1.7.0":
++  version "1.11.3"
++  resolved "https://registry.yarnpkg.com/@emnapi/runtime/-/runtime-1.11.3.tgz#84257ae3b0531eb2aec1ffa23d70700da007ba95"
++  integrity sha512-Xz4Tpyki7XyrpbUK1jR1AhdAdaXyhhY4lZ3neLodmhpuWfy2PAQN5B46sAiU4liOXGLkHypn/qU+jvfWSCYYLA==
++  dependencies:
++    tslib "^2.4.0"
++
+ "@eslint-community/eslint-utils@^4.8.0":
+   version "4.9.1"
+   resolved "https://registry.npmjs.org/@eslint-community/eslint-utils/-/eslint-utils-4.9.1.tgz"
+@@ -470,6 +477,27 @@
+   resolved "https://registry.npmjs.org/@huggingface/jinja/-/jinja-0.2.2.tgz"
+   integrity sha512-/KPde26khDUIPkTGU82jdtTW9UAuvUTumCAbFs/7giR0SxsvZC4hru51PBvpijH6BVkHcROcvZM/lpy5h1jRRA==
+ 
++"@huggingface/jinja@^0.5.10":
++  version "0.5.11"
++  resolved "https://registry.yarnpkg.com/@huggingface/jinja/-/jinja-0.5.11.tgz#359093d5c9b5e3c72dc7d76179969d5a3e6c2b69"
++  integrity sha512-YzEzwM5oQf4r0vs7ifWQ+yuVR1YkAHrjERQ+a8WRsStHHp4NRBg+NesjiFc+X2AFUpRvvrIeHDS1xFy9jY/IjQ==
++
++"@huggingface/tokenizers@^0.2.0":
++  version "0.2.0"
++  resolved "https://registry.yarnpkg.com/@huggingface/tokenizers/-/tokenizers-0.2.0.tgz#3913cd936b6e5cbc24e20d0c81dc3ec0f97b8eb0"
++  integrity sha512-LidMHe1FpcSYH4vcSjXooda34pC0M8m1gmDOv7SQi6Iv+ib1zX7J3sHBCC9/3FPCkn2k1b55FneVqMRxrr99pg==
++
++"@huggingface/transformers@4.3.0":
++  version "4.3.0"
++  resolved "https://registry.yarnpkg.com/@huggingface/transformers/-/transformers-4.3.0.tgz#bd838fcd2f64b21dc79028a520f89af8b2dda41d"
++  integrity sha512-fL1A/WUZwouPrOlYxU5dzIwD2T5J781JiB2jDR8bFe5DwCj0Gfudq+NEXCMno49kQgajHA7xQkrRLJlqG1veEA==
++  dependencies:
++    "@huggingface/jinja" "^0.5.10"
++    "@huggingface/tokenizers" "^0.2.0"
++    onnxruntime-node "1.30.0"
++    onnxruntime-web "1.31.0-dev.20260914-8d85527a0"
++    sharp "^0.35.4"
++
+ "@humanfs/core@^0.19.1":
+   version "0.19.1"
+   resolved "https://registry.npmjs.org/@humanfs/core/-/core-0.19.1.tgz"
+@@ -493,6 +521,153 @@
+   resolved "https://registry.npmjs.org/@humanwhocodes/retry/-/retry-0.4.3.tgz"
+   integrity sha512-bV0Tgo9K4hfPCek+aMAn81RppFKv2ySDQeMoSZuvTASywNTnVJCArCZE2FWqpvIatKu7VMRLWlR1EazvVhDyhQ==
+ 
++"@img/colour@^1.0.0":
++  version "1.1.0"
++  resolved "https://registry.yarnpkg.com/@img/colour/-/colour-1.1.0.tgz#b0c2c2fa661adf75effd6b4964497cd80010bb9d"
++  integrity sha512-Td76q7j57o/tLVdgS746cYARfSyxk8iEfRxewL9h4OMzYhbW4TAcppl0mT4eyqXddh6L/jwoM75mo7ixa/pCeQ==
++
++"@img/sharp-darwin-arm64@0.34.5":
++  version "0.34.5"
++  resolved "https://registry.yarnpkg.com/@img/sharp-darwin-arm64/-/sharp-darwin-arm64-0.34.5.tgz#6e0732dcade126b6670af7aa17060b926835ea86"
++  integrity sha512-imtQ3WMJXbMY4fxb/Ndp6HBTNVtWCUI0WdobyheGf5+ad6xX8VIDO8u2xE4qc/fr08CKG/7dDseFtn6M6g/r3w==
++  optionalDependencies:
++    "@img/sharp-libvips-darwin-arm64" "1.2.4"
++
++"@img/sharp-darwin-x64@0.34.5":
++  version "0.34.5"
++  resolved "https://registry.yarnpkg.com/@img/sharp-darwin-x64/-/sharp-darwin-x64-0.34.5.tgz#19bc1dd6eba6d5a96283498b9c9f401180ee9c7b"
++  integrity sha512-YNEFAF/4KQ/PeW0N+r+aVVsoIY0/qxxikF2SWdp+NRkmMB7y9LBZAVqQ4yhGCm/H3H270OSykqmQMKLBhBJDEw==
++  optionalDependencies:
++    "@img/sharp-libvips-darwin-x64" "1.2.4"
++
++"@img/sharp-libvips-darwin-arm64@1.2.4":
++  version "1.2.4"
++  resolved "https://registry.yarnpkg.com/@img/sharp-libvips-darwin-arm64/-/sharp-libvips-darwin-arm64-1.2.4.tgz#2894c0cb87d42276c3889942e8e2db517a492c43"
++  integrity sha512-zqjjo7RatFfFoP0MkQ51jfuFZBnVE2pRiaydKJ1G/rHZvnsrHAOcQALIi9sA5co5xenQdTugCvtb1cuf78Vf4g==
++
++"@img/sharp-libvips-darwin-x64@1.2.4":
++  version "1.2.4"
++  resolved "https://registry.yarnpkg.com/@img/sharp-libvips-darwin-x64/-/sharp-libvips-darwin-x64-1.2.4.tgz#e63681f4539a94af9cd17246ed8881734386f8cc"
++  integrity sha512-1IOd5xfVhlGwX+zXv2N93k0yMONvUlANylbJw1eTah8K/Jtpi15KC+WSiaX/nBmbm2HxRM1gZ0nSdjSsrZbGKg==
++
++"@img/sharp-libvips-linux-arm64@1.2.4":
++  version "1.2.4"
++  resolved "https://registry.yarnpkg.com/@img/sharp-libvips-linux-arm64/-/sharp-libvips-linux-arm64-1.2.4.tgz#b1b288b36864b3bce545ad91fa6dadcf1a4ad318"
++  integrity sha512-excjX8DfsIcJ10x1Kzr4RcWe1edC9PquDRRPx3YVCvQv+U5p7Yin2s32ftzikXojb1PIFc/9Mt28/y+iRklkrw==
++
++"@img/sharp-libvips-linux-arm@1.2.4":
++  version "1.2.4"
++  resolved "https://registry.yarnpkg.com/@img/sharp-libvips-linux-arm/-/sharp-libvips-linux-arm-1.2.4.tgz#b9260dd1ebe6f9e3bdbcbdcac9d2ac125f35852d"
++  integrity sha512-bFI7xcKFELdiNCVov8e44Ia4u2byA+l3XtsAj+Q8tfCwO6BQ8iDojYdvoPMqsKDkuoOo+X6HZA0s0q11ANMQ8A==
++
++"@img/sharp-libvips-linux-ppc64@1.2.4":
++  version "1.2.4"
++  resolved "https://registry.yarnpkg.com/@img/sharp-libvips-linux-ppc64/-/sharp-libvips-linux-ppc64-1.2.4.tgz#4b83ecf2a829057222b38848c7b022e7b4d07aa7"
++  integrity sha512-FMuvGijLDYG6lW+b/UvyilUWu5Ayu+3r2d1S8notiGCIyYU/76eig1UfMmkZ7vwgOrzKzlQbFSuQfgm7GYUPpA==
++
++"@img/sharp-libvips-linux-riscv64@1.2.4":
++  version "1.2.4"
++  resolved "https://registry.yarnpkg.com/@img/sharp-libvips-linux-riscv64/-/sharp-libvips-linux-riscv64-1.2.4.tgz#880b4678009e5a2080af192332b00b0aaf8a48de"
++  integrity sha512-oVDbcR4zUC0ce82teubSm+x6ETixtKZBh/qbREIOcI3cULzDyb18Sr/Wcyx7NRQeQzOiHTNbZFF1UwPS2scyGA==
++
++"@img/sharp-libvips-linux-s390x@1.2.4":
++  version "1.2.4"
++  resolved "https://registry.yarnpkg.com/@img/sharp-libvips-linux-s390x/-/sharp-libvips-linux-s390x-1.2.4.tgz#74f343c8e10fad821b38f75ced30488939dc59ec"
++  integrity sha512-qmp9VrzgPgMoGZyPvrQHqk02uyjA0/QrTO26Tqk6l4ZV0MPWIW6LTkqOIov+J1yEu7MbFQaDpwdwJKhbJvuRxQ==
++
++"@img/sharp-libvips-linux-x64@1.2.4":
++  version "1.2.4"
++  resolved "https://registry.yarnpkg.com/@img/sharp-libvips-linux-x64/-/sharp-libvips-linux-x64-1.2.4.tgz#df4183e8bd8410f7d61b66859a35edeab0a531ce"
++  integrity sha512-tJxiiLsmHc9Ax1bz3oaOYBURTXGIRDODBqhveVHonrHJ9/+k89qbLl0bcJns+e4t4rvaNBxaEZsFtSfAdquPrw==
++
++"@img/sharp-libvips-linuxmusl-arm64@1.2.4":
++  version "1.2.4"
++  resolved "https://registry.yarnpkg.com/@img/sharp-libvips-linuxmusl-arm64/-/sharp-libvips-linuxmusl-arm64-1.2.4.tgz#c8d6b48211df67137541007ee8d1b7b1f8ca8e06"
++  integrity sha512-FVQHuwx1IIuNow9QAbYUzJ+En8KcVm9Lk5+uGUQJHaZmMECZmOlix9HnH7n1TRkXMS0pGxIJokIVB9SuqZGGXw==
++
++"@img/sharp-libvips-linuxmusl-x64@1.2.4":
++  version "1.2.4"
++  resolved "https://registry.yarnpkg.com/@img/sharp-libvips-linuxmusl-x64/-/sharp-libvips-linuxmusl-x64-1.2.4.tgz#be11c75bee5b080cbee31a153a8779448f919f75"
++  integrity sha512-+LpyBk7L44ZIXwz/VYfglaX/okxezESc6UxDSoyo2Ks6Jxc4Y7sGjpgU9s4PMgqgjj1gZCylTieNamqA1MF7Dg==
++
++"@img/sharp-linux-arm64@0.34.5":
++  version "0.34.5"
++  resolved "https://registry.yarnpkg.com/@img/sharp-linux-arm64/-/sharp-linux-arm64-0.34.5.tgz#7aa7764ef9c001f15e610546d42fce56911790cc"
++  integrity sha512-bKQzaJRY/bkPOXyKx5EVup7qkaojECG6NLYswgktOZjaXecSAeCWiZwwiFf3/Y+O1HrauiE3FVsGxFg8c24rZg==
++  optionalDependencies:
++    "@img/sharp-libvips-linux-arm64" "1.2.4"
++
++"@img/sharp-linux-arm@0.34.5":
++  version "0.34.5"
++  resolved "https://registry.yarnpkg.com/@img/sharp-linux-arm/-/sharp-linux-arm-0.34.5.tgz#5fb0c3695dd12522d39c3ff7a6bc816461780a0d"
++  integrity sha512-9dLqsvwtg1uuXBGZKsxem9595+ujv0sJ6Vi8wcTANSFpwV/GONat5eCkzQo/1O6zRIkh0m/8+5BjrRr7jDUSZw==
++  optionalDependencies:
++    "@img/sharp-libvips-linux-arm" "1.2.4"
++
++"@img/sharp-linux-ppc64@0.34.5":
++  version "0.34.5"
++  resolved "https://registry.yarnpkg.com/@img/sharp-linux-ppc64/-/sharp-linux-ppc64-0.34.5.tgz#9c213a81520a20caf66978f3d4c07456ff2e0813"
++  integrity sha512-7zznwNaqW6YtsfrGGDA6BRkISKAAE1Jo0QdpNYXNMHu2+0dTrPflTLNkpc8l7MUP5M16ZJcUvysVWWrMefZquA==
++  optionalDependencies:
++    "@img/sharp-libvips-linux-ppc64" "1.2.4"
++
++"@img/sharp-linux-riscv64@0.34.5":
++  version "0.34.5"
++  resolved "https://registry.yarnpkg.com/@img/sharp-linux-riscv64/-/sharp-linux-riscv64-0.34.5.tgz#cdd28182774eadbe04f62675a16aabbccb833f60"
++  integrity sha512-51gJuLPTKa7piYPaVs8GmByo7/U7/7TZOq+cnXJIHZKavIRHAP77e3N2HEl3dgiqdD/w0yUfiJnII77PuDDFdw==
++  optionalDependencies:
++    "@img/sharp-libvips-linux-riscv64" "1.2.4"
++
++"@img/sharp-linux-s390x@0.34.5":
++  version "0.34.5"
++  resolved "https://registry.yarnpkg.com/@img/sharp-linux-s390x/-/sharp-linux-s390x-0.34.5.tgz#93eac601b9f329bb27917e0e19098c722d630df7"
++  integrity sha512-nQtCk0PdKfho3eC5MrbQoigJ2gd1CgddUMkabUj+rBevs8tZ2cULOx46E7oyX+04WGfABgIwmMC0VqieTiR4jg==
++  optionalDependencies:
++    "@img/sharp-libvips-linux-s390x" "1.2.4"
++
++"@img/sharp-linux-x64@0.34.5":
++  version "0.34.5"
++  resolved "https://registry.yarnpkg.com/@img/sharp-linux-x64/-/sharp-linux-x64-0.34.5.tgz#55abc7cd754ffca5002b6c2b719abdfc846819a8"
++  integrity sha512-MEzd8HPKxVxVenwAa+JRPwEC7QFjoPWuS5NZnBt6B3pu7EG2Ge0id1oLHZpPJdn3OQK+BQDiw9zStiHBTJQQQQ==
++  optionalDependencies:
++    "@img/sharp-libvips-linux-x64" "1.2.4"
++
++"@img/sharp-linuxmusl-arm64@0.34.5":
++  version "0.34.5"
++  resolved "https://registry.yarnpkg.com/@img/sharp-linuxmusl-arm64/-/sharp-linuxmusl-arm64-0.34.5.tgz#d6515ee971bb62f73001a4829b9d865a11b77086"
++  integrity sha512-fprJR6GtRsMt6Kyfq44IsChVZeGN97gTD331weR1ex1c1rypDEABN6Tm2xa1wE6lYb5DdEnk03NZPqA7Id21yg==
++  optionalDependencies:
++    "@img/sharp-libvips-linuxmusl-arm64" "1.2.4"
++
++"@img/sharp-linuxmusl-x64@0.34.5":
++  version "0.34.5"
++  resolved "https://registry.yarnpkg.com/@img/sharp-linuxmusl-x64/-/sharp-linuxmusl-x64-0.34.5.tgz#d97978aec7c5212f999714f2f5b736457e12ee9f"
++  integrity sha512-Jg8wNT1MUzIvhBFxViqrEhWDGzqymo3sV7z7ZsaWbZNDLXRJZoRGrjulp60YYtV4wfY8VIKcWidjojlLcWrd8Q==
++  optionalDependencies:
++    "@img/sharp-libvips-linuxmusl-x64" "1.2.4"
++
++"@img/sharp-wasm32@0.34.5":
++  version "0.34.5"
++  resolved "https://registry.yarnpkg.com/@img/sharp-wasm32/-/sharp-wasm32-0.34.5.tgz#2f15803aa626f8c59dd7c9d0bbc766f1ab52cfa0"
++  integrity sha512-OdWTEiVkY2PHwqkbBI8frFxQQFekHaSSkUIJkwzclWZe64O1X4UlUjqqqLaPbUpMOQk6FBu/HtlGXNblIs0huw==
++  dependencies:
++    "@emnapi/runtime" "^1.7.0"
++
++"@img/sharp-win32-arm64@0.34.5":
++  version "0.34.5"
++  resolved "https://registry.yarnpkg.com/@img/sharp-win32-arm64/-/sharp-win32-arm64-0.34.5.tgz#3706e9e3ac35fddfc1c87f94e849f1b75307ce0a"
++  integrity sha512-WQ3AgWCWYSb2yt+IG8mnC6Jdk9Whs7O0gxphblsLvdhSpSTtmu69ZG1Gkb6NuvxsNACwiPV6cNSZNzt0KPsw7g==
++
++"@img/sharp-win32-ia32@0.34.5":
++  version "0.34.5"
++  resolved "https://registry.yarnpkg.com/@img/sharp-win32-ia32/-/sharp-win32-ia32-0.34.5.tgz#0b71166599b049e032f085fb9263e02f4e4788de"
++  integrity sha512-FV9m/7NmeCmSHDD5j4+4pNI8Cp3aW+JvLoXcTUo0IqyjSfAZJ8dIUmijx1qaJsIiU+Hosw6xM5KijAWRJCSgNg==
++
++"@img/sharp-win32-x64@0.34.5":
++  version "0.34.5"
++  resolved "https://registry.yarnpkg.com/@img/sharp-win32-x64/-/sharp-win32-x64-0.34.5.tgz#a81ffb00e69267cd0a1d626eaedb8a8430b2b2f8"
++  integrity sha512-+29YMsqY2/9eFEiW93eqWnuLcWcufowXewwSNIT6UwZdUUCrM3oFjMWH/Z6/TMmb4hlFenmfAVbpWeup2jryCw==
++
+ "@inquirer/checkbox@^2.2.3":
+   version "2.3.2"
+   resolved "https://registry.npmjs.org/@inquirer/checkbox/-/checkbox-2.3.2.tgz"
+@@ -1230,6 +1405,11 @@ adm-zip@^0.5.16:
+   resolved "https://registry.npmjs.org/adm-zip/-/adm-zip-0.5.16.tgz"
+   integrity sha512-TGw5yVi4saajsSEgz25grObGHEUaDrniwvA2qwSC060KfqGPdglhvPMA2lPIoxs3PQIItj2iag35fONcQqgUaQ==
+ 
++adm-zip@^0.6.0:
++  version "0.6.1"
++  resolved "https://registry.yarnpkg.com/adm-zip/-/adm-zip-0.6.1.tgz#5b95da4a6e7af0663b71457c06e1517fa6ac8d5f"
++  integrity sha512-Xwrja8nx9e5o2N1my4DsKCeKpdrnACyr1wtbPxBDgGzKzKyE9kRtBFA8mWldI+RVlD7CBZNWY/wQ2+ydwOR6kQ==
++
+ agent-base@^7.0.2, agent-base@^7.1.0:
+   version "7.1.1"
+   resolved "https://registry.npmjs.org/agent-base/-/agent-base-7.1.1.tgz"
+@@ -2546,6 +2726,11 @@ detect-libc@^2.0.0, detect-libc@^2.0.2:
+   resolved "https://registry.npmjs.org/detect-libc/-/detect-libc-2.0.3.tgz"
+   integrity sha512-bwy0MGW55bG41VqxxypOsdSdGqLwXPI/focwgTYCFMbdUiBAxLg9CFzG08sz2aqzknwiX7Hkl0bQENjg8iLByw==
+ 
++detect-libc@^2.1.2:
++  version "2.1.2"
++  resolved "https://registry.yarnpkg.com/detect-libc/-/detect-libc-2.1.2.tgz#689c5dcdc1900ef5583a4cb9f6d7b473742074ad"
++  integrity sha512-Btj2BOOO83o3WyH59e8MgXsxEQVcarkUOpEYrubB0urwnN10yQ364rsiByU11nZlqWYZm05i/of7io4mzihBtQ==
++
+ diff@7.0.0:
+   version "7.0.0"
+   resolved "https://registry.npmjs.org/diff/-/diff-7.0.0.tgz"
+@@ -3457,6 +3642,11 @@ flatbuffers@^24.3.25:
+   resolved "https://registry.npmjs.org/flatbuffers/-/flatbuffers-24.12.23.tgz"
+   integrity sha512-dLVCAISd5mhls514keQzmEG6QHmUUsNuWsb4tFafIUwvvgDjXhtfAYSKOzt5SWOy+qByV5pbsDZ+Vb7HUOBEdA==
+ 
++flatbuffers@^25.1.24:
++  version "25.9.23"
++  resolved "https://registry.yarnpkg.com/flatbuffers/-/flatbuffers-25.9.23.tgz#346811557fe9312ab5647535e793c761e9c81eb1"
++  integrity sha512-MI1qs7Lo4Syw0EOzUl0xjs2lsoeqFku44KpngfIduHBYvzm8h2+7K8YMQh1JtVVVrUvhLpNwqVi4DERegUJhPQ==
++
+ flatted@^3.2.9:
+   version "3.3.1"
+   resolved "https://registry.npmjs.org/flatted/-/flatted-3.3.1.tgz"
+@@ -3725,6 +3915,16 @@ glob@^7.1.3, glob@^7.1.4, glob@^7.1.7, glob@^7.2.3:
+     once "^1.3.0"
+     path-is-absolute "^1.0.0"
+ 
++global-agent@^4.1.3:
++  version "4.1.6"
++  resolved "https://registry.yarnpkg.com/global-agent/-/global-agent-4.1.6.tgz#3261b3b4a340743f4c4f24a8d7886d6c4e55bb97"
++  integrity sha512-V9u791atI/bS7RryfRTK2oixDWo6/RCrIikjwuQ4kADPRZZml1C6LUJXc7y6qRhaAF8geo3bIvE/siAGJCw38A==
++  dependencies:
++    globalthis "^1.0.2"
++    matcher "^4.0.0"
++    semver "^7.3.5"
++    serialize-error "^8.1.0"
++
+ globals@^14.0.0:
+   version "14.0.0"
+   resolved "https://registry.npmjs.org/globals/-/globals-14.0.0.tgz"
+@@ -3735,7 +3935,7 @@ globals@^17.4.0:
+   resolved "https://registry.npmjs.org/globals/-/globals-17.4.0.tgz"
+   integrity sha512-hjrNztw/VajQwOLsMNT1cbJiH2muO3OROCHnbehc8eY5JyD2gqz4AcMHPqgaOR59DjgUjYAYLeH699g/eWi2jw==
+ 
+-globalthis@^1.0.3, globalthis@^1.0.4:
++globalthis@^1.0.2, globalthis@^1.0.3, globalthis@^1.0.4:
+   version "1.0.4"
+   resolved "https://registry.npmjs.org/globalthis/-/globalthis-1.0.4.tgz"
+   integrity sha512-DpLKbNU4WylpxJykQujfCcwYWiV/Jhm50Goo0wrVILAv5jOr9d+H+UR3PhSCD2rCCEIg0uc+G+muBTwD54JhDQ==
+@@ -4996,7 +5196,7 @@ long@^5.0.0, long@^5.2.1:
+   resolved "https://registry.npmjs.org/long/-/long-5.2.3.tgz"
+   integrity sha512-lcHwpNoggQTObv5apGNCTdJrO69eHOZMi4BNC+rTLER8iHAqGrUVeLh/irVIM7zTw2bOXA8T6uNPeujwOLg/2Q==
+ 
+-long@^5.3.2:
++long@^5.2.3, long@^5.3.2:
+   version "5.3.2"
+   resolved "https://registry.yarnpkg.com/long/-/long-5.3.2.tgz#1d84463095999262d7d7b7f8bfd4a8cc55167f83"
+   integrity sha512-mNAgZ1GmyNhD7AuqnTG3/VQ26o760+ZYBPKjPvugO8+nLbYfX6TVpJPseBvopbdY+qpZ/lKUnmEc1LeZYS3QAA==
+@@ -5040,6 +5240,13 @@ marked@15.0.12:
+   resolved "https://registry.yarnpkg.com/marked/-/marked-15.0.12.tgz#30722c7346e12d0a2d0207ab9b0c4f0102d86c4e"
+   integrity sha512-8dD6FusOQSrpv9Z1rdNMdlSgQOIP880DHqnohobOmYLElGEqAL/JvxvuxZO16r4HtjTlfPRDC1hbvxC9dPN2nA==
+ 
++matcher@^4.0.0:
++  version "4.0.0"
++  resolved "https://registry.yarnpkg.com/matcher/-/matcher-4.0.0.tgz#a42a05a09aaed92e2d241eb91fddac689461ea51"
++  integrity sha512-S6x5wmcDmsDRRU/c2dkccDwQPXoFczc5+HpQ2lON8pnvHlnvHAHj5WlLVvw6n6vNyHuVugYrFohYxbS+pvFpKQ==
++  dependencies:
++    escape-string-regexp "^4.0.0"
++
+ math-intrinsics@^1.1.0:
+   version "1.1.0"
+   resolved "https://registry.npmjs.org/math-intrinsics/-/math-intrinsics-1.1.0.tgz"
+@@ -5573,6 +5780,16 @@ onnx-proto@^4.0.4:
+   dependencies:
+     protobufjs "^6.8.8"
+ 
++onnxruntime-common@1.30.0:
++  version "1.30.0"
++  resolved "https://registry.yarnpkg.com/onnxruntime-common/-/onnxruntime-common-1.30.0.tgz#acbfc14f84a8cdfa087535212ae5f01255469441"
++  integrity sha512-7fdVWjAID1dVhH/G8qK3APARunV4VkBFoCQAP7qp4Wkab0mrorvmc+sqiT+mKXOzDqdjN5j+/Z9nb4gzNPWcyA==
++
++onnxruntime-common@1.31.0-dev.20260911-2a43ec07e:
++  version "1.31.0-dev.20260911-2a43ec07e"
++  resolved "https://registry.yarnpkg.com/onnxruntime-common/-/onnxruntime-common-1.31.0-dev.20260911-2a43ec07e.tgz#1a274e206a753f191c5760b3f910e181d9713c06"
++  integrity sha512-gBuF6U32YErKIAt+yD7DeGBpjRxhJ1uJwako6ygjokSZULDU6Pd+KWComX8Tumk1hYVHRxjPj7mdMnD0ryAPOw==
++
+ onnxruntime-common@~1.14.0:
+   version "1.14.0"
+   resolved "https://registry.npmjs.org/onnxruntime-common/-/onnxruntime-common-1.14.0.tgz"
+@@ -5585,6 +5802,15 @@ onnxruntime-node@1.14.0:
+   dependencies:
+     onnxruntime-common "~1.14.0"
+ 
++onnxruntime-node@1.30.0:
++  version "1.30.0"
++  resolved "https://registry.yarnpkg.com/onnxruntime-node/-/onnxruntime-node-1.30.0.tgz#8d4c4a75f31088ec846f08cccb62f3272a7bf44a"
++  integrity sha512-twhs1C2C/BFkz1yc5OY0KIU2GUq6DURO7hD4bx5Q2Qy3nAMJwRXW8xU3NVczE29VA9lolLOYepoD8fjTGOfIqw==
++  dependencies:
++    adm-zip "^0.6.0"
++    global-agent "^4.1.3"
++    onnxruntime-common "1.30.0"
++
+ onnxruntime-web@1.14.0:
+   version "1.14.0"
+   resolved "https://registry.npmjs.org/onnxruntime-web/-/onnxruntime-web-1.14.0.tgz"
+@@ -5597,6 +5823,18 @@ onnxruntime-web@1.14.0:
+     onnxruntime-common "~1.14.0"
+     platform "^1.3.6"
+ 
++onnxruntime-web@1.31.0-dev.20260914-8d85527a0:
++  version "1.31.0-dev.20260914-8d85527a0"
++  resolved "https://registry.yarnpkg.com/onnxruntime-web/-/onnxruntime-web-1.31.0-dev.20260914-8d85527a0.tgz#b8b660a1ee7d75e6e65d5e8764c1d9d227f79847"
++  integrity sha512-Iy7rtadoBgxS/LLvDr3QW38DB1PNXRnr0GJMcL0TAt7c9qjgVQl83UlGCVyeAnK2InpmW8Uc3PL8XIuqtDeF6g==
++  dependencies:
++    flatbuffers "^25.1.24"
++    guid-typescript "^1.0.9"
++    long "^5.2.3"
++    onnxruntime-common "1.31.0-dev.20260911-2a43ec07e"
++    platform "^1.3.6"
++    protobufjs "^7.2.4"
++
+ open@^8.0.0:
+   version "8.4.2"
+   resolved "https://registry.npmjs.org/open/-/open-8.4.2.tgz"
+@@ -6101,6 +6339,23 @@ protobufjs@^7.0.0, protobufjs@^7.2.5:
+     "@types/node" ">=13.7.0"
+     long "^5.3.2"
+ 
++protobufjs@^7.2.4:
++  version "7.6.6"
++  resolved "https://registry.yarnpkg.com/protobufjs/-/protobufjs-7.6.6.tgz#7a3923e8e32b0ee2ff689f8eed6e455c090ac67e"
++  integrity sha512-dYDWdjSl5RNb7SgPxGQcRU+GtvP7s2fpkrY0r432PcOIaZ0/rBcxEZnQN67iJhFuQiVw754JDoPruPCNdGsbjg==
++  dependencies:
++    "@protobufjs/aspromise" "^1.1.2"
++    "@protobufjs/base64" "^1.1.2"
++    "@protobufjs/codegen" "^2.0.5"
++    "@protobufjs/eventemitter" "^1.1.1"
++    "@protobufjs/fetch" "^1.1.1"
++    "@protobufjs/float" "^1.0.2"
++    "@protobufjs/path" "^1.1.2"
++    "@protobufjs/pool" "^1.1.0"
++    "@protobufjs/utf8" "^1.1.1"
++    "@types/node" ">=13.7.0"
++    long "^5.3.2"
++
+ proxy-addr@^2.0.7, proxy-addr@~2.0.7:
+   version "2.0.7"
+   resolved "https://registry.npmjs.org/proxy-addr/-/proxy-addr-2.0.7.tgz"
+@@ -6524,6 +6779,11 @@ semver@^7.3.5, semver@^7.5.4:
+   dependencies:
+     lru-cache "^6.0.0"
+ 
++semver@^7.7.3:
++  version "7.8.5"
++  resolved "https://registry.yarnpkg.com/semver/-/semver-7.8.5.tgz#39b646037dd50c14fb451e7e4cac58ed8b863f69"
++  integrity sha512-Y7/KDsb8LjooZpwaqGyulO6DQlksgCncchHGk+sZIY4SBvUocMBEFH5Ur1fI4dV+Jvl0w6cjvucaIi40puRioA==
++
+ semver@~7.0.0:
+   version "7.0.0"
+   resolved "https://registry.npmjs.org/semver/-/semver-7.0.0.tgz"
+@@ -6589,6 +6849,13 @@ seq-queue@^0.0.5:
+   resolved "https://registry.npmjs.org/seq-queue/-/seq-queue-0.0.5.tgz"
+   integrity sha512-hr3Wtp/GZIc/6DAGPDcV4/9WoZhjrkXsi5B/07QgX8tsdc6ilr7BFM6PM6rbdAX1kFSDYeZGLipIZZKyQP0O5Q==
+ 
++serialize-error@^8.1.0:
++  version "8.1.0"
++  resolved "https://registry.yarnpkg.com/serialize-error/-/serialize-error-8.1.0.tgz#3a069970c712f78634942ddd50fbbc0eaebe2f67"
++  integrity sha512-3NnuWfM6vBYoy5gZFvHiYsVbafvI9vZv/+jlIigFn4oP4zjNPK3LhcY0xSCgeb1a5L8jO71Mit9LlNoi2UfDDQ==
++  dependencies:
++    type-fest "^0.20.2"
++
+ serve-static@^2.2.0:
+   version "2.2.0"
+   resolved "https://registry.npmjs.org/serve-static/-/serve-static-2.2.0.tgz"
+@@ -6650,6 +6917,40 @@ setprototypeof@1.2.0, setprototypeof@~1.2.0:
+   resolved "https://registry.npmjs.org/setprototypeof/-/setprototypeof-1.2.0.tgz"
+   integrity sha512-E5LDX7Wrp85Kil5bhZv46j8jOeboKq5JMmYM3gVGdGH8xFpPWXUMsNrlODCrkoxMEeNi/XZIwuRvY4XNwYMJpw==
+ 
++sharp@0.34.5, sharp@^0.35.4:
++  version "0.34.5"
++  resolved "https://registry.yarnpkg.com/sharp/-/sharp-0.34.5.tgz#b6f148e4b8c61f1797bde11a9d1cfebbae2c57b0"
++  integrity sha512-Ou9I5Ft9WNcCbXrU9cMgPBcCK8LiwLqcbywW3t4oDV37n1pzpuNLsYiAV8eODnjbtQlSDwZ2cUEeQz4E54Hltg==
++  dependencies:
++    "@img/colour" "^1.0.0"
++    detect-libc "^2.1.2"
++    semver "^7.7.3"
++  optionalDependencies:
++    "@img/sharp-darwin-arm64" "0.34.5"
++    "@img/sharp-darwin-x64" "0.34.5"
++    "@img/sharp-libvips-darwin-arm64" "1.2.4"
++    "@img/sharp-libvips-darwin-x64" "1.2.4"
++    "@img/sharp-libvips-linux-arm" "1.2.4"
++    "@img/sharp-libvips-linux-arm64" "1.2.4"
++    "@img/sharp-libvips-linux-ppc64" "1.2.4"
++    "@img/sharp-libvips-linux-riscv64" "1.2.4"
++    "@img/sharp-libvips-linux-s390x" "1.2.4"
++    "@img/sharp-libvips-linux-x64" "1.2.4"
++    "@img/sharp-libvips-linuxmusl-arm64" "1.2.4"
++    "@img/sharp-libvips-linuxmusl-x64" "1.2.4"
++    "@img/sharp-linux-arm" "0.34.5"
++    "@img/sharp-linux-arm64" "0.34.5"
++    "@img/sharp-linux-ppc64" "0.34.5"
++    "@img/sharp-linux-riscv64" "0.34.5"
++    "@img/sharp-linux-s390x" "0.34.5"
++    "@img/sharp-linux-x64" "0.34.5"
++    "@img/sharp-linuxmusl-arm64" "0.34.5"
++    "@img/sharp-linuxmusl-x64" "0.34.5"
++    "@img/sharp-wasm32" "0.34.5"
++    "@img/sharp-win32-arm64" "0.34.5"
++    "@img/sharp-win32-ia32" "0.34.5"
++    "@img/sharp-win32-x64" "0.34.5"
++
+ sharp@^0.32.0:
+   version "0.32.6"
+   resolved "https://registry.npmjs.org/sharp/-/sharp-0.32.6.tgz"
+@@ -7244,6 +7545,11 @@ tslib@^2.2.0, tslib@^2.6.2:
+   resolved "https://registry.npmjs.org/tslib/-/tslib-2.6.2.tgz"
+   integrity sha512-AEYxH93jGFPn/a2iVAwW87VuUIkR1FVUKB77NwMF7nBTDkDrrT/Hpt/IrCJ0QXhW27jTBDcf5ZY7w6RiqTMw2Q==
+ 
++tslib@^2.4.0:
++  version "2.9.1"
++  resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.9.1.tgz#8986213ba2f17f38ba39a7c43d0e565a9134ff5f"
++  integrity sha512-a4Ux9VKuIMHsOS7ENbEq6hK2ZGYIT27Rtl0E4eD9KqwxhKiQeMZE/9xb3IdYwWaSOyIBQLExhQgXDTYoiCxnWA==
++
+ tslib@^2.8.0, tslib@^2.8.1:
+   version "2.8.1"
+   resolved "https://registry.npmjs.org/tslib/-/tslib-2.8.1.tgz"
+@@ -7268,6 +7574,11 @@ type-check@^0.4.0, type-check@~0.4.0:
+   dependencies:
+     prelude-ls "^1.2.1"
+ 
++type-fest@^0.20.2:
++  version "0.20.2"
++  resolved "https://registry.yarnpkg.com/type-fest/-/type-fest-0.20.2.tgz#1bf207f4b28f91583666cb5fbd327887301cd5f4"
++  integrity sha512-Ne+eE4r0/iWnpAxD852z3A+N0Bt5RN//NjJwRd2VFHEmrywxf5vsZlh4R6lixl6B+wz/8d+maTSAkN1FIkI3LQ==
++
+ type-fest@^0.21.3:
+   version "0.21.3"
+   resolved "https://registry.npmjs.org/type-fest/-/type-fest-0.21.3.tgz"
+-- 
+2.43.0
+

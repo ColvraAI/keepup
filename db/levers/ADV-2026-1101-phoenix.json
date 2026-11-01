@@ -1,0 +1,42 @@
+{
+  "id": "ADV-2026-1101-phoenix",
+  "name": "Arize Phoenix tracing",
+  "pattern": "PAT-no-tracing",
+  "kind": "tracing",
+  "providers": [],
+  "effects": [
+    "better answers"
+  ],
+  "gain": "Shows cost and latency per call. No gain number of its own.",
+  "proof": "adoption only",
+  "source": "https://github.com/Arize-ai/phoenix",
+  "how": "pip install arize-phoenix, run locally",
+  "replaces": "Nothing recording calls.",
+  "trade_offs": [
+    "Another service to run."
+  ],
+  "needs": "Python.",
+  "install": "pip install arize-phoenix",
+  "checked": "2026-11-01",
+  "checked_by": "agent",
+  "usage_signal": "Not visible in the bill",
+  "gain_model": {
+    "formula": "no direct money; it supplies per-call cost and latency",
+    "inputs": []
+  },
+  "test_recipe": {
+    "what_to_compare": "traces appear for each AI call",
+    "samples": 20,
+    "can_run_with": []
+  },
+  "verify_rule": "Traces arrive for a sample of calls over 7 days",
+  "change_recipe": {
+    "kind": "pull request, off by default",
+    "how": "pip install arize-phoenix, run locally",
+    "left_off": "Nothing else changes; the new path sits behind a setting until a person turns it on"
+  },
+  "audience": "product",
+  "gain_independent": null,
+  "gain_vendor": null,
+  "tier": "long_tail"
+}

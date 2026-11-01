@@ -1,0 +1,45 @@
+{
+  "version": "1",
+  "id": "PAT-no-test-set",
+  "name": "An AI call with no test set",
+  "find": [
+    {
+      "regex": "\\b(?:chat\\.completions\\.create|messages\\.create|generateText|streamText|generateObject)\\s*\\("
+    }
+  ],
+  "skip_if_near": [],
+  "skip_if_in_file": [
+    "[pP][rR][oO][mM][pP][tT][fF][oO][oO]|[dD][eE][eE][pP][eE][vV][aA][lL]|[iI][nN][sS][pP][eE][cC][tT]_[aA][iI]|[eE][vV][aA][lL][uU][aA][tT][eE]\\("
+  ],
+  "files": [
+    "**/*.py",
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.js",
+    "**/*.jsx",
+    "**/*.mjs",
+    "**/*.cjs"
+  ],
+  "skip_files": [
+    "**/__tests__/**",
+    "**/test/**",
+    "**/tests/**",
+    "**/testdata/**",
+    "**/fixtures/**",
+    "**/examples/**",
+    "**/samples/**",
+    "**/docs/**",
+    "**/node_modules/**",
+    "**/vendor/**",
+    "**/dist/**",
+    "**/*.test.*",
+    "**/*.spec.*"
+  ],
+  "why": "Absence is a repo-wide fact and this reads one file at a time, so it stays info and is raised once, at install, with an offer.",
+  "status": "info",
+  "effect": [
+    "better answers"
+  ],
+  "live_from": "v0.3",
+  "absence": true
+}

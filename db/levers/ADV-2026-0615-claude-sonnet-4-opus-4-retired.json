@@ -1,0 +1,52 @@
+{
+  "id": "ADV-2026-0615-claude-sonnet-4-opus-4-retired",
+  "name": "Claude Sonnet 4 and Opus 4 are retired; move to Sonnet 5.5 and Opus 4.8",
+  "pattern": "PAT-retired-model-id",
+  "kind": "model-successor",
+  "providers": [
+    "anthropic"
+  ],
+  "effects": [
+    "keeps working",
+    "cheaper"
+  ],
+  "gain": "Requests to these two have returned an error on the Claude API since 15 Jun 2026. Anthropic's listed price falls: Sonnet 4's $3 / $15 to Sonnet 5.5's $2 / $10, and Opus 4's $15 / $75 to Opus 4.8's $5 / $25, per 1M tokens.",
+  "proof": "vendor claim",
+  "source": "https://platform.claude.com/docs/en/about-claude/model-deprecations",
+  "how": "Change claude-sonnet-4-20250514 to claude-sonnet-5-5 and claude-opus-4-20250514 to claude-opus-4-8. Read the migration guide first.",
+  "replaces": "claude-sonnet-4-20250514, claude-opus-4-20250514",
+  "trade_offs": [
+    "Both successors return a 400 for non-default temperature, top_p and top_k; Sonnet 5.5 also rejects forced tool_choice and prefill.",
+    "Still served on Bedrock and Google-managed Vertex, so check which platform this code calls."
+  ],
+  "needs": "Nothing new; the same Anthropic key.",
+  "models": [
+    "claude-sonnet-4-20250514",
+    "claude-opus-4-20250514"
+  ],
+  "checked": "2026-11-01",
+  "checked_by": "agent",
+  "usage_signal": "Usage API: calls on the affected model or parameter",
+  "gain_model": {
+    "formula": "no money figure: the call stops working or a capability is missing",
+    "inputs": []
+  },
+  "test_recipe": {
+    "what_to_compare": "tests pass on the change",
+    "samples": 20,
+    "can_run_with": [
+      "ANTHROPIC_API_KEY",
+      "OPENAI_API_KEY"
+    ]
+  },
+  "verify_rule": "The old id or parameter is gone and calls succeed over 7 days",
+  "change_recipe": {
+    "kind": "pull request, off by default",
+    "how": "Change claude-sonnet-4-20250514 to claude-sonnet-5-5 and claude-opus-4-20250514 to claude-opus-4-8. Read the migration guide first.",
+    "left_off": "Nothing else changes; the new path sits behind a setting until a person turns it on"
+  },
+  "audience": "product",
+  "gain_independent": null,
+  "gain_vendor": "Requests to these two have returned an error on the Claude API since 15 Jun 2026. Anthropic's listed price falls: Sonnet 4's $3 / $15 to Sonnet 5.5's $2 / $10, and Opus 4's $15 / $75 to Opus 4.8's $5 / $25, per 1M tokens.",
+  "tier": "long_tail"
+}

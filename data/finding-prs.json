@@ -1,0 +1,7 @@
+[
+  { "repo": "Mintplex-Labs/anything-llm", "finding": "Model-router rule matching", "pr": "01", "shared": "rout" },
+  { "repo": "Mintplex-Labs/anything-llm", "finding": "whisper-1", "pr": "02", "shared": "whisper|transcri|audio" },
+  { "repo": "Mintplex-Labs/anything-llm", "finding": "EmbeddingGemma 2", "pr": "03", "shared": "EmbeddingGemma|embedd" },
+  { "repo": "mezmo/aura", "finding": "Add Sentry, SigNoz and Dynatrace", "pr": "04", "shared": "Sentry" },
+  { "repo": "mezmo/aura", "finding": "Anthropic models are retired or retiring", "pr": "05", "shared": "Claude|claude-" }
+]

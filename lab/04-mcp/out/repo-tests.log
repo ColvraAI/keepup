@@ -1,0 +1,275 @@
+sandbox: waiting for the other run to finish...
+sandbox: waiting for the other run to finish...
+sandbox: waiting for the other run to finish...
+sandbox: waiting for the other run to finish...
+sandbox: waiting for the other run to finish...
+sandbox: waiting for the other run to finish...
+sandbox: waiting for the other run to finish...
+sandbox: waiting for the other run to finish...
+sandbox: waiting for the other run to finish...
+sandbox: waiting for the other run to finish...
+sandbox: waiting for the other run to finish...
+sandbox: waiting for the other run to finish...
+sandbox: waiting for the other run to finish...
+sandbox: waiting for the other run to finish...
+info: syncing channel updates for 1.95.0-aarch64-unknown-linux-gnu
+info: latest update on 2026-04-16 for version 1.95.0 (59807616e 2026-04-14)
+info: component cargo is up to date
+info: downloading 3 components
+     Removed 2168 files, 701.3MiB total
+   Compiling aura-config v0.2.17 (/repo/crates/aura-config)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 28.64s
+     Running unittests src/lib.rs (/target/debug/deps/aura_config-457a2aea44379327)
+
+running 235 tests
+test config::tests::hitl_webhook_tool_headers_duplicate_after_lowercase_rejected ... ok
+test config::tests::hitl_park_table_present_but_enabled_omitted_is_disabled ... ok
+test config::tests::hitl_webhook_tool_headers_invalid_name_rejected ... ok
+test config::tests::hitl_park_parses_enabled_true ... ok
+test config::tests::hitl_webhook_tool_headers_from_response_parses_validated ... ok
+test config::tests::hitl_webhook_headers_parse_from_toml ... ok
+test config::tests::hitl_webhook_tool_headers_reserved_name_rejected ... ok
+test config::tests::hitl_webhook_tool_headers_empty_map_is_feature_off ... ok
+test config::tests::test_glob_match_exact ... ok
+test config::tests::hitl_webhook_tool_headers_response_name_lowercased ... ok
+test config::tests::test_agent_nudge_flags_parse_and_default_off ... ok
+test config::tests::test_glob_match_question ... ok
+test config::tests::test_glob_match_star_middle ... ok
+test config::tests::test_glob_match_star ... ok
+test config::tests::test_glob_match_star_only ... ok
+test config::tests::test_hitl_timeout_conflict_conversational_variant ... ok
+test config::tests::hitl_park_defaults_to_disabled_when_table_absent ... ok
+test config::tests::test_hitl_timeout_conflict_disabled_per_call_timeout ... ok
+test config::tests::hitl_webhook_headers_default_empty_when_absent ... ok
+test config::tests::test_hitl_timeout_conflict_route_timeout_equals_per_call ... ok
+test config::tests::test_hitl_timeout_conflict_route_timeout_greater_than_per_call ... ok
+test config::tests::test_hitl_timeout_conflict_route_timeout_less_than_per_call ... ok
+test config::tests::test_inactivity_vs_per_call_warning ... ok
+test config::tests::test_no_inner_bound_warning ... ok
+test config_test::tests::mcp_user_agent_trims_surrounding_whitespace ... ok
+test config_test::tests::reasoning_effort_display_matches_openai_wire_values ... ok
+test config_test::tests::scratchpad_agent_scratchpad_parses_with_defaults ... ok
+test config_test::tests::scratchpad_top_level_memory_dir_parses ... ok
+test config_test::tests::scratchpad_agent_scratchpad_parses_all_overrides ... ok
+test config_test::tests::scratchpad_mcp_server_thresholds_parse ... ok
+test config_test::tests::mcp_user_agent_defaults_to_aura_and_version ... ok
+test config_test::tests::scratchpad_validation_complete_orchestration_config_passes ... ok
+test config_test::tests::scratchpad_validation_passes_when_disabled ... ok
+test config_test::tests::scratchpad_validation_orchestration_worker_only_requires_memory_dir ... ok
+test config_test::tests::scratchpad_validation_accepts_legacy_artifacts_memory_dir ... ok
+test config_test::tests::mcp_user_agent_is_overridable ... ok
+test config_test::tests::scratchpad_validation_worker_llm_override_requires_context_window ... ok
+test config_test::tests::scratchpad_validation_orchestration_agent_level_requires_memory_dir ... ok
+test config_test::tests::server_user_agent_is_absent_unless_configured ... ok
+test config_test::tests::scratchpad_validation_passes_when_unconfigured ... ok
+test config_test::tests::mcp_user_agent_rejects_unusable_tokens ... ok
+test config_test::tests::reasoning_effort_all_variants_parse ... ok
+test config_test::tests::scratchpad_worker_override_parses ... ok
+test config_test::tests::server_user_agent_is_read_on_every_transport ... ok
+test config_test::tests::test_alias_collides_with_name_validation ... ok
+test config_test::tests::test_alias_field_defaults_to_none ... ok
+test config_test::tests::test_alias_field_parsing ... ok
+test config_test::tests::scratchpad_validation_single_agent_rejects_missing_memory_dir ... ok
+test config_test::tests::test_bedrock_embedding_without_profile ... ok
+test config_test::tests::scratchpad_validation_single_agent_rejects_missing_context_window ... ok
+test config_test::tests::test_bedrock_kb_config_parsing ... ok
+test config_test::tests::test_bedrock_embedding_missing_region_fails_validation ... ok
+test config_test::tests::test_bedrock_kb_missing_knowledge_base_id_fails ... ok
+test config_test::tests::test_bedrock_kb_missing_region_fails ... ok
+test config_test::tests::test_bedrock_kb_managed_flag_parsing ... ok
+test config_test::tests::test_anthropic_prompt_caching_flag ... ok
+test config_test::tests::test_bedrock_embedding_config_parsing ... ok
+test config_test::tests::test_config_validation ... ok
+test config_test::tests::test_context_window_defaults_to_none ... ok
+test config_test::tests::test_config_parsing ... ok
+test config_test::tests::test_bedrock_prompt_caching_flag ... ok
+test config_test::tests::test_context_window_accepts_float ... ok
+test config_test::tests::test_created_at_defaults_to_current_time ... ok
+test config_test::tests::test_duplicate_alias_validation ... ok
+test config_test::tests::test_duplicate_name_without_alias_validation ... ok
+test config_test::tests::test_created_at_explicit_value ... ok
+test config_test::tests::test_description_explicit_value ... ok
+test config_test::tests::test_embedding_config_custom_base_url ... ok
+test config_test::tests::test_legacy_top_level_llm_produces_migration_error ... ok
+test config_test::tests::test_description_defaults_to_none ... ok
+test config_test::tests::test_minimal_config ... ok
+test config_test::tests::test_model_owner_defaults_to_none ... ok
+test config_test::tests::test_model_owner_explicit_value ... ok
+test config_test::tests::test_context_window_deserializes_from_toml ... ok
+test config_test::tests::test_no_additional_properties_on_llm ... ok
+test config_test::tests::test_ollama_config_all_params ... ok
+test config_test::tests::test_ollama_config_backwards_compatible ... ok
+test config_test::tests::test_load_config_empty_directory ... ok
+test config_test::tests::test_load_config_single_file ... ok
+test config_test::tests::test_hidden_property ... ok
+test config_test::tests::test_ollama_config_custom_url ... ok
+test config_test::tests::test_ollama_config_with_additional_params ... ok
+test config_test::tests::test_openai_embedding_still_requires_api_key ... ok
+test config_test::tests::test_ollama_config_minimal ... ok
+test config_test::tests::test_same_name_with_different_aliases_is_ok ... ok
+test config_test::tests::test_validate_worker_names_empty_workers_ok ... ok
+test config_test::tests::test_validate_worker_names_rejects_case_insensitive_collision ... ok
+test config_test::tests::test_validate_worker_names_rejects_empty ... ok
+test config_test::tests::test_validate_worker_names_ok ... ok
+test config_test::tests::test_worker_empty_skill_source_fails_validation ... ok
+test config_test::tests::test_worker_with_explicit_llm_override ... ok
+test env::tests::test_default_value_when_env_missing ... ok
+test env::tests::test_commented_env_vars_are_ignored ... ok
+test config_test::tests::test_removed_agent_configs_caught ... ok
+test globpattern::tests::glob_pattern_deserialize ... ok
+test globpattern::tests::glob_pattern_matches ... ok
+test env::tests::test_inline_comments_are_stripped ... ok
+test globpattern::tests::test_glob_parser ... ok
+test lenient_bool::tests::accepts_native_false ... ok
+test globpattern::tests::glob_pattern_serialize ... ok
+test lenient_bool::tests::accepts_native_true ... ok
+test lenient_bool::tests::accepts_padded_whitespace ... ok
+test lenient_bool::tests::accepts_string_false ... ok
+test lenient_bool::tests::error_message_shows_the_bad_value ... ok
+test lenient_bool::tests::accepts_string_true ... ok
+test config_test::tests::test_worker_without_llm_inherits_from_agent ... ok
+test lenient_bool::tests::rejects_mixed_case ... ok
+test lenient_bool::tests::rejects_numeric_string ... ok
+test lenient_bool::tests::rejects_empty_string ... ok
+test lenient_bool::tests::rejects_yes ... ok
+test lenient_int::tests::accepts_none ... ok
+test lenient_int::tests::accepts_whole_float ... ok
+test lenient_bool::tests::rejects_whitespace_only ... ok
+test lenient_int::tests::accepts_integer ... ok
+test lenient_int::tests::accepts_zero_float ... ok
+test lenient_int::tests::rejects_fractional_float ... ok
+test lenient_int::tests::rejects_negative ... ok
+test lenient_int::tests::u64_whole_float ... ok
+test lenient_int::tests::usize_whole_float ... ok
+test config_test::tests::test_load_config_directory ... ok
+test load_config_tests::load_config_unwritable_memory_dir_fails ... ok
+test load_config_tests::load_config_files_pairs_each_config_with_its_file ... ok
+test load_config_tests::load_config_no_memory_dir_passes ... ok
+test orchestration::tests::test_available_worker_names ... ok
+test orchestration::tests::test_backward_compat_existing_config ... ok
+test orchestration::tests::test_backward_compat_flat_artifacts ... ok
+test orchestration::tests::test_capability_aware_planning_config ... ok
+test orchestration::tests::test_coordinator_vector_stores ... ok
+test orchestration::tests::test_default_values ... ok
+test orchestration::tests::test_delay_for_retry_base_zero_returns_zero ... ok
+test loader::tests::test_config_loader_builder ... ok
+test load_config_tests::load_config_writable_memory_dir_passes ... ok
+test orchestration::tests::test_delay_for_retry_max_below_base_caps_at_max ... ok
+test orchestration::tests::test_deserialize_full ... ok
+test orchestration::tests::test_deserialize_minimal ... ok
+test orchestration::tests::test_delay_for_retry_schedule ... ok
+test orchestration::tests::test_format_workers_empty ... ok
+test orchestration::tests::test_get_worker_not_found ... ok
+test orchestration::tests::test_memory_path_alias_in_artifacts ... ok
+test orchestration::tests::test_format_workers_for_prompt ... ok
+test orchestration::tests::test_new_sub_table_format ... ok
+test orchestration::tests::test_orchestration_with_workers ... ok
+test orchestration::tests::test_persistence_drain_timeout_flat_overrides_sub_table ... ok
+test orchestration::tests::test_flat_memory_path_alias ... ok
+test orchestration::tests::test_retry_full_custom_round_trips ... ok
+test orchestration::tests::test_retry_max_retries_zero_round_trips ... ok
+test orchestration::tests::test_retry_partial_uses_defaults_for_unset ... ok
+test orchestration::tests::test_retry_defaults_when_absent ... ok
+test orchestration::tests::test_session_history_turns_flat_overrides_sub_table ... ok
+test orchestration::tests::test_timeouts_default_when_section_omitted ... ok
+test orchestration::tests::test_timeouts_rejects_unknown_keys ... ok
+test orchestration::tests::test_tool_output_thresholds_in_artifacts_sub_table ... ok
+test orchestration::tests::test_tool_visibility_default ... ok
+test orchestration::tests::test_tool_visibility_deserialize_variants ... ok
+test orchestration::tests::test_worker_config_deserialize ... ok
+test orchestration::tests::test_worker_config_multiple_filters ... ok
+test orchestration::tests::test_worker_config_empty_filter_is_explicit ... ok
+test orchestration::tests::test_worker_vector_stores_empty_default ... ok
+test orchestration::tests::test_worker_vector_stores ... ok
+test orchestration::tests::test_worker_config_omitted_filter_is_none ... ok
+test scratchpad::tests::scratchpad_config_default_values ... ok
+test scratchpad::tests::scratchpad_config_deserialize_partial_override ... ok
+test scratchpad::tests::scratchpad_tool_entry_custom_min_tokens ... ok
+test scratchpad::tests::scratchpad_tool_entry_default_min_tokens ... ok
+test scratchpad::tests::scratchpad_config_deserialize_with_all_defaults ... ok
+test scratchpad::tests::scratchpad_tool_entry_deserialize_defaults_when_empty ... ok
+test config_test::tests::test_all_shipped_configs_parse ... ok
+test config_test::tests::test_environment_variable_placeholders ... ok
+test config_test::tests::test_ollama_additional_params_env_resolution ... ok
+test env::tests::test_default_value_when_env_set ... ok
+test loader::tests::test_standard_loader ... ok
+test session_store::tests::defaults_to_memory ... ok
+test session_store::tests::empty_env_vars_are_ignored ... ok
+test session_store::tests::empty_path_is_treated_as_missing ... ok
+test session_store::tests::file_backend_reads_path ... ok
+test session_store::tests::file_requires_path ... ok
+test session_store::tests::non_numeric_ttl_rejected ... ok
+test session_store::tests::reads_all_env_vars ... ok
+test session_store::tests::redis_fills_defaults_for_unset_vars ... ok
+test session_store::tests::redis_requires_url ... ok
+test session_store::tests::valkey_is_an_alias_for_redis ... ok
+test session_store::tests::zero_ttl_disables_expiry ... ok
+test session_store::tests::redis_vars_are_ignored_for_memory_backend ... ok
+test session_store::tests::unknown_backend_rejected ... ok
+test skills::tests::parse_frontmatter_description_too_long ... ok
+test skills::tests::parse_frontmatter_empty_description ... ok
+test skills::tests::parse_frontmatter_invalid_name ... ok
+test skills::tests::parse_frontmatter_missing_closing ... ok
+test skills::tests::parse_frontmatter_missing_name_field ... ok
+test skills::tests::parse_frontmatter_missing_opening ... ok
+test skills::tests::parse_frontmatter_tolerates_all_optional_spec_fields ... ok
+test skills::tests::parse_frontmatter_tolerates_allowed_tools_string ... ok
+test skills::tests::parse_frontmatter_valid ... ok
+test skills::tests::validate_skill_name_consecutive_hyphens ... ok
+test skills::tests::validate_skill_name_empty ... ok
+test skills::tests::discover_skills_nonexistent_source_errors ... ok
+test skills::tests::validate_skill_name_leading_hyphen ... ok
+test skills::tests::validate_skill_name_max_length_ok ... ok
+test skills::tests::validate_skill_name_too_long ... ok
+test skills::tests::validate_skill_name_trailing_hyphen ... ok
+test skills::tests::validate_skill_name_underscore_rejected ... ok
+test skills::tests::validate_skill_name_uppercase_rejected ... ok
+test skills::tests::validate_skill_name_valid ... ok
+test skills::tests::discover_skills_tolerates_optional_spec_fields ... ok
+test writer::tests::converts_inline_servers_table_to_header_table ... ok
+test writer::tests::appends_filter_entries_and_dedupes ... ok
+test writer::tests::errors_on_array_of_tables_servers ... ok
+test writer::tests::errors_on_empty_name ... ok
+test writer::tests::errors_on_malformed_toml ... ok
+test writer::tests::errors_on_unknown_worker ... ok
+test writer::tests::errors_when_mcp_is_not_a_table ... ok
+test writer::tests::creates_missing_filter_array ... ok
+test writer::tests::empty_entries_write_the_no_tools_assignment ... ok
+test skills::tests::discover_skills_relative_path_from_cwd ... ok
+test skills::tests::discover_skills_happy_path ... ok
+test skills::tests::discover_skills_name_mismatch_errors ... ok
+test writer::tests::file_append_worker_filter_roundtrips ... ok
+test skills::tests::discover_skills_deduplicates ... ok
+test writer::tests::map_output_is_key_sorted_and_deterministic ... ok
+test writer::tests::insert_preserves_original_and_creates_implicit_tables ... ok
+test writer::tests::omits_empty_optional_collections ... ok
+test writer::tests::overwrite_replaces_server_and_preserves_siblings ... ok
+test writer::tests::preserves_env_placeholders_verbatim ... ok
+test writer::tests::preserves_comment_above_replaced_server_header ... ok
+test writer::tests::round_trips_nonempty_maps_through_loader ... ok
+test skills::tests::discover_skills_skips_non_skill_dirs ... ok
+test writer::tests::file_upsert_missing_file_errors ... ok
+test writer::tests::file_upsert_is_atomic_and_leaves_no_temp_file ... ok
+test writer::tests::file_upsert_leaves_file_untouched_on_malformed_content ... ok
+test writer::tests::round_trips_scratchpad_entries_through_loader ... ok
+test writer::tests::file_upsert_preserves_file_permissions ... ok
+test writer::tests::round_trips_through_loader_for_all_transports ... ok
+test writer::tests::file_upsert_through_symlink_edits_the_target_and_keeps_the_link ... ok
+test writer::tests::round_trips_server_user_agent_through_loader ... ok
+test writer::tests::upserts_next_to_dotted_key_server ... ok
+
+test result: ok. 235 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.13s
+
+     Running tests/dotenv_resolution.rs (/target/debug/deps/dotenv_resolution-59068b9ab955fdb6)
+
+running 1 test
+test dotenv_supplies_env_vars_for_config_resolution ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+
+   Doc-tests aura_config
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

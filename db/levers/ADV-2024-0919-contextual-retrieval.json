@@ -1,0 +1,74 @@
+{
+  "id": "ADV-2024-0919-contextual-retrieval",
+  "name": "Anthropic's contextual retrieval",
+  "pattern": "PAT-search-results-into-prompt",
+  "kind": "technique",
+  "providers": [],
+  "effects": [
+    "better answers"
+  ],
+  "gain": "Anthropic's words: failed retrievals down 49%, and 67% combined with reranking, a vendor study.",
+  "proof": "vendor claim",
+  "source": "https://www.anthropic.com/news/contextual-retrieval",
+  "how": "Add a short context line to each chunk at index time, then rerank",
+  "replaces": "Plain chunk embeddings.",
+  "trade_offs": [
+    "Re-indexing costs tokens once."
+  ],
+  "needs": "A re-index job.",
+  "checked": "2026-11-01",
+  "checked_by": "agent",
+  "usage_signal": "Input tokens per retrieval call; share of retrieved passages used",
+  "gain_model": {
+    "formula": "retrieval_failures * reduction; input tokens saved = passages_dropped * tokens_per_passage * input_price",
+    "inputs": [
+      {
+        "name": "retrieval_failures",
+        "value": null,
+        "source": "the product's usage data or the bill",
+        "assumed": false
+      },
+      {
+        "name": "reduction",
+        "value": null,
+        "source": "the product's usage data or the bill",
+        "assumed": false
+      },
+      {
+        "name": "passages_dropped",
+        "value": null,
+        "source": "the product's usage data or the bill",
+        "assumed": false
+      },
+      {
+        "name": "tokens_per_passage",
+        "value": null,
+        "source": "the product's usage data or the bill",
+        "assumed": false
+      },
+      {
+        "name": "input_price",
+        "value": null,
+        "source": "the product's usage data or the bill",
+        "assumed": false
+      }
+    ]
+  },
+  "test_recipe": {
+    "what_to_compare": "answer quality on labelled questions, input tokens",
+    "samples": 50,
+    "can_run_with": [
+      "COHERE_API_KEY"
+    ]
+  },
+  "verify_rule": "Input tokens per answer and the eval score after merge",
+  "change_recipe": {
+    "kind": "pull request, off by default",
+    "how": "Add a short context line to each chunk at index time, then rerank",
+    "left_off": "Nothing else changes; the new path sits behind a setting until a person turns it on"
+  },
+  "audience": "product",
+  "gain_independent": null,
+  "gain_vendor": "Anthropic's words: failed retrievals down 49%, and 67% combined with reranking, a vendor study.",
+  "tier": "huge"
+}

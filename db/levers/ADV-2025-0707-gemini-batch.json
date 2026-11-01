@@ -1,0 +1,67 @@
+{
+  "id": "ADV-2025-0707-gemini-batch",
+  "name": "Gemini's Batch API for jobs nobody is waiting on",
+  "pattern": "PAT-scheduled-llm-no-batch",
+  "kind": "api-feature",
+  "providers": [
+    "google"
+  ],
+  "effects": [
+    "cheaper"
+  ],
+  "gain": "Google's words: processes requests \"at 50% of the standard cost\", with a target turnaround of 24 hours (vendor claim). On gemini-3.6-flash, batch input is $0.375 against $0.75 per 1M tokens through 31 Dec 2026.",
+  "proof": "vendor claim",
+  "source": "https://ai.google.dev/gemini-api/docs/batch-api",
+  "how": "Create a batch job with inline requests for small jobs or a JSONL input file for large ones, then poll the job for the result.",
+  "replaces": "A scheduled job that calls generateContent in a loop.",
+  "trade_offs": [
+    "Results can take up to the 24-hour target.",
+    "It is only available with the generateContent API, not the Interactions API."
+  ],
+  "needs": "A job that can wait.",
+  "price": "50% of standard token prices.",
+  "checked": "2026-11-01",
+  "checked_by": "agent",
+  "usage_signal": "Usage and Cost API: synchronous tokens arriving in a regular scheduled burst",
+  "gain_model": {
+    "formula": "scheduled_tokens * price * batch_discount",
+    "inputs": [
+      {
+        "name": "scheduled_tokens",
+        "value": null,
+        "source": "the product's usage data or the bill",
+        "assumed": false
+      },
+      {
+        "name": "price",
+        "value": null,
+        "source": "the product's usage data or the bill",
+        "assumed": false
+      },
+      {
+        "name": "batch_discount",
+        "value": 0.5,
+        "source": "https://ai.google.dev/gemini-api/docs/batch-api",
+        "assumed": false
+      }
+    ]
+  },
+  "test_recipe": {
+    "what_to_compare": "same outputs and completion time inside the window",
+    "samples": 100,
+    "can_run_with": [
+      "ANTHROPIC_API_KEY",
+      "OPENAI_API_KEY"
+    ]
+  },
+  "verify_rule": "Batch-tier tokens over two scheduled runs",
+  "change_recipe": {
+    "kind": "pull request, off by default",
+    "how": "Create a batch job with inline requests for small jobs or a JSONL input file for large ones, then poll the job for the result.",
+    "left_off": "Nothing else changes; the new path sits behind a setting until a person turns it on"
+  },
+  "audience": "product",
+  "gain_independent": null,
+  "gain_vendor": "Google's words: processes requests \"at 50% of the standard cost\", with a target turnaround of 24 hours (vendor claim). On gemini-3.6-flash, batch input is $0.375 against $0.75 per 1M tokens through 31 Dec 2026.",
+  "tier": "huge"
+}

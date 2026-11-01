@@ -1,0 +1,56 @@
+{
+  "id": "ADV-2026-0930-claude-sonnet-4-5-retires",
+  "name": "Claude Sonnet 4.5 retires on 30 Nov 2026; move to Sonnet 5.5",
+  "pattern": "PAT-retired-model-id",
+  "kind": "model-successor",
+  "providers": [
+    "anthropic"
+  ],
+  "effects": [
+    "keeps working",
+    "cheaper"
+  ],
+  "gain": "Requests fail after 30 Nov 2026 on Anthropic's platforms. Anthropic's listed price falls from $3 / $15 to $2 / $10 per 1M tokens.",
+  "proof": "vendor claim",
+  "source": "https://platform.claude.com/docs/en/about-claude/model-deprecations",
+  "how": "Change claude-sonnet-4-5-20250929 to claude-sonnet-5-5 and read the Sonnet 5.5 migration guide first. Run your tests on it before the date.",
+  "replaces": "claude-sonnet-4-5-20250929",
+  "trade_offs": [
+    "Sonnet 5.5 returns a 400 for tool_choice any or tool, thinking budgets, temperature, top_p, top_k and assistant prefill.",
+    "The date applies to Anthropic-operated platforms; Bedrock and Google-managed Vertex keep their own schedules."
+  ],
+  "needs": "Nothing new; the same Anthropic key.",
+  "models": [
+    "claude-sonnet-4-5-20250929"
+  ],
+  "bridge": {
+    "model": "claude-sonnet-4-6",
+    "until": "2027-02-17",
+    "what": "Anthropic lists claude-sonnet-4-6 as active, and retires it no sooner than 17 Feb 2027."
+  },
+  "checked": "2026-11-01",
+  "checked_by": "agent",
+  "usage_signal": "Usage API: calls on the affected model or parameter",
+  "gain_model": {
+    "formula": "no money figure: the call stops working or a capability is missing",
+    "inputs": []
+  },
+  "test_recipe": {
+    "what_to_compare": "tests pass on the change",
+    "samples": 20,
+    "can_run_with": [
+      "ANTHROPIC_API_KEY",
+      "OPENAI_API_KEY"
+    ]
+  },
+  "verify_rule": "The old id or parameter is gone and calls succeed over 7 days",
+  "change_recipe": {
+    "kind": "pull request, off by default",
+    "how": "Change claude-sonnet-4-5-20250929 to claude-sonnet-5-5 and read the Sonnet 5.5 migration guide first. Run your tests on it before the date.",
+    "left_off": "Nothing else changes; the new path sits behind a setting until a person turns it on"
+  },
+  "audience": "product",
+  "gain_independent": null,
+  "gain_vendor": "Requests fail after 30 Nov 2026 on Anthropic's platforms. Anthropic's listed price falls from $3 / $15 to $2 / $10 per 1M tokens.",
+  "tier": "long_tail"
+}

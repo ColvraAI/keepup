@@ -1,0 +1,120 @@
+{
+  "computed_from": "data/timeline.json",
+  "window": {
+    "from": "2026-09-01",
+    "to": "2026-10-31",
+    "fetched": "2026-10-31"
+  },
+  "overall": {
+    "events": 27,
+    "prs_opened": 7,
+    "prs_updated": 7,
+    "held_back": 7,
+    "watching": 2,
+    "brief_only": 1,
+    "findings": 1,
+    "team_notes": 2,
+    "other": 0,
+    "team_later": 3,
+    "team_later_on_prs": 3,
+    "team_later_engine": 1,
+    "team_later_engine_on_prs": 1,
+    "team_ahead": 2,
+    "team_unchanged": 1,
+    "team_same_day": 0,
+    "team_points": [
+      {
+        "date": "2026-09-01",
+        "thing": "gpt-4.1-nano, your OpenAI default, shuts down on 23 Oct (announced 22 Apr)",
+        "action": "pr_opened",
+        "team_date": "2026-10-27",
+        "commit": "5edf32b9",
+        "days_after": 56
+      },
+      {
+        "date": "2026-09-22",
+        "thing": "GPT-6 Sol and GPT-6 Luna released",
+        "action": "pr_opened",
+        "team_date": "2026-10-27",
+        "commit": "5edf32b9",
+        "days_after": 35
+      },
+      {
+        "date": "2026-09-29",
+        "thing": "GPT-6.1 Sol released",
+        "action": "pr_updated",
+        "team_date": "2026-10-27",
+        "commit": "5edf32b9",
+        "days_after": 28
+      }
+    ],
+    "median_days_later": 35
+  },
+  "repos": {
+    "Mintplex-Labs/anything-llm": {
+      "events": 18,
+      "prs_opened": 5,
+      "prs_updated": 4,
+      "held_back": 5,
+      "watching": 2,
+      "brief_only": 0,
+      "findings": 0,
+      "team_notes": 2,
+      "other": 0,
+      "team_later": 3,
+      "team_later_on_prs": 3,
+      "team_later_engine": 1,
+      "team_later_engine_on_prs": 1,
+      "team_ahead": 2,
+      "team_unchanged": 0,
+      "team_same_day": 0,
+      "team_points": [
+        {
+          "date": "2026-09-01",
+          "thing": "gpt-4.1-nano, your OpenAI default, shuts down on 23 Oct (announced 22 Apr)",
+          "action": "pr_opened",
+          "team_date": "2026-10-27",
+          "commit": "5edf32b9",
+          "days_after": 56
+        },
+        {
+          "date": "2026-09-22",
+          "thing": "GPT-6 Sol and GPT-6 Luna released",
+          "action": "pr_opened",
+          "team_date": "2026-10-27",
+          "commit": "5edf32b9",
+          "days_after": 35
+        },
+        {
+          "date": "2026-09-29",
+          "thing": "GPT-6.1 Sol released",
+          "action": "pr_updated",
+          "team_date": "2026-10-27",
+          "commit": "5edf32b9",
+          "days_after": 28
+        }
+      ],
+      "median_days_later": 35
+    },
+    "mezmo/aura": {
+      "events": 9,
+      "prs_opened": 2,
+      "prs_updated": 3,
+      "held_back": 2,
+      "watching": 0,
+      "brief_only": 1,
+      "findings": 1,
+      "team_notes": 0,
+      "other": 0,
+      "team_later": 0,
+      "team_later_on_prs": 0,
+      "team_later_engine": 0,
+      "team_later_engine_on_prs": 0,
+      "team_ahead": 0,
+      "team_unchanged": 1,
+      "team_same_day": 0,
+      "team_points": [],
+      "median_days_later": null
+    }
+  }
+}

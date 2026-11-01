@@ -1,0 +1,93 @@
+{
+  "schema": 1,
+  "id": "07",
+  "spec": "docs/prs/07-anythingllm-default-model-shutdown.md",
+  "upstream": "Mintplex-Labs/anything-llm",
+  "fork": "anything-llm",
+  "baseCommit": "bbefbc7f75f8227327242d8c5ef0b9c15577751b",
+  "baseBranch": "replay/bbefbc7f-default-model",
+  "ciWorkflow": null,
+  "branch": "keepup/2026-09-01-default-model-shutdown",
+  "lab": "lab/07-default-model",
+  "source": "OpenAI API deprecations",
+  "sourceUrl": "https://developers.openai.com/api/docs/deprecations",
+  "where": [
+    {
+      "path": "server/models/systemSettings.js",
+      "line": 878
+    },
+    {
+      "path": "server/utils/AiProviders/openAi/index.js",
+      "line": 24
+    },
+    {
+      "path": "server/utils/agents/index.js",
+      "line": 318
+    },
+    {
+      "path": "server/utils/agents/index.js",
+      "line": 857
+    },
+    {
+      "path": "server/utils/agents/ephemeral.js",
+      "line": 516
+    },
+    {
+      "path": "server/utils/agents/aibitat/providers/openai.js",
+      "line": 18
+    },
+    {
+      "path": "server/utils/agents/aibitat/providers/genericOpenAi.js",
+      "line": 24
+    }
+  ],
+  "founderLine": "Chats with no model set stop working on 23 Oct, and this moves the default to OpenAI's named substitute.",
+  "effect": [
+    "keeps working"
+  ],
+  "effort": "Hours",
+  "whyItFits": "With no model set, AnythingLLM falls back to gpt-4.1-nano: server/models/systemSettings.js:878 for settings, server/utils/AiProviders/openAi/index.js:24 for chats, and server/utils/agents/index.js:318 and :857 and server/utils/agents/ephemeral.js:516 for agents. OpenAI shuts that model down on 23 Oct and names gpt-5.6-luna, released on 9 Jul, as its substitute.",
+  "risks": "Nothing a person chose changes, which cuts both ways: the settings screen stores whichever model is selected when it's saved, so anyone with gpt-4.1-nano in OPEN_MODEL_PREF or on a workspace stays on it and still stops working on 23 Oct. Anyone with no model set moves to a different model: OpenAI's pricing page lists gpt-5.6-luna at $0.20 input and $1.20 output per million tokens, against $0.10 and $0.40 for gpt-4.1-nano, and the provider's existing rule for gpt-5 models sends it a temperature of 1 whatever the workspace sets. AnythingLLM reads context windows from LiteLLM's published list, so until an install's cached copy lists gpt-5.6-luna it treats the model as 4,096 tokens and compresses long prompts to fit; the list had it at 922,000 tokens when checked on 1 Nov 2026.",
+  "rollback": "Set OPEN_MODEL_PREF back to gpt-4.1-nano, or revert this commit. Either only holds until 23 Oct: that model no longer answers after that.",
+  "proof": {
+    "vendor": {
+      "claim": "OpenAI announced on 22 Apr 2026 that gpt-4.1-nano shuts down on 23 Oct 2026, and its deprecations page now names gpt-5.6-luna as the substitute",
+      "url": "https://developers.openai.com/api/docs/deprecations"
+    },
+    "independent": null
+  },
+  "sources": [
+    "https://developers.openai.com/api/docs/deprecations",
+    "https://web.archive.org/web/20260902020743/https://developers.openai.com/api/docs/deprecations",
+    "https://developers.openai.com/api/docs/changelog",
+    "https://developers.openai.com/api/docs/pricing",
+    "https://github.com/Mintplex-Labs/anything-llm/commit/5edf32b9",
+    "https://raw.githubusercontent.com/BerriAI/litellm/main/model_prices_and_context_window.json"
+  ],
+  "sourcedNumbers": [
+    {
+      "text": "$0.20, $1.20, $0.10, $0.40",
+      "source": "https://developers.openai.com/api/docs/pricing"
+    },
+    {
+      "text": "4,096 tokens",
+      "source": "https://github.com/Mintplex-Labs/anything-llm/blob/bbefbc7f/server/utils/AiProviders/openAi/index.js#L59"
+    },
+    {
+      "text": "922,000 tokens",
+      "source": "https://raw.githubusercontent.com/BerriAI/litellm/main/model_prices_and_context_window.json"
+    }
+  ],
+  "stages": [
+    {
+      "date": "2026-09-01",
+      "patches": [
+        "patches/0001-fix-move-the-default-OpenAI-model-off-gpt-4.1-nano-b.patch"
+      ],
+      "title": "Your default OpenAI model shuts down on 23 Oct · move to gpt-5.6-luna",
+      "whatShipped": "OpenAI announced on 22 Apr 2026 that gpt-4.1-nano shuts down on 23 Oct 2026, and its deprecations page now names gpt-5.6-luna as the substitute. OpenAI released gpt-5.6-luna on 9 Jul 2026.",
+      "whatThisChanges": "The default moves from gpt-4.1-nano to gpt-5.6-luna everywhere the server falls back when nothing is set: server/models/systemSettings.js, server/utils/AiProviders/openAi/index.js, server/utils/agents/index.js, server/utils/agents/ephemeral.js, and the agent providers aibitat/providers/openai.js and aibitat/providers/genericOpenAi.js. OPEN_MODEL_PREF and a workspace's model still win. The commented sample lines in the .env.example files and a settings placeholder still name gpt-4.1-nano, and set nothing. server/__tests__ gains tests for the default and for an explicit setting.",
+      "comment": null
+    }
+  ]
+}

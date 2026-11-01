@@ -1,0 +1,41 @@
+Datalab 
+ State of the Art models for Document Intelligence 
+# Indra OCR
+Indra OCR is a 1M-parameter OCR model that runs on CPU. It turns PDFs and images into markdown, text, or JSON with boxes, and it reads handwriting, 80+ languages, and pages at any angle.
+- **Accurate** - 66.7 on OmniParseBench (71.4 with `--math`), ahead of PaddleOCR's full PP-StructureV3 pipeline (58.4). Its text score (46.7) is ahead of PaddleOCR's PP-OCR text models (35.8) and Tesseract (19.3).
+- **Fast** - about 44 pages/s on 32 CPU cores, 15x Tesseract and 10x PaddleOCR's PP-OCR text models on the same machine type and pages, and about 210 ms per page on 4 cores (benchmarks)
+- **80+ languages** - Latin-script languages, Russian and the Cyrillic languages, Greek, Chinese, Japanese, Korean, Arabic, Persian, Urdu, Hebrew, Hindi and the Indic languages, Thai, Khmer and more (languages)
+- **Handwriting** - handwritten pages and forms (25.2% on the OmniParseBench handwriting tests, see limitations)
+- **Real-world scans** - sideways, upside down, tilted up to 45 degrees, light text on dark ground
+- **Layout** - a box, a label and a reading order for every line and block (headings, lists, tables, captions, footnotes, page headers)
+- **Digital PDFs** - reads the text layer in any script, and OCRs only what is missing
+- **Small** - ONNX Runtime, no PyTorch, no GPU
+Indra OCR is named for Indra.
+## Try Datalab's Managed Platform
+Indra OCR is built for speed on CPUs. When you need the highest accuracy, on handwriting, math, complex tables and degraded scans, our managed platform runs Chandra, our state of the art OCR model, with zero data retention by default, SOC 2 Type 2, and custom BAAs.
+If you have high volume workloads, we offer a batch processing service that can handle 1B+ pages a day.
+Get started with **$5 in free credits** - sign up - or try Chandra in our public playground.
+## Quickstart
+```shell
+pip install indra-ocr
+indra-ocr paper.pdf # markdown to stdout
+indra-ocr *.pdf --out results/ # one .md per input, all cores
+indra-ocr scan.png --format json # lines, boxes, layout blocks, confidences
+indra-ocr-viewer # local web viewer on http://localhost:8765
+```
+The first run downloads the models (about 76 MB) from Hugging Face.
+## Examples
+Real Indra OCR outputs on OmniParseBench pages. Colored boxes are layout blocks with their label, faint blue boxes are lines, drawn from the JSON output with no edits.
+ A handwritten letter in cursive: Indra OCR finds every line and reads the body of the letter. 
+ A scanned Korean letter: each line goes to the recognizer for its script. 
+**See more examples, with the markdown output for each →**
+# License
+The code is Apache 2.0. The model weights use a modified OpenRAIL-M license (LICENSE).
+# Commercial usage
+This code is Apache 2.0, and our model weights use a modified OpenRAIL-M license (free for research, personal use, and startups under $20M funding/revenue, cannot be used competitively with our API). To remove the OpenRAIL license requirements, or for broader commercial licensing, visit our pricing page here.
+# Installation
+```shell
+pip install indra-ocr
+```
+The default models are about 76 MB: 30 MB of networks and 46 MB of language models for unsure lines. The main recognizer, `rec.onnx` (Latin script), has about 1.25M parameters, and all default models together have 7.3M (the optional math models are extra).
+For the latest code from GitHub instead: `pip install git+https://github.com/datalab-to/indra.git`. To let the viewer 

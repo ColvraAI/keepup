@@ -1,0 +1,5 @@
+# a comment
+openai==1.40.0
+anthropic>=0.30,<1
+langchain[all]~=0.2.0  # extras and a comment
+-r other.txt

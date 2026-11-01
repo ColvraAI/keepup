@@ -1,0 +1,260 @@
+/* Moonshot */
+.goal {
+  display: grid;
+  gap: var(--s-5);
+}
+
+.goal__head {
+  display: grid;
+  gap: var(--s-2);
+}
+
+.goal__result {
+  display: flex;
+  align-items: baseline;
+  gap: var(--s-3);
+  flex-wrap: wrap;
+}
+
+.goal__result .num {
+  font-size: var(--t-xxl);
+  font-weight: 600;
+  letter-spacing: -0.035em;
+  line-height: 1;
+  color: var(--blue-ink);
+}
+
+.goal__label {
+  font-family: var(--mono);
+  font-size: var(--t-s);
+  color: var(--ink-2);
+}
+
+.goal__bar {
+  position: relative;
+  height: 12px;
+  background: var(--box);
+  margin: var(--s-3) 0 var(--s-4);
+}
+
+.goal__bar i {
+  display: block;
+  height: 100%;
+  background: var(--blue);
+}
+
+.goal__bar b {
+  position: absolute;
+  top: -5px;
+  bottom: -5px;
+  width: 2px;
+  background: var(--ink);
+}
+
+.goal__bar b span {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  transform: translateX(-50%);
+  font-family: var(--mono);
+  font-weight: 400;
+  font-size: var(--t-xs);
+}
+
+.goal__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+  gap: var(--s-6);
+  align-items: start;
+}
+
+.goal__inputs {
+  display: grid;
+  gap: var(--s-2);
+}
+
+.assume {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 2px var(--s-2);
+  font-size: var(--t-s);
+  line-height: 1.2;
+  padding-bottom: var(--s-1);
+  border-bottom: 1px solid var(--rule);
+  align-items: center;
+}
+
+.assume .chip {
+  display: none;
+}
+
+.goal__assumed {
+  justify-self: start;
+}
+
+.assume__input {
+  grid-column: 2;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 2px;
+}
+
+.assume input {
+  width: 6.2em;
+  font-family: var(--mono);
+  font-size: var(--t-s);
+  text-align: right;
+  padding: 0.2em 0.35em;
+  border: 1px solid var(--rule-strong);
+  border-radius: 2px;
+  background: #fbf9f4;
+  color: var(--ink);
+}
+
+.assume em {
+  font-style: normal;
+  font-family: var(--mono);
+  font-size: var(--t-xs);
+}
+
+.levers {
+  display: grid;
+  gap: var(--s-3);
+}
+
+.levers li {
+  display: grid;
+  gap: var(--s-1);
+  border-top: 1px solid var(--rule);
+  padding-top: var(--s-2);
+}
+
+.levers .h3 {
+  font-size: var(--t-b);
+}
+
+.formula {
+  font-size: var(--t-xs);
+  line-height: 1.32;
+  background: var(--paper-2);
+  padding: var(--s-1) var(--s-2);
+  overflow-wrap: anywhere;
+}
+
+.fleet {
+  margin-top: var(--s-7);
+  display: grid;
+  gap: var(--s-3);
+}
+
+.fleet__total td {
+  font-weight: 600;
+  border-bottom: 2px solid var(--ink);
+}
+
+.moonshot__foot {
+  margin-top: var(--s-3);
+}
+
+
+.is-present .moonshot .screen__title-row {
+  display: none;
+}
+
+.is-present .moonshot .screen__head {
+  margin-bottom: var(--s-3);
+}
+
+.goal__assumed {
+  font-size: var(--t-s);
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.assume--model select {
+  max-width: 14em;
+  min-width: 11em;
+  font-family: var(--mono);
+  font-size: var(--t-xs);
+  padding: 0.2em 0.35em;
+  border: 1px solid var(--rule-strong);
+  border-radius: 2px;
+  background: #fbf9f4;
+  color: var(--ink);
+}
+
+.lever {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: var(--s-1) var(--s-4);
+}
+
+.lever__figure {
+  font-size: var(--t-b);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.lever__detail {
+  grid-column: 1 / -1;
+  display: grid;
+  gap: var(--s-1);
+}
+
+.fleet__points {
+  color: var(--ink-3);
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+.is-present .moonshot .lever {
+  padding: var(--s-2) 0;
+}
+
+.is-present .moonshot .lever .h3 {
+  font-size: var(--t-m);
+  line-height: 1.15;
+}
+
+.is-present .moonshot .lever__figure {
+  font-size: var(--t-m);
+}
+
+.is-present .moonshot .goal {
+  gap: var(--s-3);
+}
+
+.is-present .moonshot .assume {
+  font-size: var(--t-xs);
+}
+
+.is-present .moonshot .assume input,
+.is-present .moonshot .assume select {
+  font-size: var(--t-xs);
+}
+
+.is-present .moonshot .fleet {
+  margin-top: var(--s-3);
+}
+
+.is-present .moonshot .fleet .data {
+  font-size: var(--t-m);
+}
+
+.is-present .moonshot .fleet .data td {
+  padding-top: var(--s-4);
+  padding-bottom: var(--s-4);
+}
+
+.is-present .moonshot .fleet .data th {
+  font-size: var(--t-b);
+}
+
+.is-present .moonshot .fleet__points {
+  font-size: var(--t-xs);
+}
+
+.is-present .moonshot .fleet .h2 {
+  font-size: var(--t-xl);
+}

@@ -1,0 +1,29 @@
+{
+ "version": 1,
+ "repo": "must-match-json",
+ "commit": "COMMIT",
+ "hits": [
+  {
+   "file": "src/far.ts",
+   "line": 22,
+   "pattern": "PAT-hand-parsed-json",
+   "text": "const value = JSON.parse(reply.content);"
+  },
+  {
+   "file": "src/reply.py",
+   "line": 3,
+   "pattern": "PAT-hand-parsed-json",
+   "text": "    return json.loads(reply.content)"
+  },
+  {
+   "file": "src/reply.ts",
+   "line": 5,
+   "pattern": "PAT-hand-parsed-json",
+   "text": "  return JSON.parse(res.choices[0].message.content);"
+  }
+ ],
+ "checked": {
+  "files": 3,
+  "lines": 34
+ }
+}

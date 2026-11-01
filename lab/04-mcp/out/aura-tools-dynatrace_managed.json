@@ -1,0 +1,32 @@
+{
+  "kind": "aura-tools",
+  "ok": true,
+  "server": "dynatrace_managed",
+  "example": "examples/complete/incident-response-dynatrace-managed.toml",
+  "measuredAt": "2026-11-01T04:47:54.610Z",
+  "aura": "v0.2.18-nightly.9",
+  "alias": "incident-response/dynatrace-managed",
+  "credentials": "placeholder",
+  "toolsByServer": {
+    "dynatrace_managed": [
+      "dynatrace_managed_discover_entities",
+      "dynatrace_managed_get_entity_details",
+      "dynatrace_managed_get_entity_relationships",
+      "dynatrace_managed_get_entity_type_details",
+      "dynatrace_managed_get_environments_info",
+      "dynatrace_managed_get_event_details",
+      "dynatrace_managed_get_metric_details",
+      "dynatrace_managed_get_problem_details",
+      "dynatrace_managed_get_security_problem_details",
+      "dynatrace_managed_get_slo_details",
+      "dynatrace_managed_list_available_metrics",
+      "dynatrace_managed_list_entity_types",
+      "dynatrace_managed_list_events",
+      "dynatrace_managed_list_problems",
+      "dynatrace_managed_list_security_problems",
+      "dynatrace_managed_list_slos",
+      "dynatrace_managed_query_logs",
+      "dynatrace_managed_query_metrics_data"
+    ]
+  }
+}

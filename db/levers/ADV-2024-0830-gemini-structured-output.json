@@ -1,0 +1,68 @@
+{
+  "id": "ADV-2024-0830-gemini-structured-output",
+  "name": "Gemini's structured output instead of parsing its text",
+  "pattern": "PAT-hand-parsed-json",
+  "kind": "api-feature",
+  "providers": [
+    "google"
+  ],
+  "effects": [
+    "better answers",
+    "keeps working"
+  ],
+  "gain": "Google's words: responses adhere to a provided JSON Schema, giving \"predictable, type-safe results\" (vendor claim). No measured number here.",
+  "proof": "vendor claim",
+  "source": "https://ai.google.dev/gemini-api/docs/structured-output",
+  "how": "Pass a JSON schema in response_format on client.interactions.create, built from Pydantic in Python or Zod in JavaScript. Keep the old parser as a fallback.",
+  "replaces": "Prompts that ask for JSON, then a parser.",
+  "trade_offs": [
+    "Only a subset of JSON Schema is supported.",
+    "Very large or deeply nested schemas are rejected with a 400 INVALID_ARGUMENT.",
+    "minLength, maxLength, uniqueItems and similar constraints are not enforced, so validate them in your code."
+  ],
+  "needs": "A Gemini API key and a model that supports it.",
+  "checked": "2026-11-01",
+  "checked_by": "agent",
+  "usage_signal": "Retries and output tokens on calls that are re-sent after a parse failure",
+  "gain_model": {
+    "formula": "parse_failure_rate * calls * cost_per_call = money lost to retries",
+    "inputs": [
+      {
+        "name": "parse_failure_rate",
+        "value": null,
+        "source": "the product's usage data or the bill",
+        "assumed": false
+      },
+      {
+        "name": "calls",
+        "value": null,
+        "source": "the product's usage data or the bill",
+        "assumed": false
+      },
+      {
+        "name": "cost_per_call",
+        "value": null,
+        "source": "the product's usage data or the bill",
+        "assumed": false
+      }
+    ]
+  },
+  "test_recipe": {
+    "what_to_compare": "parse failures and schema errors, before and after",
+    "samples": 200,
+    "can_run_with": [
+      "OPENAI_API_KEY",
+      "ANTHROPIC_API_KEY"
+    ]
+  },
+  "verify_rule": "Parse-error logs and retried calls over 14 days after merge",
+  "change_recipe": {
+    "kind": "pull request, off by default",
+    "how": "Pass a JSON schema in response_format on client.interactions.create, built from Pydantic in Python or Zod in JavaScript. Keep the old parser as a fallback.",
+    "left_off": "Nothing else changes; the new path sits behind a setting until a person turns it on"
+  },
+  "audience": "product",
+  "gain_independent": null,
+  "gain_vendor": "Google's words: responses adhere to a provided JSON Schema, giving \"predictable, type-safe results\" (vendor claim). No measured number here.",
+  "tier": "huge"
+}

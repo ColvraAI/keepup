@@ -1,0 +1,72 @@
+{
+  "passages": 1000,
+  "queries": 200,
+  "dim": 384,
+  "segmentMs": [
+    {
+      "passages": 100,
+      "ms": 10683.774213
+    },
+    {
+      "passages": 100,
+      "ms": 13574.551131
+    },
+    {
+      "passages": 100,
+      "ms": 22924.094468
+    },
+    {
+      "passages": 100,
+      "ms": 19387.091926
+    },
+    {
+      "passages": 100,
+      "ms": 20632.901551
+    },
+    {
+      "passages": 100,
+      "ms": 21361.159926
+    },
+    {
+      "passages": 100,
+      "ms": 19695.745468
+    },
+    {
+      "passages": 100,
+      "ms": 20439.979551
+    },
+    {
+      "passages": 100,
+      "ms": 17921.9778
+    },
+    {
+      "passages": 100,
+      "ms": 21386.453593
+    }
+  ],
+  "queryMs": 5411.977795,
+  "loadMs": [
+    246.149958
+  ],
+  "peakRssKb": 2076624,
+  "sessions": 1,
+  "model": "Xenova/all-MiniLM-L6-v2",
+  "machine": {
+    "node": "v18.20.8",
+    "arch": "arm64",
+    "cpus": 8,
+    "totalMemMb": 3919,
+    "transformers": "4.3.2"
+  },
+  "prefixes": {
+    "passage": "",
+    "query": ""
+  },
+  "batch": 25,
+  "scores": {
+    "recallAt5": 0.8475,
+    "mrrAt10": 0.7528630952380954,
+    "queries": 200,
+    "passages": 1000
+  }
+}

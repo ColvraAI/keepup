@@ -1,0 +1,47 @@
+{
+  "id": "ADV-2026-1021-anthropic-sampling-params-removed",
+  "name": "Remove temperature, top_p and top_k from Claude requests",
+  "pattern": "PAT-removed-sampling-param",
+  "kind": "api-migration",
+  "providers": [
+    "anthropic"
+  ],
+  "effects": [
+    "keeps working"
+  ],
+  "gain": "On API version 2026-10-21 a request that sends any of the three returns a 400, even at the default. The first SDK majors on that version include Python 2.0.0 and TypeScript 1.0.0.",
+  "proof": "vendor claim",
+  "source": "https://platform.claude.com/docs/en/api/migration-2026-10-21",
+  "how": "Stop sending the three parameters before upgrading the SDK major. A request that relies on a non-default value can stay on 2023-06-01 for now.",
+  "replaces": "temperature, top_p or top_k on a Messages or Message Batches request.",
+  "trade_offs": [
+    "On a model that accepts other values, such as Sonnet 4.6, a request that lowered temperature loses that effect, and no other setting replaces it.",
+    "Nothing breaks until the SDK major or the version header changes, unless the model is Claude 4.7 or later and the value is non-default."
+  ],
+  "needs": "Nothing new.",
+  "checked": "2026-11-01",
+  "checked_by": "agent",
+  "usage_signal": "Usage API: calls on the affected model or parameter",
+  "gain_model": {
+    "formula": "no money figure: the call stops working or a capability is missing",
+    "inputs": []
+  },
+  "test_recipe": {
+    "what_to_compare": "tests pass on the change",
+    "samples": 20,
+    "can_run_with": [
+      "ANTHROPIC_API_KEY",
+      "OPENAI_API_KEY"
+    ]
+  },
+  "verify_rule": "The old id or parameter is gone and calls succeed over 7 days",
+  "change_recipe": {
+    "kind": "pull request with tests",
+    "how": "Stop sending the three parameters before upgrading the SDK major. A request that relies on a non-default value can stay on 2023-06-01 for now.",
+    "left_off": "Nothing else changes; the new path sits behind a setting until a person turns it on"
+  },
+  "audience": "product",
+  "gain_independent": null,
+  "gain_vendor": "On API version 2026-10-21 a request that sends any of the three returns a 400, even at the default. The first SDK majors on that version include Python 2.0.0 and TypeScript 1.0.0.",
+  "tier": "long_tail"
+}

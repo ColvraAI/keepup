@@ -1,0 +1,74 @@
+{
+  "id": "ADV-2026-0915-typesafe-jev",
+  "name": "TypeSafe Jev for calls that only pick a label",
+  "pattern": "PAT-label-picking-call",
+  "kind": "llm-call-substitute",
+  "providers": [],
+  "effects": [
+    "cheaper",
+    "faster"
+  ],
+  "gain": "TypeSafe's words: end-to-end response time of 70ms-500ms, \"40x-200x faster\" than frontier models on these queries (vendor claim). There is no independent study on this page.",
+  "proof": "vendor claim",
+  "source": "https://typesafe.ai/blog/introducing-system-one-models-and-jev",
+  "how": "POST /v1/systemone with the state and a Choice, Score or Noul question. Gate on the returned confidence, and keep today's call as the fallback below the gate. Pin a version such as jev-1.14.0 once a threshold is tuned.",
+  "replaces": "A chat call asked to classify, route, answer yes or no, or score.",
+  "trade_offs": [
+    "Weak on maths, counting and date comparison: TypeSafe says to keep those in code.",
+    "English is where accuracy is best; test other languages on your own content first.",
+    "A new vendor and a new key. jev-latest moves when a release ships, so its answers can change without a code change.",
+    "The default limit is 64k tokens per request and 32k per question."
+  ],
+  "needs": "A TypeSafe key.",
+  "price": "$0.042 per 1M input tokens; output tokens are free.",
+  "checked": "2026-11-01",
+  "checked_by": "agent",
+  "usage_signal": "Usage and Cost API: high call count with few output tokens per call",
+  "gain_model": {
+    "formula": "calls * (current_cost_per_call - decision_cost_per_call), plus p50 latency difference",
+    "inputs": [
+      {
+        "name": "calls",
+        "value": null,
+        "source": "the product's usage data or the bill",
+        "assumed": false
+      },
+      {
+        "name": "current_cost_per_call",
+        "value": null,
+        "source": "the product's usage data or the bill",
+        "assumed": false
+      },
+      {
+        "name": "decision_cost_per_call",
+        "value": null,
+        "source": "the product's usage data or the bill",
+        "assumed": false
+      },
+      {
+        "name": "decision_input_price_per_m",
+        "value": 0.042,
+        "source": "TypeSafe's price, output free: https://typesafe.ai/blog/introducing-system-one-models-and-jev",
+        "assumed": false
+      }
+    ]
+  },
+  "test_recipe": {
+    "what_to_compare": "agreement with the current call, p50 latency, fallback rate",
+    "samples": 500,
+    "can_run_with": [
+      "OPENAI_API_KEY",
+      "TYPESAFE_API_KEY"
+    ]
+  },
+  "verify_rule": "Cost line and p50 for that call over 14 days; fallback rate under the gate",
+  "change_recipe": {
+    "kind": "pull request, off by default",
+    "how": "POST /v1/systemone with the state and a Choice, Score or Noul question. Gate on the returned confidence, and keep today's call as the fallback below the gate. Pin a version such as jev-1.14.0 once a threshold is tuned.",
+    "left_off": "Nothing else changes; the new path sits behind a setting until a person turns it on"
+  },
+  "audience": "product",
+  "gain_independent": null,
+  "gain_vendor": "TypeSafe's words: end-to-end response time of 70ms-500ms, \"40x-200x faster\" than frontier models on these queries (vendor claim). There is no independent study on this page.",
+  "tier": "huge"
+}

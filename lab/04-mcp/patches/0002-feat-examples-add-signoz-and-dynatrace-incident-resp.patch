@@ -1,0 +1,194 @@
+From 9a22afa84194c0802fceacdeacd7b38375bf35b2 Mon Sep 17 00:00:00 2001
+From: "keepup[bot]" <keepup[bot]@users.noreply.github.com>
+Date: Fri, 30 Oct 2026 12:00:00 +0000
+Subject: [PATCH 2/2] feat(examples): add signoz and dynatrace incident
+ response examples
+
+The integrations table doesn't list SigNoz or Dynatrace Managed, two
+backends teams run themselves, and each vendor publishes its own MCP
+server. Apply the same triage pattern to them over stdio, with tokens
+in the environment. The SigNoz example keeps the agent on the server's
+read tools.
+
+Replay date: 2026-10-30, the day SigNoz MCP v0.17.0 and Dynatrace
+Managed MCP v2.0.0 shipped.
+Source: https://registry.modelcontextprotocol.io
+---
+ README.md                                     |  2 +
+ .../incident-response-dynatrace-managed.toml  | 68 ++++++++++++++++++
+ .../complete/incident-response-signoz.toml    | 71 +++++++++++++++++++
+ 3 files changed, 141 insertions(+)
+ create mode 100644 examples/complete/incident-response-dynatrace-managed.toml
+ create mode 100644 examples/complete/incident-response-signoz.toml
+
+diff --git a/README.md b/README.md
+index 81cdc158..1af08614 100644
+--- a/README.md
++++ b/README.md
+@@ -89,6 +89,7 @@ Through compatible [MCP](https://modelcontextprotocol.io) servers and built-in i
+ | [Dash0](https://www.youtube.com/watch?v=W7G3jlGVBH0) | Query hosted OpenTelemetry traces, metrics, and logs |
+ | Datadog | Query metrics, monitors, dashboards, and traces |
+ | Docker | Inspect containers, images, logs, and runtime state |
++| Dynatrace Managed | Investigate problems, logs, events, metrics, entities, and SLOs in self-hosted Dynatrace |
+ | GCP | Inspect cloud resources, logs, metrics, and operational state |
+ | [GitHub](https://www.youtube.com/watch?v=9MeK_V3U9YA) | Search code and work with repositories, issues, and pull requests |
+ | GitLab | Search code and work with repositories, issues, merge requests, and pipelines |
+@@ -104,6 +105,7 @@ Through compatible [MCP](https://modelcontextprotocol.io) servers and built-in i
+ | [Prometheus](https://www.youtube.com/watch?v=cw34mXc4XgM) | Query metrics and alert status |
+ | [Qdrant](https://www.youtube.com/watch?v=cw34mXc4XgM) | Retrieve runbooks and reference material from vector collections |
+ | Sentry | Search issues and errors, read stack traces and events, and find the release that introduced a problem |
++| SigNoz | Query metrics, traces, logs, alerts, and dashboards |
+ | [Slack](https://www.youtube.com/watch?v=9hWlh-xCzhQ) | Read incident channels and post investigation updates |
+ | [Temporal](https://www.youtube.com/watch?v=kuUsojClQcA) | Run agent investigations as steps in durable workflows |
+ | [Windows Server](https://www.youtube.com/watch?v=7nFvKJpp9Sk) | Inspect services, drives, processes, and resource usage |
+diff --git a/examples/complete/incident-response-dynatrace-managed.toml b/examples/complete/incident-response-dynatrace-managed.toml
+new file mode 100644
+index 00000000..35984020
+--- /dev/null
++++ b/examples/complete/incident-response-dynatrace-managed.toml
+@@ -0,0 +1,68 @@
++# Incident response agent — PagerDuty + Dynatrace Managed.
++# Triages alerts, then pulls problems, logs, events, and metrics from Dynatrace.
++#
++# This server is for self-hosted Dynatrace Managed clusters. Dynatrace SaaS has
++# its own server: https://github.com/dynatrace-oss/dynatrace-mcp
++#
++# Prerequisites:
++#   1. Node.js 26 (26.12.1 or later), as the package's engines field requires. `npx -y`
++#      downloads the server from the npm registry on first run, which has to finish
++#      within [mcp].connect_timeout_secs. To avoid that, or on an air-gapped host,
++#      install it ahead of time
++#      (npm install -g @dynatrace-oss/dynatrace-managed-mcp-server@2.0.0) and
++#      change `cmd` below to ["mcp-server-dynatrace"] with no `args`.
++#   2. A Dynatrace API token with these scopes: DataExport, entities.read,
++#      events.read, logs.read, metrics.read, problems.read,
++#      securityProblems.read, slo.read
++#   3. The variables below. apiEndpointUrl is the cluster's base URL.
++#        export OPENAI_API_KEY="sk-..."
++#        export PAGERDUTY_API_TOKEN="..."
++#        export DT_ENVIRONMENT_CONFIGS='[{"apiEndpointUrl":"https://your-cluster.example.com/","environmentId":"...","alias":"production","apiToken":"..."}]'
++#
++# Usage:
++#   CONFIG_PATH=examples/complete/incident-response-dynatrace-managed.toml cargo run --bin aura -- webserver
++
++[mcp]
++sanitize_schemas = true
++
++# PagerDuty — incident and on-call management
++[mcp.servers.pagerduty]
++transport = "http_streamable"
++url = "https://mcp.pagerduty.com/mcp"
++description = "PagerDuty incident management, on-call schedules, and escalation"
++
++[mcp.servers.pagerduty.headers]
++Authorization = "Token {{ env.PAGERDUTY_API_TOKEN | default: '' }}"
++
++# Dynatrace Managed — problems, logs, events, and metrics
++# The child process inherits AURA's environment, so DT_ENVIRONMENT_CONFIGS and the
++# token inside it stay out of this file. stderr-all keeps the server's log out of
++# the working directory.
++[mcp.servers.dynatrace_managed]
++transport = "stdio"
++cmd = ["npx"]
++args = ["-y", "@dynatrace-oss/dynatrace-managed-mcp-server@2.0.0"]
++env = { LOG_OUTPUT = "stderr-all" }
++description = "Dynatrace Managed problems, logs, events, metrics, entities, and SLOs"
++
++[agent]
++name = "Incident Response Agent"
++alias = "incident-response/dynatrace-managed"
++description = "Incident triage with PagerDuty context and Dynatrace Managed observability"
++model_owner = "mezmo"
++system_prompt = """
++You are an incident response agent with access to PagerDuty and
++Dynatrace Managed. Follow this triage workflow:
++
++1. Identify the triggering alert and affected services via PagerDuty.
++2. Pull the related problems, logs, events, and metrics from Dynatrace Managed.
++3. Summarize findings: timeline, root cause hypothesis, and next steps.
++
++Always include timestamps and link back to source data.
++"""
++turn_depth = 10
++
++[agent.llm]
++provider = "openai"
++api_key = "{{ env.OPENAI_API_KEY }}"
++model = "gpt-5.2"
+diff --git a/examples/complete/incident-response-signoz.toml b/examples/complete/incident-response-signoz.toml
+new file mode 100644
+index 00000000..374e1108
+--- /dev/null
++++ b/examples/complete/incident-response-signoz.toml
+@@ -0,0 +1,71 @@
++# Incident response agent — PagerDuty + SigNoz.
++# Triages alerts, then correlates metrics, traces, and logs from SigNoz.
++#
++# The SigNoz MCP server runs from its Docker image over stdio, so it works with
++# a self-hosted SigNoz and needs no hosted service.
++#
++# Prerequisites:
++#   1. Docker. Pull the image ahead of time so the first request doesn't spend
++#      its connect timeout on it: docker pull signoz/signoz-mcp-server:v0.17.0
++#   2. The variables below. SIGNOZ_URL is read from inside the container, so a
++#      SigNoz on this host is http://host.docker.internal:8080 on Docker Desktop.
++#        export OPENAI_API_KEY="sk-..."
++#        export PAGERDUTY_API_TOKEN="..."
++#        export SIGNOZ_URL="https://your-signoz-instance.com"
++#        export SIGNOZ_API_KEY="..."   # a SigNoz API key, which only an Admin can create
++#
++# Usage:
++#   CONFIG_PATH=examples/complete/incident-response-signoz.toml cargo run --bin aura -- webserver
++
++[mcp]
++sanitize_schemas = true
++
++# PagerDuty — incident and on-call management
++[mcp.servers.pagerduty]
++transport = "http_streamable"
++url = "https://mcp.pagerduty.com/mcp"
++description = "PagerDuty incident management, on-call schedules, and escalation"
++
++[mcp.servers.pagerduty.headers]
++Authorization = "Token {{ env.PAGERDUTY_API_TOKEN | default: '' }}"
++
++# SigNoz — metrics, traces, logs, alerts, and dashboards
++# `docker run -e NAME` copies the variable from `env` into the container, so the
++# API key never appears on a command line.
++[mcp.servers.signoz]
++transport = "stdio"
++cmd = ["docker"]
++args = ["run", "-i", "--rm", "-e", "SIGNOZ_URL", "-e", "SIGNOZ_API_KEY", "signoz/signoz-mcp-server:v0.17.0"]
++env = { SIGNOZ_URL = "{{ env.SIGNOZ_URL | default: '' }}", SIGNOZ_API_KEY = "{{ env.SIGNOZ_API_KEY | default: '' }}" }
++description = "SigNoz metrics, traces, logs, alerts, and dashboards"
++
++[agent]
++name = "Incident Response Agent"
++alias = "incident-response/signoz"
++description = "Incident triage with PagerDuty context and SigNoz telemetry"
++model_owner = "mezmo"
++system_prompt = """
++You are an incident response agent with access to PagerDuty and
++SigNoz. Follow this triage workflow:
++
++1. Identify the triggering alert and affected services via PagerDuty.
++2. Check alerts and service health in SigNoz, then correlate metrics, traces,
++   and logs for the affected services.
++3. Summarize findings: timeline, root cause hypothesis, and next steps.
++
++Always include timestamps and link back to source data.
++"""
++turn_depth = 10
++# SigNoz's read tools only. Triage changes nothing in SigNoz, and the write tools
++# carry most of the definition size sent to the model on every turn.
++mcp_filter = [
++  "pagerduty:*",
++  "signoz:signoz_{aggregate,check,execute,fetch,list,query,search}_*",
++  # Every get tool but get_notification_channel, whose settings can hold webhook URLs.
++  "signoz:signoz_get_[!n]*",
++]
++
++[agent.llm]
++provider = "openai"
++api_key = "{{ env.OPENAI_API_KEY }}"
++model = "gpt-5.2"

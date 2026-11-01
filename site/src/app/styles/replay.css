@@ -1,0 +1,233 @@
+.replay__controls {
+  display: flex;
+  gap: var(--s-3);
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* The lead story: the viewer should feel this one. */
+.lead {
+  display: grid;
+  gap: var(--s-4);
+  padding: var(--s-5) 0 var(--s-6);
+  border-top: 2px solid var(--ink);
+}
+
+.lead__title {
+  font-size: var(--t-xl);
+  font-weight: 600;
+  letter-spacing: -0.024em;
+  line-height: 1.08;
+  max-width: 30em;
+  text-wrap: pretty;
+}
+
+.lead__title code {
+  font: inherit;
+  letter-spacing: inherit;
+}
+
+/* The product's own mark: the blue dot that survived, carried with each finding through the deck. */
+.kept-dot {
+  display: inline-block;
+  width: 0.56em;
+  height: 0.56em;
+  margin-right: 0.34em;
+  border-radius: 50%;
+  background: var(--blue);
+  vertical-align: 0.06em;
+}
+
+.event__conflict {
+  display: block;
+  color: var(--amber);
+}
+
+.lead__blue {
+  color: var(--blue-ink);
+}
+
+.lead__caption {
+  max-width: 88ch;
+  text-wrap: pretty;
+}
+
+/* The rows: the words behind the chart. Quiet weeks take one line. */
+.timeline {
+  --axis: 74px;
+  margin-top: var(--s-4);
+  --cols: var(--axis) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
+}
+
+.timeline__head {
+  display: grid;
+  grid-template-columns: var(--cols);
+  gap: var(--s-4);
+  padding: var(--s-2) 0;
+  border-bottom: 1px solid var(--ink);
+}
+
+.week {
+  display: grid;
+  grid-template-columns: var(--axis) minmax(0, 1fr);
+  gap: 0 var(--s-4);
+  border-bottom: 1px solid var(--rule);
+  padding: var(--s-2) 0;
+  transition: opacity 180ms ease;
+}
+
+.week--dim {
+  opacity: 0.16;
+}
+
+.week--now {
+  border-bottom-color: var(--ink);
+}
+
+.week--quiet {
+  padding: var(--s-1) 0;
+}
+
+.week__label {
+  font-size: var(--t-xs);
+  color: var(--ink-3);
+  padding-top: var(--s-2);
+}
+
+.week--quiet .week__label {
+  padding-top: 2px;
+}
+
+.week__quiet {
+  font-size: var(--t-xs);
+  color: var(--ink-3);
+  padding: 2px 0;
+}
+
+.event {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--s-1) var(--s-4);
+  padding: var(--s-2) 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--rule) 50%, transparent);
+}
+
+.event:last-child {
+  border-bottom: 0;
+}
+
+.event__left,
+.event__right {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 var(--s-2);
+  min-width: 0;
+  align-content: flex-start;
+}
+
+.event__date {
+  font-size: var(--t-xs);
+  color: var(--ink-3);
+}
+
+.event__thing {
+  flex: 1 1 100%;
+  font-size: var(--t-s);
+  font-weight: 500;
+  line-height: 1.25;
+  overflow-wrap: break-word;
+}
+
+.event__source {
+  flex: none;
+}
+
+.event__action {
+  flex: 1 1 100%;
+  margin-bottom: 2px;
+}
+
+.event__origin {
+  font-size: 11px;
+  color: var(--ink-3);
+}
+
+.is-present .event__origin {
+  font-size: var(--t-xs);
+}
+
+.event__origin[data-origin='engine run'] {
+  color: var(--blue-ink);
+}
+
+.event__pr {
+  text-decoration: none;
+}
+
+.event__pr:hover .chip {
+  background: var(--blue-ink);
+}
+
+.event__summary {
+  flex: 1 1 100%;
+  font-size: var(--t-s);
+  line-height: 1.25;
+  color: var(--ink-2);
+}
+
+.event__where {
+  flex: 1 1 100%;
+  font-size: var(--t-xs);
+  margin-top: 2px;
+}
+
+.event__team {
+  line-height: 1.3;
+}
+
+.event__team strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.event__team .event__ahead {
+  color: var(--amber);
+}
+
+.event__none {
+  color: var(--rule-strong);
+}
+
+.replay__headline {
+  margin-top: var(--s-6);
+  padding-top: var(--s-4);
+  border-top: 2px solid var(--ink);
+  display: grid;
+  gap: var(--s-3);
+}
+
+.replay__big {
+  font-size: var(--t-xl);
+  font-weight: 600;
+  line-height: 1.08;
+  letter-spacing: -0.024em;
+  max-width: 30em;
+  text-wrap: balance;
+  margin-bottom: var(--s-2);
+}
+
+.replay__second {
+  font-size: var(--t-l);
+  line-height: 1.16;
+  letter-spacing: -0.012em;
+  font-weight: 500;
+  max-width: 40em;
+  text-wrap: balance;
+}
+
+.replay__headline .small {
+  max-width: 96ch;
+  text-wrap: pretty;
+}
+

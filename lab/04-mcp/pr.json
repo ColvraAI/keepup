@@ -1,0 +1,54 @@
+{
+  "schema": 1,
+  "id": "04",
+  "spec": "docs/prs/04-aura-incident-mcp-servers.md",
+  "upstream": "mezmo/aura",
+  "fork": "aura",
+  "baseCommit": "3a49ac4803a1399c69dda6c7a0de1e69f6c085da",
+  "baseBranch": "replay/3a49ac4",
+  "ciWorkflow": "lab/ci/aura.yml",
+  "branch": "keepup/2026-09-25-incident-mcp-servers",
+  "lab": "lab/04-mcp",
+  "source": "Official MCP Registry",
+  "sourceUrl": "https://registry.modelcontextprotocol.io",
+  "where": [
+    { "path": "README.md", "line": 78 },
+    { "path": "examples/complete/incident-response-datadog.toml", "line": 26 }
+  ],
+  "founderLine": "Adds ready-made examples for connecting your agents to Sentry for errors, and to SigNoz or Dynatrace for logs and metrics, while they work an incident.",
+  "effect": ["new capability"],
+  "effort": "Hours",
+  "whyItFits": "AURA's agents reach production tools through MCP, and the README's integrations table has no Sentry, SigNoz or Dynatrace. incident-response-datadog.toml already shows the pattern to copy, and SigNoz and Dynatrace Managed fit your self-hosted users.",
+  "risks": "None to existing configs: these are new examples, and the README only gains rows. Sentry's and SigNoz's servers also have write tools, so the Sentry example leaves out the skill that updates issues and the SigNoz example filters to read tools; PagerDuty stays unfiltered, as in the sibling examples. A server that can't start within AURA's connect timeout shows as failed and the agent carries on without it, so the examples say what to pull or install ahead of time. Dynatrace Managed needs Node.js 26 (26.12.1 or later), as its package requires, and its tools answer without an error when they can't reach the cluster, so an agent with bad settings can read that as nothing being wrong.",
+  "rollback": "Delete the new examples and their README rows.",
+  "proof": {
+    "vendor": { "claim": "Sentry's and SigNoz's official servers and Dynatrace's own, community-supported server, all listed in the MCP Registry", "url": "https://registry.modelcontextprotocol.io" },
+    "independent": null
+  },
+  "sources": [
+    "https://github.com/getsentry/toolkit/releases/tag/0.42.0",
+    "https://github.com/SigNoz/signoz-mcp-server",
+    "https://github.com/dynatrace-oss/dynatrace-managed-mcp",
+    "https://registry.modelcontextprotocol.io"
+  ],
+  "stages": [
+    {
+      "date": "2026-09-25",
+      "patches": ["patches/0001-feat-examples-add-sentry-incident-response-example-c.patch"],
+      "title": "Add Sentry as an incident integration",
+      "titleUnmeasured": null,
+      "whatShipped": "Sentry MCP server v0.42.0, 25 Sep: errors, issues and debugging context from Sentry's official server, hosted or on npm.",
+      "whatThisChanges": "Adds examples/complete/incident-response-sentry.toml and a Sentry row in the README's integrations table. Nothing is switched on by default: it's a new example you choose to run.",
+      "comment": null
+    },
+    {
+      "date": "2026-10-30",
+      "patches": ["patches/0002-feat-examples-add-signoz-and-dynatrace-incident-resp.patch"],
+      "title": "Add Sentry, SigNoz and Dynatrace as incident integrations · {{lab.title_number}}",
+      "titleUnmeasured": "Add Sentry, SigNoz and Dynatrace as incident integrations",
+      "whatShipped": "SigNoz MCP v0.17.0 and Dynatrace Managed MCP v2.0.0, 30 Oct: new releases of the vendors' own servers, for the open-source OpenTelemetry backend and for self-hosted Dynatrace.",
+      "whatThisChanges": "Adds examples/complete/incident-response-signoz.toml and examples/complete/incident-response-dynatrace-managed.toml, and their two README rows. Nothing is switched on by default: they're new examples you choose to run.",
+      "comment": "Updated 30 Oct: new releases of SigNoz MCP (v0.17.0) and Dynatrace Managed MCP (v2.0.0), so this pull request now covers all three servers."
+    }
+  ]
+}

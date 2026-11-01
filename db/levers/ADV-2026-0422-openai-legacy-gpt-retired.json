@@ -1,0 +1,66 @@
+{
+  "id": "ADV-2026-0422-openai-legacy-gpt-retired",
+  "name": "gpt-3.5-turbo, gpt-4, gpt-4-turbo and o1 are shut down; move to GPT-5.6",
+  "pattern": "PAT-retired-model-id",
+  "kind": "model-successor",
+  "providers": [
+    "openai"
+  ],
+  "effects": [
+    "keeps working"
+  ],
+  "gain": "OpenAI shut these down on 23 Oct 2026, so a request to one of them no longer works.",
+  "proof": "vendor claim",
+  "source": "https://developers.openai.com/api/docs/deprecations",
+  "how": "Follow the page per id: gpt-3.5-turbo and o4-mini to gpt-5.6-terra; gpt-4, gpt-4-turbo, o1 and o3-mini to gpt-5.6-sol; gpt-4.1-nano to gpt-5.6-luna. A model list in a picker can simply drop the entry.",
+  "replaces": "gpt-3.5-turbo, gpt-4, gpt-4-turbo, gpt-4.1-nano, o1, o1-pro, o3-mini, o4-mini and their dated snapshots",
+  "trade_offs": [
+    "gpt-5.6-terra costs more than gpt-3.5-turbo: $2 / $12 against $0.50 / $1.50 per 1M tokens on OpenAI's price list.",
+    "The page covers OpenAI's own API, so check who the code calls: a gateway or a compatible server has its own list."
+  ],
+  "needs": "Nothing new; the same OpenAI key.",
+  "models": [
+    "gpt-3.5-turbo",
+    "gpt-3.5-turbo-0125",
+    "gpt-4",
+    "gpt-4-0613",
+    "gpt-4-turbo",
+    "gpt-4-turbo-2024-04-09",
+    "gpt-4-1106-preview",
+    "gpt-4.1-nano",
+    "gpt-4.1-nano-2025-04-14",
+    "gpt-4o-2024-05-13",
+    "o1",
+    "o1-2024-12-17",
+    "o1-pro",
+    "o3-mini",
+    "o3-mini-2025-01-31",
+    "o4-mini",
+    "o4-mini-2025-04-16"
+  ],
+  "checked": "2026-11-01",
+  "checked_by": "agent",
+  "usage_signal": "Usage API: calls on the affected model or parameter",
+  "gain_model": {
+    "formula": "no money figure: the call stops working or a capability is missing",
+    "inputs": []
+  },
+  "test_recipe": {
+    "what_to_compare": "tests pass on the change",
+    "samples": 20,
+    "can_run_with": [
+      "ANTHROPIC_API_KEY",
+      "OPENAI_API_KEY"
+    ]
+  },
+  "verify_rule": "The old id or parameter is gone and calls succeed over 7 days",
+  "change_recipe": {
+    "kind": "pull request with tests",
+    "how": "Follow the page per id: gpt-3.5-turbo and o4-mini to gpt-5.6-terra; gpt-4, gpt-4-turbo, o1 and o3-mini to gpt-5.6-sol; gpt-4.1-nano to gpt-5.6-luna. A model list in a picker can simply drop the entry.",
+    "left_off": "Nothing else changes; the new path sits behind a setting until a person turns it on"
+  },
+  "audience": "product",
+  "gain_independent": null,
+  "gain_vendor": "OpenAI shut these down on 23 Oct 2026, so a request to one of them no longer works.",
+  "tier": "long_tail"
+}

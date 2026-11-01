@@ -1,0 +1,44 @@
+{
+  "version": "1",
+  "id": "PAT-one-top-model",
+  "name": "A top model set as the default",
+  "find": [
+    {
+      "regex": "\\bmodel\\s*[:=]\\s*[\\\"'](?:claude-opus-\\d|gpt-[56](?:\\.\\d+)?(?:-pro)?[\\\"']|gemini-[\\d.]+-pro)"
+    }
+  ],
+  "skip_if_near": [
+    "[rR][oO][uU][tT][eE][rR]|[fF][aA][lL][lL][bB][aA][cC][kK]|[tT][iI][eE][rR]"
+  ],
+  "skip_if_in_file": [],
+  "files": [
+    "**/*.py",
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.js",
+    "**/*.jsx",
+    "**/*.mjs",
+    "**/*.cjs"
+  ],
+  "skip_files": [
+    "**/__tests__/**",
+    "**/test/**",
+    "**/tests/**",
+    "**/testdata/**",
+    "**/fixtures/**",
+    "**/examples/**",
+    "**/samples/**",
+    "**/docs/**",
+    "**/node_modules/**",
+    "**/vendor/**",
+    "**/dist/**",
+    "**/*.test.*",
+    "**/*.spec.*"
+  ],
+  "why": "A frontier model named as a default usually serves every call, including simple ones. A line can't prove that, so it stays info until usage data shows the split.",
+  "status": "info",
+  "effect": [
+    "cheaper"
+  ],
+  "live_from": "v0.3"
+}

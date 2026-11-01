@@ -1,0 +1,83 @@
+{
+  "id": "ADV-2026-1020-openai-12-hour-cache",
+  "name": "OpenAI's 12-hour prompt cache",
+  "pattern": "PAT-prompt-caching-off",
+  "kind": "sdk-feature",
+  "providers": [
+    "openai"
+  ],
+  "effects": [
+    "cheaper"
+  ],
+  "gain": "OpenAI's words: a 12-hour minimum lifetime at a higher write rate, and savings of up to 95%, listed by the vendor.",
+  "proof": "vendor claim",
+  "source": "https://developers.openai.com/api/docs/guides/prompt-caching",
+  "how": "Set prompt_cache_retention and a stable prompt_cache_key",
+  "replaces": "The same prefix re-sent at full price after a short cache expires.",
+  "trade_offs": [
+    "Writes cost more than plain input, so a prefix must be reused to pay."
+  ],
+  "needs": "The OpenAI API.",
+  "checked": "2026-11-01",
+  "checked_by": "agent",
+  "usage_signal": "Usage and Cost API: cached input tokens at or near zero on a model with large input",
+  "gain_model": {
+    "formula": "input_tokens * input_price * hit_rate * (1 - read_multiplier) - writes * input_price * (write_multiplier - 1)",
+    "inputs": [
+      {
+        "name": "input_tokens",
+        "value": null,
+        "source": "the product's usage data or the bill",
+        "assumed": false
+      },
+      {
+        "name": "input_price",
+        "value": null,
+        "source": "the product's usage data or the bill",
+        "assumed": false
+      },
+      {
+        "name": "hit_rate",
+        "value": null,
+        "source": "the product's usage data or the bill",
+        "assumed": false
+      },
+      {
+        "name": "read_multiplier",
+        "value": null,
+        "source": "the product's usage data or the bill",
+        "assumed": false
+      },
+      {
+        "name": "write_multiplier",
+        "value": null,
+        "source": "the product's usage data or the bill",
+        "assumed": false
+      },
+      {
+        "name": "writes",
+        "value": null,
+        "source": "the product's usage data or the bill",
+        "assumed": false
+      }
+    ]
+  },
+  "test_recipe": {
+    "what_to_compare": "input cost and latency, identical answers",
+    "samples": 200,
+    "can_run_with": [
+      "ANTHROPIC_API_KEY",
+      "OPENAI_API_KEY"
+    ]
+  },
+  "verify_rule": "Cached-read share of input tokens on that model over 14 days",
+  "change_recipe": {
+    "kind": "pull request with tests",
+    "how": "Set prompt_cache_retention and a stable prompt_cache_key",
+    "left_off": "Nothing else changes; the new path sits behind a setting until a person turns it on"
+  },
+  "audience": "product",
+  "gain_independent": null,
+  "gain_vendor": "OpenAI's words: a 12-hour minimum lifetime at a higher write rate, and savings of up to 95%, listed by the vendor.",
+  "tier": "long_tail"
+}

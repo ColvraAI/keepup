@@ -1,0 +1,28 @@
+{
+  "summary": "At the base commit, 8 of the 14 new tests fail: every one that expects gpt-5.6-luna as the default. The 6 that pass are the ones where an explicit setting wins, which is already true there.",
+  "commit": "bbefbc7f75f8227327242d8c5ef0b9c15577751b",
+  "with": "only server/__tests__/utils/AiProviders/openAi/defaultModel.test.js added",
+  "ran_on": "2026-11-01",
+  "command": "yarn -s jest --forceExit --json --outputFile=/lab-work/07-default-model/at-base/jest.json server/__tests__/utils/AiProviders/openAi/defaultModel.test.js",
+  "numTotalTests": 14,
+  "numPassedTests": 6,
+  "numFailedTests": 8,
+  "failed_names": [
+    "the default OpenAI model OpenAiLLM, which chats use uses the substitute when no model is set",
+    "the default OpenAI model OpenAiLLM, which chats use sends the substitute, with the temperature the provider allows it",
+    "the default OpenAI model SystemSettings, which the settings screen reads reports the substitute when no model is set",
+    "the default OpenAI model the agent providers OpenAIProvider uses the substitute unless given a model",
+    "the default OpenAI model the agent providers GenericOpenAiProvider uses the substitute unless given a model",
+    "the default OpenAI model AgentHandler.providerDefault uses the substitute when no model is set",
+    "the default OpenAI model AgentHandler.createAIbitat uses the substitute when the handler has no model",
+    "the default OpenAI model EphemeralAgentHandler.createAIbitat uses the substitute when the handler has no model"
+  ],
+  "passed_names": [
+    "the default OpenAI model OpenAiLLM, which chats use keeps OPEN_MODEL_PREF when it is set",
+    "the default OpenAI model OpenAiLLM, which chats use keeps a workspace's model over OPEN_MODEL_PREF",
+    "the default OpenAI model SystemSettings, which the settings screen reads reports OPEN_MODEL_PREF when it is set",
+    "the default OpenAI model AgentHandler.providerDefault keeps OPEN_MODEL_PREF when it is set",
+    "the default OpenAI model AgentHandler.createAIbitat keeps the handler's model when it has one",
+    "the default OpenAI model EphemeralAgentHandler.createAIbitat keeps the handler's model when it has one"
+  ]
+}

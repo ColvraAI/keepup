@@ -1,0 +1,31 @@
+Apriel Voice 27B Preview
+# Apriel Voice 27B Preview
+An open model for speech, reasoning, and tool use from **ServiceNow**
+Apriel Voice 27B Preview understands spoken requests, reasons over conversational context, and generates text responses and tool calls through a shared Gemma 4 backbone. It adds a speech interface while retaining text and image input capabilities. Pair it with an external speech synthesizer to build interactive voice assistants, customer support workflows, and spoken tool use.
+Try Apriel Live · Read the blog · Technical report
+## Model capabilities
+Apriel Voice architecture
+| Capability | What it supports |
+|---|---|
+| Speech understanding | Transcription, translation, and spoken question answering. |
+| Reasoning and tool use | Following instructions, handling multi-step requests, and generating structured tool calls. |
+| Multimodal context | Audio, text, images, and tool results in a shared conversation. |
+| Voice applications | Text responses paired with external speech synthesis and application-managed turn-taking. |
+The model supports transcription, speech translation, spoken instruction following, reasoning, and function calling. The application executes tools and returns their results to the conversation. Real-time voice interaction is supported by the application and serving stack; the checkpoint itself generates text and tool calls rather than native full-duplex speech.
+A Whisper large-v3-turbo speech encoder connects to the Gemma 4 26B-A4B backbone through a learned projector. Training first aligns this speech interface, then adapts it with the backbone using speech tasks and text replay. Cross-entropy and teacher-distillation supervision vary by data source; the technical report describes the full recipe.
+### Long audio
+The processor automatically splits longer 16 kHz mono recordings into 30-second chunks. In testing, we observed good performance on continuous recordings up to around 30 minutes. Longer recordings are supported, but performance can decline as duration grows; thinking mode is recommended for longer audio.
+Audio chunks and the rest of the conversation share the total context budget. Practical input length also depends on GPU memory and the encoder cache. The serving examples below include settings for 30-minute audio, with optional settings for one-hour input.
+## English results
+Apriel Voice achieves **51.27% EVA-A**, **74.13% EVA-X**, and **65.51% τ-Voice task success**, with **1.91 seconds** mean τ-Voice response latency. On LibriSpeech, word error rate is **2.23% on test-clean** and **5.15% on test-other**; lower WER is better.
+| System | Type | Source | EVA-A ↑ | EVA-X ↑ | τ-Voice pass@1 ↑ | Latency (s) ↓ |
+|---|---|---|---:|---:|---:|---:|
+| GPT Realtime 2.1 | S2S | Proprietary | 59.03 | 61.6 | 69.82 | 1.55 |
+| Gemini-3.8 Live Extended Thinking | S2S | Proprietary | 54.82 | 73.5 | 84.19 | 1.50 |
+| Flux + Gemma 4-26B | 3-stage | Mixed | 36.07 | 29.22 | 65.92 | 2.92 |
+| Parakeet + Gemma 4-26B | 3-stage | Open source | 39.97 | 3.93 | 67.78 | 3.01 |
+| UltraVox v0.6 (Qwen) | 2-stage | Open source | 8.94 | 1.91 | 26.80 | 3.95 |
+| Gemma 4-12B-IT | 2-stage | Open source | 13.25 | 5.97 | 24.20 | 3.61 |
+| Audex-30B-A3B | 2-stage | Open source | 5.66 | 8.2 | 17.15 | 2.83 |
+| **Apriel Voice 27B Preview** | **2-stage** | **Open source** | **51.27** | **74.13** | **65.51** | **1.91** |
+EVA-A measures service accuracy and EVA-X measures conversational experience. EVA-A/X and τ-Voice pass@1 use a 0–100 s

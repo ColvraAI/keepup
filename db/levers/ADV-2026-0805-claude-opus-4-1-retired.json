@@ -1,0 +1,51 @@
+{
+  "id": "ADV-2026-0805-claude-opus-4-1-retired",
+  "name": "Claude Opus 4.1 is retired; move to Opus 4.8",
+  "pattern": "PAT-retired-model-id",
+  "kind": "model-successor",
+  "providers": [
+    "anthropic"
+  ],
+  "effects": [
+    "keeps working",
+    "cheaper"
+  ],
+  "gain": "Requests have returned an error on the Claude API since 5 Aug 2026. Anthropic's listed price falls from $15 / $75 to $5 / $25 per 1M tokens.",
+  "proof": "vendor claim",
+  "source": "https://platform.claude.com/docs/en/about-claude/model-deprecations",
+  "how": "Change claude-opus-4-1-20250805 to claude-opus-4-8, and remove non-default temperature, top_p and top_k.",
+  "replaces": "claude-opus-4-1-20250805",
+  "trade_offs": [
+    "Opus 4.8 returns a 400 for non-default temperature, top_p and top_k.",
+    "Still served on Bedrock and Google-managed Vertex, so check which platform this code calls."
+  ],
+  "needs": "Nothing new; the same Anthropic key.",
+  "models": [
+    "claude-opus-4-1-20250805"
+  ],
+  "checked": "2026-11-01",
+  "checked_by": "agent",
+  "usage_signal": "Usage API: calls on the affected model or parameter",
+  "gain_model": {
+    "formula": "no money figure: the call stops working or a capability is missing",
+    "inputs": []
+  },
+  "test_recipe": {
+    "what_to_compare": "tests pass on the change",
+    "samples": 20,
+    "can_run_with": [
+      "ANTHROPIC_API_KEY",
+      "OPENAI_API_KEY"
+    ]
+  },
+  "verify_rule": "The old id or parameter is gone and calls succeed over 7 days",
+  "change_recipe": {
+    "kind": "pull request, off by default",
+    "how": "Change claude-opus-4-1-20250805 to claude-opus-4-8, and remove non-default temperature, top_p and top_k.",
+    "left_off": "Nothing else changes; the new path sits behind a setting until a person turns it on"
+  },
+  "audience": "product",
+  "gain_independent": null,
+  "gain_vendor": "Requests have returned an error on the Claude API since 5 Aug 2026. Anthropic's listed price falls from $15 / $75 to $5 / $25 per 1M tokens.",
+  "tier": "long_tail"
+}

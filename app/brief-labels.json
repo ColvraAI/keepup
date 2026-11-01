@@ -1,0 +1,13 @@
+{
+  "_about": "Plain-English words for the Monday brief. Keyed by <repo>/<date> for a timeline event with no pull request, and by pull request id as the fallback until its pr.json exists (founderLine, effect and effort in pr.json win). effect is from: cheaper, faster, better answers, keeps working, new capability. No measured numbers here: those come from lab/<dir>/result.md.",
+  "01": { "plain": "Your model router can use a decision model instead of a full agent run", "effect": ["cheaper", "faster"], "effort": "A day" },
+  "01-jev": { "plain": "Your model router can use a decision model without tying you to OpenAI", "effect": ["cheaper", "faster"], "effort": "A day" },
+  "02": { "plain": "Audio uploads keep working after OpenAI shuts down its old transcription model", "effect": ["keeps working"], "effort": "Hours" },
+  "03": { "plain": "A newer on-device embedder for your native engine", "effect": ["better answers"], "effort": "A day" },
+  "04": { "plain": "New incident integrations your SRE agents can use", "effect": ["new capability"], "effort": "Hours" },
+  "05": { "plain": "Example configs move off retired and retiring Claude models", "effect": ["keeps working"], "effort": "Hours" },
+  "06": { "plain": "New OpenAI models your users can pick from the fallback list", "effect": ["new capability"], "effort": "Hours" },
+  "anything-llm/2026-09-01": { "plain": "Your default OpenAI model is on OpenAI's shutdown list, and its fallback needs to move", "effect": ["keeps working"], "effort": "Hours", "proof": "vendor claim" },
+  "aura/2026-09-10": { "plain": "Your MCP client library is three major versions behind", "effect": ["keeps working"], "effort": "A project", "proof": "vendor claim" },
+  "aura/2026-10-07": { "plain": "Claude prompt caching is opt-in, and it just got cheaper", "effect": ["cheaper"], "effort": "Hours", "proof": "vendor claim" }
+}

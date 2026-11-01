@@ -1,0 +1,56 @@
+{
+  "id": "ADV-2026-0420-claude-3-family-retired",
+  "name": "The Claude 3 family is retired; move to the named successors",
+  "pattern": "PAT-retired-model-id",
+  "kind": "model-successor",
+  "providers": [
+    "anthropic"
+  ],
+  "effects": [
+    "keeps working"
+  ],
+  "gain": "Requests to these ids return an error on the Claude API. The last of them, Haiku 3, went on 20 Apr 2026.",
+  "proof": "vendor claim",
+  "source": "https://platform.claude.com/docs/en/about-claude/model-deprecations",
+  "how": "Follow the page per id: claude-3-haiku-20240307 and claude-3-5-haiku-20241022 to claude-haiku-4-5-20251001; claude-3-opus-20240229 to claude-opus-4-8; claude-3-sonnet-20240229, the claude-3-5-sonnet ids and claude-3-7-sonnet-20250219 to claude-sonnet-5-5.",
+  "replaces": "claude-3-haiku-20240307, claude-3-5-haiku-20241022, claude-3-opus-20240229, claude-3-sonnet-20240229, claude-3-5-sonnet-20240620, claude-3-5-sonnet-20241022, claude-3-7-sonnet-20250219",
+  "trade_offs": [
+    "Newer models reject parameters these accepted, so run your tests.",
+    "Haiku 4.5's minimum cacheable prompt is 4,096 tokens, so a prompt cached on an older model may stop caching."
+  ],
+  "needs": "Nothing new; the same Anthropic key.",
+  "models": [
+    "claude-3-haiku-20240307",
+    "claude-3-5-haiku-20241022",
+    "claude-3-opus-20240229",
+    "claude-3-sonnet-20240229",
+    "claude-3-5-sonnet-20240620",
+    "claude-3-5-sonnet-20241022",
+    "claude-3-7-sonnet-20250219"
+  ],
+  "checked": "2026-11-01",
+  "checked_by": "agent",
+  "usage_signal": "Usage API: calls on the affected model or parameter",
+  "gain_model": {
+    "formula": "no money figure: the call stops working or a capability is missing",
+    "inputs": []
+  },
+  "test_recipe": {
+    "what_to_compare": "tests pass on the change",
+    "samples": 20,
+    "can_run_with": [
+      "ANTHROPIC_API_KEY",
+      "OPENAI_API_KEY"
+    ]
+  },
+  "verify_rule": "The old id or parameter is gone and calls succeed over 7 days",
+  "change_recipe": {
+    "kind": "pull request with tests",
+    "how": "Follow the page per id: claude-3-haiku-20240307 and claude-3-5-haiku-20241022 to claude-haiku-4-5-20251001; claude-3-opus-20240229 to claude-opus-4-8; claude-3-sonnet-20240229, the claude-3-5-sonnet ids and claude-3-7-sonnet-20250219 to claude-sonnet-5-5.",
+    "left_off": "Nothing else changes; the new path sits behind a setting until a person turns it on"
+  },
+  "audience": "product",
+  "gain_independent": null,
+  "gain_vendor": "Requests to these ids return an error on the Claude API. The last of them, Haiku 3, went on 20 Apr 2026.",
+  "tier": "long_tail"
+}

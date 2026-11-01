@@ -1,0 +1,307 @@
+/* Present mode: one stage. The chart on top, the stop below it, nothing to scroll. */
+.replay-stage__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--s-4);
+  margin-bottom: var(--s-2);
+}
+
+.stop {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: var(--s-5);
+  padding-top: var(--s-4);
+  border-top: 2px solid var(--ink);
+  margin-top: var(--s-3);
+  animation: rise-in 240ms ease-out both;
+}
+
+.stop--lead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--s-3);
+}
+
+.stop__date {
+  font-size: var(--t-xl);
+  letter-spacing: -0.04em;
+  word-spacing: -0.35em;
+  line-height: 1;
+  color: var(--ink);
+}
+
+.stop__conflict {
+  font-size: var(--t-b);
+  line-height: 1.3;
+  color: var(--amber);
+  max-width: 62em;
+  text-wrap: pretty;
+}
+
+.replay-stage__when {
+  font-size: var(--t-s);
+  color: var(--ink-2);
+}
+
+.replay-stage__stop {
+  display: grid;
+}
+
+.lead__label {
+  font-size: var(--t-s);
+  color: var(--ink-2);
+}
+
+.lead__label[data-measured='true'] {
+  color: var(--green);
+}
+
+.stop__body {
+  display: grid;
+  gap: var(--s-3);
+  align-content: start;
+}
+
+.stop__thing {
+  font-size: var(--t-l);
+  font-weight: 600;
+  letter-spacing: -0.016em;
+  line-height: 1.12;
+  text-wrap: balance;
+}
+
+.stop__did {
+  font-size: var(--t-m);
+  line-height: 1.25;
+  text-wrap: pretty;
+}
+
+.stop__did .chip {
+  font-size: var(--t-s);
+  vertical-align: 0.12em;
+}
+
+.stop__team {
+  font-size: var(--t-m);
+  line-height: 1.25;
+  text-wrap: pretty;
+}
+
+.stop__team strong {
+  font-weight: 700;
+  color: var(--blue-ink);
+}
+
+.stop__meta [data-origin='engine run'] {
+  color: var(--blue-ink);
+}
+
+.replay-end {
+  display: grid;
+  gap: var(--s-3);
+  padding-top: var(--s-4);
+  margin-top: var(--s-3);
+  border-top: 2px solid var(--ink);
+  animation: rise-in 240ms ease-out both;
+}
+
+.replay-end__line {
+  font-size: var(--t-l);
+  line-height: 1.18;
+  letter-spacing: -0.012em;
+  font-weight: 500;
+  max-width: 44em;
+  text-wrap: pretty;
+}
+
+.replay-end__line b {
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.replay-end__must {
+  font-size: var(--t-m);
+  line-height: 1.28;
+  color: var(--ink-2);
+  max-width: 62em;
+  text-wrap: pretty;
+}
+
+.is-present .lead__title {
+  max-width: none;
+  text-wrap: balance;
+}
+
+.is-present .gap-row__label {
+  font-size: var(--t-b);
+}
+
+.is-present .gap-row {
+  height: 48px;
+}
+
+.is-present .gap-row .gap-bar {
+  top: 9px;
+  bottom: 9px;
+}
+
+.is-present .gap-lead__track {
+  height: 72px;
+  margin-top: var(--s-2);
+}
+
+.is-present .gap-lead__ends {
+  font-size: var(--t-b);
+  margin-top: var(--s-1);
+}
+
+.is-present .gap-lead__broken {
+  bottom: calc(100% + 6px);
+  font-size: var(--t-b);
+}
+
+.is-present .gap-lead__days {
+  font-size: var(--t-xl);
+}
+
+.is-present .gap-lead--open .gap-lead__days {
+  color: var(--ink);
+}
+
+.is-present .gap {
+  gap: var(--s-1);
+  padding: var(--s-1) 0 0;
+}
+
+.is-present .gap__rows {
+  gap: 0;
+  padding-top: var(--s-1);
+}
+
+.is-present .gap__key {
+  padding-top: var(--s-1);
+}
+
+.is-present .stop {
+  padding-top: var(--s-3);
+  margin-top: var(--s-2);
+}
+
+@media (max-width: 860px) {
+  .timeline__head {
+    display: none;
+  }
+
+  .week {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .event {
+    grid-template-columns: minmax(0, 1fr);
+    padding: var(--s-3) 0;
+  }
+
+  .event__none {
+    display: none;
+  }
+
+  .replay__chart {
+    position: static;
+  }
+
+  .gap-row {
+    height: auto;
+    padding-bottom: 1.4em;
+    margin-bottom: 6px;
+  }
+
+  .gap-row .gap-bar {
+    height: 12px;
+    bottom: auto;
+    top: 0;
+  }
+
+  .gap-row__label,
+  .gap-row__label--left {
+    left: 0 !important;
+    right: auto !important;
+    top: 16px;
+    transform: none;
+    white-space: normal;
+  }
+
+  .gap-row--unchanged .gap-row__label {
+    color: var(--ink-2);
+  }
+
+  .gap-row--unchanged .gap-row__label b {
+    color: var(--ink);
+  }
+
+  .gap-lead__ends {
+    height: auto;
+    display: grid;
+    gap: 2px;
+  }
+
+  .gap-lead__ends span {
+    position: static;
+    transform: none;
+    padding: 0;
+  }
+
+  .gap-lead__broken {
+    font-size: var(--t-b);
+  }
+
+  .gap-lead__what {
+    display: none;
+  }
+
+  .gap__key-commit {
+    margin-left: 0;
+  }
+
+  .gap__tick:nth-child(even) {
+    display: none;
+  }
+
+  .gap-lead__top {
+    flex-wrap: wrap;
+    margin-left: 0 !important;
+  }
+
+}
+
+/* On a short window the sticky chart would take the rows' room. */
+@media (max-height: 760px) {
+  .replay__chart {
+    position: static;
+  }
+}
+
+/* A product with one line on the chart: the chart keeps its size, and the words sit in the middle of what's left. */
+.is-present .replay--stage[data-sparse='true'] {
+  display: flex;
+  flex-direction: column;
+  height: var(--stage-h);
+}
+
+.is-present .replay--stage[data-sparse='true'] .replay-stage__stop {
+  flex: 1;
+  align-content: center;
+  padding-bottom: var(--s-7);
+}
+
+.is-present .replay--stage[data-sparse='true'] .gap__key {
+  border-bottom: 2px solid var(--ink);
+  padding-bottom: var(--s-3);
+}
+
+.is-present .replay--stage[data-sparse='true'] .stop,
+.is-present .replay--stage[data-sparse='true'] .replay-end {
+  border-top: 0;
+  margin-top: 0;
+  padding-top: 0;
+}

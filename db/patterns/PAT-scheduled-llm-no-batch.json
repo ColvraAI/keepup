@@ -1,0 +1,69 @@
+{
+  "version": 1,
+  "id": "PAT-scheduled-llm-no-batch",
+  "name": "A scheduled AI job on the real-time path",
+  "find": [
+    {
+      "regex": "^(?!\\s*(?:#|//|\\*|/\\*|--|\"\"\"|'''))(?!\\s*(?:async\\s+)?(?:def|function)\\s).*(?:chat\\.completions\\.(?:create|parse)|responses\\.(?:create|parse)|(?<!threads|agents)\\.messages\\.(?:create|parse)|\\bgenerateText|\\bgenerateObject|generate_content|generateContent|litellm\\.completion|\\bacompletion)\\(",
+      "note": "A model call in a file whose path says cron or scheduled"
+    }
+  ],
+  "skip_if_near": [
+    "batches\\.create",
+    "message_batches",
+    "/v1/batches",
+    "batchGenerateContent",
+    "service_tier\\s*[:=]\\s*[\"']flex",
+    "#\\[cfg\\(test\\)\\]",
+    "\\bdescribe\\(",
+    "\\bdef test_"
+  ],
+  "skip_if_in_file": [
+    "batches\\.create",
+    "message_batches",
+    "/v1/batches",
+    "batchGenerateContent"
+  ],
+  "files": [
+    "**/cron/**",
+    "**/crons/**",
+    "**/cronjobs/**",
+    "**/scheduled/**",
+    "**/scheduler/**",
+    "**/schedulers/**",
+    "**/*cron*",
+    "**/*scheduled*",
+    "**/nightly*",
+    "**/daily*",
+    "**/weekly*"
+  ],
+  "skip_files": [
+    "**/__tests__/**",
+    "**/test/**",
+    "**/tests/**",
+    "**/testdata/**",
+    "**/fixtures/**",
+    "**/spec/**",
+    "**/e2e/**",
+    "**/*.test.*",
+    "**/*.spec.*",
+    "**/*_test.*",
+    "**/test_*",
+    "**/test-*",
+    "**/conftest.py",
+    "**/samples/**",
+    "**/sample/**",
+    "**/examples/**",
+    "**/example/**",
+    "**/docs/**",
+    "**/website/**",
+    "**/cookbook/**",
+    "**/cookbooks/**"
+  ],
+  "why": "A job nobody is waiting on can go through a batch API at half price. It doesn't fit a job someone is watching, or one that needs its answer within minutes.",
+  "status": "info",
+  "effect": [
+    "cheaper"
+  ],
+  "live_from": "v0.2"
+}

@@ -1,0 +1,52 @@
+Unable to find image 'node:18-bookworm' locally
+Digest: sha256:c6ae79e38498325db67193d391e6ec1d224d96c693a8a4d943498556716d3783
+Status: Image is up to date for node:18-bookworm
+=== machine: x86_64 node v18.20.8 x64 yarn 1.22.22
+=== A default install (NuGet reachable)
+[3/4] Linking dependencies...
+[4/4] Building fresh packages...
+success Saved lockfile.
+Done in 126.89s.
+yarn exit 0 in 129 s
+total 311908
+drwxr-xr-x 2 root root      4096 Nov  1 01:42 .
+drwxr-xr-x 4 root root      4096 Nov  1 01:41 ..
+-rw-r--r-- 1 root root  45828512 Nov  1 01:41 libonnxruntime.so.1
+-rw-rw-rw- 1 root root 272054000 Nov  1 01:42 libonnxruntime_providers_cuda.so
+-rw-rw-rw- 1 root root     14632 Nov  1 01:42 libonnxruntime_providers_shared.so
+-rw-rw-rw- 1 root root   1084896 Nov  1 01:42 libonnxruntime_providers_tensorrt.so
+-rw-r--r-- 1 root root    389488 Nov  1 01:41 onnxruntime_binding.node
+548M	node_modules/onnxruntime-node
+LOAD FAILED `local_files_only=true` or `env.allowRemoteModels=false` and file was not found locally at "/tmp/x/node_modules/@huggingface/transformers/models/Xenova/all-MiniLM-L6-v2/config.json".
+load exit 1
+=== B NuGet unreachable
+
+Error: connect ECONNREFUSED 127.0.0.1:443
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1555:16) {
+  errno: -111,
+  code: 'ECONNREFUSED',
+  syscall: 'connect',
+  address: '127.0.0.1',
+  port: 443
+}
+
+Node.js v18.20.8
+info Visit https://yarnpkg.com/en/docs/cli/install for documentation about this command.
+yarn exit 1 in 15 s
+libonnxruntime.so.1
+onnxruntime_binding.node
+=== C NuGet unreachable, ONNXRUNTIME_NODE_INSTALL=skip
+[3/4] Linking dependencies...
+[4/4] Building fresh packages...
+Done in 5.40s.
+yarn exit 0 in 7 s
+total 45148
+drwxr-xr-x 2 root root     4096 Nov  1 01:43 .
+drwxr-xr-x 4 root root     4096 Nov  1 01:43 ..
+-rw-r--r-- 1 root root 45828512 Nov  1 01:41 libonnxruntime.so.1
+-rw-r--r-- 1 root root   389488 Nov  1 01:41 onnxruntime_binding.node
+288M	node_modules/onnxruntime-node
+LOAD FAILED `local_files_only=true` or `env.allowRemoteModels=false` and file was not found locally at "/tmp/x/node_modules/@huggingface/transformers/models/Xenova/all-MiniLM-L6-v2/config.json".
+load exit 1
+=== done
+exit=0

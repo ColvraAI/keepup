@@ -1,0 +1,27 @@
+{
+ "app": {
+  "name": null,
+  "permissions": {
+   "metadata": "read",
+   "contents": "write",
+   "pull_requests": "write",
+   "issues": "write",
+   "workflows": "write",
+   "actions": "read",
+   "checks": "read",
+   "statuses": "read"
+  },
+  "registered": false,
+  "url": null,
+  "bot": null
+ },
+ "github": {
+  "exists": false,
+  "org": null,
+  "forks": {},
+  "pull_requests": 0,
+  "issues": 0
+ },
+ "database_fetched": "2026-10-31",
+ "built_at": "2026-11-01T14:57:33.994Z"
+}

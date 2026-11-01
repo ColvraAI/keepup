@@ -1,0 +1,13 @@
+{
+  "scenario": "external-data-server",
+  "node": "v18.20.8",
+  "transformers": "4.3.2",
+  "exitCode": 0,
+  "signal": null,
+  "documentsBefore": "1",
+  "documentsAfter": "0",
+  "updateError": "false",
+  "serverStillUp": true,
+  "stdoutTail": "der - Downloading model]\u001b[0m tokenizer.json 98%\n\u001b[36m[NativeEmbedder - Downloading model]\u001b[0m tokenizer.json 98%\n\u001b[36m[NativeEmbedder - Downloading model]\u001b[0m tokenizer.json 98%\n\u001b[36m[NativeEmbedder - Downloading model]\u001b[0m tokenizer.json 99%\n\u001b[36m[NativeEmbedder - Downloading model]\u001b[0m tokenizer.json 99%\n\u001b[36m[NativeEmbedder - Downloading model]\u001b[0m tokenizer.json 99%\n\u001b[36m[NativeEmbedder - Downloading model]\u001b[0m tokenizer.json 99%\n\u001b[36m[NativeEmbedder - Downloading model]\u001b[0m tokenizer.json 99%\n\u001b[36m[NativeEmbedder - Downloading model]\u001b[0m tokenizer.json 99%\n\u001b[36m[NativeEmbedder - Downloading model]\u001b[0m tokenizer.json 99%\n\u001b[36m[NativeEmbedder - Downloading model]\u001b[0m tokenizer.json 99%\n\u001b[36m[NativeEmbedder - Downloading model]\u001b[0m tokenizer.json 99%\n\u001b[36m[NativeEmbedder - Downloading model]\u001b[0m tokenizer.json 99%\n\u001b[36m[NativeEmbedder - Downloading model]\u001b[0m tokenizer.json 99%\n\u001b[36m[NativeEmbedder - Downloading model]\u001b[0m tokenizer.json 99%\n\u001b[36m[NativeEmbedder - Downloading model]\u001b[0m tokenizer.json 99%\n\u001b[36m[NativeEmbedder - Downloading model]\u001b[0m tokenizer.json 99%\n\u001b[36m[NativeEmbedder - Downloading model]\u001b[0m tokenizer.json 99%\n\u001b[36m[NativeEmbedder - Downloading model]\u001b[0m tokenizer.json 99%\n\u001b[36m[NativeEmbedder - Downloading model]\u001b[0m tokenizer.json 99%\n\u001b[36m[NativeEmbedder - Downloading model]\u001b[0m tokenizer.json 99%\n\u001b[36m[NativeEmbedder - Downloading model]\u001b[0m tokenizer.json 99%\n\u001b[36m[NativeEmbedder - Downloading model]\u001b[0m tokenizer.json 100%\nSERVER_STILL_UP=true\n",
+  "stderrTail": "Namespace by that name does not exist.\nNamespace by that name does not exist.\nUnable to fetch model file metadata for total progress tracking: Error: simulated failure of the external data download\nFailed to download embedding model onnx-community/embeddinggemma-2-ONNX: simulated failure of the external data download\n"
+}

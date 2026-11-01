@@ -1,0 +1,6 @@
+{
+  "tag": "v0.2.18-nightly.9",
+  "tagCommit": "3a49ac4803a1399c69dda6c7a0de1e69f6c085da",
+  "image": "mezmo/aura:0.2.18-nightly.9@sha256:640e2f9cc12e3ef324fdf5a4c985dd4b5c61bf18072025a20a32a7c2d395751c",
+  "binarySha256": "a643066a9c3cc90d0f8f979b24fcea21fc1a9c483cb05445add411aa28b2ce2f"
+}

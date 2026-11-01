@@ -1,0 +1,45 @@
+{
+  "id": "ADV-2026-1101-agent-skills-format",
+  "name": "Load skills in the open Agent Skills format",
+  "pattern": "PAT-own-skill-format",
+  "kind": "open-format",
+  "providers": [],
+  "effects": [
+    "new capability"
+  ],
+  "gain": "Agent Skills is an open format: a folder with a SKILL.md file holding a name, a description and instructions, which agents load on demand. The spec's own page says it \"has been adopted by a growing number of agent products\" and lists them in a client showcase. Nobody has measured what it does for this product.",
+  "proof": "adoption only",
+  "source": "https://agentskills.io",
+  "how": "Keep the current format working and add a loader for folders with a SKILL.md, following the spec's guide on adding skills support. Load only the name and description at start, and read the full instructions when a task matches. Skills can bundle scripts, so don't run them without the same checks as other imported code.",
+  "replaces": "Agent skills that only load in the product's own manifest format.",
+  "trade_offs": [
+    "Two formats to support for as long as old skills exist.",
+    "Skills can bundle scripts, so loading a stranger's skill is loading a stranger's code."
+  ],
+  "needs": "Nothing new to install; a loader for SKILL.md folders.",
+  "checked": "2026-11-01",
+  "checked_by": "agent",
+  "usage_signal": "Not visible in the bill",
+  "gain_model": {
+    "formula": "no money figure: the call stops working or a capability is missing",
+    "inputs": []
+  },
+  "test_recipe": {
+    "what_to_compare": "tests pass on the change",
+    "samples": 20,
+    "can_run_with": [
+      "ANTHROPIC_API_KEY",
+      "OPENAI_API_KEY"
+    ]
+  },
+  "verify_rule": "The old id or parameter is gone and calls succeed over 7 days",
+  "change_recipe": {
+    "kind": "pull request, off by default",
+    "how": "Keep the current format working and add a loader for folders with a SKILL.md, following the spec's guide on adding skills support. Load only the name and description at start, and read the full instructions when a task matches. Skills can bundle scripts, so don't run them without the same checks as other imported code.",
+    "left_off": "Nothing else changes; the new path sits behind a setting until a person turns it on"
+  },
+  "audience": "product",
+  "gain_independent": null,
+  "gain_vendor": null,
+  "tier": "long_tail"
+}

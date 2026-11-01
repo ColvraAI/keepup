@@ -1,0 +1,81 @@
+{
+  "version": 1,
+  "id": "PAT-prompt-caching-off",
+  "name": "The same long prompt sent without caching",
+  "find": [
+    {
+      "regex": "^\\s*(?:#|//)\\s*[\"']?(?:prompt_caching|enable_prompt_caching|promptCaching|cache_control)[\"']?\\s*[:=]",
+      "note": "Prompt caching exists here but is commented out"
+    },
+    {
+      "regex": "\\bprompt_caching:\\s*bool\\b",
+      "note": "Prompt caching is a setting here; check its default"
+    },
+    {
+      "regex": "^\\s*[\"']?(?:prompt_caching|enable_prompt_caching|promptCaching)[\"']?\\s*[:=]\\s*(?:false|False)\\b",
+      "note": "Prompt caching is switched off here"
+    },
+    {
+      "regex": "^(?!\\s*(?:#|//|\\*|/\\*|--|\"\"\"|''')).*(?<!threads|agents)\\.messages\\.(?:create|stream)\\(",
+      "note": "A Claude Messages call with no cache_control near it. Claude only caches when the request asks"
+    }
+  ],
+  "skip_if_near": [
+    "[\"']?cache_control[\"']?\\s*[:=]|\\bcacheControl\\b|\\bCACHE_CONTROL\\b",
+    "[bB]uildSystem\\w*",
+    "systemPromptBuilder",
+    "\\bcache_prompt\\b",
+    "#\\[cfg\\(test\\)\\]",
+    "\\bdescribe\\(",
+    "\\bdef test_",
+    "\\bbeta\\.threads\\b"
+  ],
+  "skip_if_in_file": [
+    "[\"']?cache_control[\"']?\\s*[:=]|\\bcacheControl\\b|\\bCACHE_CONTROL\\b"
+  ],
+  "files": [
+    "**/*.py",
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.js",
+    "**/*.jsx",
+    "**/*.mjs",
+    "**/*.cjs",
+    "**/*.rs",
+    "**/*.toml",
+    "**/*.yaml",
+    "**/*.yml"
+  ],
+  "skip_files": [
+    "**/__tests__/**",
+    "**/test/**",
+    "**/tests/**",
+    "**/testdata/**",
+    "**/fixtures/**",
+    "**/spec/**",
+    "**/e2e/**",
+    "**/*.test.*",
+    "**/*.spec.*",
+    "**/*_test.*",
+    "**/test_*",
+    "**/test-*",
+    "**/conftest.py",
+    "**/samples/**",
+    "**/sample/**",
+    "**/docs/**",
+    "**/website/**",
+    "**/cookbook/**",
+    "**/cookbooks/**",
+    "**/bedrock/**",
+    "**/*bedrock*",
+    "**/aws/**"
+  ],
+  "why": "Claude only caches a prompt when the request says so, or when a product's setting is on. Long system prompts and tool lists re-sent every turn pay full price each time. It doesn't fit prompts under the model's minimum length or calls that don't repeat.",
+  "status": "live",
+  "effect": [
+    "cheaper",
+    "faster"
+  ],
+  "live_from": "v0.2",
+  "judge_note": "For this pattern, this replaces the general rule on prompt caching: a Claude Messages call with no cache_control near it, whose system prompt or tool list goes out again turn after turn, is a fit even with no setting in the code, and that call's line is the place to cite. A one-off call with a short prompt is no fit. A line that only builds a client is no fit."
+}

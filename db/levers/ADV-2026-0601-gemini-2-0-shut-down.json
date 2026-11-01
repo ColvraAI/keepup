@@ -1,0 +1,53 @@
+{
+  "id": "ADV-2026-0601-gemini-2-0-shut-down",
+  "name": "Gemini 2.0 Flash is shut down; move to gemini-3.6-flash",
+  "pattern": "PAT-retired-model-id",
+  "kind": "model-successor",
+  "providers": [
+    "google"
+  ],
+  "effects": [
+    "keeps working"
+  ],
+  "gain": "Google's release notes for 1 Jun 2026 say these models are now shut down, so a request to one no longer works.",
+  "proof": "vendor claim",
+  "source": "https://ai.google.dev/gemini-api/docs/deprecations",
+  "how": "Change gemini-2.0-flash and gemini-2.0-flash-001 to gemini-3.6-flash, and gemini-2.0-flash-lite and gemini-2.0-flash-lite-001 to gemini-3.1-flash-lite.",
+  "replaces": "gemini-2.0-flash, gemini-2.0-flash-001, gemini-2.0-flash-lite, gemini-2.0-flash-lite-001",
+  "trade_offs": [
+    "gemini-3.1-flash-lite has its own earliest shutdown date of 7 May 2027.",
+    "gemini-3.6-flash doubles in price on 1 Jan 2027, from $0.75 to $1.50 per 1M input tokens."
+  ],
+  "needs": "Nothing new; the same Gemini key.",
+  "models": [
+    "gemini-2.0-flash",
+    "gemini-2.0-flash-001",
+    "gemini-2.0-flash-lite",
+    "gemini-2.0-flash-lite-001"
+  ],
+  "checked": "2026-11-01",
+  "checked_by": "agent",
+  "usage_signal": "Usage API: calls on the affected model or parameter",
+  "gain_model": {
+    "formula": "no money figure: the call stops working or a capability is missing",
+    "inputs": []
+  },
+  "test_recipe": {
+    "what_to_compare": "tests pass on the change",
+    "samples": 20,
+    "can_run_with": [
+      "ANTHROPIC_API_KEY",
+      "OPENAI_API_KEY"
+    ]
+  },
+  "verify_rule": "The old id or parameter is gone and calls succeed over 7 days",
+  "change_recipe": {
+    "kind": "pull request with tests",
+    "how": "Change gemini-2.0-flash and gemini-2.0-flash-001 to gemini-3.6-flash, and gemini-2.0-flash-lite and gemini-2.0-flash-lite-001 to gemini-3.1-flash-lite.",
+    "left_off": "Nothing else changes; the new path sits behind a setting until a person turns it on"
+  },
+  "audience": "product",
+  "gain_independent": null,
+  "gain_vendor": "Google's release notes for 1 Jun 2026 say these models are now shut down, so a request to one no longer works.",
+  "tier": "long_tail"
+}

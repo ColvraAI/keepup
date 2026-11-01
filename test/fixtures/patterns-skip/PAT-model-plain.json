@@ -1,0 +1,11 @@
+{
+  "id": "PAT-model-plain",
+  "name": "A model id, everywhere",
+  "find": [{ "regex": "old-model-1" }],
+  "skip_if_near": [],
+  "files": ["**/*.js"],
+  "why": "The same find as PAT-model-with-skip-files, without the field.",
+  "status": "live",
+  "effect": ["keeps working"],
+  "live_from": "v0.1"
+}

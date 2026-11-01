@@ -1,0 +1,61 @@
+{
+  "id": "ADV-2026-0611-openai-gpt-5-o3-retire",
+  "name": "GPT-5 and o3 shut down on 11 Dec 2026; move to GPT-5.6",
+  "pattern": "PAT-retired-model-id",
+  "kind": "model-successor",
+  "providers": [
+    "openai"
+  ],
+  "effects": [
+    "keeps working"
+  ],
+  "gain": "Requests fail after 11 Dec 2026, which is under six weeks away. This is about working, not saving: the named successors cost more.",
+  "proof": "vendor claim",
+  "source": "https://developers.openai.com/api/docs/deprecations",
+  "how": "Follow the page per id: gpt-5 and o3 to gpt-5.6-sol, gpt-5-mini to gpt-5.6-terra, gpt-5-nano to gpt-5.6-luna, and gpt-5-pro and o3-pro to gpt-5.6-sol with reasoning.mode pro.",
+  "replaces": "gpt-5, gpt-5-mini, gpt-5-nano, gpt-5-pro, o3, o3-pro and their dated snapshots",
+  "trade_offs": [
+    "The successors cost more on OpenAI's own price list: gpt-5 is $1.25 / $10 and gpt-5.6-sol is $4 / $20 per 1M tokens.",
+    "A cheaper option may fit, such as gpt-6-sol at $2 / $10, but the page does not name it, so test before choosing."
+  ],
+  "needs": "Nothing new; the same OpenAI key.",
+  "models": [
+    "gpt-5",
+    "gpt-5-2025-08-07",
+    "gpt-5-mini",
+    "gpt-5-mini-2025-08-07",
+    "gpt-5-nano",
+    "gpt-5-nano-2025-08-07",
+    "gpt-5-pro",
+    "gpt-5-pro-2025-10-06",
+    "o3",
+    "o3-2025-04-16",
+    "o3-pro",
+    "o3-pro-2025-06-10"
+  ],
+  "checked": "2026-11-01",
+  "checked_by": "agent",
+  "usage_signal": "Usage API: calls on the affected model or parameter",
+  "gain_model": {
+    "formula": "no money figure: the call stops working or a capability is missing",
+    "inputs": []
+  },
+  "test_recipe": {
+    "what_to_compare": "tests pass on the change",
+    "samples": 20,
+    "can_run_with": [
+      "ANTHROPIC_API_KEY",
+      "OPENAI_API_KEY"
+    ]
+  },
+  "verify_rule": "The old id or parameter is gone and calls succeed over 7 days",
+  "change_recipe": {
+    "kind": "pull request with tests",
+    "how": "Follow the page per id: gpt-5 and o3 to gpt-5.6-sol, gpt-5-mini to gpt-5.6-terra, gpt-5-nano to gpt-5.6-luna, and gpt-5-pro and o3-pro to gpt-5.6-sol with reasoning.mode pro.",
+    "left_off": "Nothing else changes; the new path sits behind a setting until a person turns it on"
+  },
+  "audience": "product",
+  "gain_independent": null,
+  "gain_vendor": "Requests fail after 11 Dec 2026, which is under six weeks away. This is about working, not saving: the named successors cost more.",
+  "tier": "long_tail"
+}

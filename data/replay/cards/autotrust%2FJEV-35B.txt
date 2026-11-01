@@ -1,0 +1,43 @@
+# autotrust/JEV-35B
+## Blog One Decision Model Instead of a Ranking Team
+[AutoTrust/GuruSearch recommendation & search live demo: news.guru.so](https://news.guru.so/ui)
+## 🔴 Live: AutoTrust/GuruSearch recommendation & search demo → news.guru.so
+> [!IMPORTANT]
+> **Try AutoTrust/GuruSearch live (new, 11 October 2026).** A recommendation and search demo in which every ranking is a
+> calibrated System 1 decision, made in about half a second:
+> * **Recommendation:** the latest headlines from 6 news feeds, ranked by importance.
+> * **Search:** results from Google News, Bing News and Yahoo News re-ranked by relevance, side by side with the
+> search engines' own order, plus a short answer with citations.
+### A System 1 decision model on Qwen3.5-35B-A3B (35 B parameters, about 3 B active per token), up to 256 options in one pass
+**Decision Index 0.3, public suite: 59.73** (our scoring with the kit), against 53.64 for
+autotrust/JEV-27B-VL on the board. Approximate public vision score
+**71.94** (our rebuild of the vision benchmarks; JEV-27B-VL 71.67 on the same rebuild, a tie within noise). Median single-request latency
+204 ms on one B200 (JEV-27B-VL 271 ms).
+> [!TIP]
+> **NVFP4 version: autotrust/JEV-35B-NVFP4**, the same model with its
+> routed experts in NVFP4: **25.6 GB download, 23 GiB of GPU memory** (bf16: 72 GB, 66 GiB), so it runs on one 32–48 GB
+> GPU. Decision Index 0.3 public 59.18 (bf16 59.73), vision rebuild 71.23 (bf16 71.94), 96.6 % of the Decision Index
+> answers identical to bf16, same latency, same `serve.sh` and API.
+| version | download | GPU memory (weights) | Decision Index 0.3 public | vision (rebuild) |
+|---|---:|---:|---:|---:|
+| autotrust/JEV-35B (bf16, this repo) | 72 GB | 66.5 GiB | 59.73 | 71.94 |
+| **autotrust/JEV-35B-NVFP4** | **25.6 GB** | **23.3 GiB** | 59.18 | 71.23 |
+> **Two models, two organisations.** **TypeSafe Jev 1.13** is the hosted, closed model made by TypeSafe AI.
+> **autotrust/JEV-35B** is an independent open-weights model built by AutoTrust AI; it is not affiliated with,
+> endorsed by, or a product of TypeSafe AI.
+## 🤖 Robot embodied reasoning: ERQA 51.3% in one pass, zero robot training
+> [!IMPORTANT]
+> **Zero robot training: no robot or embodied data in JEV-35B's decision training** (text only), yet in one pass it scores
+> 51.3% on ERQA, level with PhysBrain 1.5 (52.8, the best open embodied model in the report, trained on robot
+> trajectories and human-interaction video) and above every other open embodied model of 7–9B (42.3–47.5). JEV-35B has
+> no thinking mode; with thinking, JEV-27B-VL reaches 61.5%.
+**The benchmark.** ERQA (Embodied Reasoning Question Answering) is the
+benchmark Google DeepMind released with Gemini Robotics (March 2025) to measure whether a vision-language model
+understands the physical world a robot acts in. It has 400 multiple-choice questions about real robot and
+everyday scenes, with 1–16 images per question (287 questions have one image). 382 questions have 4 options and the rest
+2–3, so chance is about 26%. ERQA is one of the standard embodied-reasoning benchmarks; Gemini Robotics-ER, PhysBrain and
+Hy-Embodied report it. With 400 questions the 95% interval of a score is about ±5 points.
+| question type | questions | example from the benchmark |
+|---|---:|---|
+| Spatial reasoning | 84 | How will the part marked in orange move if I turn the object part I have in hand clockwise? |
+| Action reasoning | 72 | How do you need to rotate the dumbbell for it to fit back in the we

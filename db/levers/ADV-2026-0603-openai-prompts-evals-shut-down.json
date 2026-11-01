@@ -1,0 +1,47 @@
+{
+  "id": "ADV-2026-0603-openai-prompts-evals-shut-down",
+  "name": "OpenAI reusable prompts and Evals shut down on 30 Nov 2026",
+  "pattern": "PAT-removed-parameter",
+  "kind": "api-migration",
+  "providers": [
+    "openai"
+  ],
+  "effects": [
+    "keeps working"
+  ],
+  "gain": "The v1/prompts API, reusable prompt objects, and the Evals dashboard and API are scheduled to shut down on 30 Nov 2026.",
+  "proof": "vendor claim",
+  "source": "https://developers.openai.com/api/docs/deprecations",
+  "how": "Move reusable prompt content into application code, and move evals to another tool. OpenAI's page links a cookbook for moving to Promptfoo.",
+  "replaces": "/v1/prompts, client.prompts, /v1/evals, client.evals.",
+  "trade_offs": [
+    "Prompts in code need a deploy to change.",
+    "Existing evals became read-only on 31 Oct 2026, so history needs exporting before the shutdown."
+  ],
+  "needs": "Engineering time, and an eval tool if the product runs evals.",
+  "checked": "2026-11-01",
+  "checked_by": "agent",
+  "usage_signal": "Usage API: calls on the affected model or parameter",
+  "gain_model": {
+    "formula": "no money figure: the call stops working or a capability is missing",
+    "inputs": []
+  },
+  "test_recipe": {
+    "what_to_compare": "tests pass on the change",
+    "samples": 20,
+    "can_run_with": [
+      "ANTHROPIC_API_KEY",
+      "OPENAI_API_KEY"
+    ]
+  },
+  "verify_rule": "The old id or parameter is gone and calls succeed over 7 days",
+  "change_recipe": {
+    "kind": "pull request with tests",
+    "how": "Move reusable prompt content into application code, and move evals to another tool. OpenAI's page links a cookbook for moving to Promptfoo.",
+    "left_off": "Nothing else changes; the new path sits behind a setting until a person turns it on"
+  },
+  "audience": "product",
+  "gain_independent": null,
+  "gain_vendor": "The v1/prompts API, reusable prompt objects, and the Evals dashboard and API are scheduled to shut down on 30 Nov 2026.",
+  "tier": "long_tail"
+}

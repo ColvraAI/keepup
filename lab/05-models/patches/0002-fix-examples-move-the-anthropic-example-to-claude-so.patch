@@ -1,0 +1,30 @@
+From 33bc2c871ee24230b4ffc8da598d1b8b5afa3952 Mon Sep 17 00:00:00 2001
+From: "keepup[bot]" <keepup[bot]@users.noreply.github.com>
+Date: Mon, 28 Sep 2026 12:00:00 +0000
+Subject: [PATCH 2/3] fix(examples): move the anthropic example to
+ claude-sonnet-5-5
+
+Anthropic launched Claude Sonnet 5.5 on 28 Sep 2026, so the minimal
+Anthropic example follows it. Sonnet 5.5 returns a 400 error for forced
+tool use (tool_choice any or tool). AURA's crates never set tool_choice,
+and in the rig fork the only forced tool use is its Extractor, which
+AURA never builds, so this example isn't affected.
+
+Replay date: 2026-09-28.
+Source: Claude Platform release notes,
+https://platform.claude.com/docs/en/release-notes/overview
+---
+ examples/minimal/anthropic.toml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/examples/minimal/anthropic.toml b/examples/minimal/anthropic.toml
+index 4efff7fe..1e9afd34 100644
+--- a/examples/minimal/anthropic.toml
++++ b/examples/minimal/anthropic.toml
+@@ -11,5 +11,5 @@ system_prompt = "You are a helpful assistant."
+ [agent.llm]
+ provider = "anthropic"
+ api_key = "{{ env.ANTHROPIC_API_KEY }}"
+-model = "claude-sonnet-5"
++model = "claude-sonnet-5-5"
+ 

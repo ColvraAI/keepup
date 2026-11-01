@@ -1,0 +1,46 @@
+{
+  "summary": "1828 of 1831 repo tests pass in the sandbox on Node 18. The 3 that fail are in collector/__tests__/utils/WhisperProviders/ffmpeg/index.test.js, and the image has no ffmpeg binary. Every linter and check that ran passed: server lint, collector lint, frontend lint, check-translations, check-package-versions.",
+  "commit": "41e170d3ec6cb7a1ddb87fb4bc0d7f81e0c6a740",
+  "ran_on": "2026-11-01",
+  "command": "yarn setup:envs >/dev/null; yarn prisma:setup >/dev/null 2>&1; yarn -s jest --json --outputFile=$OUT/jest.json >/dev/null 2>&1; echo \"jest=$?\" >$OUT/checks.txt; (cd server && yarn -s lint:check >/dev/null 2>&1; echo \"server lint=$?\" >>$OUT/checks.txt); (cd collector && yarn -s lint:check >/dev/null 2>&1; echo \"collector lint=$?\" >>$OUT/checks.txt); (if [ -x frontend/node_modules/.bin/eslint ]; then cd frontend && yarn -s lint:check >/dev/null 2>&1; echo \"frontend lint=$?\" >>$OUT/checks.txt; fi); (cd frontend/src/locales && node verifyTranslations.mjs >/dev/null 2>&1; echo \"check-translations=$?\" >>$OUT/checks.txt); (cd extras/scripts && node verifyPackageVersions.mjs >/dev/null 2>&1; echo \"check-package-versions=$?\" >>$OUT/checks.txt); command -v ffmpeg >/dev/null; echo \"ffmpeg in image=$?\" >>$OUT/checks.txt",
+  "tests": {
+    "total": 1831,
+    "passed": 1828,
+    "failed": 3
+  },
+  "failed_tests": [
+    {
+      "file": "collector/__tests__/utils/WhisperProviders/ffmpeg/index.test.js",
+      "test": "FFMPEGWrapper should find ffmpeg executable"
+    },
+    {
+      "file": "collector/__tests__/utils/WhisperProviders/ffmpeg/index.test.js",
+      "test": "FFMPEGWrapper should validate ffmpeg executable"
+    },
+    {
+      "file": "collector/__tests__/utils/WhisperProviders/ffmpeg/index.test.js",
+      "test": "FFMPEGWrapper should convert audio file to wav format"
+    }
+  ],
+  "tests_this_change_adds": [
+    {
+      "file": "server/__tests__/utils/EmbeddingEngines/native/index.test.js",
+      "total": 21,
+      "passed": 21
+    },
+    {
+      "file": "server/__tests__/utils/helpers/updateENV.test.js",
+      "total": 1,
+      "passed": 1
+    }
+  ],
+  "checks": {
+    "jest": 1,
+    "server lint": 0,
+    "collector lint": 0,
+    "frontend lint": 0,
+    "check-translations": 0,
+    "check-package-versions": 0,
+    "ffmpeg in image": 1
+  }
+}

@@ -1,0 +1,37 @@
+2026-11-01T05:17:01.141083Z  INFO aura_web_server::server: Starting Aura Web Server v0.2.12
+2026-11-01T05:17:01.150340Z  INFO aura_web_server::server: Loading configuration from: /lab-work/05-models/run/configs/before-minimal.toml
+2026-11-01T05:17:01.192676Z  INFO aura_web_server::server: Loaded agent 'Claude Assistant' (anthropic/claude-sonnet-4-20250514)
+2026-11-01T05:17:01.197015Z  INFO aura_web_server::server: Session store backend: memory
+2026-11-01T05:17:01.199176Z  WARN aura::hitl::signing: HITL webhook HMAC verification DISABLED: AURA_HITL_WEBHOOK_SECRET is not set; webhook traffic is unsigned and unverified
+2026-11-01T05:17:01.201598Z  INFO aura_web_server::server: Starting server on 127.0.0.1:18080 (shutdown_timeout=30s)
+2026-11-01T05:17:02.258227Z  INFO chat_completions{otel.kind="server"}: aura::builder:   Max turn depth: 5 (tool calls per turn)
+2026-11-01T05:17:02.259650Z  INFO chat_completions{otel.kind="server"}: aura::builder: Initializing Anthropic provider
+2026-11-01T05:17:02.270280Z  INFO chat_completions{otel.kind="server"}: aura::builder: Anthropic client initialized successfully
+2026-11-01T05:17:02.281309Z TRACE agent.stream: rig::completions: Anthropic completion request: {
+  "max_tokens": 64000,
+  "messages": [
+    {
+      "content": [
+        {
+          "text": "Name the capital of France in one word.",
+          "type": "text"
+        }
+      ],
+      "role": "user"
+    }
+  ],
+  "model": "claude-sonnet-4-20250514",
+  "stream": true,
+  "system": [
+    {
+      "text": "You are a helpful assistant.",
+      "type": "text"
+    }
+  ]
+}
+2026-11-01T05:17:02.921119Z ERROR agent.stream: aura_web_server::streaming::handlers: Stream error: CompletionError: ProviderError: SSE Error: Invalid status code 404 Not Found with message: {"type":"error","error":{"type":"not_found_error","message":"model: claude-sonnet-4-20250514"},"request_id":"req_011Cgbe8krxPEjZaw2hz9XrH"}
+2026-11-01T05:17:02.928250Z ERROR agent.stream: aura::logging: error="CompletionError: ProviderError: SSE Error: Invalid status code 404 Not Found with message: {\"type\":\"error\",\"error\":{\"type\":\"not_found_error\",\"message\":\"model: claude-sonnet-4-20250514\"},\"request_id\":\"req_011Cgbe8krxPEjZaw2hz9XrH\"}"
+2026-11-01T05:17:02.932812Z  WARN agent.stream: aura_web_server::handlers: Stream producer ended with error: CompletionError: ProviderError: SSE Error: Invalid status code 404 Not Found with message: {"type":"error","error":{"type":"not_found_error","message":"model: claude-sonnet-4-20250514"},"request_id":"req_011Cgbe8krxPEjZaw2hz9XrH"}
+2026-11-01T05:17:02.988815Z  INFO aura_web_server::server: Received SIGTERM, initiating graceful shutdown
+2026-11-01T05:17:02.992179Z  INFO aura_web_server::server: Allowing 30s for in-flight requests to complete
+2026-11-01T05:17:02.992588Z  INFO aura_web_server::server: All in-flight requests completed, shutting down early

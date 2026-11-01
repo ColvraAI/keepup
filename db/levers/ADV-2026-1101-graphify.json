@@ -1,0 +1,42 @@
+{
+  "id": "ADV-2026-1101-graphify",
+  "name": "graphify for coding agents",
+  "pattern": "PAT-coding-agent-setup",
+  "kind": "install",
+  "providers": [],
+  "effects": [
+    "cheaper"
+  ],
+  "gain": "A self-reported token saving, not independently tested. A workflow tool for developers, never a product change.",
+  "proof": "adoption only",
+  "source": "https://github.com/safishamsi/graphify",
+  "how": "Install it, then run graphify install",
+  "replaces": "Agents re-reading raw files.",
+  "trade_offs": [
+    "No independent number; graph retrieval costs more on simple questions. Read a community skill before installing it: the plan reports many malicious ones."
+  ],
+  "needs": "Python.",
+  "install": "graphify install",
+  "audience": "team",
+  "checked": "2026-11-01",
+  "checked_by": "agent",
+  "usage_signal": "Not visible in the bill",
+  "gain_model": {
+    "formula": "no money figure: developer time, unmeasured",
+    "inputs": []
+  },
+  "test_recipe": {
+    "what_to_compare": "a developer tries it on one task",
+    "samples": 1,
+    "can_run_with": []
+  },
+  "verify_rule": "Whether the team keeps it installed after 30 days",
+  "change_recipe": {
+    "kind": "written steps",
+    "how": "Install it, then run graphify install",
+    "left_off": "Never a pull request: a brief line"
+  },
+  "gain_independent": null,
+  "gain_vendor": null,
+  "tier": "long_tail"
+}

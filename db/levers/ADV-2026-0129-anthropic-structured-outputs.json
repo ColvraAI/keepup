@@ -1,0 +1,68 @@
+{
+  "id": "ADV-2026-0129-anthropic-structured-outputs",
+  "name": "Claude's structured outputs instead of parsing its text",
+  "pattern": "PAT-hand-parsed-json",
+  "kind": "api-feature",
+  "providers": [
+    "anthropic"
+  ],
+  "effects": [
+    "better answers",
+    "keeps working"
+  ],
+  "gain": "Anthropic's words: outputs follow your schema, so \"no more JSON.parse() errors\" (vendor claim). No measured number here.",
+  "proof": "vendor claim",
+  "source": "https://platform.claude.com/docs/en/build-with-claude/structured-outputs",
+  "how": "Send the schema in output_config.format, or pass a Pydantic model or zodOutputFormat() to client.messages.parse(). Keep the old parser as a fallback and add a test that the same keys come back.",
+  "replaces": "JSON.parse or json.loads on Claude text, fence stripping, retry-on-parse loops.",
+  "trade_offs": [
+    "The first request with a new schema is slower while its grammar compiles; grammars are cached for 24 hours from last use.",
+    "Refusals and max_tokens can still return output that does not match the schema, so those two stop reasons need handling.",
+    "Only a subset of JSON Schema is supported, and assistant prefill is incompatible."
+  ],
+  "needs": "A supported model; claude-sonnet-4-5-20250929 and newer are on the page, and retired models are not.",
+  "checked": "2026-11-01",
+  "checked_by": "agent",
+  "usage_signal": "Retries and output tokens on calls that are re-sent after a parse failure",
+  "gain_model": {
+    "formula": "parse_failure_rate * calls * cost_per_call = money lost to retries",
+    "inputs": [
+      {
+        "name": "parse_failure_rate",
+        "value": null,
+        "source": "the product's usage data or the bill",
+        "assumed": false
+      },
+      {
+        "name": "calls",
+        "value": null,
+        "source": "the product's usage data or the bill",
+        "assumed": false
+      },
+      {
+        "name": "cost_per_call",
+        "value": null,
+        "source": "the product's usage data or the bill",
+        "assumed": false
+      }
+    ]
+  },
+  "test_recipe": {
+    "what_to_compare": "parse failures and schema errors, before and after",
+    "samples": 200,
+    "can_run_with": [
+      "OPENAI_API_KEY",
+      "ANTHROPIC_API_KEY"
+    ]
+  },
+  "verify_rule": "Parse-error logs and retried calls over 14 days after merge",
+  "change_recipe": {
+    "kind": "pull request, off by default",
+    "how": "Send the schema in output_config.format, or pass a Pydantic model or zodOutputFormat() to client.messages.parse(). Keep the old parser as a fallback and add a test that the same keys come back.",
+    "left_off": "Nothing else changes; the new path sits behind a setting until a person turns it on"
+  },
+  "audience": "product",
+  "gain_independent": null,
+  "gain_vendor": "Anthropic's words: outputs follow your schema, so \"no more JSON.parse() errors\" (vendor claim). No measured number here.",
+  "tier": "huge"
+}

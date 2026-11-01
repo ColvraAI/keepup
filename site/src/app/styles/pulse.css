@@ -1,0 +1,394 @@
+/* The one screen that is noise. Everything here is ink; text sits in cut-outs of the field. */
+.pulse {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) clamp(280px, 27vw, 500px);
+  min-height: 100dvh;
+  height: 100dvh;
+  background: var(--noise);
+  color: var(--noise-text);
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.pulse-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: calc(100% - clamp(280px, 27vw, 500px));
+  height: 100%;
+  z-index: -1;
+}
+
+.pulse-main {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--s-4);
+  padding: var(--s-5);
+  min-width: 0;
+}
+
+.pulse-cut {
+  background: var(--noise);
+  padding: var(--s-4) var(--s-5);
+}
+
+.pulse-head h1 {
+  display: grid;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.pulse-head__lead,
+.pulse-head__tail {
+  font-size: var(--t-xl);
+  line-height: 1.1;
+}
+
+.pulse-counter {
+  font-variant-numeric: tabular-nums lining-nums;
+  font-size: var(--t-huge);
+  line-height: 1;
+  letter-spacing: -0.045em;
+  font-weight: 600;
+  min-width: 5ch;
+}
+
+.pulse-date {
+  margin-top: var(--s-3);
+  font-size: var(--t-xs);
+  color: var(--noise-dim);
+}
+
+.pulse-date__more::before {
+  content: ' · ';
+}
+
+.pulse-foot {
+  display: grid;
+  grid-template-columns: auto auto;
+  justify-content: start;
+  align-items: stretch;
+  gap: var(--s-4);
+  width: 100%;
+}
+
+.pulse-counter__sep {
+  margin: 0 -0.16em 0 -0.12em;
+}
+
+.pulse-label {
+  font-family: var(--mono);
+  font-size: var(--t-xs);
+  color: var(--noise-dim);
+  margin-bottom: var(--s-2);
+}
+
+.pulse-bars li {
+  display: grid;
+  grid-template-columns: 10.5em minmax(5em, 9em) 3.7em;
+  align-items: center;
+  gap: var(--s-2);
+  font-size: var(--t-s);
+  line-height: 1.32;
+}
+
+.pulse-bars__name {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pulse-bars__track {
+  height: 0.55em;
+  display: block;
+}
+
+.pulse-bars__track i {
+  display: block;
+  height: 100%;
+}
+
+.pulse-bars__value {
+  text-align: right;
+  font-size: var(--t-xs);
+  color: var(--noise-dim);
+}
+
+.pulse-weeks {
+  display: flex;
+  flex-direction: column;
+}
+
+.pulse-weeks ol {
+  flex: 1;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(1.9em, 1fr);
+  gap: 3px;
+  min-height: 120px;
+}
+
+.pulse-weeks li {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: stretch;
+  min-width: 0;
+}
+
+.pulse-weeks__bar {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: flex-end;
+}
+
+.pulse-weeks i {
+  display: block;
+  width: 100%;
+  background: var(--noise-dim);
+  min-height: 1px;
+}
+
+.pulse-weeks__date b {
+  display: block;
+  font-weight: 400;
+}
+
+.pulse-weeks__date {
+  font-size: var(--t-xs);
+  color: var(--noise-dim);
+  white-space: nowrap;
+  text-align: center;
+  overflow: hidden;
+}
+
+.pulse-line {
+  grid-column: 1 / -1;
+  justify-self: start;
+  font-size: var(--t-l);
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  line-height: 1.15;
+}
+
+.pulse-feed {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  height: 100%;
+  overflow: hidden;
+  background: var(--noise);
+  border-left: 1px solid var(--noise-rule);
+  padding: var(--s-5) 0 0 var(--s-4);
+}
+
+.pulse-feed ol {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-width: none;
+  padding-right: var(--s-4);
+}
+
+.pulse-feed li {
+  display: grid;
+  padding: var(--s-2) 0;
+  border-top: 1px solid var(--noise-2);
+  font-size: var(--t-s);
+  line-height: 1.25;
+}
+
+.pulse-feed a {
+  overflow-wrap: break-word;
+  text-decoration-color: var(--noise-rule);
+}
+
+.pulse-feed a:hover {
+  color: #fff;
+  text-decoration-color: currentColor;
+}
+
+.pulse-feed span {
+  font-size: var(--t-xs);
+  color: var(--noise-dim);
+  display: flex;
+  gap: 0.5em;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.pulse-feed span i {
+  width: 6px;
+  height: 6px;
+  flex: none;
+  display: inline-block;
+}
+
+@media (max-width: 860px) {
+  .pulse {
+    grid-template-columns: minmax(0, 1fr);
+    height: auto;
+    overflow: visible;
+  }
+
+  .pulse-canvas {
+    width: 100%;
+    bottom: auto;
+    height: 100dvh;
+  }
+
+  .pulse-main {
+    padding: var(--s-3);
+    min-height: 88dvh;
+  }
+
+  .pulse-cut {
+    padding: var(--s-3);
+  }
+
+  .pulse-foot {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .pulse-chart {
+    display: block;
+    padding: var(--s-3);
+  }
+
+  .pulse-line {
+    padding: var(--s-3);
+  }
+
+  .pulse-feed {
+    height: 62dvh;
+    border-left: 0;
+    border-top: 1px solid var(--noise-rule);
+    padding: var(--s-4) 0 0 var(--s-3);
+  }
+
+  .pulse-bars li {
+    grid-template-columns: minmax(6em, 9em) minmax(30px, 1fr) 3.6em;
+  }
+}
+
+/* Nothing that gives the climb away shows until the counter lands: then the line, alone. */
+.pulse-land {
+  opacity: 0;
+}
+
+[data-landed='true'] .pulse-land {
+  opacity: 1;
+  transition: opacity 420ms ease-out;
+}
+
+.pulse-chart,
+.pulse-line {
+  background: var(--noise);
+  padding: var(--s-4) var(--s-5);
+}
+
+.pulse-chart {
+  display: flex;
+}
+
+.pulse-note {
+  margin-top: var(--s-2);
+  font-size: var(--t-xs);
+  line-height: 1.35;
+  color: var(--noise-dim);
+  max-width: 44ch;
+}
+
+/* The noise on the projector: the field runs behind everything, under the feed too. */
+/* The feed sits over the older, sparser days, so the flood on the right stays in plain sight. */
+.is-present .pulse {
+  height: var(--stage-h);
+  min-height: var(--stage-h);
+  grid-template-columns: 520px minmax(0, 1fr);
+}
+
+.is-present .pulse-feed {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.is-present .pulse-main {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.is-present .pulse-canvas {
+  width: 100%;
+}
+
+.is-present .pulse-head {
+  padding: var(--s-3) var(--s-5) var(--s-4) var(--s-4);
+}
+
+.is-present .pulse-date span {
+  display: block;
+}
+
+.is-present .pulse-date .pulse-date__more::before {
+  content: none;
+}
+
+.is-present .pulse-main {
+  padding: var(--s-6);
+}
+
+.is-present .pulse-foot {
+  display: block;
+}
+
+.is-present .pulse-line {
+  display: inline-block;
+  font-size: var(--t-xl);
+  line-height: 1.08;
+  padding: var(--s-3) var(--s-5) var(--s-4) var(--s-4);
+}
+
+.is-present .pulse-feed {
+  background: transparent;
+  border-left: 0;
+  padding: 0;
+}
+
+.is-present .pulse-feed .pulse-label {
+  background: var(--noise);
+  margin: 0;
+  padding: var(--s-3) var(--s-4);
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.is-present .pulse-feed ol {
+  padding-right: 0;
+  overflow: hidden;
+}
+
+.is-present .pulse-feed li {
+  background: rgba(11, 10, 8, 0.86);
+  padding: var(--s-2) var(--s-4);
+  border-top-color: var(--noise-rule);
+}
+
+/* Two blocks, so the line can't break between "Your" and "product". */
+.pulse-line span {
+  display: block;
+}
+
+.pulse-share {
+  display: table;
+  background: var(--noise);
+  color: var(--noise-dim);
+  font-size: var(--t-xs);
+  padding: 0 var(--s-5) var(--s-3) var(--s-4);
+}

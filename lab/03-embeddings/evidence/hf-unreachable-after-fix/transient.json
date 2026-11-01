@@ -1,0 +1,31 @@
+{
+  "scenario": "transient",
+  "node": "v18.20.8",
+  "transformers": "4.3.2",
+  "whileDown": {
+    "model": "onnx-community/embeddinggemma-2-ONNX",
+    "outcome": "rejected",
+    "message": "fetch failed"
+  },
+  "afterBack": {
+    "model": "onnx-community/embeddinggemma-2-ONNX",
+    "outcome": "loaded"
+  },
+  "requests": [
+    "https://huggingface.co/onnx-community/embeddinggemma-2-ONNX/resolve/main/config.json -> fetch failed",
+    "https://huggingface.co/onnx-community/embeddinggemma-2-ONNX/resolve/main/config.json -> 200",
+    "https://huggingface.co/onnx-community/embeddinggemma-2-ONNX/resolve/main/tokenizer_config.json -> 206",
+    "https://huggingface.co/onnx-community/embeddinggemma-2-ONNX/resolve/main/tokenizer.json -> 206",
+    "https://huggingface.co/onnx-community/embeddinggemma-2-ONNX/resolve/main/onnx/model_q4.onnx_data -> 206",
+    "https://huggingface.co/onnx-community/embeddinggemma-2-ONNX/resolve/main/onnx/model_q4.onnx -> 206",
+    "https://huggingface.co/onnx-community/embeddinggemma-2-ONNX/resolve/main/onnx/audio_encoder_q4.onnx -> 206",
+    "https://huggingface.co/onnx-community/embeddinggemma-2-ONNX/resolve/main/onnx/vision_encoder_q4.onnx_data -> 206",
+    "https://huggingface.co/onnx-community/embeddinggemma-2-ONNX/resolve/main/onnx/audio_encoder_q4.onnx_data -> 206",
+    "https://huggingface.co/onnx-community/embeddinggemma-2-ONNX/resolve/main/onnx/vision_encoder_q4.onnx -> 206",
+    "https://huggingface.co/onnx-community/embeddinggemma-2-ONNX/resolve/main/tokenizer_config.json -> 200",
+    "https://huggingface.co/onnx-community/embeddinggemma-2-ONNX/resolve/main/tokenizer_config.json -> 206",
+    "https://huggingface.co/onnx-community/embeddinggemma-2-ONNX/resolve/main/onnx/model_q4.onnx_data -> 200",
+    "https://huggingface.co/onnx-community/embeddinggemma-2-ONNX/resolve/main/tokenizer.json -> 200",
+    "https://huggingface.co/onnx-community/embeddinggemma-2-ONNX/resolve/main/onnx/model_q4.onnx -> 200"
+  ]
+}

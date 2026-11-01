@@ -1,0 +1,39 @@
+{
+  "version": "1",
+  "id": "PAT-coding-agent-setup",
+  "name": "The team builds with a coding agent",
+  "find": [
+    {
+      "regex": "^# \\S"
+    }
+  ],
+  "skip_if_near": [],
+  "skip_if_in_file": [],
+  "files": [
+    "CLAUDE.md",
+    "AGENTS.md",
+    "**/CLAUDE.md",
+    "**/AGENTS.md"
+  ],
+  "skip_files": [
+    "**/__tests__/**",
+    "**/test/**",
+    "**/tests/**",
+    "**/testdata/**",
+    "**/fixtures/**",
+    "**/examples/**",
+    "**/samples/**",
+    "**/docs/**",
+    "**/node_modules/**",
+    "**/vendor/**",
+    "**/dist/**",
+    "**/*.test.*",
+    "**/*.spec.*"
+  ],
+  "why": "An instructions file says the team uses a coding agent, so plugins and skills can help. These are brief lines for the team and never a pull request.",
+  "status": "live",
+  "effect": [
+    "new capability"
+  ],
+  "live_from": "v0.3"
+}

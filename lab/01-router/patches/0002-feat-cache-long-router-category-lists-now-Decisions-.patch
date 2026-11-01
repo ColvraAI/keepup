@@ -1,0 +1,304 @@
+From b7c1144e0799ebb837df0a2fa935fbf8586617dc Mon Sep 17 00:00:00 2001
+From: "keepup[bot]" <keepup[bot]@users.noreply.github.com>
+Date: Thu, 22 Oct 2026 12:00:00 +0000
+Subject: [PATCH 2/2] feat: cache long router category lists now Decisions is
+ GA
+
+The Decisions API went generally available with prompt caching on shared
+input. Content in questions is outside the reusable prefix, and the prefix
+needs at least 1,024 tokens, so a category list only benefits when it is long
+enough and sits in input.
+
+A list at that size now moves to a developer message with an explicit cache
+breakpoint, so the user's message is never written to the cache. A cache write
+costs 1.25x normal input and lasts at least 30 minutes, so a long list on a
+router that gets less than about one message every 30 minutes can pay that
+rate on each message instead of getting a discount.
+
+A shorter list keeps its plain choices and adds explicit mode with no
+breakpoint, which turns caching off for the request. GA otherwise puts an
+implicit breakpoint at the end of input, which would write a long user message
+to the cache at the write rate. A router with a short list sees no discount
+from this commit.
+
+The size is judged from the list's bytes, at an estimate of about 4 characters
+a token, and not by counting tokens. Counting would run a tokenizer over the
+list on every classification, and js-tiktoken doesn't know gpt-6-luna, so
+TokenManager would fall back to cl100k_base and give an estimate too. A wrong
+guess near the minimum only costs a missed discount.
+
+input_json isn't used. The message is plain text, and JSON parts can't carry
+a cache breakpoint and are limited to 256 KiB where text parts aren't.
+
+Replay date: 22 Oct 2026, Decisions API generally available.
+Source: https://developers.openai.com/api/docs/changelog
+---
+ .../aibitat/plugins/router-classifier.test.js | 115 ++++++++++++++++++
+ .../aibitat/plugins/router-classifier.js      |  99 +++++++++++----
+ 2 files changed, 193 insertions(+), 21 deletions(-)
+
+diff --git a/server/__tests__/utils/agents/aibitat/plugins/router-classifier.test.js b/server/__tests__/utils/agents/aibitat/plugins/router-classifier.test.js
+index c89ff4cb..f9c2babd 100644
+--- a/server/__tests__/utils/agents/aibitat/plugins/router-classifier.test.js
++++ b/server/__tests__/utils/agents/aibitat/plugins/router-classifier.test.js
+@@ -18,8 +18,10 @@ const OpenAI = require("openai");
+ const {
+   classifyMessage,
+   classifyWithDecisions,
++  DECISIONS_CACHE_MIN_BYTES,
+   DECISIONS_MIN_PROBABILITY,
+ } = require("../../../../../utils/agents/aibitat/plugins/router-classifier");
++const { TokenManager } = require("../../../../../utils/helpers/tiktoken");
+ 
+ const CODING = { title: "coding", description: "Writing or fixing code." };
+ const BILLING = { title: "billing", description: "Invoices and payments." };
+@@ -182,6 +184,119 @@ describe("router classifier", () => {
+     });
+   });
+ 
++  describe("classifyWithDecisions shared-input caching", () => {
++    // One rule whose list line, `- title: description`, is exactly this long.
++    const ruleOfBytes = (bytes) => ({
++      title: "coding",
++      description: "c".repeat(bytes - "- coding: ".length),
++    });
++    const LONG_RULES = [
++      { title: "coding", description: "c".repeat(DECISIONS_CACHE_MIN_BYTES) },
++      BILLING,
++    ];
++
++    beforeEach(() => {
++      mockDecisionsPost.mockResolvedValue(decisionAnswer("coding", 0.95));
++    });
++
++    it("sends a short list as plain choices, with caching turned off", async () => {
++      await classifyWithDecisions(RULES, "fix my code");
++
++      const { body } = mockDecisionsPost.mock.calls[0][1];
++      expect(body.input).toBe("fix my code");
++      // Explicit mode with no breakpoint is how the API turns caching off.
++      // Without it, the implicit breakpoint would write a long message.
++      expect(body.prompt_cache_options).toEqual({ mode: "explicit" });
++      expect(body.questions[0].choices[0].description).toBe(CODING.description);
++    });
++
++    it("keeps plain choices one byte under the size that can be cached", async () => {
++      await classifyWithDecisions(
++        [ruleOfBytes(DECISIONS_CACHE_MIN_BYTES - 1)],
++        "fix my code"
++      );
++
++      const { body } = mockDecisionsPost.mock.calls[0][1];
++      expect(body.input).toBe("fix my code");
++      expect(body.prompt_cache_options).toEqual({ mode: "explicit" });
++    });
++
++    it("moves a list at that size into a cacheable shared prefix", async () => {
++      await classifyWithDecisions(
++        [ruleOfBytes(DECISIONS_CACHE_MIN_BYTES)],
++        "fix my code"
++      );
++
++      const { input } = mockDecisionsPost.mock.calls[0][1].body;
++      expect(Array.isArray(input)).toBe(true);
++      expect(input[0].role).toBe("developer");
++      expect(input[0].content[0].prompt_cache_breakpoint).toEqual({
++        mode: "explicit",
++      });
++    });
++
++    it("puts the rules in the prefix in priority order, ahead of the message", async () => {
++      await classifyWithDecisions(LONG_RULES, "fix my code");
++
++      const { body } = mockDecisionsPost.mock.calls[0][1];
++      const [shared, user] = body.input;
++      expect(shared.role).toBe("developer");
++      expect(shared.content[0].prompt_cache_breakpoint).toEqual({
++        mode: "explicit",
++      });
++      expect(shared.content[0].text.indexOf("- coding:")).toBeLessThan(
++        shared.content[0].text.indexOf("- billing:")
++      );
++      expect(user).toEqual({ role: "user", content: "fix my code" });
++    });
++
++    it("keeps every choice, without repeating descriptions outside the prefix", async () => {
++      await classifyWithDecisions(LONG_RULES, "fix my code");
++
++      const { choices } = mockDecisionsPost.mock.calls[0][1].body.questions[0];
++      expect(choices.map(({ value }) => value)).toEqual([
++        "coding",
++        "billing",
++        "none",
++      ]);
++      expect(choices[0].description).toBeUndefined();
++    });
++
++    it("keeps the same prefix across messages so it can be reused", async () => {
++      await classifyWithDecisions(LONG_RULES, "first message");
++      await classifyWithDecisions(LONG_RULES, "second message");
++
++      const [first, second] = mockDecisionsPost.mock.calls.map(
++        (call) => call[1].body.input[0]
++      );
++      expect(first).toEqual(second);
++    });
++
++    it("logs the tokens it read from the cache", async () => {
++      mockDecisionsPost.mockResolvedValue({
++        ...decisionAnswer("coding", 0.95),
++        usage: { input_tokens_details: { cached_tokens: 1280 } },
++      });
++      await classifyWithDecisions(LONG_RULES, "fix my code");
++      expect(logged()).toContain("1280 cached tokens");
++    });
++
++    // TokenManager keeps one instance, for one model, so asking it about the
++    // Decisions model would replace the one the router builds with the default
++    // model when it gathers its routing context.
++    it("doesn't replace the shared tokenizer, at any list size", async () => {
++      const shared = new TokenManager();
++
++      await classifyWithDecisions(
++        [ruleOfBytes(DECISIONS_CACHE_MIN_BYTES - 1)],
++        "fix my code"
++      );
++      await classifyWithDecisions(LONG_RULES, "fix my code");
++
++      expect(TokenManager.instance).toBe(shared);
++    });
++  });
++
+   describe("classifyMessage", () => {
+     it("uses the Decisions category and never starts the agent", async () => {
+       mockDecisionsPost.mockResolvedValue(decisionAnswer("coding", 0.95));
+diff --git a/server/utils/agents/aibitat/plugins/router-classifier.js b/server/utils/agents/aibitat/plugins/router-classifier.js
+index 6f0e0693..fee5fa52 100644
+--- a/server/utils/agents/aibitat/plugins/router-classifier.js
++++ b/server/utils/agents/aibitat/plugins/router-classifier.js
+@@ -65,6 +65,13 @@ const DECISIONS_QUESTION_NAME = "category";
+ const DECISIONS_MIN_PROBABILITY = 0.7;
+ // The agent is ready as a fallback, so a slow call shouldn't hold up the message.
+ const DECISIONS_TIMEOUT_MS = 10_000;
++// Decisions only reuses a prefix of shared input of at least 1,024 tokens, and
++// content in `questions` doesn't count. This is that minimum at an estimate of
++// about 4 characters a token. Tokens aren't counted here: that would run a
++// tokenizer over the list on every classification, and js-tiktoken doesn't know
++// this model, so TokenManager would fall back to cl100k_base and give an estimate
++// too. A wrong guess near the minimum only costs a missed discount.
++const DECISIONS_CACHE_MIN_BYTES = 1024 * 4;
+ const NO_CATEGORY = "none";
+ const DECISIONS_INSTRUCTIONS = `Which category best matches the user's message? The categories are listed in priority order: pick the FIRST category whose description matches the message. If no category matches, pick "${NO_CATEGORY}".`;
+ 
+@@ -158,34 +165,83 @@ async function classifyWithDecisions(rules, prompt) {
+     });
+     // The pinned SDK has no decisions resource, so call the endpoint directly.
+     const response = await client.post("/decisions", {
+-      body: {
+-        model: DECISIONS_MODEL,
+-        input: prompt,
+-        questions: [
+-          {
+-            type: "choice",
+-            name: DECISIONS_QUESTION_NAME,
+-            instructions: DECISIONS_INSTRUCTIONS,
+-            choices: [
+-              ...validRules.map((rule) => ({
+-                value: rule.title,
+-                description: rule.description,
+-              })),
+-              {
+-                value: NO_CATEGORY,
+-                description: "No other category matches the message.",
+-              },
+-            ],
+-          },
+-        ],
+-      },
++      body: buildDecisionsRequest(validRules, prompt),
+     });
++    const cachedTokens = response?.usage?.input_tokens_details?.cached_tokens;
++    if (cachedTokens)
++      console.log(`[RouterClassifier] read ${cachedTokens} cached tokens`);
+     return readDecision(response?.answers?.[0], validRules);
+   } catch (error) {
+     return { answered: false, reason: error.message };
+   }
+ }
+ 
++/**
++ * Build the request body. A list under the caching size goes in the question as
++ * plain choices with descriptions, where it can't be cached and doesn't need to
++ * be. A list at that size moves to a shared prefix in `input`, since content in
++ * `questions` is outside the reusable prefix.
++ *
++ * Both forms use explicit mode, so the user's message is never written to the
++ * cache at the write rate. By default the API adds a breakpoint at the end of
++ * `input`, which is that message. With no breakpoint of ours, explicit mode
++ * turns caching off for the request.
++ *
++ * `input_json` isn't used. The message is plain text, and JSON parts can't carry
++ * a cache breakpoint and are limited to 256 KiB where text parts aren't.
++ * @param {Array} validRules - The rules to offer as choices, in priority order
++ * @param {string} prompt - The user's message to classify
++ * @returns {Object} The request body for POST /v1/decisions
++ */
++function buildDecisionsRequest(validRules, prompt) {
++  const categoryList = validRules
++    .map((rule) => `- ${rule.title}: ${rule.description}`)
++    .join("\n");
++  const cacheable =
++    Buffer.byteLength(categoryList) >= DECISIONS_CACHE_MIN_BYTES;
++  const question = {
++    type: "choice",
++    name: DECISIONS_QUESTION_NAME,
++    instructions: DECISIONS_INSTRUCTIONS,
++    choices: [
++      ...validRules.map((rule) => ({
++        value: rule.title,
++        ...(cacheable ? {} : { description: rule.description }),
++      })),
++      {
++        value: NO_CATEGORY,
++        description: "No other category matches the message.",
++      },
++    ],
++  };
++  if (!cacheable)
++    return {
++      model: DECISIONS_MODEL,
++      input: prompt,
++      prompt_cache_options: { mode: "explicit" },
++      questions: [question],
++    };
++
++  return {
++    model: DECISIONS_MODEL,
++    input: [
++      {
++        role: "developer",
++        content: [
++          {
++            type: "input_text",
++            text: `Categories, in priority order:\n${categoryList}`,
++            prompt_cache_breakpoint: { mode: "explicit" },
++          },
++        ],
++      },
++      { role: "user", content: prompt },
++    ],
++    prompt_cache_options: { mode: "explicit" },
++    questions: [question],
++  };
++}
++
+ /**
+  * Turn a Decisions answer into a rule. The threshold is on the chosen option's
+  * probability, which reads directly as how likely that option is. The answer's
+@@ -259,5 +315,6 @@ module.exports = {
+   classifyWithLLM,
+   classifyWithDecisions,
+   classifyMessage,
++  DECISIONS_CACHE_MIN_BYTES,
+   DECISIONS_MIN_PROBABILITY,
+ };

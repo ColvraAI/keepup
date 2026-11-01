@@ -1,0 +1,2730 @@
+{
+  "id": "PAT-retired-model-id",
+  "name": "A retired or retiring model id",
+  "find": [
+    {
+      "regex": "^(?!\\s*(?:#|//|\\*|/\\*|--))(?!.*(?:tiktoken|encoding_for_model|[Tt]okenizer)).*(?:[\"'`](?:claude-sonnet-4-5-20250929|claude-opus-4-1-20250805|claude-sonnet-4-20250514|claude-opus-4-20250514|claude-3-haiku-20240307|claude-3-5-haiku-20241022|claude-3-7-sonnet-20250219|claude-3-5-sonnet-20240620|claude-3-5-sonnet-20241022|claude-3-opus-20240229|claude-2\\.0|claude-2\\.1|claude-3-sonnet-20240229|claude-1\\.0|claude-1\\.1|claude-1\\.2|claude-1\\.3|claude-instant-1\\.0|claude-instant-1\\.1|claude-instant-1\\.2)[\"'`](?!\\s*:\\s*[\\d{\\[])|[=:]\\s*(?:claude-sonnet-4-5-20250929|claude-opus-4-1-20250805|claude-sonnet-4-20250514|claude-opus-4-20250514|claude-3-haiku-20240307|claude-3-5-haiku-20241022|claude-3-7-sonnet-20250219|claude-3-5-sonnet-20240620|claude-3-5-sonnet-20241022|claude-3-opus-20240229|claude-2\\.0|claude-2\\.1|claude-3-sonnet-20240229|claude-1\\.0|claude-1\\.1|claude-1\\.2|claude-1\\.3|claude-instant-1\\.0|claude-instant-1\\.1|claude-instant-1\\.2)\\s*(?:#.*)?$)",
+      "note": "An exact anthropic id on its retirement list. The date and successor for each id are in models."
+    },
+    {
+      "regex": "^(?!\\s*(?:#|//|\\*|/\\*|--))(?!.*(?:tiktoken|encoding_for_model|[Tt]okenizer)).*(?:[\"'`](?:gpt-4o-2024-08-06|gpt-4o-2024-11-20|gpt-4o-mini-2024-07-18|gpt-4\\.1-2025-04-14|gpt-4\\.1-mini-2025-04-14|gpt-5\\.3-codex|gpt-5\\.4-nano|gpt-5\\.4-nano-2026-03-17|gpt-5\\.1|gpt-5\\.1-2025-11-13|tts-1|tts-1-hd|gpt-4o-mini-tts|gpt-4o-mini-tts-2025-03-20|gpt-4o-mini-tts-2025-12-15|whisper-1|gpt-4o-transcribe|gpt-4o-mini-transcribe|gpt-4o-mini-transcribe-2025-12-15|gpt-4o-transcribe-diarize|gpt-realtime|gpt-realtime-2025-08-28|gpt-audio|gpt-audio-2025-08-28|gpt-4o-audio|gpt-4o-realtime|gpt-realtime-mini|gpt-realtime-mini-2025-12-15|gpt-audio-mini|gpt-audio-mini-2025-12-15|gpt-4o-mini-realtime|gpt-4o-mini-audio|gpt-4o-mini-transcribe-2025-03-20|gpt-5|gpt-5-2025-08-07|gpt-5-mini|gpt-5-mini-2025-08-07|gpt-5-nano|gpt-5-nano-2025-08-07|gpt-5-pro|gpt-5-pro-2025-10-06|o3|o3-2025-04-16|o3-pro|o3-pro-2025-06-10|gpt-image-1-mini|gpt-image-1\\.5|gpt-image-1\\.5-2025-12-16|chatgpt-image-latest|gpt-5\\.4-cyber|gpt-5\\.2-chat-latest|gpt-5\\.3-chat-latest|gpt-3\\.5-turbo-0125|gpt-3\\.5-turbo|gpt-3\\.5-turbo-completions|gpt-4-0613|gpt-4|gpt-4-0613-completions|gpt-4-completions|gpt-4-1106-preview|gpt-4-turbo|gpt-4-turbo-2024-04-09|gpt-4-turbo-completions|gpt-4\\.1-nano|gpt-4\\.1-nano-2025-04-14|gpt-4o-2024-05-13|gpt-image-1|o1-2024-12-17|o1|o1-pro-2025-03-19|o1-pro|o3-mini-2025-01-31|o3-mini|ft-o4-mini-2025-04-16|o4-mini-2025-04-16|o4-mini|computer-use-preview-2025-03-11|computer-use-preview|gpt-4o-mini-search-preview-2025-03-11|gpt-4o-search-preview-2025-03-11|gpt-5-chat-latest|gpt-5-codex|gpt-5\\.1-chat-latest|gpt-5\\.1-codex|gpt-5\\.1-codex-max|gpt-5\\.1-codex-mini|gpt-audio-mini-2025-10-06|gpt-realtime-mini-2025-10-06|o3-deep-research-2025-06-26|o3-deep-research|o4-mini-deep-research-2025-06-26|o4-mini-deep-research|gpt-5\\.2-codex|sora-2|sora-2-pro|sora-2-2025-10-06|sora-2-2025-12-08|sora-2-pro-2025-10-06|chatgpt-4o-latest|codex-mini-latest|dall-e-2|dall-e-3|gpt-3\\.5-turbo-instruct|babbage-002|davinci-002|gpt-3\\.5-turbo-1106|gpt-4-0314|gpt-4-0125-preview|gpt-4-turbo-preview|gpt-4-turbo-preview-completions|gpt-4o-realtime-preview|gpt-4o-realtime-preview-2025-06-03|gpt-4o-realtime-preview-2024-12-17|gpt-4o-mini-realtime-preview|gpt-4o-audio-preview|gpt-4o-mini-audio-preview|gpt-4o-realtime-preview-2024-10-01|gpt-4o-audio-preview-2024-10-01|text-moderation-007|text-moderation-stable|text-moderation-latest|o1-preview|o1-mini|gpt-4\\.5-preview|gpt-4-32k|gpt-4-32k-0613|gpt-4-32k-0314|gpt-4-vision-preview|gpt-4-1106-vision-preview|gpt-3\\.5-turbo-0613|gpt-3\\.5-turbo-16k-0613|text-ada-001|text-babbage-001|text-curie-001|text-davinci-001|text-davinci-002|text-davinci-003|code-davinci-002|text-davinci-edit-001|code-davinci-edit-001|text-similarity-ada-001|text-search-ada-doc-001|text-search-ada-query-001|code-search-ada-code-001|code-search-ada-text-001|text-similarity-babbage-001|text-search-babbage-doc-001|text-search-babbage-query-001|code-search-babbage-code-001|code-search-babbage-text-001|text-similarity-curie-001|text-search-curie-doc-001|text-search-curie-query-001|text-similarity-davinci-001|text-search-davinci-doc-001|text-search-davinci-query-001|gpt-3\\.5-turbo-0301|code-davinci-001|code-cushman-002|code-cushman-001|gpt-4o|gpt-4o-mini|gpt-4\\.1|gpt-4\\.1-mini)[\"'`](?!\\s*:\\s*[\\d{\\[])|[=:]\\s*(?:gpt-4o-2024-08-06|gpt-4o-2024-11-20|gpt-4o-mini-2024-07-18|gpt-4\\.1-2025-04-14|gpt-4\\.1-mini-2025-04-14|gpt-5\\.3-codex|gpt-5\\.4-nano|gpt-5\\.4-nano-2026-03-17|gpt-5\\.1|gpt-5\\.1-2025-11-13|tts-1|tts-1-hd|gpt-4o-mini-tts|gpt-4o-mini-tts-2025-03-20|gpt-4o-mini-tts-2025-12-15|whisper-1|gpt-4o-transcribe|gpt-4o-mini-transcribe|gpt-4o-mini-transcribe-2025-12-15|gpt-4o-transcribe-diarize|gpt-realtime|gpt-realtime-2025-08-28|gpt-audio|gpt-audio-2025-08-28|gpt-4o-audio|gpt-4o-realtime|gpt-realtime-mini|gpt-realtime-mini-2025-12-15|gpt-audio-mini|gpt-audio-mini-2025-12-15|gpt-4o-mini-realtime|gpt-4o-mini-audio|gpt-4o-mini-transcribe-2025-03-20|gpt-5|gpt-5-2025-08-07|gpt-5-mini|gpt-5-mini-2025-08-07|gpt-5-nano|gpt-5-nano-2025-08-07|gpt-5-pro|gpt-5-pro-2025-10-06|o3|o3-2025-04-16|o3-pro|o3-pro-2025-06-10|gpt-image-1-mini|gpt-image-1\\.5|gpt-image-1\\.5-2025-12-16|chatgpt-image-latest|gpt-5\\.4-cyber|gpt-5\\.2-chat-latest|gpt-5\\.3-chat-latest|gpt-3\\.5-turbo-0125|gpt-3\\.5-turbo|gpt-3\\.5-turbo-completions|gpt-4-0613|gpt-4|gpt-4-0613-completions|gpt-4-completions|gpt-4-1106-preview|gpt-4-turbo|gpt-4-turbo-2024-04-09|gpt-4-turbo-completions|gpt-4\\.1-nano|gpt-4\\.1-nano-2025-04-14|gpt-4o-2024-05-13|gpt-image-1|o1-2024-12-17|o1|o1-pro-2025-03-19|o1-pro|o3-mini-2025-01-31|o3-mini|ft-o4-mini-2025-04-16|o4-mini-2025-04-16|o4-mini|computer-use-preview-2025-03-11|computer-use-preview|gpt-4o-mini-search-preview-2025-03-11|gpt-4o-search-preview-2025-03-11|gpt-5-chat-latest|gpt-5-codex|gpt-5\\.1-chat-latest|gpt-5\\.1-codex|gpt-5\\.1-codex-max|gpt-5\\.1-codex-mini|gpt-audio-mini-2025-10-06|gpt-realtime-mini-2025-10-06|o3-deep-research-2025-06-26|o3-deep-research|o4-mini-deep-research-2025-06-26|o4-mini-deep-research|gpt-5\\.2-codex|sora-2|sora-2-pro|sora-2-2025-10-06|sora-2-2025-12-08|sora-2-pro-2025-10-06|chatgpt-4o-latest|codex-mini-latest|dall-e-2|dall-e-3|gpt-3\\.5-turbo-instruct|babbage-002|davinci-002|gpt-3\\.5-turbo-1106|gpt-4-0314|gpt-4-0125-preview|gpt-4-turbo-preview|gpt-4-turbo-preview-completions|gpt-4o-realtime-preview|gpt-4o-realtime-preview-2025-06-03|gpt-4o-realtime-preview-2024-12-17|gpt-4o-mini-realtime-preview|gpt-4o-audio-preview|gpt-4o-mini-audio-preview|gpt-4o-realtime-preview-2024-10-01|gpt-4o-audio-preview-2024-10-01|text-moderation-007|text-moderation-stable|text-moderation-latest|o1-preview|o1-mini|gpt-4\\.5-preview|gpt-4-32k|gpt-4-32k-0613|gpt-4-32k-0314|gpt-4-vision-preview|gpt-4-1106-vision-preview|gpt-3\\.5-turbo-0613|gpt-3\\.5-turbo-16k-0613|text-ada-001|text-babbage-001|text-curie-001|text-davinci-001|text-davinci-002|text-davinci-003|code-davinci-002|text-davinci-edit-001|code-davinci-edit-001|text-similarity-ada-001|text-search-ada-doc-001|text-search-ada-query-001|code-search-ada-code-001|code-search-ada-text-001|text-similarity-babbage-001|text-search-babbage-doc-001|text-search-babbage-query-001|code-search-babbage-code-001|code-search-babbage-text-001|text-similarity-curie-001|text-search-curie-doc-001|text-search-curie-query-001|text-similarity-davinci-001|text-search-davinci-doc-001|text-search-davinci-query-001|gpt-3\\.5-turbo-0301|code-davinci-001|code-cushman-002|code-cushman-001|gpt-4o|gpt-4o-mini|gpt-4\\.1|gpt-4\\.1-mini)\\s*(?:#.*)?$)",
+      "note": "An exact openai id on its retirement list. The date and successor for each id are in models."
+    },
+    {
+      "regex": "^(?!\\s*(?:#|//|\\*|/\\*|--))(?!.*(?:tiktoken|encoding_for_model|[Tt]okenizer)).*(?:[\"'`](?:gemini-3\\.1-flash-lite|gemini-3\\.1-flash-tts-preview|gemini-3-pro-preview|gemini-3\\.1-flash-lite-preview|gemini-2\\.5-computer-use-preview-10-2025|gemini-2\\.5-pro-preview-03-25|gemini-2\\.5-pro-preview-05-06|gemini-2\\.5-pro-preview-06-05|gemini-2\\.5-flash-lite-preview-09-2025|gemini-2\\.5-flash-preview-05-20|gemini-2\\.5-flash-preview-09-25|gemini-2\\.0-flash|gemini-2\\.0-flash-001|gemini-2\\.0-flash-lite|gemini-2\\.0-flash-lite-001|gemini-2\\.0-flash-lite-preview|gemini-2\\.0-flash-lite-preview-02-05|gemini-2\\.0-flash-live-001|gemini-3\\.1-flash-live-preview|gemini-2\\.5-flash-native-audio-preview-12-2025|gemini-live-2\\.5-flash-preview|gemini-2\\.5-flash-preview-tts|gemini-2\\.5-pro-preview-tts|text-embedding-004|embedding-2-preview|embedding-001|embedding-gecko-001|gemini-embedding-exp|gemini-embedding-exp-03-07|gemini-2\\.5-flash-image|gemini-3\\.1-flash-image-preview|gemini-3-pro-image-preview|gemini-2\\.5-flash-image-preview|gemini-2\\.0-flash-preview-image-generation|imagen-4\\.0-generate-001|imagen-4\\.0-ultra-generate-001|imagen-4\\.0-fast-generate-001|imagen-3\\.0-generate-002|imagen-4\\.0-generate-preview-06-06|imagen-4\\.0-ultra-generate-preview-06-06|veo-3\\.0-generate-001|veo-3\\.0-fast-generate-001|veo-2\\.0-generate-001|veo-3\\.1-lite-generate-preview|veo-3\\.1-generate-preview|veo-3\\.1-fast-generate-preview|veo-3\\.0-generate-preview|veo-3\\.0-fast-generate-preview|gemini-omni-flash-preview|gemini-robotics-er-1\\.6-preview|gemini-robotics-er-1\\.5-preview)[\"'`](?!\\s*:\\s*[\\d{\\[])|[=:]\\s*(?:gemini-3\\.1-flash-lite|gemini-3\\.1-flash-tts-preview|gemini-3-pro-preview|gemini-3\\.1-flash-lite-preview|gemini-2\\.5-computer-use-preview-10-2025|gemini-2\\.5-pro-preview-03-25|gemini-2\\.5-pro-preview-05-06|gemini-2\\.5-pro-preview-06-05|gemini-2\\.5-flash-lite-preview-09-2025|gemini-2\\.5-flash-preview-05-20|gemini-2\\.5-flash-preview-09-25|gemini-2\\.0-flash|gemini-2\\.0-flash-001|gemini-2\\.0-flash-lite|gemini-2\\.0-flash-lite-001|gemini-2\\.0-flash-lite-preview|gemini-2\\.0-flash-lite-preview-02-05|gemini-2\\.0-flash-live-001|gemini-3\\.1-flash-live-preview|gemini-2\\.5-flash-native-audio-preview-12-2025|gemini-live-2\\.5-flash-preview|gemini-2\\.5-flash-preview-tts|gemini-2\\.5-pro-preview-tts|text-embedding-004|embedding-2-preview|embedding-001|embedding-gecko-001|gemini-embedding-exp|gemini-embedding-exp-03-07|gemini-2\\.5-flash-image|gemini-3\\.1-flash-image-preview|gemini-3-pro-image-preview|gemini-2\\.5-flash-image-preview|gemini-2\\.0-flash-preview-image-generation|imagen-4\\.0-generate-001|imagen-4\\.0-ultra-generate-001|imagen-4\\.0-fast-generate-001|imagen-3\\.0-generate-002|imagen-4\\.0-generate-preview-06-06|imagen-4\\.0-ultra-generate-preview-06-06|veo-3\\.0-generate-001|veo-3\\.0-fast-generate-001|veo-2\\.0-generate-001|veo-3\\.1-lite-generate-preview|veo-3\\.1-generate-preview|veo-3\\.1-fast-generate-preview|veo-3\\.0-generate-preview|veo-3\\.0-fast-generate-preview|gemini-omni-flash-preview|gemini-robotics-er-1\\.6-preview|gemini-robotics-er-1\\.5-preview)\\s*(?:#.*)?$)",
+      "note": "An exact google id on its retirement list. The date and successor for each id are in models."
+    }
+  ],
+  "skip_if_near": [
+    "#\\[cfg\\(test\\)\\]",
+    "#\\[(tokio::)?test\\]",
+    "\\bassert(_eq|_ne)?!\\(",
+    "\\bdescribe\\(",
+    "\\bit\\(['\"`]",
+    "\\bexpect\\(",
+    "\\bdef test_",
+    "\\bassert ",
+    "@pytest\\.",
+    "\\bfunc Test[A-Z]",
+    "(?:NO|NOT|UNSUPPORTED|DISABLED|BLOCKED|SUPPORT\\w*|SKIP|EXCLUDE\\w*)_\\w*MODELS",
+    "disabledModels|[Ff]ilteredModels",
+    "\\bmodelRegistry\\b"
+  ],
+  "skip_files": [
+    "**/__tests__/**",
+    "**/test/**",
+    "**/tests/**",
+    "**/testdata/**",
+    "**/fixtures/**",
+    "**/spec/**",
+    "**/*.test.*",
+    "**/*.spec.*",
+    "**/*_test.*",
+    "**/test_*",
+    "**/test-*",
+    "**/conftest.py",
+    "**/website/**",
+    "**/docs/**",
+    "**/benchmark/**",
+    "**/benchmarks/**",
+    "**/evals/**",
+    "**/migrations/**",
+    "**/*tiktoken*"
+  ],
+  "files": [
+    "**/*.py",
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.js",
+    "**/*.jsx",
+    "**/*.mjs",
+    "**/*.cjs",
+    "**/*.rs",
+    "**/*.go",
+    "**/*.toml",
+    "**/*.yaml",
+    "**/*.yml",
+    "**/*.env.example",
+    "**/.env.example"
+  ],
+  "why": "A model id on a provider's retirement list either already returns an error or will on a stated date. Age alone is never a finding: only an id the provider itself has dated.",
+  "status": "live",
+  "effect": [
+    "keeps working"
+  ],
+  "live_from": "v0.1",
+  "models_as_of": "2026-11-01",
+  "models": [
+    {
+      "id": "claude-sonnet-4-5-20250929",
+      "provider": "anthropic",
+      "date": "2026-11-30",
+      "successors": [
+        "claude-sonnet-5-5"
+      ],
+      "earliest": false,
+      "note": "anthropic: shuts down on 2026-11-30. Provider's named successor: claude-sonnet-5-5.",
+      "source": "https://platform.claude.com/docs/en/about-claude/model-deprecations"
+    },
+    {
+      "id": "claude-opus-4-1-20250805",
+      "provider": "anthropic",
+      "date": "2026-08-05",
+      "successors": [
+        "claude-opus-4-8"
+      ],
+      "earliest": false,
+      "note": "anthropic: shut down on 2026-08-05. Provider's named successor: claude-opus-4-8.",
+      "source": "https://platform.claude.com/docs/en/about-claude/model-deprecations"
+    },
+    {
+      "id": "claude-sonnet-4-20250514",
+      "provider": "anthropic",
+      "date": "2026-06-15",
+      "successors": [
+        "claude-sonnet-5-5"
+      ],
+      "earliest": false,
+      "note": "anthropic: shut down on 2026-06-15. Provider's named successor: claude-sonnet-5-5.",
+      "source": "https://platform.claude.com/docs/en/about-claude/model-deprecations"
+    },
+    {
+      "id": "claude-opus-4-20250514",
+      "provider": "anthropic",
+      "date": "2026-06-15",
+      "successors": [
+        "claude-opus-4-8"
+      ],
+      "earliest": false,
+      "note": "anthropic: shut down on 2026-06-15. Provider's named successor: claude-opus-4-8.",
+      "source": "https://platform.claude.com/docs/en/about-claude/model-deprecations"
+    },
+    {
+      "id": "claude-3-haiku-20240307",
+      "provider": "anthropic",
+      "date": "2026-04-20",
+      "successors": [
+        "claude-haiku-4-5-20251001"
+      ],
+      "earliest": false,
+      "note": "anthropic: shut down on 2026-04-20. Provider's named successor: claude-haiku-4-5-20251001.",
+      "source": "https://platform.claude.com/docs/en/about-claude/model-deprecations"
+    },
+    {
+      "id": "claude-3-5-haiku-20241022",
+      "provider": "anthropic",
+      "date": "2026-02-19",
+      "successors": [
+        "claude-haiku-4-5-20251001"
+      ],
+      "earliest": false,
+      "note": "anthropic: shut down on 2026-02-19. Provider's named successor: claude-haiku-4-5-20251001.",
+      "source": "https://platform.claude.com/docs/en/about-claude/model-deprecations"
+    },
+    {
+      "id": "claude-3-7-sonnet-20250219",
+      "provider": "anthropic",
+      "date": "2026-02-19",
+      "successors": [
+        "claude-sonnet-5-5"
+      ],
+      "earliest": false,
+      "note": "anthropic: shut down on 2026-02-19. Provider's named successor: claude-sonnet-5-5.",
+      "source": "https://platform.claude.com/docs/en/about-claude/model-deprecations"
+    },
+    {
+      "id": "claude-3-5-sonnet-20240620",
+      "provider": "anthropic",
+      "date": "2025-10-28",
+      "successors": [
+        "claude-sonnet-5-5"
+      ],
+      "earliest": false,
+      "note": "anthropic: shut down on 2025-10-28. Provider's named successor: claude-sonnet-5-5.",
+      "source": "https://platform.claude.com/docs/en/about-claude/model-deprecations"
+    },
+    {
+      "id": "claude-3-5-sonnet-20241022",
+      "provider": "anthropic",
+      "date": "2025-10-28",
+      "successors": [
+        "claude-sonnet-5-5"
+      ],
+      "earliest": false,
+      "note": "anthropic: shut down on 2025-10-28. Provider's named successor: claude-sonnet-5-5.",
+      "source": "https://platform.claude.com/docs/en/about-claude/model-deprecations"
+    },
+    {
+      "id": "claude-3-opus-20240229",
+      "provider": "anthropic",
+      "date": "2026-01-05",
+      "successors": [
+        "claude-opus-4-8"
+      ],
+      "earliest": false,
+      "note": "anthropic: shut down on 2026-01-05. Provider's named successor: claude-opus-4-8.",
+      "source": "https://platform.claude.com/docs/en/about-claude/model-deprecations"
+    },
+    {
+      "id": "claude-2.0",
+      "provider": "anthropic",
+      "date": "2025-07-21",
+      "successors": [
+        "claude-opus-4-8"
+      ],
+      "earliest": false,
+      "note": "anthropic: shut down on 2025-07-21. Provider's named successor: claude-opus-4-8.",
+      "source": "https://platform.claude.com/docs/en/about-claude/model-deprecations"
+    },
+    {
+      "id": "claude-2.1",
+      "provider": "anthropic",
+      "date": "2025-07-21",
+      "successors": [
+        "claude-opus-4-8"
+      ],
+      "earliest": false,
+      "note": "anthropic: shut down on 2025-07-21. Provider's named successor: claude-opus-4-8.",
+      "source": "https://platform.claude.com/docs/en/about-claude/model-deprecations"
+    },
+    {
+      "id": "claude-3-sonnet-20240229",
+      "provider": "anthropic",
+      "date": "2025-07-21",
+      "successors": [
+        "claude-sonnet-5-5"
+      ],
+      "earliest": false,
+      "note": "anthropic: shut down on 2025-07-21. Provider's named successor: claude-sonnet-5-5.",
+      "source": "https://platform.claude.com/docs/en/about-claude/model-deprecations"
+    },
+    {
+      "id": "claude-1.0",
+      "provider": "anthropic",
+      "date": "2024-11-06",
+      "successors": [
+        "claude-haiku-4-5-20251001"
+      ],
+      "earliest": false,
+      "note": "anthropic: shut down on 2024-11-06. Provider's named successor: claude-haiku-4-5-20251001.",
+      "source": "https://platform.claude.com/docs/en/about-claude/model-deprecations"
+    },
+    {
+      "id": "claude-1.1",
+      "provider": "anthropic",
+      "date": "2024-11-06",
+      "successors": [
+        "claude-haiku-4-5-20251001"
+      ],
+      "earliest": false,
+      "note": "anthropic: shut down on 2024-11-06. Provider's named successor: claude-haiku-4-5-20251001.",
+      "source": "https://platform.claude.com/docs/en/about-claude/model-deprecations"
+    },
+    {
+      "id": "claude-1.2",
+      "provider": "anthropic",
+      "date": "2024-11-06",
+      "successors": [
+        "claude-haiku-4-5-20251001"
+      ],
+      "earliest": false,
+      "note": "anthropic: shut down on 2024-11-06. Provider's named successor: claude-haiku-4-5-20251001.",
+      "source": "https://platform.claude.com/docs/en/about-claude/model-deprecations"
+    },
+    {
+      "id": "claude-1.3",
+      "provider": "anthropic",
+      "date": "2024-11-06",
+      "successors": [
+        "claude-haiku-4-5-20251001"
+      ],
+      "earliest": false,
+      "note": "anthropic: shut down on 2024-11-06. Provider's named successor: claude-haiku-4-5-20251001.",
+      "source": "https://platform.claude.com/docs/en/about-claude/model-deprecations"
+    },
+    {
+      "id": "claude-instant-1.0",
+      "provider": "anthropic",
+      "date": "2024-11-06",
+      "successors": [
+        "claude-haiku-4-5-20251001"
+      ],
+      "earliest": false,
+      "note": "anthropic: shut down on 2024-11-06. Provider's named successor: claude-haiku-4-5-20251001.",
+      "source": "https://platform.claude.com/docs/en/about-claude/model-deprecations"
+    },
+    {
+      "id": "claude-instant-1.1",
+      "provider": "anthropic",
+      "date": "2024-11-06",
+      "successors": [
+        "claude-haiku-4-5-20251001"
+      ],
+      "earliest": false,
+      "note": "anthropic: shut down on 2024-11-06. Provider's named successor: claude-haiku-4-5-20251001.",
+      "source": "https://platform.claude.com/docs/en/about-claude/model-deprecations"
+    },
+    {
+      "id": "claude-instant-1.2",
+      "provider": "anthropic",
+      "date": "2024-11-06",
+      "successors": [
+        "claude-haiku-4-5-20251001"
+      ],
+      "earliest": false,
+      "note": "anthropic: shut down on 2024-11-06. Provider's named successor: claude-haiku-4-5-20251001.",
+      "source": "https://platform.claude.com/docs/en/about-claude/model-deprecations"
+    },
+    {
+      "id": "gpt-4o-2024-08-06",
+      "provider": "openai",
+      "date": "2027-01-14",
+      "successors": [
+        "gpt-6-luna"
+      ],
+      "earliest": false,
+      "note": "openai: shuts down on 2027-01-14. Provider's named successor: gpt-6-luna.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-4o-2024-11-20",
+      "provider": "openai",
+      "date": "2027-01-14",
+      "successors": [
+        "gpt-6-luna"
+      ],
+      "earliest": false,
+      "note": "openai: shuts down on 2027-01-14. Provider's named successor: gpt-6-luna.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-4o-mini-2024-07-18",
+      "provider": "openai",
+      "date": "2027-01-14",
+      "successors": [
+        "gpt-6-luna"
+      ],
+      "earliest": false,
+      "note": "openai: shuts down on 2027-01-14. Provider's named successor: gpt-6-luna.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-4.1-2025-04-14",
+      "provider": "openai",
+      "date": "2027-01-14",
+      "successors": [
+        "gpt-6-luna"
+      ],
+      "earliest": false,
+      "note": "openai: shuts down on 2027-01-14. Provider's named successor: gpt-6-luna.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-4.1-mini-2025-04-14",
+      "provider": "openai",
+      "date": "2027-01-14",
+      "successors": [
+        "gpt-6-luna"
+      ],
+      "earliest": false,
+      "note": "openai: shuts down on 2027-01-14. Provider's named successor: gpt-6-luna.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-5.3-codex",
+      "provider": "openai",
+      "date": "2027-04-01",
+      "successors": [
+        "gpt-6-sol"
+      ],
+      "earliest": false,
+      "note": "openai: shuts down on 2027-04-01. Provider's named successor: gpt-6-sol.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-5.4-nano",
+      "provider": "openai",
+      "date": "2027-04-01",
+      "successors": [
+        "gpt-6-luna"
+      ],
+      "earliest": false,
+      "note": "openai: shuts down on 2027-04-01. Provider's named successor: gpt-6-luna.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-5.4-nano-2026-03-17",
+      "provider": "openai",
+      "date": "2027-04-01",
+      "successors": [
+        "gpt-6-luna"
+      ],
+      "earliest": false,
+      "note": "openai: shuts down on 2027-04-01. Provider's named successor: gpt-6-luna.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-5.1",
+      "provider": "openai",
+      "date": "2027-04-01",
+      "successors": [
+        "gpt-6-sol"
+      ],
+      "earliest": false,
+      "note": "openai: shuts down on 2027-04-01. Provider's named successor: gpt-6-sol.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-5.1-2025-11-13",
+      "provider": "openai",
+      "date": "2027-04-01",
+      "successors": [
+        "gpt-6-sol"
+      ],
+      "earliest": false,
+      "note": "openai: shuts down on 2027-04-01. Provider's named successor: gpt-6-sol.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "tts-1",
+      "provider": "openai",
+      "date": "2027-01-06",
+      "successors": [
+        "gpt-realtime-2.1-mini"
+      ],
+      "earliest": false,
+      "note": "openai: shuts down on 2027-01-06. Provider's named successor: gpt-realtime-2.1-mini.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "tts-1-hd",
+      "provider": "openai",
+      "date": "2027-01-06",
+      "successors": [
+        "gpt-realtime-2.1-mini"
+      ],
+      "earliest": false,
+      "note": "openai: shuts down on 2027-01-06. Provider's named successor: gpt-realtime-2.1-mini.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-4o-mini-tts",
+      "provider": "openai",
+      "date": "2027-01-06",
+      "successors": [
+        "gpt-realtime-2.1-mini"
+      ],
+      "earliest": false,
+      "note": "openai: shuts down on 2027-01-06. Provider's named successor: gpt-realtime-2.1-mini.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-4o-mini-tts-2025-03-20",
+      "provider": "openai",
+      "date": "2027-01-06",
+      "successors": [
+        "gpt-realtime-2.1-mini"
+      ],
+      "earliest": false,
+      "note": "openai: shuts down on 2027-01-06. Provider's named successor: gpt-realtime-2.1-mini.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-4o-mini-tts-2025-12-15",
+      "provider": "openai",
+      "date": "2027-01-06",
+      "successors": [
+        "gpt-realtime-2.1-mini"
+      ],
+      "earliest": false,
+      "note": "openai: shuts down on 2027-01-06. Provider's named successor: gpt-realtime-2.1-mini.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "whisper-1",
+      "provider": "openai",
+      "date": "2027-02-26",
+      "successors": [
+        "gpt-live-transcribe",
+        "gpt-transcribe"
+      ],
+      "earliest": false,
+      "note": "openai: shuts down on 2027-02-26. Provider's named successor: gpt-live-transcribe or gpt-transcribe.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-4o-transcribe",
+      "provider": "openai",
+      "date": "2027-02-26",
+      "successors": [
+        "gpt-live-transcribe",
+        "gpt-transcribe"
+      ],
+      "earliest": false,
+      "note": "openai: shuts down on 2027-02-26. Provider's named successor: gpt-live-transcribe or gpt-transcribe.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-4o-mini-transcribe",
+      "provider": "openai",
+      "date": "2027-02-26",
+      "successors": [
+        "gpt-live-transcribe",
+        "gpt-transcribe"
+      ],
+      "earliest": false,
+      "note": "openai: shuts down on 2027-02-26. Provider's named successor: gpt-live-transcribe or gpt-transcribe.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-4o-mini-transcribe-2025-12-15",
+      "provider": "openai",
+      "date": "2027-02-26",
+      "successors": [
+        "gpt-live-transcribe",
+        "gpt-transcribe"
+      ],
+      "earliest": false,
+      "note": "openai: shuts down on 2027-02-26. Provider's named successor: gpt-live-transcribe or gpt-transcribe.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-4o-transcribe-diarize",
+      "provider": "openai",
+      "date": "2027-02-26",
+      "successors": [
+        "gpt-live-transcribe",
+        "gpt-transcribe"
+      ],
+      "earliest": false,
+      "note": "openai: shuts down on 2027-02-26. Provider's named successor: gpt-live-transcribe or gpt-transcribe.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-realtime",
+      "provider": "openai",
+      "date": "2027-01-20",
+      "successors": [
+        "gpt-realtime-2.1"
+      ],
+      "earliest": false,
+      "note": "openai: shuts down on 2027-01-20. Provider's named successor: gpt-realtime-2.1.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-realtime-2025-08-28",
+      "provider": "openai",
+      "date": "2027-01-20",
+      "successors": [
+        "gpt-realtime-2.1"
+      ],
+      "earliest": false,
+      "note": "openai: shuts down on 2027-01-20. Provider's named successor: gpt-realtime-2.1.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-audio",
+      "provider": "openai",
+      "date": "2027-01-20",
+      "successors": [
+        "gpt-audio-1.5"
+      ],
+      "earliest": false,
+      "note": "openai: shuts down on 2027-01-20. Provider's named successor: gpt-audio-1.5.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-audio-2025-08-28",
+      "provider": "openai",
+      "date": "2027-01-20",
+      "successors": [
+        "gpt-audio-1.5"
+      ],
+      "earliest": false,
+      "note": "openai: shuts down on 2027-01-20. Provider's named successor: gpt-audio-1.5.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-4o-audio",
+      "provider": "openai",
+      "date": "2027-01-20",
+      "successors": [
+        "gpt-audio-1.5"
+      ],
+      "earliest": false,
+      "note": "openai: shuts down on 2027-01-20. Provider's named successor: gpt-audio-1.5.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-4o-realtime",
+      "provider": "openai",
+      "date": "2027-01-20",
+      "successors": [
+        "gpt-realtime-2.1"
+      ],
+      "earliest": false,
+      "note": "openai: shuts down on 2027-01-20. Provider's named successor: gpt-realtime-2.1.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-realtime-mini",
+      "provider": "openai",
+      "date": "2027-01-20",
+      "successors": [
+        "gpt-realtime-2.1-mini"
+      ],
+      "earliest": false,
+      "note": "openai: shuts down on 2027-01-20. Provider's named successor: gpt-realtime-2.1-mini.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-realtime-mini-2025-12-15",
+      "provider": "openai",
+      "date": "2027-01-20",
+      "successors": [
+        "gpt-realtime-2.1-mini"
+      ],
+      "earliest": false,
+      "note": "openai: shuts down on 2027-01-20. Provider's named successor: gpt-realtime-2.1-mini.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-audio-mini",
+      "provider": "openai",
+      "date": "2027-01-20",
+      "successors": [
+        "gpt-audio-1.5"
+      ],
+      "earliest": false,
+      "note": "openai: shuts down on 2027-01-20. Provider's named successor: gpt-audio-1.5.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-audio-mini-2025-12-15",
+      "provider": "openai",
+      "date": "2027-01-20",
+      "successors": [
+        "gpt-audio-1.5"
+      ],
+      "earliest": false,
+      "note": "openai: shuts down on 2027-01-20. Provider's named successor: gpt-audio-1.5.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-4o-mini-realtime",
+      "provider": "openai",
+      "date": "2027-01-20",
+      "successors": [
+        "gpt-realtime-2.1-mini"
+      ],
+      "earliest": false,
+      "note": "openai: shuts down on 2027-01-20. Provider's named successor: gpt-realtime-2.1-mini.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-4o-mini-audio",
+      "provider": "openai",
+      "date": "2027-01-20",
+      "successors": [
+        "gpt-audio-1.5"
+      ],
+      "earliest": false,
+      "note": "openai: shuts down on 2027-01-20. Provider's named successor: gpt-audio-1.5.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-4o-mini-transcribe-2025-03-20",
+      "provider": "openai",
+      "date": "2027-01-20",
+      "successors": [
+        "gpt-4o-mini-transcribe-2025-12-15"
+      ],
+      "earliest": false,
+      "note": "openai: shuts down on 2027-01-20. Provider's named successor: gpt-4o-mini-transcribe-2025-12-15.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-5",
+      "provider": "openai",
+      "date": "2026-12-11",
+      "successors": [
+        "gpt-5.6-sol"
+      ],
+      "earliest": false,
+      "note": "openai: shuts down on 2026-12-11. Provider's named successor: gpt-5.6-sol.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-5-2025-08-07",
+      "provider": "openai",
+      "date": "2026-12-11",
+      "successors": [
+        "gpt-5.6-sol"
+      ],
+      "earliest": false,
+      "note": "openai: shuts down on 2026-12-11. Provider's named successor: gpt-5.6-sol.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-5-mini",
+      "provider": "openai",
+      "date": "2026-12-11",
+      "successors": [
+        "gpt-5.6-terra"
+      ],
+      "earliest": false,
+      "note": "openai: shuts down on 2026-12-11. Provider's named successor: gpt-5.6-terra.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-5-mini-2025-08-07",
+      "provider": "openai",
+      "date": "2026-12-11",
+      "successors": [
+        "gpt-5.6-terra"
+      ],
+      "earliest": false,
+      "note": "openai: shuts down on 2026-12-11. Provider's named successor: gpt-5.6-terra.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-5-nano",
+      "provider": "openai",
+      "date": "2026-12-11",
+      "successors": [
+        "gpt-5.6-luna"
+      ],
+      "earliest": false,
+      "note": "openai: shuts down on 2026-12-11. Provider's named successor: gpt-5.6-luna.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-5-nano-2025-08-07",
+      "provider": "openai",
+      "date": "2026-12-11",
+      "successors": [
+        "gpt-5.6-luna"
+      ],
+      "earliest": false,
+      "note": "openai: shuts down on 2026-12-11. Provider's named successor: gpt-5.6-luna.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-5-pro",
+      "provider": "openai",
+      "date": "2026-12-11",
+      "successors": [
+        "gpt-5.6-sol",
+        "reasoning.mode: pro"
+      ],
+      "earliest": false,
+      "note": "openai: shuts down on 2026-12-11. Provider's named successor: gpt-5.6-sol or reasoning.mode: pro.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-5-pro-2025-10-06",
+      "provider": "openai",
+      "date": "2026-12-11",
+      "successors": [
+        "gpt-5.6-sol",
+        "reasoning.mode: pro"
+      ],
+      "earliest": false,
+      "note": "openai: shuts down on 2026-12-11. Provider's named successor: gpt-5.6-sol or reasoning.mode: pro.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "o3",
+      "provider": "openai",
+      "date": "2026-12-11",
+      "successors": [
+        "gpt-5.6-sol"
+      ],
+      "earliest": false,
+      "note": "openai: shuts down on 2026-12-11. Provider's named successor: gpt-5.6-sol.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "o3-2025-04-16",
+      "provider": "openai",
+      "date": "2026-12-11",
+      "successors": [
+        "gpt-5.6-sol"
+      ],
+      "earliest": false,
+      "note": "openai: shuts down on 2026-12-11. Provider's named successor: gpt-5.6-sol.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "o3-pro",
+      "provider": "openai",
+      "date": "2026-12-11",
+      "successors": [
+        "gpt-5.6-sol",
+        "reasoning.mode: pro"
+      ],
+      "earliest": false,
+      "note": "openai: shuts down on 2026-12-11. Provider's named successor: gpt-5.6-sol or reasoning.mode: pro.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "o3-pro-2025-06-10",
+      "provider": "openai",
+      "date": "2026-12-11",
+      "successors": [
+        "gpt-5.6-sol",
+        "reasoning.mode: pro"
+      ],
+      "earliest": false,
+      "note": "openai: shuts down on 2026-12-11. Provider's named successor: gpt-5.6-sol or reasoning.mode: pro.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-image-1-mini",
+      "provider": "openai",
+      "date": "2026-12-01",
+      "successors": [
+        "gpt-image-2.5-sunburst",
+        "gpt-image-2.5-flare"
+      ],
+      "earliest": false,
+      "note": "openai: shuts down on 2026-12-01. Provider's named successor: gpt-image-2.5-sunburst or gpt-image-2.5-flare.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-image-1.5",
+      "provider": "openai",
+      "date": "2026-12-01",
+      "successors": [
+        "gpt-image-2.5-sunburst",
+        "gpt-image-2.5-flare"
+      ],
+      "earliest": false,
+      "note": "openai: shuts down on 2026-12-01. Provider's named successor: gpt-image-2.5-sunburst or gpt-image-2.5-flare.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-image-1.5-2025-12-16",
+      "provider": "openai",
+      "date": "2026-12-01",
+      "successors": [
+        "gpt-image-2.5-sunburst",
+        "gpt-image-2.5-flare"
+      ],
+      "earliest": false,
+      "note": "openai: shuts down on 2026-12-01. Provider's named successor: gpt-image-2.5-sunburst or gpt-image-2.5-flare.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "chatgpt-image-latest",
+      "provider": "openai",
+      "date": "2026-12-01",
+      "successors": [
+        "gpt-image-2.5-sunburst",
+        "gpt-image-2.5-flare"
+      ],
+      "earliest": false,
+      "note": "openai: shuts down on 2026-12-01. Provider's named successor: gpt-image-2.5-sunburst or gpt-image-2.5-flare.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-5.4-cyber",
+      "provider": "openai",
+      "date": "2026-10-01",
+      "successors": [],
+      "earliest": false,
+      "note": "openai: shut down on 2026-10-01. The provider names no successor.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-5.2-chat-latest",
+      "provider": "openai",
+      "date": "2026-08-10",
+      "successors": [
+        "gpt-5.6-sol"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2026-08-10. Provider's named successor: gpt-5.6-sol.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-5.3-chat-latest",
+      "provider": "openai",
+      "date": "2026-08-10",
+      "successors": [
+        "gpt-5.6-sol"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2026-08-10. Provider's named successor: gpt-5.6-sol.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-3.5-turbo-0125",
+      "provider": "openai",
+      "date": "2026-10-23",
+      "successors": [
+        "gpt-5.6-terra"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2026-10-23. Provider's named successor: gpt-5.6-terra.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-3.5-turbo",
+      "provider": "openai",
+      "date": "2026-10-23",
+      "successors": [
+        "gpt-5.6-terra"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2026-10-23. Provider's named successor: gpt-5.6-terra.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-3.5-turbo-completions",
+      "provider": "openai",
+      "date": "2026-10-23",
+      "successors": [
+        "gpt-5.6-terra"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2026-10-23. Provider's named successor: gpt-5.6-terra.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-4-0613",
+      "provider": "openai",
+      "date": "2026-10-23",
+      "successors": [
+        "gpt-5.6-sol"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2026-10-23. Provider's named successor: gpt-5.6-sol.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-4",
+      "provider": "openai",
+      "date": "2026-10-23",
+      "successors": [
+        "gpt-5.6-sol"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2026-10-23. Provider's named successor: gpt-5.6-sol.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-4-0613-completions",
+      "provider": "openai",
+      "date": "2026-10-23",
+      "successors": [
+        "gpt-5.6-sol"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2026-10-23. Provider's named successor: gpt-5.6-sol.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-4-completions",
+      "provider": "openai",
+      "date": "2026-10-23",
+      "successors": [
+        "gpt-5.6-sol"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2026-10-23. Provider's named successor: gpt-5.6-sol.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-4-1106-preview",
+      "provider": "openai",
+      "date": "2026-10-23",
+      "successors": [
+        "gpt-5.6-sol"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2026-10-23. Provider's named successor: gpt-5.6-sol.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-4-turbo",
+      "provider": "openai",
+      "date": "2026-10-23",
+      "successors": [
+        "gpt-5.6-sol"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2026-10-23. Provider's named successor: gpt-5.6-sol.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-4-turbo-2024-04-09",
+      "provider": "openai",
+      "date": "2026-10-23",
+      "successors": [
+        "gpt-5.6-sol"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2026-10-23. Provider's named successor: gpt-5.6-sol.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-4-turbo-completions",
+      "provider": "openai",
+      "date": "2026-10-23",
+      "successors": [
+        "gpt-5.6-sol"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2026-10-23. Provider's named successor: gpt-5.6-sol.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-4.1-nano",
+      "provider": "openai",
+      "date": "2026-10-23",
+      "successors": [
+        "gpt-5.6-luna"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2026-10-23. Provider's named successor: gpt-5.6-luna.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-4.1-nano-2025-04-14",
+      "provider": "openai",
+      "date": "2026-10-23",
+      "successors": [
+        "gpt-5.6-luna"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2026-10-23. Provider's named successor: gpt-5.6-luna.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-4o-2024-05-13",
+      "provider": "openai",
+      "date": "2026-10-23",
+      "successors": [
+        "gpt-5.6-sol"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2026-10-23. Provider's named successor: gpt-5.6-sol.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-image-1",
+      "provider": "openai",
+      "date": "2026-10-23",
+      "successors": [
+        "gpt-image-2.5-sunburst",
+        "gpt-image-2.5-flare"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2026-10-23. Provider's named successor: gpt-image-2.5-sunburst or gpt-image-2.5-flare.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "o1-2024-12-17",
+      "provider": "openai",
+      "date": "2026-10-23",
+      "successors": [
+        "gpt-5.6-sol"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2026-10-23. Provider's named successor: gpt-5.6-sol.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "o1",
+      "provider": "openai",
+      "date": "2026-10-23",
+      "successors": [
+        "gpt-5.6-sol"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2026-10-23. Provider's named successor: gpt-5.6-sol.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "o1-pro-2025-03-19",
+      "provider": "openai",
+      "date": "2026-10-23",
+      "successors": [
+        "gpt-5.6-sol",
+        "reasoning.mode: pro"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2026-10-23. Provider's named successor: gpt-5.6-sol or reasoning.mode: pro.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "o1-pro",
+      "provider": "openai",
+      "date": "2026-10-23",
+      "successors": [
+        "gpt-5.6-sol",
+        "reasoning.mode: pro"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2026-10-23. Provider's named successor: gpt-5.6-sol or reasoning.mode: pro.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "o3-mini-2025-01-31",
+      "provider": "openai",
+      "date": "2026-10-23",
+      "successors": [
+        "gpt-5.6-sol"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2026-10-23. Provider's named successor: gpt-5.6-sol.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "o3-mini",
+      "provider": "openai",
+      "date": "2026-10-23",
+      "successors": [
+        "gpt-5.6-sol"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2026-10-23. Provider's named successor: gpt-5.6-sol.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "ft-o4-mini-2025-04-16",
+      "provider": "openai",
+      "date": "2026-10-23",
+      "successors": [
+        "gpt-5.6-terra"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2026-10-23. Provider's named successor: gpt-5.6-terra.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "o4-mini-2025-04-16",
+      "provider": "openai",
+      "date": "2026-10-23",
+      "successors": [
+        "gpt-5.6-terra"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2026-10-23. Provider's named successor: gpt-5.6-terra.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "o4-mini",
+      "provider": "openai",
+      "date": "2026-10-23",
+      "successors": [
+        "gpt-5.6-terra"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2026-10-23. Provider's named successor: gpt-5.6-terra.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "computer-use-preview-2025-03-11",
+      "provider": "openai",
+      "date": "2026-07-23",
+      "successors": [
+        "gpt-5.6-terra"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2026-07-23. Provider's named successor: gpt-5.6-terra.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "computer-use-preview",
+      "provider": "openai",
+      "date": "2026-07-23",
+      "successors": [
+        "gpt-5.6-terra"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2026-07-23. Provider's named successor: gpt-5.6-terra.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-4o-mini-search-preview-2025-03-11",
+      "provider": "openai",
+      "date": "2026-07-23",
+      "successors": [
+        "gpt-5.6-terra"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2026-07-23. Provider's named successor: gpt-5.6-terra.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-4o-search-preview-2025-03-11",
+      "provider": "openai",
+      "date": "2026-07-23",
+      "successors": [
+        "gpt-5.6-terra"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2026-07-23. Provider's named successor: gpt-5.6-terra.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-5-chat-latest",
+      "provider": "openai",
+      "date": "2026-07-23",
+      "successors": [
+        "gpt-5.6-sol"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2026-07-23. Provider's named successor: gpt-5.6-sol.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-5-codex",
+      "provider": "openai",
+      "date": "2026-07-23",
+      "successors": [
+        "gpt-5.6-sol"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2026-07-23. Provider's named successor: gpt-5.6-sol.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-5.1-chat-latest",
+      "provider": "openai",
+      "date": "2026-07-23",
+      "successors": [
+        "gpt-5.6-sol"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2026-07-23. Provider's named successor: gpt-5.6-sol.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-5.1-codex",
+      "provider": "openai",
+      "date": "2026-07-23",
+      "successors": [
+        "gpt-5.6-sol"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2026-07-23. Provider's named successor: gpt-5.6-sol.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-5.1-codex-max",
+      "provider": "openai",
+      "date": "2026-07-23",
+      "successors": [
+        "gpt-5.6-sol"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2026-07-23. Provider's named successor: gpt-5.6-sol.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-5.1-codex-mini",
+      "provider": "openai",
+      "date": "2026-07-23",
+      "successors": [
+        "gpt-5.6-terra"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2026-07-23. Provider's named successor: gpt-5.6-terra.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-audio-mini-2025-10-06",
+      "provider": "openai",
+      "date": "2026-07-23",
+      "successors": [
+        "gpt-audio-1.5"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2026-07-23. Provider's named successor: gpt-audio-1.5.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-realtime-mini-2025-10-06",
+      "provider": "openai",
+      "date": "2026-07-23",
+      "successors": [
+        "gpt-realtime-2.1-mini"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2026-07-23. Provider's named successor: gpt-realtime-2.1-mini.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "o3-deep-research-2025-06-26",
+      "provider": "openai",
+      "date": "2026-07-23",
+      "successors": [
+        "gpt-5.6-sol"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2026-07-23. Provider's named successor: gpt-5.6-sol.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "o3-deep-research",
+      "provider": "openai",
+      "date": "2026-07-23",
+      "successors": [
+        "gpt-5.6-sol"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2026-07-23. Provider's named successor: gpt-5.6-sol.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "o4-mini-deep-research-2025-06-26",
+      "provider": "openai",
+      "date": "2026-07-23",
+      "successors": [
+        "gpt-5.6-sol"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2026-07-23. Provider's named successor: gpt-5.6-sol.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "o4-mini-deep-research",
+      "provider": "openai",
+      "date": "2026-07-23",
+      "successors": [
+        "gpt-5.6-sol"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2026-07-23. Provider's named successor: gpt-5.6-sol.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-5.2-codex",
+      "provider": "openai",
+      "date": "2026-07-23",
+      "successors": [
+        "gpt-5.6-sol"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2026-07-23. Provider's named successor: gpt-5.6-sol.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "sora-2",
+      "provider": "openai",
+      "date": "2026-09-24",
+      "successors": [],
+      "earliest": false,
+      "note": "openai: shut down on 2026-09-24. The provider names no successor.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "sora-2-pro",
+      "provider": "openai",
+      "date": "2026-09-24",
+      "successors": [],
+      "earliest": false,
+      "note": "openai: shut down on 2026-09-24. The provider names no successor.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "sora-2-2025-10-06",
+      "provider": "openai",
+      "date": "2026-09-24",
+      "successors": [],
+      "earliest": false,
+      "note": "openai: shut down on 2026-09-24. The provider names no successor.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "sora-2-2025-12-08",
+      "provider": "openai",
+      "date": "2026-09-24",
+      "successors": [],
+      "earliest": false,
+      "note": "openai: shut down on 2026-09-24. The provider names no successor.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "sora-2-pro-2025-10-06",
+      "provider": "openai",
+      "date": "2026-09-24",
+      "successors": [],
+      "earliest": false,
+      "note": "openai: shut down on 2026-09-24. The provider names no successor.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "chatgpt-4o-latest",
+      "provider": "openai",
+      "date": "2026-02-17",
+      "successors": [
+        "gpt-5.1-chat-latest"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2026-02-17. Provider's named successor: gpt-5.1-chat-latest.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "codex-mini-latest",
+      "provider": "openai",
+      "date": "2026-02-12",
+      "successors": [
+        "gpt-5-codex-mini"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2026-02-12. Provider's named successor: gpt-5-codex-mini.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "dall-e-2",
+      "provider": "openai",
+      "date": "2026-05-12",
+      "successors": [
+        "gpt-image-2",
+        "gpt-image-1",
+        "gpt-image-1-mini"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2026-05-12. Provider's named successor: gpt-image-2 or gpt-image-1 or gpt-image-1-mini.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "dall-e-3",
+      "provider": "openai",
+      "date": "2026-05-12",
+      "successors": [
+        "gpt-image-2",
+        "gpt-image-1",
+        "gpt-image-1-mini"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2026-05-12. Provider's named successor: gpt-image-2 or gpt-image-1 or gpt-image-1-mini.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-3.5-turbo-instruct",
+      "provider": "openai",
+      "date": "2026-09-28",
+      "successors": [
+        "gpt-5.6-terra"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2026-09-28. Provider's named successor: gpt-5.6-terra.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "babbage-002",
+      "provider": "openai",
+      "date": "2026-09-28",
+      "successors": [
+        "gpt-5.6-terra"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2026-09-28. Provider's named successor: gpt-5.6-terra.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "davinci-002",
+      "provider": "openai",
+      "date": "2026-09-28",
+      "successors": [
+        "gpt-5.6-terra"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2026-09-28. Provider's named successor: gpt-5.6-terra.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-3.5-turbo-1106",
+      "provider": "openai",
+      "date": "2026-09-28",
+      "successors": [
+        "gpt-5.6-terra"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2026-09-28. Provider's named successor: gpt-5.6-terra.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-4-0314",
+      "provider": "openai",
+      "date": "2026-03-26",
+      "successors": [
+        "gpt-5",
+        "gpt-4.1*"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2026-03-26. Provider's named successor: gpt-5 or gpt-4.1*.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-4-0125-preview",
+      "provider": "openai",
+      "date": "2026-03-26",
+      "successors": [
+        "gpt-5",
+        "gpt-4.1*"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2026-03-26. Provider's named successor: gpt-5 or gpt-4.1*.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-4-turbo-preview",
+      "provider": "openai",
+      "date": "2026-03-26",
+      "successors": [
+        "gpt-5",
+        "gpt-4.1*"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2026-03-26. Provider's named successor: gpt-5 or gpt-4.1*.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-4-turbo-preview-completions",
+      "provider": "openai",
+      "date": "2026-03-26",
+      "successors": [
+        "gpt-5",
+        "gpt-4.1*"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2026-03-26. Provider's named successor: gpt-5 or gpt-4.1*.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-4o-realtime-preview",
+      "provider": "openai",
+      "date": "2026-05-07",
+      "successors": [
+        "gpt-realtime-1.5"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2026-05-07. Provider's named successor: gpt-realtime-1.5.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-4o-realtime-preview-2025-06-03",
+      "provider": "openai",
+      "date": "2026-05-07",
+      "successors": [
+        "gpt-realtime-1.5"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2026-05-07. Provider's named successor: gpt-realtime-1.5.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-4o-realtime-preview-2024-12-17",
+      "provider": "openai",
+      "date": "2026-05-07",
+      "successors": [
+        "gpt-realtime-1.5"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2026-05-07. Provider's named successor: gpt-realtime-1.5.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-4o-mini-realtime-preview",
+      "provider": "openai",
+      "date": "2026-05-07",
+      "successors": [
+        "gpt-realtime-mini"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2026-05-07. Provider's named successor: gpt-realtime-mini.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-4o-audio-preview",
+      "provider": "openai",
+      "date": "2026-05-07",
+      "successors": [
+        "gpt-audio-1.5"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2026-05-07. Provider's named successor: gpt-audio-1.5.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-4o-mini-audio-preview",
+      "provider": "openai",
+      "date": "2026-05-07",
+      "successors": [
+        "gpt-audio-mini"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2026-05-07. Provider's named successor: gpt-audio-mini.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-4o-realtime-preview-2024-10-01",
+      "provider": "openai",
+      "date": "2025-10-10",
+      "successors": [
+        "gpt-realtime-1.5"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2025-10-10. Provider's named successor: gpt-realtime-1.5.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-4o-audio-preview-2024-10-01",
+      "provider": "openai",
+      "date": "2025-10-10",
+      "successors": [
+        "gpt-audio-1.5"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2025-10-10. Provider's named successor: gpt-audio-1.5.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "text-moderation-007",
+      "provider": "openai",
+      "date": "2025-10-27",
+      "successors": [
+        "omni-moderation"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2025-10-27. Provider's named successor: omni-moderation.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "text-moderation-stable",
+      "provider": "openai",
+      "date": "2025-10-27",
+      "successors": [
+        "omni-moderation"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2025-10-27. Provider's named successor: omni-moderation.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "text-moderation-latest",
+      "provider": "openai",
+      "date": "2025-10-27",
+      "successors": [
+        "omni-moderation"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2025-10-27. Provider's named successor: omni-moderation.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "o1-preview",
+      "provider": "openai",
+      "date": "2025-07-28",
+      "successors": [
+        "o3"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2025-07-28. Provider's named successor: o3.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "o1-mini",
+      "provider": "openai",
+      "date": "2025-10-27",
+      "successors": [
+        "o4-mini"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2025-10-27. Provider's named successor: o4-mini.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-4.5-preview",
+      "provider": "openai",
+      "date": "2025-07-14",
+      "successors": [
+        "gpt-4.1"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2025-07-14. Provider's named successor: gpt-4.1.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-4-32k",
+      "provider": "openai",
+      "date": "2025-06-06",
+      "successors": [
+        "gpt-4o"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2025-06-06. Provider's named successor: gpt-4o.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-4-32k-0613",
+      "provider": "openai",
+      "date": "2025-06-06",
+      "successors": [
+        "gpt-4o"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2025-06-06. Provider's named successor: gpt-4o.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-4-32k-0314",
+      "provider": "openai",
+      "date": "2025-06-06",
+      "successors": [
+        "gpt-4o"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2025-06-06. Provider's named successor: gpt-4o.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-4-vision-preview",
+      "provider": "openai",
+      "date": "2024-12-06",
+      "successors": [
+        "gpt-4o"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2024-12-06. Provider's named successor: gpt-4o.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-4-1106-vision-preview",
+      "provider": "openai",
+      "date": "2024-12-06",
+      "successors": [
+        "gpt-4o"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2024-12-06. Provider's named successor: gpt-4o.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-3.5-turbo-0613",
+      "provider": "openai",
+      "date": "2024-09-13",
+      "successors": [
+        "gpt-3.5-turbo"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2024-09-13. Provider's named successor: gpt-3.5-turbo.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-3.5-turbo-16k-0613",
+      "provider": "openai",
+      "date": "2024-09-13",
+      "successors": [
+        "gpt-3.5-turbo"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2024-09-13. Provider's named successor: gpt-3.5-turbo.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "text-ada-001",
+      "provider": "openai",
+      "date": "2024-01-04",
+      "successors": [
+        "gpt-3.5-turbo-instruct"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2024-01-04. Provider's named successor: gpt-3.5-turbo-instruct.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "text-babbage-001",
+      "provider": "openai",
+      "date": "2024-01-04",
+      "successors": [
+        "gpt-3.5-turbo-instruct"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2024-01-04. Provider's named successor: gpt-3.5-turbo-instruct.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "text-curie-001",
+      "provider": "openai",
+      "date": "2024-01-04",
+      "successors": [
+        "gpt-3.5-turbo-instruct"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2024-01-04. Provider's named successor: gpt-3.5-turbo-instruct.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "text-davinci-001",
+      "provider": "openai",
+      "date": "2024-01-04",
+      "successors": [
+        "gpt-3.5-turbo-instruct"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2024-01-04. Provider's named successor: gpt-3.5-turbo-instruct.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "text-davinci-002",
+      "provider": "openai",
+      "date": "2024-01-04",
+      "successors": [
+        "gpt-3.5-turbo-instruct"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2024-01-04. Provider's named successor: gpt-3.5-turbo-instruct.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "text-davinci-003",
+      "provider": "openai",
+      "date": "2024-01-04",
+      "successors": [
+        "gpt-3.5-turbo-instruct"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2024-01-04. Provider's named successor: gpt-3.5-turbo-instruct.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "code-davinci-002",
+      "provider": "openai",
+      "date": "2024-01-04",
+      "successors": [
+        "gpt-3.5-turbo-instruct"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2024-01-04. Provider's named successor: gpt-3.5-turbo-instruct.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "text-davinci-edit-001",
+      "provider": "openai",
+      "date": "2024-01-04",
+      "successors": [
+        "gpt-4o"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2024-01-04. Provider's named successor: gpt-4o.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "code-davinci-edit-001",
+      "provider": "openai",
+      "date": "2024-01-04",
+      "successors": [
+        "gpt-4o"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2024-01-04. Provider's named successor: gpt-4o.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "text-similarity-ada-001",
+      "provider": "openai",
+      "date": "2024-01-04",
+      "successors": [
+        "text-embedding-3-small"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2024-01-04. Provider's named successor: text-embedding-3-small.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "text-search-ada-doc-001",
+      "provider": "openai",
+      "date": "2024-01-04",
+      "successors": [
+        "text-embedding-3-small"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2024-01-04. Provider's named successor: text-embedding-3-small.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "text-search-ada-query-001",
+      "provider": "openai",
+      "date": "2024-01-04",
+      "successors": [
+        "text-embedding-3-small"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2024-01-04. Provider's named successor: text-embedding-3-small.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "code-search-ada-code-001",
+      "provider": "openai",
+      "date": "2024-01-04",
+      "successors": [
+        "text-embedding-3-small"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2024-01-04. Provider's named successor: text-embedding-3-small.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "code-search-ada-text-001",
+      "provider": "openai",
+      "date": "2024-01-04",
+      "successors": [
+        "text-embedding-3-small"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2024-01-04. Provider's named successor: text-embedding-3-small.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "text-similarity-babbage-001",
+      "provider": "openai",
+      "date": "2024-01-04",
+      "successors": [
+        "text-embedding-3-small"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2024-01-04. Provider's named successor: text-embedding-3-small.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "text-search-babbage-doc-001",
+      "provider": "openai",
+      "date": "2024-01-04",
+      "successors": [
+        "text-embedding-3-small"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2024-01-04. Provider's named successor: text-embedding-3-small.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "text-search-babbage-query-001",
+      "provider": "openai",
+      "date": "2024-01-04",
+      "successors": [
+        "text-embedding-3-small"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2024-01-04. Provider's named successor: text-embedding-3-small.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "code-search-babbage-code-001",
+      "provider": "openai",
+      "date": "2024-01-04",
+      "successors": [
+        "text-embedding-3-small"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2024-01-04. Provider's named successor: text-embedding-3-small.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "code-search-babbage-text-001",
+      "provider": "openai",
+      "date": "2024-01-04",
+      "successors": [
+        "text-embedding-3-small"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2024-01-04. Provider's named successor: text-embedding-3-small.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "text-similarity-curie-001",
+      "provider": "openai",
+      "date": "2024-01-04",
+      "successors": [
+        "text-embedding-3-small"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2024-01-04. Provider's named successor: text-embedding-3-small.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "text-search-curie-doc-001",
+      "provider": "openai",
+      "date": "2024-01-04",
+      "successors": [
+        "text-embedding-3-small"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2024-01-04. Provider's named successor: text-embedding-3-small.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "text-search-curie-query-001",
+      "provider": "openai",
+      "date": "2024-01-04",
+      "successors": [
+        "text-embedding-3-small"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2024-01-04. Provider's named successor: text-embedding-3-small.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "text-similarity-davinci-001",
+      "provider": "openai",
+      "date": "2024-01-04",
+      "successors": [
+        "text-embedding-3-small"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2024-01-04. Provider's named successor: text-embedding-3-small.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "text-search-davinci-doc-001",
+      "provider": "openai",
+      "date": "2024-01-04",
+      "successors": [
+        "text-embedding-3-small"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2024-01-04. Provider's named successor: text-embedding-3-small.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "text-search-davinci-query-001",
+      "provider": "openai",
+      "date": "2024-01-04",
+      "successors": [
+        "text-embedding-3-small"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2024-01-04. Provider's named successor: text-embedding-3-small.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-3.5-turbo-0301",
+      "provider": "openai",
+      "date": "2024-09-13",
+      "successors": [
+        "gpt-3.5-turbo"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2024-09-13. Provider's named successor: gpt-3.5-turbo.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "code-davinci-001",
+      "provider": "openai",
+      "date": "2023-03-23",
+      "successors": [
+        "gpt-4o"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2023-03-23. Provider's named successor: gpt-4o.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "code-cushman-002",
+      "provider": "openai",
+      "date": "2023-03-23",
+      "successors": [
+        "gpt-4o"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2023-03-23. Provider's named successor: gpt-4o.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "code-cushman-001",
+      "provider": "openai",
+      "date": "2023-03-23",
+      "successors": [
+        "gpt-4o"
+      ],
+      "earliest": false,
+      "note": "openai: shut down on 2023-03-23. Provider's named successor: gpt-4o.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-4o",
+      "provider": "openai",
+      "date": "2027-01-14",
+      "successors": [
+        "gpt-6-luna"
+      ],
+      "earliest": false,
+      "alias_of": "gpt-4o-2024-08-06",
+      "note": "openai: shuts down on 2027-01-14. Provider's named successor: gpt-6-luna.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-4o-mini",
+      "provider": "openai",
+      "date": "2027-01-14",
+      "successors": [
+        "gpt-6-luna"
+      ],
+      "earliest": false,
+      "alias_of": "gpt-4o-mini-2024-07-18",
+      "note": "openai: shuts down on 2027-01-14. Provider's named successor: gpt-6-luna.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-4.1",
+      "provider": "openai",
+      "date": "2027-01-14",
+      "successors": [
+        "gpt-6-luna"
+      ],
+      "earliest": false,
+      "alias_of": "gpt-4.1-2025-04-14",
+      "note": "openai: shuts down on 2027-01-14. Provider's named successor: gpt-6-luna.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gpt-4.1-mini",
+      "provider": "openai",
+      "date": "2027-01-14",
+      "successors": [
+        "gpt-6-luna"
+      ],
+      "earliest": false,
+      "alias_of": "gpt-4.1-mini-2025-04-14",
+      "note": "openai: shuts down on 2027-01-14. Provider's named successor: gpt-6-luna.",
+      "source": "https://developers.openai.com/api/docs/deprecations"
+    },
+    {
+      "id": "gemini-3.1-flash-lite",
+      "provider": "google",
+      "date": "2027-05-07",
+      "successors": [
+        "gemini-3.5-flash-lite"
+      ],
+      "earliest": true,
+      "note": "google: shuts down no earlier than 2027-05-07, the provider's stated earliest date. Provider's named successor: gemini-3.5-flash-lite.",
+      "source": "https://ai.google.dev/gemini-api/docs/deprecations"
+    },
+    {
+      "id": "gemini-3.1-flash-tts-preview",
+      "provider": "google",
+      "date": "2026-11-17",
+      "successors": [
+        "gemini-3.8-flash-tts",
+        "gemini-3.8-flash-lite-tts"
+      ],
+      "earliest": true,
+      "note": "google: shuts down no earlier than 2026-11-17, the provider's stated earliest date. Provider's named successor: gemini-3.8-flash-tts or gemini-3.8-flash-lite-tts.",
+      "source": "https://ai.google.dev/gemini-api/docs/deprecations"
+    },
+    {
+      "id": "gemini-3-pro-preview",
+      "provider": "google",
+      "date": "2026-03-09",
+      "successors": [
+        "gemini-3.1-pro-preview"
+      ],
+      "earliest": true,
+      "note": "google: shut down no earlier than 2026-03-09, the provider's stated earliest date. Provider's named successor: gemini-3.1-pro-preview.",
+      "source": "https://ai.google.dev/gemini-api/docs/deprecations"
+    },
+    {
+      "id": "gemini-3.1-flash-lite-preview",
+      "provider": "google",
+      "date": "2026-05-25",
+      "successors": [
+        "gemini-3.1-flash-lite"
+      ],
+      "earliest": true,
+      "note": "google: shut down no earlier than 2026-05-25, the provider's stated earliest date. Provider's named successor: gemini-3.1-flash-lite.",
+      "source": "https://ai.google.dev/gemini-api/docs/deprecations"
+    },
+    {
+      "id": "gemini-2.5-computer-use-preview-10-2025",
+      "provider": "google",
+      "date": "2026-07-28",
+      "successors": [
+        "gemini-3.8-flash"
+      ],
+      "earliest": true,
+      "note": "google: shut down no earlier than 2026-07-28, the provider's stated earliest date. Provider's named successor: gemini-3.8-flash.",
+      "source": "https://ai.google.dev/gemini-api/docs/deprecations"
+    },
+    {
+      "id": "gemini-2.5-pro-preview-03-25",
+      "provider": "google",
+      "date": "2025-12-02",
+      "successors": [
+        "gemini-3.1-pro-preview"
+      ],
+      "earliest": true,
+      "note": "google: shut down no earlier than 2025-12-02, the provider's stated earliest date. Provider's named successor: gemini-3.1-pro-preview.",
+      "source": "https://ai.google.dev/gemini-api/docs/deprecations"
+    },
+    {
+      "id": "gemini-2.5-pro-preview-05-06",
+      "provider": "google",
+      "date": "2025-12-02",
+      "successors": [
+        "gemini-3.1-pro-preview"
+      ],
+      "earliest": true,
+      "note": "google: shut down no earlier than 2025-12-02, the provider's stated earliest date. Provider's named successor: gemini-3.1-pro-preview.",
+      "source": "https://ai.google.dev/gemini-api/docs/deprecations"
+    },
+    {
+      "id": "gemini-2.5-pro-preview-06-05",
+      "provider": "google",
+      "date": "2025-12-02",
+      "successors": [
+        "gemini-3.1-pro-preview"
+      ],
+      "earliest": true,
+      "note": "google: shut down no earlier than 2025-12-02, the provider's stated earliest date. Provider's named successor: gemini-3.1-pro-preview.",
+      "source": "https://ai.google.dev/gemini-api/docs/deprecations"
+    },
+    {
+      "id": "gemini-2.5-flash-lite-preview-09-2025",
+      "provider": "google",
+      "date": "2026-03-31",
+      "successors": [
+        "gemini-3.1-flash-lite"
+      ],
+      "earliest": true,
+      "note": "google: shut down no earlier than 2026-03-31, the provider's stated earliest date. Provider's named successor: gemini-3.1-flash-lite.",
+      "source": "https://ai.google.dev/gemini-api/docs/deprecations"
+    },
+    {
+      "id": "gemini-2.5-flash-preview-05-20",
+      "provider": "google",
+      "date": "2025-11-18",
+      "successors": [
+        "gemini-3.6-flash"
+      ],
+      "earliest": true,
+      "note": "google: shut down no earlier than 2025-11-18, the provider's stated earliest date. Provider's named successor: gemini-3.6-flash.",
+      "source": "https://ai.google.dev/gemini-api/docs/deprecations"
+    },
+    {
+      "id": "gemini-2.5-flash-preview-09-25",
+      "provider": "google",
+      "date": "2026-02-17",
+      "successors": [
+        "gemini-3.6-flash"
+      ],
+      "earliest": true,
+      "note": "google: shut down no earlier than 2026-02-17, the provider's stated earliest date. Provider's named successor: gemini-3.6-flash.",
+      "source": "https://ai.google.dev/gemini-api/docs/deprecations"
+    },
+    {
+      "id": "gemini-2.0-flash",
+      "provider": "google",
+      "date": "2026-06-01",
+      "successors": [
+        "gemini-3.6-flash"
+      ],
+      "earliest": true,
+      "note": "google: shut down no earlier than 2026-06-01, the provider's stated earliest date. Provider's named successor: gemini-3.6-flash.",
+      "source": "https://ai.google.dev/gemini-api/docs/deprecations"
+    },
+    {
+      "id": "gemini-2.0-flash-001",
+      "provider": "google",
+      "date": "2026-06-01",
+      "successors": [
+        "gemini-3.6-flash"
+      ],
+      "earliest": true,
+      "note": "google: shut down no earlier than 2026-06-01, the provider's stated earliest date. Provider's named successor: gemini-3.6-flash.",
+      "source": "https://ai.google.dev/gemini-api/docs/deprecations"
+    },
+    {
+      "id": "gemini-2.0-flash-lite",
+      "provider": "google",
+      "date": "2026-06-01",
+      "successors": [
+        "gemini-3.1-flash-lite"
+      ],
+      "earliest": true,
+      "note": "google: shut down no earlier than 2026-06-01, the provider's stated earliest date. Provider's named successor: gemini-3.1-flash-lite.",
+      "source": "https://ai.google.dev/gemini-api/docs/deprecations"
+    },
+    {
+      "id": "gemini-2.0-flash-lite-001",
+      "provider": "google",
+      "date": "2026-06-01",
+      "successors": [
+        "gemini-3.1-flash-lite"
+      ],
+      "earliest": true,
+      "note": "google: shut down no earlier than 2026-06-01, the provider's stated earliest date. Provider's named successor: gemini-3.1-flash-lite.",
+      "source": "https://ai.google.dev/gemini-api/docs/deprecations"
+    },
+    {
+      "id": "gemini-2.0-flash-lite-preview",
+      "provider": "google",
+      "date": "2025-12-09",
+      "successors": [
+        "gemini-3.1-flash-lite"
+      ],
+      "earliest": true,
+      "note": "google: shut down no earlier than 2025-12-09, the provider's stated earliest date. Provider's named successor: gemini-3.1-flash-lite.",
+      "source": "https://ai.google.dev/gemini-api/docs/deprecations"
+    },
+    {
+      "id": "gemini-2.0-flash-lite-preview-02-05",
+      "provider": "google",
+      "date": "2025-12-09",
+      "successors": [
+        "gemini-3.1-flash-lite"
+      ],
+      "earliest": true,
+      "note": "google: shut down no earlier than 2025-12-09, the provider's stated earliest date. Provider's named successor: gemini-3.1-flash-lite.",
+      "source": "https://ai.google.dev/gemini-api/docs/deprecations"
+    },
+    {
+      "id": "gemini-2.0-flash-live-001",
+      "provider": "google",
+      "date": "2025-12-09",
+      "successors": [
+        "gemini-3.8-live"
+      ],
+      "earliest": true,
+      "note": "google: shut down no earlier than 2025-12-09, the provider's stated earliest date. Provider's named successor: gemini-3.8-live.",
+      "source": "https://ai.google.dev/gemini-api/docs/deprecations"
+    },
+    {
+      "id": "gemini-3.1-flash-live-preview",
+      "provider": "google",
+      "date": "2026-11-17",
+      "successors": [
+        "gemini-3.8-live"
+      ],
+      "earliest": true,
+      "note": "google: shuts down no earlier than 2026-11-17, the provider's stated earliest date. Provider's named successor: gemini-3.8-live.",
+      "source": "https://ai.google.dev/gemini-api/docs/deprecations"
+    },
+    {
+      "id": "gemini-2.5-flash-native-audio-preview-12-2025",
+      "provider": "google",
+      "date": "2026-11-17",
+      "successors": [
+        "gemini-3.8-live"
+      ],
+      "earliest": true,
+      "note": "google: shuts down no earlier than 2026-11-17, the provider's stated earliest date. Provider's named successor: gemini-3.8-live.",
+      "source": "https://ai.google.dev/gemini-api/docs/deprecations"
+    },
+    {
+      "id": "gemini-live-2.5-flash-preview",
+      "provider": "google",
+      "date": "2025-12-09",
+      "successors": [
+        "gemini-3.8-live"
+      ],
+      "earliest": true,
+      "note": "google: shut down no earlier than 2025-12-09, the provider's stated earliest date. Provider's named successor: gemini-3.8-live.",
+      "source": "https://ai.google.dev/gemini-api/docs/deprecations"
+    },
+    {
+      "id": "gemini-2.5-flash-preview-tts",
+      "provider": "google",
+      "date": "2026-11-17",
+      "successors": [
+        "gemini-3.8-flash-tts",
+        "gemini-3.8-flash-lite-tts"
+      ],
+      "earliest": true,
+      "note": "google: shuts down no earlier than 2026-11-17, the provider's stated earliest date. Provider's named successor: gemini-3.8-flash-tts or gemini-3.8-flash-lite-tts.",
+      "source": "https://ai.google.dev/gemini-api/docs/deprecations"
+    },
+    {
+      "id": "gemini-2.5-pro-preview-tts",
+      "provider": "google",
+      "date": "2026-11-17",
+      "successors": [
+        "gemini-3.8-flash-tts",
+        "gemini-3.8-flash-lite-tts"
+      ],
+      "earliest": true,
+      "note": "google: shuts down no earlier than 2026-11-17, the provider's stated earliest date. Provider's named successor: gemini-3.8-flash-tts or gemini-3.8-flash-lite-tts.",
+      "source": "https://ai.google.dev/gemini-api/docs/deprecations"
+    },
+    {
+      "id": "text-embedding-004",
+      "provider": "google",
+      "date": "2026-01-14",
+      "successors": [
+        "gemini-embedding-2"
+      ],
+      "earliest": true,
+      "note": "google: shut down no earlier than 2026-01-14, the provider's stated earliest date. Provider's named successor: gemini-embedding-2.",
+      "source": "https://ai.google.dev/gemini-api/docs/deprecations"
+    },
+    {
+      "id": "embedding-2-preview",
+      "provider": "google",
+      "date": "2026-08-10",
+      "successors": [
+        "gemini-embedding-2"
+      ],
+      "earliest": true,
+      "note": "google: shut down no earlier than 2026-08-10, the provider's stated earliest date. Provider's named successor: gemini-embedding-2.",
+      "source": "https://ai.google.dev/gemini-api/docs/deprecations"
+    },
+    {
+      "id": "embedding-001",
+      "provider": "google",
+      "date": "2025-10-30",
+      "successors": [
+        "gemini-embedding-2"
+      ],
+      "earliest": true,
+      "note": "google: shut down no earlier than 2025-10-30, the provider's stated earliest date. Provider's named successor: gemini-embedding-2.",
+      "source": "https://ai.google.dev/gemini-api/docs/deprecations"
+    },
+    {
+      "id": "embedding-gecko-001",
+      "provider": "google",
+      "date": "2025-10-30",
+      "successors": [
+        "gemini-embedding-2"
+      ],
+      "earliest": true,
+      "note": "google: shut down no earlier than 2025-10-30, the provider's stated earliest date. Provider's named successor: gemini-embedding-2.",
+      "source": "https://ai.google.dev/gemini-api/docs/deprecations"
+    },
+    {
+      "id": "gemini-embedding-exp",
+      "provider": "google",
+      "date": "2025-10-30",
+      "successors": [
+        "gemini-embedding-2"
+      ],
+      "earliest": true,
+      "note": "google: shut down no earlier than 2025-10-30, the provider's stated earliest date. Provider's named successor: gemini-embedding-2.",
+      "source": "https://ai.google.dev/gemini-api/docs/deprecations"
+    },
+    {
+      "id": "gemini-embedding-exp-03-07",
+      "provider": "google",
+      "date": "2025-10-30",
+      "successors": [
+        "gemini-embedding-2"
+      ],
+      "earliest": true,
+      "note": "google: shut down no earlier than 2025-10-30, the provider's stated earliest date. Provider's named successor: gemini-embedding-2.",
+      "source": "https://ai.google.dev/gemini-api/docs/deprecations"
+    },
+    {
+      "id": "gemini-2.5-flash-image",
+      "provider": "google",
+      "date": "2027-03-15",
+      "successors": [
+        "gemini-3.1-flash-lite-image"
+      ],
+      "earliest": true,
+      "note": "google: shuts down no earlier than 2027-03-15, the provider's stated earliest date. Provider's named successor: gemini-3.1-flash-lite-image.",
+      "source": "https://ai.google.dev/gemini-api/docs/deprecations"
+    },
+    {
+      "id": "gemini-3.1-flash-image-preview",
+      "provider": "google",
+      "date": "2026-06-25",
+      "successors": [
+        "gemini-nano-banana-2.1"
+      ],
+      "earliest": true,
+      "note": "google: shut down no earlier than 2026-06-25, the provider's stated earliest date. Provider's named successor: gemini-nano-banana-2.1.",
+      "source": "https://ai.google.dev/gemini-api/docs/deprecations"
+    },
+    {
+      "id": "gemini-3-pro-image-preview",
+      "provider": "google",
+      "date": "2026-06-25",
+      "successors": [
+        "gemini-3-pro-image"
+      ],
+      "earliest": true,
+      "note": "google: shut down no earlier than 2026-06-25, the provider's stated earliest date. Provider's named successor: gemini-3-pro-image.",
+      "source": "https://ai.google.dev/gemini-api/docs/deprecations"
+    },
+    {
+      "id": "gemini-2.5-flash-image-preview",
+      "provider": "google",
+      "date": "2026-01-15",
+      "successors": [
+        "gemini-nano-banana-2.1"
+      ],
+      "earliest": true,
+      "note": "google: shut down no earlier than 2026-01-15, the provider's stated earliest date. Provider's named successor: gemini-nano-banana-2.1.",
+      "source": "https://ai.google.dev/gemini-api/docs/deprecations"
+    },
+    {
+      "id": "gemini-2.0-flash-preview-image-generation",
+      "provider": "google",
+      "date": "2025-11-14",
+      "successors": [
+        "gemini-nano-banana-2.1"
+      ],
+      "earliest": true,
+      "note": "google: shut down no earlier than 2025-11-14, the provider's stated earliest date. Provider's named successor: gemini-nano-banana-2.1.",
+      "source": "https://ai.google.dev/gemini-api/docs/deprecations"
+    },
+    {
+      "id": "imagen-4.0-generate-001",
+      "provider": "google",
+      "date": "2026-08-17",
+      "successors": [
+        "gemini-nano-banana-2.1"
+      ],
+      "earliest": true,
+      "note": "google: shut down no earlier than 2026-08-17, the provider's stated earliest date. Provider's named successor: gemini-nano-banana-2.1.",
+      "source": "https://ai.google.dev/gemini-api/docs/deprecations"
+    },
+    {
+      "id": "imagen-4.0-ultra-generate-001",
+      "provider": "google",
+      "date": "2026-08-17",
+      "successors": [
+        "gemini-nano-banana-2.1"
+      ],
+      "earliest": true,
+      "note": "google: shut down no earlier than 2026-08-17, the provider's stated earliest date. Provider's named successor: gemini-nano-banana-2.1.",
+      "source": "https://ai.google.dev/gemini-api/docs/deprecations"
+    },
+    {
+      "id": "imagen-4.0-fast-generate-001",
+      "provider": "google",
+      "date": "2026-08-17",
+      "successors": [
+        "gemini-nano-banana-2.1"
+      ],
+      "earliest": true,
+      "note": "google: shut down no earlier than 2026-08-17, the provider's stated earliest date. Provider's named successor: gemini-nano-banana-2.1.",
+      "source": "https://ai.google.dev/gemini-api/docs/deprecations"
+    },
+    {
+      "id": "imagen-3.0-generate-002",
+      "provider": "google",
+      "date": "2025-11-10",
+      "successors": [
+        "gemini-nano-banana-2.1"
+      ],
+      "earliest": true,
+      "note": "google: shut down no earlier than 2025-11-10, the provider's stated earliest date. Provider's named successor: gemini-nano-banana-2.1.",
+      "source": "https://ai.google.dev/gemini-api/docs/deprecations"
+    },
+    {
+      "id": "imagen-4.0-generate-preview-06-06",
+      "provider": "google",
+      "date": "2026-02-17",
+      "successors": [
+        "gemini-nano-banana-2.1"
+      ],
+      "earliest": true,
+      "note": "google: shut down no earlier than 2026-02-17, the provider's stated earliest date. Provider's named successor: gemini-nano-banana-2.1.",
+      "source": "https://ai.google.dev/gemini-api/docs/deprecations"
+    },
+    {
+      "id": "imagen-4.0-ultra-generate-preview-06-06",
+      "provider": "google",
+      "date": "2026-02-17",
+      "successors": [
+        "gemini-nano-banana-2.1"
+      ],
+      "earliest": true,
+      "note": "google: shut down no earlier than 2026-02-17, the provider's stated earliest date. Provider's named successor: gemini-nano-banana-2.1.",
+      "source": "https://ai.google.dev/gemini-api/docs/deprecations"
+    },
+    {
+      "id": "veo-3.0-generate-001",
+      "provider": "google",
+      "date": "2026-06-30",
+      "successors": [
+        "gemini-omni-1.1-flash"
+      ],
+      "earliest": true,
+      "note": "google: shut down no earlier than 2026-06-30, the provider's stated earliest date. Provider's named successor: gemini-omni-1.1-flash.",
+      "source": "https://ai.google.dev/gemini-api/docs/deprecations"
+    },
+    {
+      "id": "veo-3.0-fast-generate-001",
+      "provider": "google",
+      "date": "2026-06-30",
+      "successors": [
+        "gemini-omni-1.1-flash"
+      ],
+      "earliest": true,
+      "note": "google: shut down no earlier than 2026-06-30, the provider's stated earliest date. Provider's named successor: gemini-omni-1.1-flash.",
+      "source": "https://ai.google.dev/gemini-api/docs/deprecations"
+    },
+    {
+      "id": "veo-2.0-generate-001",
+      "provider": "google",
+      "date": "2026-06-30",
+      "successors": [
+        "gemini-omni-1.1-flash"
+      ],
+      "earliest": true,
+      "note": "google: shut down no earlier than 2026-06-30, the provider's stated earliest date. Provider's named successor: gemini-omni-1.1-flash.",
+      "source": "https://ai.google.dev/gemini-api/docs/deprecations"
+    },
+    {
+      "id": "veo-3.1-lite-generate-preview",
+      "provider": "google",
+      "date": "2026-10-22",
+      "successors": [
+        "gemini-omni-1.1-flash"
+      ],
+      "earliest": true,
+      "note": "google: shut down no earlier than 2026-10-22, the provider's stated earliest date. Provider's named successor: gemini-omni-1.1-flash.",
+      "source": "https://ai.google.dev/gemini-api/docs/deprecations"
+    },
+    {
+      "id": "veo-3.1-generate-preview",
+      "provider": "google",
+      "date": "2026-10-22",
+      "successors": [
+        "gemini-omni-1.1-flash"
+      ],
+      "earliest": true,
+      "note": "google: shut down no earlier than 2026-10-22, the provider's stated earliest date. Provider's named successor: gemini-omni-1.1-flash.",
+      "source": "https://ai.google.dev/gemini-api/docs/deprecations"
+    },
+    {
+      "id": "veo-3.1-fast-generate-preview",
+      "provider": "google",
+      "date": "2026-10-22",
+      "successors": [
+        "gemini-omni-1.1-flash"
+      ],
+      "earliest": true,
+      "note": "google: shut down no earlier than 2026-10-22, the provider's stated earliest date. Provider's named successor: gemini-omni-1.1-flash.",
+      "source": "https://ai.google.dev/gemini-api/docs/deprecations"
+    },
+    {
+      "id": "veo-3.0-generate-preview",
+      "provider": "google",
+      "date": "2025-11-12",
+      "successors": [
+        "gemini-omni-1.1-flash"
+      ],
+      "earliest": true,
+      "note": "google: shut down no earlier than 2025-11-12, the provider's stated earliest date. Provider's named successor: gemini-omni-1.1-flash.",
+      "source": "https://ai.google.dev/gemini-api/docs/deprecations"
+    },
+    {
+      "id": "veo-3.0-fast-generate-preview",
+      "provider": "google",
+      "date": "2025-11-12",
+      "successors": [
+        "gemini-omni-1.1-flash"
+      ],
+      "earliest": true,
+      "note": "google: shut down no earlier than 2025-11-12, the provider's stated earliest date. Provider's named successor: gemini-omni-1.1-flash.",
+      "source": "https://ai.google.dev/gemini-api/docs/deprecations"
+    },
+    {
+      "id": "gemini-omni-flash-preview",
+      "provider": "google",
+      "date": "2026-10-22",
+      "successors": [
+        "gemini-omni-1.1-flash"
+      ],
+      "earliest": true,
+      "note": "google: shut down no earlier than 2026-10-22, the provider's stated earliest date. Provider's named successor: gemini-omni-1.1-flash.",
+      "source": "https://ai.google.dev/gemini-api/docs/deprecations"
+    },
+    {
+      "id": "gemini-robotics-er-1.6-preview",
+      "provider": "google",
+      "date": "2026-08-31",
+      "successors": [
+        "gemini-robotics-er-2-preview"
+      ],
+      "earliest": true,
+      "note": "google: shut down no earlier than 2026-08-31, the provider's stated earliest date. Provider's named successor: gemini-robotics-er-2-preview.",
+      "source": "https://ai.google.dev/gemini-api/docs/deprecations"
+    },
+    {
+      "id": "gemini-robotics-er-1.5-preview",
+      "provider": "google",
+      "date": "2026-04-30",
+      "successors": [
+        "gemini-robotics-er-2-preview"
+      ],
+      "earliest": true,
+      "note": "google: shut down no earlier than 2026-04-30, the provider's stated earliest date. Provider's named successor: gemini-robotics-er-2-preview.",
+      "source": "https://ai.google.dev/gemini-api/docs/deprecations"
+    }
+  ],
+  "undated_successors": [
+    {
+      "id": "gemini-3.7-flash",
+      "provider": "google",
+      "successors": [
+        "gemini-3.8-flash"
+      ],
+      "note": "google: no shutdown date announced. Provider's named successor: gemini-3.8-flash.",
+      "source": "https://ai.google.dev/gemini-api/docs/deprecations"
+    },
+    {
+      "id": "gemini-3.5-flash",
+      "provider": "google",
+      "successors": [
+        "gemini-3.6-flash"
+      ],
+      "note": "google: no shutdown date announced. Provider's named successor: gemini-3.6-flash.",
+      "source": "https://ai.google.dev/gemini-api/docs/deprecations"
+    },
+    {
+      "id": "gemini-3-flash-preview",
+      "provider": "google",
+      "successors": [
+        "gemini-3.6-flash"
+      ],
+      "note": "google: no shutdown date announced. Provider's named successor: gemini-3.6-flash.",
+      "source": "https://ai.google.dev/gemini-api/docs/deprecations"
+    },
+    {
+      "id": "gemini-3.1-flash-image",
+      "provider": "google",
+      "successors": [
+        "gemini-nano-banana-2.1"
+      ],
+      "note": "google: no shutdown date announced. Provider's named successor: gemini-nano-banana-2.1.",
+      "source": "https://ai.google.dev/gemini-api/docs/deprecations"
+    },
+    {
+      "id": "lyria-3-pro-preview",
+      "provider": "google",
+      "successors": [
+        "lyria-3.5"
+      ],
+      "note": "google: no shutdown date announced. Provider's named successor: lyria-3.5.",
+      "source": "https://ai.google.dev/gemini-api/docs/deprecations"
+    }
+  ]
+}

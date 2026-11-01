@@ -1,0 +1,14 @@
+{
+  "scenario": "external-data",
+  "node": "v18.20.8",
+  "transformers": "4.3.2",
+  "load": {
+    "model": "onnx-community/embeddinggemma-2-ONNX",
+    "outcome": "rejected",
+    "message": "simulated failure of the external data download"
+  },
+  "requests": [
+    "https://huggingface.co/onnx-community/embeddinggemma-2-ONNX/resolve/main/config.json -> 200",
+    "https://huggingface.co/onnx-community/embeddinggemma-2-ONNX/resolve/main/tokenizer_config.json -> 206"
+  ]
+}

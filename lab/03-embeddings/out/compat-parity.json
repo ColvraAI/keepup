@@ -1,0 +1,12 @@
+{
+  "check": "parity",
+  "node": "v18.20.8",
+  "n": 200,
+  "oldDim": 384,
+  "newDim": 384,
+  "minCosine": 0.9944202123219057,
+  "meanCosine": 0.9975796585411181,
+  "chunkChars": 1000,
+  "wholePassageMinCosine": 0.996092046118899,
+  "wholePassageMeanCosine": 0.9978459146414097
+}

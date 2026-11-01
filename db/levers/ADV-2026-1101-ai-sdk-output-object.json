@@ -1,0 +1,65 @@
+{
+  "id": "ADV-2026-1101-ai-sdk-output-object",
+  "name": "The AI SDK's Output.object for any provider",
+  "pattern": "PAT-hand-parsed-json",
+  "kind": "library",
+  "providers": [],
+  "effects": [
+    "better answers",
+    "keeps working"
+  ],
+  "gain": "The SDK validates the returned object against your schema. Its docs state no number, and nothing here is measured.",
+  "proof": "adoption only",
+  "source": "https://ai-sdk.dev/docs/ai-sdk-core/generating-structured-data",
+  "how": "Call generateText with output: Output.object({ schema }), using a Zod, Valibot or JSON schema. Catch AI_NoObjectGeneratedError and keep the old path as the fallback.",
+  "replaces": "generateText followed by JSON.parse in TypeScript.",
+  "trade_offs": [
+    "The model can still fail to return a valid object, which raises AI_NoObjectGeneratedError.",
+    "It adds a dependency if the product calls the provider SDK directly today."
+  ],
+  "needs": "The ai package in a TypeScript or JavaScript product.",
+  "checked": "2026-11-01",
+  "checked_by": "agent",
+  "usage_signal": "Retries and output tokens on calls that are re-sent after a parse failure",
+  "gain_model": {
+    "formula": "parse_failure_rate * calls * cost_per_call = money lost to retries",
+    "inputs": [
+      {
+        "name": "parse_failure_rate",
+        "value": null,
+        "source": "the product's usage data or the bill",
+        "assumed": false
+      },
+      {
+        "name": "calls",
+        "value": null,
+        "source": "the product's usage data or the bill",
+        "assumed": false
+      },
+      {
+        "name": "cost_per_call",
+        "value": null,
+        "source": "the product's usage data or the bill",
+        "assumed": false
+      }
+    ]
+  },
+  "test_recipe": {
+    "what_to_compare": "parse failures and schema errors, before and after",
+    "samples": 200,
+    "can_run_with": [
+      "OPENAI_API_KEY",
+      "ANTHROPIC_API_KEY"
+    ]
+  },
+  "verify_rule": "Parse-error logs and retried calls over 14 days after merge",
+  "change_recipe": {
+    "kind": "pull request, off by default",
+    "how": "Call generateText with output: Output.object({ schema }), using a Zod, Valibot or JSON schema. Catch AI_NoObjectGeneratedError and keep the old path as the fallback.",
+    "left_off": "Nothing else changes; the new path sits behind a setting until a person turns it on"
+  },
+  "audience": "product",
+  "gain_independent": null,
+  "gain_vendor": null,
+  "tier": "long_tail"
+}

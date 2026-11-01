@@ -1,0 +1,1 @@
+{"id":"chatcmpl-b70afdc0-7b3e-4207-8e9c-6794bd94b85e","object":"chat.completion","created":1793510224,"model":"anthropic/claude-sonnet-5-5","choices":[{"index":0,"message":{"role":"assistant","content":"Paris"},"finish_reason":"stop"}],"usage":{"prompt_tokens":30,"completion_tokens":5,"total_tokens":35},"metadata":{"chat_session_id":"cs_50cf61f747a54471b91c05790e74b6db"}}

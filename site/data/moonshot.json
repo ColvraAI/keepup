@@ -1,0 +1,139 @@
+{
+ "label": "Prices are real. Volumes are assumptions you can change. Everything computed is projected.",
+ "prices": [
+  {
+   "model_id": "openai/gpt-6-luna",
+   "name": "OpenAI: GPT-6 Luna",
+   "price_in_per_m": 0.1,
+   "price_out_per_m": 0.5,
+   "released": "2026-09-22",
+   "fetched": "2026-10-31",
+   "url": "https://openrouter.ai/openai/gpt-6-luna",
+   "source": "OpenRouter"
+  },
+  {
+   "model_id": "openai/gpt-6.1-sol",
+   "name": "OpenAI: GPT-6.1 Sol",
+   "price_in_per_m": 2,
+   "price_out_per_m": 10,
+   "released": "2026-09-29",
+   "fetched": "2026-10-31",
+   "url": "https://openrouter.ai/openai/gpt-6.1-sol",
+   "source": "OpenRouter"
+  },
+  {
+   "model_id": "anthropic/claude-sonnet-5.5",
+   "name": "Anthropic: Claude Sonnet 5.5",
+   "price_in_per_m": 2,
+   "price_out_per_m": 10,
+   "released": "2026-09-28",
+   "fetched": "2026-10-31",
+   "url": "https://openrouter.ai/anthropic/claude-sonnet-5.5",
+   "source": "OpenRouter"
+  },
+  {
+   "model_id": "anthropic/claude-haiku-5.5",
+   "name": "Anthropic: Claude Haiku 5.5",
+   "price_in_per_m": 0.1,
+   "price_out_per_m": 0.5,
+   "released": "2026-10-07",
+   "fetched": "2026-10-31",
+   "url": "https://openrouter.ai/anthropic/claude-haiku-5.5",
+   "source": "OpenRouter"
+  }
+ ],
+ "missing_prices": [],
+ "router_fallback": {
+  "model": "gpt-5.6-luna",
+  "where": "server/utils/AiProviders/openAi/index.js:32",
+  "url": "https://github.com/Mintplex-Labs/anything-llm/blob/9caf2b4c29d9782f1cba4142be2525ebfa0ecd43/server/utils/AiProviders/openAi/index.js#L32",
+  "price": null,
+  "note": "gpt-5.6-luna has no OpenRouter price in this database window, so it isn't priced here."
+ },
+ "cache": [
+  {
+   "provider": "anthropic",
+   "date": "2026-10-07",
+   "models": [
+    "Claude Sonnet 5.5"
+   ],
+   "multiplier": 0.05,
+   "printed": true,
+   "quote": "We’ve lowered the price of prompt cache reads on Claude Sonnet 5.5 from $0.20 USD to $0.10 USD per million tokens: 0.05x the base input price instead of 0.1x.",
+   "url": "https://platform.claude.com/docs/en/release-notes/overview"
+  },
+  {
+   "provider": "anthropic",
+   "date": "2026-09-01",
+   "models": [
+    "Claude Fable 5.1",
+    "Claude Mythos 5.1"
+   ],
+   "multiplier": 0.025,
+   "printed": true,
+   "quote": "Prompt cache reads on Claude Fable 5.1 and Claude Mythos 5.1 cost $0.25 USD per million tokens: 0.025x the base input price, compared with 0.1x on other models.",
+   "url": "https://platform.claude.com/docs/en/release-notes/overview"
+  },
+  {
+   "provider": "openai",
+   "date": "2026-09-29",
+   "models": [
+    "gpt-6.1-sol"
+   ],
+   "multiplier": 0.05,
+   "printed": false,
+   "quote": "Standard pricing per 1M tokens for prompts with up to 272K input tokens is $2 input, $0.10 cached input, $2.50 cache write, and $10 output.",
+   "url": "https://developers.openai.com/api/docs/changelog"
+  },
+  {
+   "provider": "openai",
+   "date": "2026-09-22",
+   "models": [
+    "GPT-6 Sol"
+   ],
+   "multiplier": 0.1,
+   "printed": false,
+   "quote": "GPT-6 Sol: $2 input, $0.20 cached input, and $10 output.",
+   "url": "https://developers.openai.com/api/docs/changelog"
+  },
+  {
+   "provider": "openai",
+   "date": "2026-09-22",
+   "models": [
+    "GPT-6 Luna"
+   ],
+   "multiplier": 0.1,
+   "printed": false,
+   "quote": "GPT-6 Luna: $0.10 input, $0.01 cached input, and $0.50 output.",
+   "url": "https://developers.openai.com/api/docs/changelog"
+  }
+ ],
+ "fleet": [
+  {
+   "repo": "Mintplex-Labs/anything-llm",
+   "pinned_commit": "9caf2b4",
+   "prs_opened": 5,
+   "prs_updated": 4,
+   "held_back": 5,
+   "watching": 2,
+   "brief_only": 0,
+   "findings": 0,
+   "team_later": 3,
+   "median_days_later": 35,
+   "runs": 2
+  },
+  {
+   "repo": "mezmo/aura",
+   "pinned_commit": "5efb4e8",
+   "prs_opened": 2,
+   "prs_updated": 3,
+   "held_back": 2,
+   "watching": 0,
+   "brief_only": 1,
+   "findings": 1,
+   "team_later": 0,
+   "median_days_later": null,
+   "runs": 1
+  }
+ ]
+}

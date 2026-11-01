@@ -1,0 +1,47 @@
+{
+  "id": "ADV-2026-0826-openai-assistants-shut-down",
+  "name": "The Assistants API is shut down; move to Responses and Conversations",
+  "pattern": "PAT-removed-parameter",
+  "kind": "api-migration",
+  "providers": [
+    "openai"
+  ],
+  "effects": [
+    "keeps working"
+  ],
+  "gain": "OpenAI says the Assistants API \"was officially sunset on August 26, 2026, and is no longer available\".",
+  "proof": "vendor claim",
+  "source": "https://developers.openai.com/api/docs/assistants/migration",
+  "how": "Follow OpenAI's migration guide to the Responses API and Conversations API. This is a project rather than a small swap, so make it a tracked issue with written steps.",
+  "replaces": "beta.assistants, beta.threads, /v1/assistants, /v1/threads and the assistants=v2 header.",
+  "trade_offs": [
+    "Threads and runs have no one-line replacement, so conversation handling has to change.",
+    "The page covers OpenAI's own API; a product calling Azure OpenAI has to check Azure's docs instead."
+  ],
+  "needs": "Engineering time.",
+  "checked": "2026-11-01",
+  "checked_by": "agent",
+  "usage_signal": "Usage API: calls on the affected model or parameter",
+  "gain_model": {
+    "formula": "no money figure: the call stops working or a capability is missing",
+    "inputs": []
+  },
+  "test_recipe": {
+    "what_to_compare": "tests pass on the change",
+    "samples": 20,
+    "can_run_with": [
+      "ANTHROPIC_API_KEY",
+      "OPENAI_API_KEY"
+    ]
+  },
+  "verify_rule": "The old id or parameter is gone and calls succeed over 7 days",
+  "change_recipe": {
+    "kind": "pull request with tests",
+    "how": "Follow OpenAI's migration guide to the Responses API and Conversations API. This is a project rather than a small swap, so make it a tracked issue with written steps.",
+    "left_off": "Nothing else changes; the new path sits behind a setting until a person turns it on"
+  },
+  "audience": "product",
+  "gain_independent": null,
+  "gain_vendor": "OpenAI says the Assistants API \"was officially sunset on August 26, 2026, and is no longer available\".",
+  "tier": "long_tail"
+}

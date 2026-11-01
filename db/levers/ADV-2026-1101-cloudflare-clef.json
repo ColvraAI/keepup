@@ -1,0 +1,64 @@
+{
+  "id": "ADV-2026-1101-cloudflare-clef",
+  "name": "Cloudflare Clef for calls that only pick a label",
+  "pattern": "PAT-label-picking-call",
+  "kind": "llm-call-substitute",
+  "providers": [],
+  "effects": [
+    "cheaper",
+    "faster"
+  ],
+  "gain": "Cloudflare's post says Clef is Jev-API compatible and hosted, in the vendor's words; no independent number recorded here.",
+  "proof": "vendor claim",
+  "source": "https://blog.cloudflare.com/clef-decision-models/",
+  "how": "Point a decision call at the Clef model behind a confidence gate",
+  "replaces": "A chat call asked to classify, route or score.",
+  "trade_offs": [
+    "Unaudited accuracy; keep a fallback path."
+  ],
+  "needs": "A Cloudflare account.",
+  "checked": "2026-11-01",
+  "checked_by": "agent",
+  "usage_signal": "Usage and Cost API: high call count with few output tokens per call",
+  "gain_model": {
+    "formula": "calls * (current_cost_per_call - decision_cost_per_call), plus p50 latency difference",
+    "inputs": [
+      {
+        "name": "calls",
+        "value": null,
+        "source": "the product's usage data or the bill",
+        "assumed": false
+      },
+      {
+        "name": "current_cost_per_call",
+        "value": null,
+        "source": "the product's usage data or the bill",
+        "assumed": false
+      },
+      {
+        "name": "decision_cost_per_call",
+        "value": null,
+        "source": "the product's usage data or the bill",
+        "assumed": false
+      }
+    ]
+  },
+  "test_recipe": {
+    "what_to_compare": "agreement with the current call, p50 latency, fallback rate",
+    "samples": 500,
+    "can_run_with": [
+      "OPENAI_API_KEY",
+      "TYPESAFE_API_KEY"
+    ]
+  },
+  "verify_rule": "Cost line and p50 for that call over 14 days; fallback rate under the gate",
+  "change_recipe": {
+    "kind": "pull request, off by default",
+    "how": "Point a decision call at the Clef model behind a confidence gate",
+    "left_off": "Nothing else changes; the new path sits behind a setting until a person turns it on"
+  },
+  "audience": "product",
+  "gain_independent": null,
+  "gain_vendor": "Cloudflare's post says Clef is Jev-API compatible and hosted, in the vendor's words; no independent number recorded here.",
+  "tier": "long_tail"
+}

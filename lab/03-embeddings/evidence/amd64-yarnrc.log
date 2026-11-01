@@ -1,0 +1,18 @@
+=== machine: x86_64
+=== .yarnrc with NuGet unreachable: onnxruntime-node-install skip
+success Saved lockfile.
+Done in 41.45s.
+yarn exit 0
+libonnxruntime.so.1
+onnxruntime_binding.node
+288M	node_modules/onnxruntime-node
+=== .npmrc with NuGet unreachable: onnxruntime-node-install=skip
+[4/4] Building fresh packages...
+Done in 5.59s.
+yarn exit 0
+libonnxruntime.so.1
+onnxruntime_binding.node
+288M	node_modules/onnxruntime-node
+=== load on x64 with the files present, through the real cache
+embedded dims [ 2, 384 ] ms 901
+load exit 0

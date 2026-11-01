@@ -1,0 +1,4086 @@
+{
+ "version": 1,
+ "repo": "stackblitz/bolt.new",
+ "commit": "eda10b121221b30825a4c16eec5da1fd3eb1eb99",
+ "commit_date": "2024-12-17",
+ "scanned_at": "2026-11-01T14:24:17.627Z",
+ "as_of": "2026-10-31",
+ "db": {
+  "fetched": "2026-10-31",
+  "records": 41785,
+  "by_source": {
+   "mcp-registry": 35587,
+   "npm": 3953,
+   "github": 1088,
+   "huggingface": 455,
+   "pypi": 281,
+   "hn": 133,
+   "yc": 120,
+   "openrouter": 94,
+   "changelog": 70,
+   "skills": 4
+  },
+  "window": {
+   "since": "2026-09-01",
+   "until": "2026-10-31"
+  },
+  "reconciliation": {
+   "changelog_in_window": 70,
+   "changelog_year_blind": 84,
+   "records_year_blind": 41799,
+   "note": "14 of the 84 changelog entries counted without the year are OpenAI's Sep and Oct entries from earlier years; 70 are in the window."
+  }
+ },
+ "ran": {
+  "search": true,
+  "judge": true,
+  "online": true
+ },
+ "steps": [
+  {
+   "name": "List files",
+   "detail": "133 files to read, 5 skipped (vendored, generated, minified, binary or over 2 MB)",
+   "ms": 12
+  },
+  {
+   "name": "Read manifests",
+   "detail": "1 manifest, 72 declared dependencies",
+   "ms": 3
+  },
+  {
+   "name": "Read the README",
+   "detail": "README.md",
+   "ms": 0
+  },
+  {
+   "name": "Measure languages",
+   "detail": "TypeScript 85%, CSS 8%, Markdown 2%",
+   "ms": 0
+  },
+  {
+   "name": "Run signals",
+   "detail": "5 of 43 signals fired",
+   "ms": 22
+  },
+  {
+   "name": "Find model ids",
+   "detail": "1 distinct model id in 1 place",
+   "ms": 4
+  },
+  {
+   "name": "Run patterns",
+   "detail": "9 hits in 102 files",
+   "ms": 34
+  },
+  {
+   "name": "Check model ids against provider changelogs and deprecation pages",
+   "detail": "1 ids retired, retiring or deprecated",
+   "ms": 8
+  },
+  {
+   "name": "Check dependencies against the registries",
+   "detail": "72 dependencies checked, 36 behind",
+   "ms": 31
+  },
+  {
+   "name": "Understand the product",
+   "detail": "4 AI jobs",
+   "ms": 59
+  },
+  {
+   "name": "Search the database",
+   "detail": "136 candidates",
+   "ms": 243
+  },
+  {
+   "name": "Judge each candidate against the code",
+   "detail": "3 fit, 15 held back",
+   "ms": 27
+  },
+  {
+   "name": "Check every claim",
+   "detail": "17 checks passed, 3 findings dropped",
+   "ms": 20
+  }
+ ],
+ "facts": {
+  "version": 1,
+  "repo": "stackblitz/bolt.new",
+  "commit": "eda10b121221b30825a4c16eec5da1fd3eb1eb99",
+  "commit_date": "2024-12-17",
+  "languages": [
+   {
+    "language": "TypeScript",
+    "files": 96,
+    "lines": 7754,
+    "share": 0.853
+   },
+   {
+    "language": "CSS",
+    "files": 12,
+    "lines": 751,
+    "share": 0.083
+   },
+   {
+    "language": "Markdown",
+    "files": 3,
+    "lines": 190,
+    "share": 0.021
+   },
+   {
+    "language": "YAML",
+    "files": 5,
+    "lines": 182,
+    "share": 0.02
+   },
+   {
+    "language": "JSON",
+    "files": 2,
+    "lines": 139,
+    "share": 0.015
+   },
+   {
+    "language": "JavaScript",
+    "files": 1,
+    "lines": 47,
+    "share": 0.005
+   },
+   {
+    "language": "Shell",
+    "files": 1,
+    "lines": 17,
+    "share": 0.002
+   },
+   {
+    "language": "TOML",
+    "files": 1,
+    "lines": 6,
+    "share": 0.001
+   }
+  ],
+  "manifests": [
+   {
+    "file": "package.json",
+    "kind": "package.json",
+    "dependencies": [
+     {
+      "name": "@ai-sdk/anthropic",
+      "spec": "^0.0.39",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "package.json",
+      "line": 26,
+      "source": "registry",
+      "locked": {
+       "version": "0.0.39",
+       "file": "pnpm-lock.yaml",
+       "line": 16
+      }
+     },
+     {
+      "name": "@codemirror/autocomplete",
+      "spec": "^6.17.0",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "package.json",
+      "line": 27,
+      "source": "registry",
+      "locked": {
+       "version": "6.17.0",
+       "file": "pnpm-lock.yaml",
+       "line": 19
+      }
+     },
+     {
+      "name": "@codemirror/commands",
+      "spec": "^6.6.0",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "package.json",
+      "line": 28,
+      "source": "registry",
+      "locked": {
+       "version": "6.6.0",
+       "file": "pnpm-lock.yaml",
+       "line": 22
+      }
+     },
+     {
+      "name": "@codemirror/lang-cpp",
+      "spec": "^6.0.2",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "package.json",
+      "line": 29,
+      "source": "registry",
+      "locked": {
+       "version": "6.0.2",
+       "file": "pnpm-lock.yaml",
+       "line": 25
+      }
+     },
+     {
+      "name": "@codemirror/lang-css",
+      "spec": "^6.2.1",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "package.json",
+      "line": 30,
+      "source": "registry",
+      "locked": {
+       "version": "6.2.1",
+       "file": "pnpm-lock.yaml",
+       "line": 28
+      }
+     },
+     {
+      "name": "@codemirror/lang-html",
+      "spec": "^6.4.9",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "package.json",
+      "line": 31,
+      "source": "registry",
+      "locked": {
+       "version": "6.4.9",
+       "file": "pnpm-lock.yaml",
+       "line": 31
+      }
+     },
+     {
+      "name": "@codemirror/lang-javascript",
+      "spec": "^6.2.2",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "package.json",
+      "line": 32,
+      "source": "registry",
+      "locked": {
+       "version": "6.2.2",
+       "file": "pnpm-lock.yaml",
+       "line": 34
+      }
+     },
+     {
+      "name": "@codemirror/lang-json",
+      "spec": "^6.0.1",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "package.json",
+      "line": 33,
+      "source": "registry",
+      "locked": {
+       "version": "6.0.1",
+       "file": "pnpm-lock.yaml",
+       "line": 37
+      }
+     },
+     {
+      "name": "@codemirror/lang-markdown",
+      "spec": "^6.2.5",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "package.json",
+      "line": 34,
+      "source": "registry",
+      "locked": {
+       "version": "6.2.5",
+       "file": "pnpm-lock.yaml",
+       "line": 40
+      }
+     },
+     {
+      "name": "@codemirror/lang-python",
+      "spec": "^6.1.6",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "package.json",
+      "line": 35,
+      "source": "registry",
+      "locked": {
+       "version": "6.1.6",
+       "file": "pnpm-lock.yaml",
+       "line": 43
+      }
+     },
+     {
+      "name": "@codemirror/lang-sass",
+      "spec": "^6.0.2",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "package.json",
+      "line": 36,
+      "source": "registry",
+      "locked": {
+       "version": "6.0.2",
+       "file": "pnpm-lock.yaml",
+       "line": 46
+      }
+     },
+     {
+      "name": "@codemirror/lang-wast",
+      "spec": "^6.0.2",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "package.json",
+      "line": 37,
+      "source": "registry",
+      "locked": {
+       "version": "6.0.2",
+       "file": "pnpm-lock.yaml",
+       "line": 49
+      }
+     },
+     {
+      "name": "@codemirror/language",
+      "spec": "^6.10.2",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "package.json",
+      "line": 38,
+      "source": "registry",
+      "locked": {
+       "version": "6.10.2",
+       "file": "pnpm-lock.yaml",
+       "line": 52
+      }
+     },
+     {
+      "name": "@codemirror/search",
+      "spec": "^6.5.6",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "package.json",
+      "line": 39,
+      "source": "registry",
+      "locked": {
+       "version": "6.5.6",
+       "file": "pnpm-lock.yaml",
+       "line": 55
+      }
+     },
+     {
+      "name": "@codemirror/state",
+      "spec": "^6.4.1",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "package.json",
+      "line": 40,
+      "source": "registry",
+      "locked": {
+       "version": "6.4.1",
+       "file": "pnpm-lock.yaml",
+       "line": 58
+      }
+     },
+     {
+      "name": "@codemirror/view",
+      "spec": "^6.28.4",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "package.json",
+      "line": 41,
+      "source": "registry",
+      "locked": {
+       "version": "6.28.4",
+       "file": "pnpm-lock.yaml",
+       "line": 61
+      }
+     },
+     {
+      "name": "@iconify-json/ph",
+      "spec": "^1.1.13",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "package.json",
+      "line": 42,
+      "source": "registry",
+      "locked": {
+       "version": "1.1.13",
+       "file": "pnpm-lock.yaml",
+       "line": 64
+      }
+     },
+     {
+      "name": "@iconify-json/svg-spinners",
+      "spec": "^1.1.2",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "package.json",
+      "line": 43,
+      "source": "registry",
+      "locked": {
+       "version": "1.1.2",
+       "file": "pnpm-lock.yaml",
+       "line": 67
+      }
+     },
+     {
+      "name": "@lezer/highlight",
+      "spec": "^1.2.0",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "package.json",
+      "line": 44,
+      "source": "registry",
+      "locked": {
+       "version": "1.2.0",
+       "file": "pnpm-lock.yaml",
+       "line": 70
+      }
+     },
+     {
+      "name": "@nanostores/react",
+      "spec": "^0.7.2",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "package.json",
+      "line": 45,
+      "source": "registry",
+      "locked": {
+       "version": "0.7.2",
+       "file": "pnpm-lock.yaml",
+       "line": 73
+      }
+     },
+     {
+      "name": "@radix-ui/react-dialog",
+      "spec": "^1.1.1",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "package.json",
+      "line": 46,
+      "source": "registry",
+      "locked": {
+       "version": "1.1.1",
+       "file": "pnpm-lock.yaml",
+       "line": 76
+      }
+     },
+     {
+      "name": "@radix-ui/react-dropdown-menu",
+      "spec": "^2.1.1",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "package.json",
+      "line": 47,
+      "source": "registry",
+      "locked": {
+       "version": "2.1.1",
+       "file": "pnpm-lock.yaml",
+       "line": 79
+      }
+     },
+     {
+      "name": "@remix-run/cloudflare",
+      "spec": "^2.10.2",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "package.json",
+      "line": 48,
+      "source": "registry",
+      "locked": {
+       "version": "2.10.2",
+       "file": "pnpm-lock.yaml",
+       "line": 82
+      }
+     },
+     {
+      "name": "@remix-run/cloudflare-pages",
+      "spec": "^2.10.2",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "package.json",
+      "line": 49,
+      "source": "registry",
+      "locked": {
+       "version": "2.10.2",
+       "file": "pnpm-lock.yaml",
+       "line": 85
+      }
+     },
+     {
+      "name": "@remix-run/react",
+      "spec": "^2.10.2",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "package.json",
+      "line": 50,
+      "source": "registry",
+      "locked": {
+       "version": "2.10.2",
+       "file": "pnpm-lock.yaml",
+       "line": 88
+      }
+     },
+     {
+      "name": "@uiw/codemirror-theme-vscode",
+      "spec": "^4.23.0",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "package.json",
+      "line": 51,
+      "source": "registry",
+      "locked": {
+       "version": "4.23.0",
+       "file": "pnpm-lock.yaml",
+       "line": 91
+      }
+     },
+     {
+      "name": "@unocss/reset",
+      "spec": "^0.61.0",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "package.json",
+      "line": 52,
+      "source": "registry",
+      "locked": {
+       "version": "0.61.3",
+       "file": "pnpm-lock.yaml",
+       "line": 94
+      }
+     },
+     {
+      "name": "@webcontainer/api",
+      "spec": "1.3.0-internal.10",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "package.json",
+      "line": 53,
+      "source": "registry",
+      "locked": {
+       "version": "1.3.0-internal.10",
+       "file": "pnpm-lock.yaml",
+       "line": 97
+      }
+     },
+     {
+      "name": "@xterm/addon-fit",
+      "spec": "^0.10.0",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "package.json",
+      "line": 54,
+      "source": "registry",
+      "locked": {
+       "version": "0.10.0",
+       "file": "pnpm-lock.yaml",
+       "line": 100
+      }
+     },
+     {
+      "name": "@xterm/addon-web-links",
+      "spec": "^0.11.0",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "package.json",
+      "line": 55,
+      "source": "registry",
+      "locked": {
+       "version": "0.11.0",
+       "file": "pnpm-lock.yaml",
+       "line": 103
+      }
+     },
+     {
+      "name": "@xterm/xterm",
+      "spec": "^5.5.0",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "package.json",
+      "line": 56,
+      "source": "registry",
+      "locked": {
+       "version": "5.5.0",
+       "file": "pnpm-lock.yaml",
+       "line": 106
+      }
+     },
+     {
+      "name": "ai",
+      "spec": "^3.3.4",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "package.json",
+      "line": 57,
+      "source": "registry",
+      "locked": {
+       "version": "3.3.4",
+       "file": "pnpm-lock.yaml",
+       "line": 109
+      }
+     },
+     {
+      "name": "date-fns",
+      "spec": "^3.6.0",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "package.json",
+      "line": 58,
+      "source": "registry",
+      "locked": {
+       "version": "3.6.0",
+       "file": "pnpm-lock.yaml",
+       "line": 112
+      }
+     },
+     {
+      "name": "diff",
+      "spec": "^5.2.0",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "package.json",
+      "line": 59,
+      "source": "registry",
+      "locked": {
+       "version": "5.2.0",
+       "file": "pnpm-lock.yaml",
+       "line": 115
+      }
+     },
+     {
+      "name": "framer-motion",
+      "spec": "^11.2.12",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "package.json",
+      "line": 60,
+      "source": "registry",
+      "locked": {
+       "version": "11.2.12",
+       "file": "pnpm-lock.yaml",
+       "line": 118
+      }
+     },
+     {
+      "name": "isbot",
+      "spec": "^4.1.0",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "package.json",
+      "line": 61,
+      "source": "registry",
+      "locked": {
+       "version": "4.4.0",
+       "file": "pnpm-lock.yaml",
+       "line": 121
+      }
+     },
+     {
+      "name": "istextorbinary",
+      "spec": "^9.5.0",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "package.json",
+      "line": 62,
+      "source": "registry",
+      "locked": {
+       "version": "9.5.0",
+       "file": "pnpm-lock.yaml",
+       "line": 124
+      }
+     },
+     {
+      "name": "jose",
+      "spec": "^5.6.3",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "package.json",
+      "line": 63,
+      "source": "registry",
+      "locked": {
+       "version": "5.6.3",
+       "file": "pnpm-lock.yaml",
+       "line": 127
+      }
+     },
+     {
+      "name": "nanostores",
+      "spec": "^0.10.3",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "package.json",
+      "line": 64,
+      "source": "registry",
+      "locked": {
+       "version": "0.10.3",
+       "file": "pnpm-lock.yaml",
+       "line": 130
+      }
+     },
+     {
+      "name": "react",
+      "spec": "^18.2.0",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "package.json",
+      "line": 65,
+      "source": "registry",
+      "locked": {
+       "version": "18.3.1",
+       "file": "pnpm-lock.yaml",
+       "line": 133
+      }
+     },
+     {
+      "name": "react-dom",
+      "spec": "^18.2.0",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "package.json",
+      "line": 66,
+      "source": "registry",
+      "locked": {
+       "version": "18.3.1",
+       "file": "pnpm-lock.yaml",
+       "line": 136
+      }
+     },
+     {
+      "name": "react-hotkeys-hook",
+      "spec": "^4.5.0",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "package.json",
+      "line": 67,
+      "source": "registry",
+      "locked": {
+       "version": "4.5.0",
+       "file": "pnpm-lock.yaml",
+       "line": 139
+      }
+     },
+     {
+      "name": "react-markdown",
+      "spec": "^9.0.1",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "package.json",
+      "line": 68,
+      "source": "registry",
+      "locked": {
+       "version": "9.0.1",
+       "file": "pnpm-lock.yaml",
+       "line": 142
+      }
+     },
+     {
+      "name": "react-resizable-panels",
+      "spec": "^2.0.20",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "package.json",
+      "line": 69,
+      "source": "registry",
+      "locked": {
+       "version": "2.0.20",
+       "file": "pnpm-lock.yaml",
+       "line": 145
+      }
+     },
+     {
+      "name": "react-toastify",
+      "spec": "^10.0.5",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "package.json",
+      "line": 70,
+      "source": "registry",
+      "locked": {
+       "version": "10.0.5",
+       "file": "pnpm-lock.yaml",
+       "line": 148
+      }
+     },
+     {
+      "name": "rehype-raw",
+      "spec": "^7.0.0",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "package.json",
+      "line": 71,
+      "source": "registry",
+      "locked": {
+       "version": "7.0.0",
+       "file": "pnpm-lock.yaml",
+       "line": 151
+      }
+     },
+     {
+      "name": "rehype-sanitize",
+      "spec": "^6.0.0",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "package.json",
+      "line": 72,
+      "source": "registry",
+      "locked": {
+       "version": "6.0.0",
+       "file": "pnpm-lock.yaml",
+       "line": 154
+      }
+     },
+     {
+      "name": "remark-gfm",
+      "spec": "^4.0.0",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "package.json",
+      "line": 73,
+      "source": "registry",
+      "locked": {
+       "version": "4.0.0",
+       "file": "pnpm-lock.yaml",
+       "line": 157
+      }
+     },
+     {
+      "name": "remix-island",
+      "spec": "^0.2.0",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "package.json",
+      "line": 74,
+      "source": "registry",
+      "locked": {
+       "version": "0.2.0",
+       "file": "pnpm-lock.yaml",
+       "line": 160
+      }
+     },
+     {
+      "name": "remix-utils",
+      "spec": "^7.6.0",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "package.json",
+      "line": 75,
+      "source": "registry",
+      "locked": {
+       "version": "7.6.0",
+       "file": "pnpm-lock.yaml",
+       "line": 163
+      }
+     },
+     {
+      "name": "shiki",
+      "spec": "^1.9.1",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "package.json",
+      "line": 76,
+      "source": "registry",
+      "locked": {
+       "version": "1.9.1",
+       "file": "pnpm-lock.yaml",
+       "line": 166
+      }
+     },
+     {
+      "name": "unist-util-visit",
+      "spec": "^5.0.0",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "package.json",
+      "line": 77,
+      "source": "registry",
+      "locked": {
+       "version": "5.0.0",
+       "file": "pnpm-lock.yaml",
+       "line": 169
+      }
+     },
+     {
+      "name": "@blitz/eslint-plugin",
+      "spec": "0.1.0",
+      "ecosystem": "npm",
+      "section": "devDependencies",
+      "file": "package.json",
+      "line": 80,
+      "source": "registry",
+      "locked": {
+       "version": "0.1.0",
+       "file": "pnpm-lock.yaml",
+       "line": 173
+      }
+     },
+     {
+      "name": "@cloudflare/workers-types",
+      "spec": "^4.20240620.0",
+      "ecosystem": "npm",
+      "section": "devDependencies",
+      "file": "package.json",
+      "line": 81,
+      "source": "registry",
+      "locked": {
+       "version": "4.20240620.0",
+       "file": "pnpm-lock.yaml",
+       "line": 176
+      }
+     },
+     {
+      "name": "@remix-run/dev",
+      "spec": "^2.10.0",
+      "ecosystem": "npm",
+      "section": "devDependencies",
+      "file": "package.json",
+      "line": 82,
+      "source": "registry",
+      "locked": {
+       "version": "2.10.0",
+       "file": "pnpm-lock.yaml",
+       "line": 179
+      }
+     },
+     {
+      "name": "@types/diff",
+      "spec": "^5.2.1",
+      "ecosystem": "npm",
+      "section": "devDependencies",
+      "file": "package.json",
+      "line": 83,
+      "source": "registry",
+      "locked": {
+       "version": "5.2.1",
+       "file": "pnpm-lock.yaml",
+       "line": 182
+      }
+     },
+     {
+      "name": "@types/react",
+      "spec": "^18.2.20",
+      "ecosystem": "npm",
+      "section": "devDependencies",
+      "file": "package.json",
+      "line": 84,
+      "source": "registry",
+      "locked": {
+       "version": "18.3.3",
+       "file": "pnpm-lock.yaml",
+       "line": 185
+      }
+     },
+     {
+      "name": "@types/react-dom",
+      "spec": "^18.2.7",
+      "ecosystem": "npm",
+      "section": "devDependencies",
+      "file": "package.json",
+      "line": 85,
+      "source": "registry",
+      "locked": {
+       "version": "18.3.0",
+       "file": "pnpm-lock.yaml",
+       "line": 188
+      }
+     },
+     {
+      "name": "fast-glob",
+      "spec": "^3.3.2",
+      "ecosystem": "npm",
+      "section": "devDependencies",
+      "file": "package.json",
+      "line": 86,
+      "source": "registry",
+      "locked": {
+       "version": "3.3.2",
+       "file": "pnpm-lock.yaml",
+       "line": 191
+      }
+     },
+     {
+      "name": "is-ci",
+      "spec": "^3.0.1",
+      "ecosystem": "npm",
+      "section": "devDependencies",
+      "file": "package.json",
+      "line": 87,
+      "source": "registry",
+      "locked": {
+       "version": "3.0.1",
+       "file": "pnpm-lock.yaml",
+       "line": 194
+      }
+     },
+     {
+      "name": "node-fetch",
+      "spec": "^3.3.2",
+      "ecosystem": "npm",
+      "section": "devDependencies",
+      "file": "package.json",
+      "line": 88,
+      "source": "registry",
+      "locked": {
+       "version": "3.3.2",
+       "file": "pnpm-lock.yaml",
+       "line": 197
+      }
+     },
+     {
+      "name": "prettier",
+      "spec": "^3.3.2",
+      "ecosystem": "npm",
+      "section": "devDependencies",
+      "file": "package.json",
+      "line": 89,
+      "source": "registry",
+      "locked": {
+       "version": "3.3.2",
+       "file": "pnpm-lock.yaml",
+       "line": 200
+      }
+     },
+     {
+      "name": "typescript",
+      "spec": "^5.5.2",
+      "ecosystem": "npm",
+      "section": "devDependencies",
+      "file": "package.json",
+      "line": 90,
+      "source": "registry",
+      "locked": {
+       "version": "5.5.2",
+       "file": "pnpm-lock.yaml",
+       "line": 203
+      }
+     },
+     {
+      "name": "unified",
+      "spec": "^11.0.5",
+      "ecosystem": "npm",
+      "section": "devDependencies",
+      "file": "package.json",
+      "line": 91,
+      "source": "registry",
+      "locked": {
+       "version": "11.0.5",
+       "file": "pnpm-lock.yaml",
+       "line": 206
+      }
+     },
+     {
+      "name": "unocss",
+      "spec": "^0.61.3",
+      "ecosystem": "npm",
+      "section": "devDependencies",
+      "file": "package.json",
+      "line": 92,
+      "source": "registry",
+      "locked": {
+       "version": "0.61.3",
+       "file": "pnpm-lock.yaml",
+       "line": 209
+      }
+     },
+     {
+      "name": "vite",
+      "spec": "^5.3.1",
+      "ecosystem": "npm",
+      "section": "devDependencies",
+      "file": "package.json",
+      "line": 93,
+      "source": "registry",
+      "locked": {
+       "version": "5.3.1",
+       "file": "pnpm-lock.yaml",
+       "line": 212
+      }
+     },
+     {
+      "name": "vite-plugin-node-polyfills",
+      "spec": "^0.22.0",
+      "ecosystem": "npm",
+      "section": "devDependencies",
+      "file": "package.json",
+      "line": 94,
+      "source": "registry",
+      "locked": {
+       "version": "0.22.0",
+       "file": "pnpm-lock.yaml",
+       "line": 215
+      }
+     },
+     {
+      "name": "vite-plugin-optimize-css-modules",
+      "spec": "^1.1.0",
+      "ecosystem": "npm",
+      "section": "devDependencies",
+      "file": "package.json",
+      "line": 95,
+      "source": "registry",
+      "locked": {
+       "version": "1.1.0",
+       "file": "pnpm-lock.yaml",
+       "line": 218
+      }
+     },
+     {
+      "name": "vite-tsconfig-paths",
+      "spec": "^4.3.2",
+      "ecosystem": "npm",
+      "section": "devDependencies",
+      "file": "package.json",
+      "line": 96,
+      "source": "registry",
+      "locked": {
+       "version": "4.3.2",
+       "file": "pnpm-lock.yaml",
+       "line": 221
+      }
+     },
+     {
+      "name": "vitest",
+      "spec": "^2.0.1",
+      "ecosystem": "npm",
+      "section": "devDependencies",
+      "file": "package.json",
+      "line": 97,
+      "source": "registry",
+      "locked": {
+       "version": "2.0.1",
+       "file": "pnpm-lock.yaml",
+       "line": 224
+      }
+     },
+     {
+      "name": "wrangler",
+      "spec": "^3.63.2",
+      "ecosystem": "npm",
+      "section": "devDependencies",
+      "file": "package.json",
+      "line": 98,
+      "source": "registry",
+      "locked": {
+       "version": "3.63.2",
+       "file": "pnpm-lock.yaml",
+       "line": 227
+      }
+     },
+     {
+      "name": "zod",
+      "spec": "^3.23.8",
+      "ecosystem": "npm",
+      "section": "devDependencies",
+      "file": "package.json",
+      "line": 99,
+      "source": "registry",
+      "locked": {
+       "version": "3.23.8",
+       "file": "pnpm-lock.yaml",
+       "line": 230
+      }
+     }
+    ]
+   }
+  ],
+  "readme": {
+   "file": "README.md",
+   "head": "[![Bolt.new: AI-Powered Full-Stack Web Development in the Browser](./public/social_preview_index.jpg)](https://bolt.new)\n\n# Bolt.new: AI-Powered Full-Stack Web Development in the Browser\n\nBolt.new is an AI-powered web development agent that allows you to prompt, run, edit, and deploy full-stack applications directly from your browser—no local setup required. If you're here to build your own AI-powered web dev agent using the Bolt open source codebase, [click here to get started!](./CONTRIBUTING.md)\n\n## What Makes Bolt.new Different\n\nClaude, v0, etc are incredible- but you can't install packages, run backends or edit code. That’s where Bolt.new stands out:\n\n- **Full-Stack in the Browser**: Bolt.new integrates cutting-edge AI models with an in-browser development environment powered by **StackBlitz’s WebContainers**. This allows you to:\n  - Install and run npm tools and libraries (like Vite, Next.js, and more)\n  - Run Node.js servers\n  - Interact with third-party APIs\n  - Deploy to production from chat\n  - Share your work via a URL\n\n- **AI with Environment Control**: Unlike traditional dev environments where the AI can only assist in code generation, Bolt.new gives AI models **complete control** over the entire  environment including the filesystem, node server, package manager, terminal, and browser console. This empowers AI agents to handle the entire app lifecycle—from creation to deployment.\n\nWhether you’re an experienced developer, a PM or designer, Bolt.new allows you to build production-grade full-stack applications with ease.\n\nFor developers interested in building their own AI-powered development tools with WebContainers, check out the open-source Bolt codebase in this repo!\n\n## Tips and Tricks\n\nHere are some tips to get the most out of Bolt.new:\n\n- **Be specific about your stack**: If you want to use specific frameworks or libraries (like Astro, Tailwind, ShadCN, or any other popular JavaScript framework), mention them in your initial prompt to ensure Bolt scaffolds the project accordingly.\n\n- **Use the enhance prompt icon**: Before sending your prompt, try clicking the 'enhance' icon to have the AI model help you refine your prompt, then edit the results before submitting.\n\n- **Scaffold the basics first, then add features**: Make sure the basic structure of your application is in place before diving into more advanced functionality. This helps Bolt understand the foundation of your project and ensure everything is wired up right before building out more advanced functionality.\n\n- **Batch simple instructions**: Save time by combining simple instructions into one message. For example, you can ask Bolt to change the color scheme, add mobile responsiveness, and restart the dev server, all in one go saving you time and reducing API credit consumption significantly.\n\n## FAQs\n\n**Where do I sign up for a paid plan?**  \nBolt.new is free to get started. If you need more AI tokens or want private projects, you can purchase a paid subscription in your [Bolt.new](https://bolt.new) settings, in the lower-left hand corner of the application. \n\n**What happens if I hit the free usage limit?**  \nOnce your free daily token limit is reached, AI interactions are paused until the next day or until you upgrade your plan.\n\n**Is Bolt in beta?**  \nYes, Bolt.new is in beta, and we are actively improving it based on feedback.\n\n**How can I report Bolt.new issues?**  \nCheck out the [Issues section](https://github.com/stackblitz/bolt.new/issues) to report an issue or request a new feature. Please use the search feature to check if someone else has already submitted the same issue/request.\n\n**What frameworks/libraries currently work on Bolt?**  \nBolt.new supports most popular JavaScript frameworks and libraries. If it runs on StackBlitz, it will run on Bolt.new as well.\n\n**How can I add make sure my framework/project works well in bolt?**  \nWe are excited to work with the JavaScript ecosystem to improve functionality in Bolt. Reach out to us via [hello@stackblitz.com](mailto:hello@stackblitz.com) to discuss how we can partner!\n"
+  },
+  "ai_call_sites": [
+   {
+    "signal": "llm_call",
+    "file": "app/routes/api.chat.ts",
+    "line": 35,
+    "text": "        const result = await streamText(messages, context.cloudflare.env, options);"
+   },
+   {
+    "signal": "llm_call",
+    "file": "app/routes/api.chat.ts",
+    "line": 41,
+    "text": "    const result = await streamText(messages, context.cloudflare.env, options);"
+   },
+   {
+    "signal": "llm_call",
+    "file": "app/routes/api.enhancer.ts",
+    "line": 17,
+    "text": "    const result = await streamText("
+   },
+   {
+    "signal": "sdk_vercel_ai",
+    "file": "app/components/chat/BaseChat.tsx",
+    "line": 1,
+    "text": "import type { Message } from 'ai';"
+   },
+   {
+    "signal": "sdk_vercel_ai",
+    "file": "app/components/chat/Chat.client.tsx",
+    "line": 2,
+    "text": "import type { Message } from 'ai';"
+   },
+   {
+    "signal": "sdk_vercel_ai",
+    "file": "app/components/chat/Messages.client.tsx",
+    "line": 1,
+    "text": "import type { Message } from 'ai';"
+   },
+   {
+    "signal": "sdk_vercel_ai",
+    "file": "app/lib/hooks/useMessageParser.ts",
+    "line": 1,
+    "text": "import type { Message } from 'ai';"
+   },
+   {
+    "signal": "sdk_vercel_ai",
+    "file": "app/lib/persistence/db.ts",
+    "line": 1,
+    "text": "import type { Message } from 'ai';"
+   },
+   {
+    "signal": "sdk_vercel_ai",
+    "file": "app/lib/persistence/useChatHistory.ts",
+    "line": 4,
+    "text": "import type { Message } from 'ai';"
+   },
+   {
+    "signal": "sdk_vercel_ai",
+    "file": "app/routes/api.enhancer.ts",
+    "line": 2,
+    "text": "import { StreamingTextResponse, parseStreamPart } from 'ai';"
+   }
+  ],
+  "signals": {
+   "sdk_vercel_ai": {
+    "hits": 7,
+    "files": 7,
+    "samples": [
+     {
+      "file": "app/components/chat/BaseChat.tsx",
+      "line": 1,
+      "text": "import type { Message } from 'ai';"
+     },
+     {
+      "file": "app/components/chat/Chat.client.tsx",
+      "line": 2,
+      "text": "import type { Message } from 'ai';"
+     },
+     {
+      "file": "app/components/chat/Messages.client.tsx",
+      "line": 1,
+      "text": "import type { Message } from 'ai';"
+     },
+     {
+      "file": "app/lib/hooks/useMessageParser.ts",
+      "line": 1,
+      "text": "import type { Message } from 'ai';"
+     }
+    ]
+   },
+   "scheduled": {
+    "hits": 1,
+    "files": 1,
+    "samples": [
+     {
+      "file": "app/components/ui/LoadingDots.tsx",
+      "line": 11,
+      "text": "    const interval = setInterval(() => {"
+     }
+    ]
+   },
+   "llm_call": {
+    "hits": 3,
+    "files": 2,
+    "samples": [
+     {
+      "file": "app/routes/api.chat.ts",
+      "line": 35,
+      "text": "        const result = await streamText(messages, context.cloudflare.env, options);"
+     },
+     {
+      "file": "app/routes/api.chat.ts",
+      "line": 41,
+      "text": "    const result = await streamText(messages, context.cloudflare.env, options);"
+     },
+     {
+      "file": "app/routes/api.enhancer.ts",
+      "line": 17,
+      "text": "    const result = await streamText("
+     }
+    ]
+   },
+   "streaming": {
+    "hits": 3,
+    "files": 2,
+    "samples": [
+     {
+      "file": "app/routes/api.chat.ts",
+      "line": 35,
+      "text": "        const result = await streamText(messages, context.cloudflare.env, options);"
+     },
+     {
+      "file": "app/routes/api.chat.ts",
+      "line": 41,
+      "text": "    const result = await streamText(messages, context.cloudflare.env, options);"
+     },
+     {
+      "file": "app/routes/api.enhancer.ts",
+      "line": 17,
+      "text": "    const result = await streamText("
+     }
+    ]
+   },
+   "classifier_prompt": {
+    "hits": 1,
+    "files": 1,
+    "samples": [
+     {
+      "file": "uno.config.ts",
+      "line": 251,
+      "text": " * @param hex - The hex color code (without alpha) to generate the palette from."
+     }
+    ]
+   }
+  },
+  "model_ids": [
+   {
+    "id": "claude-3-5-sonnet-20240620",
+    "provider": "anthropic",
+    "places": [
+     {
+      "file": "app/lib/.server/llm/model.ts",
+      "line": 8,
+      "text": "return anthropic('claude-3-5-sonnet-20240620');",
+      "route": "direct",
+      "context": "code",
+      "commented": false
+     }
+    ]
+   }
+  ],
+  "steps": [
+   {
+    "name": "List files",
+    "detail": "133 files to read, 5 skipped (vendored, generated, minified, binary or over 2 MB)",
+    "ms": 12
+   },
+   {
+    "name": "Read manifests",
+    "detail": "1 manifest, 72 declared dependencies",
+    "ms": 3
+   },
+   {
+    "name": "Read the README",
+    "detail": "README.md",
+    "ms": 0
+   },
+   {
+    "name": "Measure languages",
+    "detail": "TypeScript 85%, CSS 8%, Markdown 2%",
+    "ms": 0
+   },
+   {
+    "name": "Run signals",
+    "detail": "5 of 43 signals fired",
+    "ms": 22
+   },
+   {
+    "name": "Find model ids",
+    "detail": "1 distinct model id in 1 place",
+    "ms": 4
+   }
+  ],
+  "checked": {
+   "files": 133,
+   "lines": 9410
+  }
+ },
+ "pattern_hits": [
+  {
+   "file": "app/lib/.server/llm/model.ts",
+   "line": 8,
+   "pattern": "PAT-retired-model-id",
+   "text": "  return anthropic('claude-3-5-sonnet-20240620');"
+  },
+  {
+   "file": "app/lib/.server/llm/stream-text.ts",
+   "line": 24,
+   "pattern": "PAT-no-test-set",
+   "text": "export function streamText(messages: Messages, env: Env, options?: StreamingOptions) {"
+  },
+  {
+   "file": "app/lib/.server/llm/stream-text.ts",
+   "line": 24,
+   "pattern": "PAT-no-tracing",
+   "text": "export function streamText(messages: Messages, env: Env, options?: StreamingOptions) {"
+  },
+  {
+   "file": "app/routes/api.chat.ts",
+   "line": 35,
+   "pattern": "PAT-no-test-set",
+   "text": "        const result = await streamText(messages, context.cloudflare.env, options);"
+  },
+  {
+   "file": "app/routes/api.chat.ts",
+   "line": 35,
+   "pattern": "PAT-no-tracing",
+   "text": "        const result = await streamText(messages, context.cloudflare.env, options);"
+  },
+  {
+   "file": "app/routes/api.chat.ts",
+   "line": 41,
+   "pattern": "PAT-no-test-set",
+   "text": "    const result = await streamText(messages, context.cloudflare.env, options);"
+  },
+  {
+   "file": "app/routes/api.chat.ts",
+   "line": 41,
+   "pattern": "PAT-no-tracing",
+   "text": "    const result = await streamText(messages, context.cloudflare.env, options);"
+  },
+  {
+   "file": "app/routes/api.enhancer.ts",
+   "line": 17,
+   "pattern": "PAT-no-test-set",
+   "text": "    const result = await streamText("
+  },
+  {
+   "file": "app/routes/api.enhancer.ts",
+   "line": 17,
+   "pattern": "PAT-no-tracing",
+   "text": "    const result = await streamText("
+  }
+ ],
+ "exact": [
+  {
+   "kind": "model",
+   "model": "claude-3-5-sonnet-20240620",
+   "provider": "anthropic",
+   "status": "retired",
+   "announced": "2025-08-13",
+   "effective": "2025-10-28",
+   "successors": [
+    "claude-sonnet-5-5"
+   ],
+   "source": "https://platform.claude.com/docs/en/release-notes/overview",
+   "sentence": "We’ve retired the Claude Sonnet 3.5 models.",
+   "live_places": [
+    {
+     "file": "app/lib/.server/llm/model.ts",
+     "line": 8,
+     "text": "return anthropic('claude-3-5-sonnet-20240620');",
+     "route": "direct",
+     "context": "code",
+     "commented": false
+    }
+   ],
+   "not_live": [],
+   "successors_from_page": true,
+   "page_source": "https://platform.claude.com/docs/en/about-claude/model-deprecations"
+  },
+  {
+   "kind": "dependency",
+   "name": "@ai-sdk/anthropic",
+   "ecosystem": "npm",
+   "spec": "^0.0.39",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "package.json",
+     "line": 26,
+     "spec": "^0.0.39"
+    }
+   ],
+   "locked": {
+    "version": "0.0.39",
+    "file": "pnpm-lock.yaml",
+    "line": 16
+   },
+   "status": "behind",
+   "latest": "4.0.94",
+   "latest_date": "2026-10-30",
+   "declared_date": "2024-08-08",
+   "majors_behind": 4,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/@ai-sdk/anthropic",
+   "release_notes": {
+    "url": "https://github.com/vercel/ai/blob/main/packages/anthropic/CHANGELOG.md",
+    "gains": [
+     {
+      "version": "3.0.17",
+      "date": null,
+      "kind": "fix",
+      "text": "Fix JSON parsing crash when handling Anthropic web_fetch tool error results"
+     },
+     {
+      "version": "4.0.52",
+      "date": null,
+      "kind": "add",
+      "text": "add batch cancellation and listing"
+     },
+     {
+      "version": "4.0.91",
+      "date": null,
+      "kind": "fix",
+      "text": "Fix workflow serialization of Anthropic models using API keys or synchronous auth tokens while preserving support for asynchronous token providers."
+     },
+     {
+      "version": "4.0.0",
+      "date": null,
+      "kind": "add",
+      "text": "add new top-level reasoning parameter to spec and support it in generateText and streamText"
+     }
+    ]
+   }
+  },
+  {
+   "kind": "dependency",
+   "name": "@codemirror/autocomplete",
+   "ecosystem": "npm",
+   "spec": "^6.17.0",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "package.json",
+     "line": 27,
+     "spec": "^6.17.0"
+    }
+   ],
+   "locked": {
+    "version": "6.17.0",
+    "file": "pnpm-lock.yaml",
+    "line": 19
+   },
+   "status": "allowed-by-range",
+   "latest": "6.20.4",
+   "latest_date": "2026-10-19",
+   "declared_date": "2024-07-03",
+   "majors_behind": 0,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/@codemirror/autocomplete"
+  },
+  {
+   "kind": "dependency",
+   "name": "@codemirror/commands",
+   "ecosystem": "npm",
+   "spec": "^6.6.0",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "package.json",
+     "line": 28,
+     "spec": "^6.6.0"
+    }
+   ],
+   "locked": {
+    "version": "6.6.0",
+    "file": "pnpm-lock.yaml",
+    "line": 22
+   },
+   "status": "allowed-by-range",
+   "latest": "6.11.1",
+   "latest_date": "2026-09-15",
+   "declared_date": "2024-06-04",
+   "majors_behind": 0,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/@codemirror/commands"
+  },
+  {
+   "kind": "dependency",
+   "name": "@codemirror/lang-cpp",
+   "ecosystem": "npm",
+   "spec": "^6.0.2",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "package.json",
+     "line": 29,
+     "spec": "^6.0.2"
+    }
+   ],
+   "locked": {
+    "version": "6.0.2",
+    "file": "pnpm-lock.yaml",
+    "line": 25
+   },
+   "status": "allowed-by-range",
+   "latest": "6.0.3",
+   "latest_date": "2025-06-19",
+   "declared_date": "2022-10-24",
+   "majors_behind": 0,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/@codemirror/lang-cpp"
+  },
+  {
+   "kind": "dependency",
+   "name": "@codemirror/lang-css",
+   "ecosystem": "npm",
+   "spec": "^6.2.1",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "package.json",
+     "line": 30,
+     "spec": "^6.2.1"
+    }
+   ],
+   "locked": {
+    "version": "6.2.1",
+    "file": "pnpm-lock.yaml",
+    "line": 28
+   },
+   "status": "allowed-by-range",
+   "latest": "6.3.1",
+   "latest_date": "2024-11-26",
+   "declared_date": "2023-08-04",
+   "majors_behind": 0,
+   "stale": true,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/@codemirror/lang-css"
+  },
+  {
+   "kind": "dependency",
+   "name": "@codemirror/lang-html",
+   "ecosystem": "npm",
+   "spec": "^6.4.9",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "package.json",
+     "line": 31,
+     "spec": "^6.4.9"
+    }
+   ],
+   "locked": {
+    "version": "6.4.9",
+    "file": "pnpm-lock.yaml",
+    "line": 31
+   },
+   "status": "allowed-by-range",
+   "latest": "6.4.12",
+   "latest_date": "2026-08-04",
+   "declared_date": "2024-04-12",
+   "majors_behind": 0,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/@codemirror/lang-html"
+  },
+  {
+   "kind": "dependency",
+   "name": "@codemirror/lang-javascript",
+   "ecosystem": "npm",
+   "spec": "^6.2.2",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "package.json",
+     "line": 32,
+     "spec": "^6.2.2"
+    }
+   ],
+   "locked": {
+    "version": "6.2.2",
+    "file": "pnpm-lock.yaml",
+    "line": 34
+   },
+   "status": "allowed-by-range",
+   "latest": "6.2.5",
+   "latest_date": "2026-03-02",
+   "declared_date": "2024-02-20",
+   "majors_behind": 0,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/@codemirror/lang-javascript"
+  },
+  {
+   "kind": "dependency",
+   "name": "@codemirror/lang-json",
+   "ecosystem": "npm",
+   "spec": "^6.0.1",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "package.json",
+     "line": 33,
+     "spec": "^6.0.1"
+    }
+   ],
+   "locked": {
+    "version": "6.0.1",
+    "file": "pnpm-lock.yaml",
+    "line": 37
+   },
+   "status": "allowed-by-range",
+   "latest": "6.0.2",
+   "latest_date": "2025-06-19",
+   "declared_date": "2022-10-24",
+   "majors_behind": 0,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/@codemirror/lang-json"
+  },
+  {
+   "kind": "dependency",
+   "name": "@codemirror/lang-markdown",
+   "ecosystem": "npm",
+   "spec": "^6.2.5",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "package.json",
+     "line": 34,
+     "spec": "^6.2.5"
+    }
+   ],
+   "locked": {
+    "version": "6.2.5",
+    "file": "pnpm-lock.yaml",
+    "line": 40
+   },
+   "status": "allowed-by-range",
+   "latest": "6.5.2",
+   "latest_date": "2026-08-04",
+   "declared_date": "2024-04-12",
+   "majors_behind": 0,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/@codemirror/lang-markdown"
+  },
+  {
+   "kind": "dependency",
+   "name": "@codemirror/lang-python",
+   "ecosystem": "npm",
+   "spec": "^6.1.6",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "package.json",
+     "line": 35,
+     "spec": "^6.1.6"
+    }
+   ],
+   "locked": {
+    "version": "6.1.6",
+    "file": "pnpm-lock.yaml",
+    "line": 43
+   },
+   "status": "allowed-by-range",
+   "latest": "6.2.1",
+   "latest_date": "2025-05-14",
+   "declared_date": "2024-04-29",
+   "majors_behind": 0,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/@codemirror/lang-python"
+  },
+  {
+   "kind": "dependency",
+   "name": "@codemirror/lang-sass",
+   "ecosystem": "npm",
+   "spec": "^6.0.2",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "package.json",
+     "line": 36,
+     "spec": "^6.0.2"
+    }
+   ],
+   "locked": {
+    "version": "6.0.2",
+    "file": "pnpm-lock.yaml",
+    "line": 46
+   },
+   "status": "current",
+   "latest": "6.0.2",
+   "latest_date": "2023-06-05",
+   "declared_date": "2023-06-05",
+   "majors_behind": 0,
+   "stale": true,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/@codemirror/lang-sass"
+  },
+  {
+   "kind": "dependency",
+   "name": "@codemirror/lang-wast",
+   "ecosystem": "npm",
+   "spec": "^6.0.2",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "package.json",
+     "line": 37,
+     "spec": "^6.0.2"
+    }
+   ],
+   "locked": {
+    "version": "6.0.2",
+    "file": "pnpm-lock.yaml",
+    "line": 49
+   },
+   "status": "current",
+   "latest": "6.0.2",
+   "latest_date": "2023-12-28",
+   "declared_date": "2023-12-28",
+   "majors_behind": 0,
+   "stale": true,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/@codemirror/lang-wast"
+  },
+  {
+   "kind": "dependency",
+   "name": "@codemirror/language",
+   "ecosystem": "npm",
+   "spec": "^6.10.2",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "package.json",
+     "line": 38,
+     "spec": "^6.10.2"
+    }
+   ],
+   "locked": {
+    "version": "6.10.2",
+    "file": "pnpm-lock.yaml",
+    "line": 52
+   },
+   "status": "allowed-by-range",
+   "latest": "6.13.1",
+   "latest_date": "2026-10-07",
+   "declared_date": "2024-06-03",
+   "majors_behind": 0,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/@codemirror/language"
+  },
+  {
+   "kind": "dependency",
+   "name": "@codemirror/search",
+   "ecosystem": "npm",
+   "spec": "^6.5.6",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "package.json",
+     "line": 39,
+     "spec": "^6.5.6"
+    }
+   ],
+   "locked": {
+    "version": "6.5.6",
+    "file": "pnpm-lock.yaml",
+    "line": 55
+   },
+   "status": "allowed-by-range",
+   "latest": "6.7.2",
+   "latest_date": "2026-08-31",
+   "declared_date": "2024-02-07",
+   "majors_behind": 0,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/@codemirror/search"
+  },
+  {
+   "kind": "dependency",
+   "name": "@codemirror/state",
+   "ecosystem": "npm",
+   "spec": "^6.4.1",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "package.json",
+     "line": 40,
+     "spec": "^6.4.1"
+    }
+   ],
+   "locked": {
+    "version": "6.4.1",
+    "file": "pnpm-lock.yaml",
+    "line": 58
+   },
+   "status": "allowed-by-range",
+   "latest": "6.7.6",
+   "latest_date": "2026-09-22",
+   "declared_date": "2024-02-19",
+   "majors_behind": 0,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/@codemirror/state"
+  },
+  {
+   "kind": "dependency",
+   "name": "@codemirror/view",
+   "ecosystem": "npm",
+   "spec": "^6.28.4",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "package.json",
+     "line": 41,
+     "spec": "^6.28.4"
+    }
+   ],
+   "locked": {
+    "version": "6.28.4",
+    "file": "pnpm-lock.yaml",
+    "line": 61
+   },
+   "status": "allowed-by-range",
+   "latest": "6.43.15",
+   "latest_date": "2026-10-19",
+   "declared_date": "2024-07-03",
+   "majors_behind": 0,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/@codemirror/view"
+  },
+  {
+   "kind": "dependency",
+   "name": "@iconify-json/ph",
+   "ecosystem": "npm",
+   "spec": "^1.1.13",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "package.json",
+     "line": 42,
+     "spec": "^1.1.13"
+    }
+   ],
+   "locked": {
+    "version": "1.1.13",
+    "file": "pnpm-lock.yaml",
+    "line": 64
+   },
+   "status": "allowed-by-range",
+   "latest": "1.2.2",
+   "latest_date": "2024-12-16",
+   "declared_date": "2024-05-06",
+   "majors_behind": 0,
+   "stale": true,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/@iconify-json/ph"
+  },
+  {
+   "kind": "dependency",
+   "name": "@iconify-json/svg-spinners",
+   "ecosystem": "npm",
+   "spec": "^1.1.2",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "package.json",
+     "line": 43,
+     "spec": "^1.1.2"
+    }
+   ],
+   "locked": {
+    "version": "1.1.2",
+    "file": "pnpm-lock.yaml",
+    "line": 67
+   },
+   "status": "allowed-by-range",
+   "latest": "1.2.4",
+   "latest_date": "2025-08-11",
+   "declared_date": "2023-08-06",
+   "majors_behind": 0,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/@iconify-json/svg-spinners"
+  },
+  {
+   "kind": "dependency",
+   "name": "@lezer/highlight",
+   "ecosystem": "npm",
+   "spec": "^1.2.0",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "package.json",
+     "line": 44,
+     "spec": "^1.2.0"
+    }
+   ],
+   "locked": {
+    "version": "1.2.0",
+    "file": "pnpm-lock.yaml",
+    "line": 70
+   },
+   "status": "allowed-by-range",
+   "latest": "1.2.5",
+   "latest_date": "2026-09-28",
+   "declared_date": "2023-11-12",
+   "majors_behind": 0,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/@lezer/highlight"
+  },
+  {
+   "kind": "dependency",
+   "name": "@nanostores/react",
+   "ecosystem": "npm",
+   "spec": "^0.7.2",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "package.json",
+     "line": 45,
+     "spec": "^0.7.2"
+    }
+   ],
+   "locked": {
+    "version": "0.7.2",
+    "file": "pnpm-lock.yaml",
+    "line": 73
+   },
+   "status": "behind",
+   "latest": "2.0.1",
+   "latest_date": "2026-09-02",
+   "declared_date": "2024-02-20",
+   "majors_behind": 2,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/@nanostores/react"
+  },
+  {
+   "kind": "dependency",
+   "name": "@radix-ui/react-dialog",
+   "ecosystem": "npm",
+   "spec": "^1.1.1",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "package.json",
+     "line": 46,
+     "spec": "^1.1.1"
+    }
+   ],
+   "locked": {
+    "version": "1.1.1",
+    "file": "pnpm-lock.yaml",
+    "line": 76
+   },
+   "status": "allowed-by-range",
+   "latest": "1.3.1",
+   "latest_date": "2026-10-12",
+   "declared_date": "2024-06-21",
+   "majors_behind": 0,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/@radix-ui/react-dialog"
+  },
+  {
+   "kind": "dependency",
+   "name": "@radix-ui/react-dropdown-menu",
+   "ecosystem": "npm",
+   "spec": "^2.1.1",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "package.json",
+     "line": 47,
+     "spec": "^2.1.1"
+    }
+   ],
+   "locked": {
+    "version": "2.1.1",
+    "file": "pnpm-lock.yaml",
+    "line": 79
+   },
+   "status": "allowed-by-range",
+   "latest": "2.2.1",
+   "latest_date": "2026-10-12",
+   "declared_date": "2024-06-21",
+   "majors_behind": 0,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/@radix-ui/react-dropdown-menu"
+  },
+  {
+   "kind": "dependency",
+   "name": "@remix-run/cloudflare",
+   "ecosystem": "npm",
+   "spec": "^2.10.2",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "package.json",
+     "line": 48,
+     "spec": "^2.10.2"
+    }
+   ],
+   "locked": {
+    "version": "2.10.2",
+    "file": "pnpm-lock.yaml",
+    "line": 82
+   },
+   "status": "allowed-by-range",
+   "latest": "2.17.5",
+   "latest_date": "2026-06-01",
+   "declared_date": "2024-07-04",
+   "majors_behind": 0,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/@remix-run/cloudflare"
+  },
+  {
+   "kind": "dependency",
+   "name": "@remix-run/cloudflare-pages",
+   "ecosystem": "npm",
+   "spec": "^2.10.2",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "package.json",
+     "line": 49,
+     "spec": "^2.10.2"
+    }
+   ],
+   "locked": {
+    "version": "2.10.2",
+    "file": "pnpm-lock.yaml",
+    "line": 85
+   },
+   "status": "allowed-by-range",
+   "latest": "2.17.5",
+   "latest_date": "2026-06-01",
+   "declared_date": "2024-07-04",
+   "majors_behind": 0,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/@remix-run/cloudflare-pages"
+  },
+  {
+   "kind": "dependency",
+   "name": "@remix-run/react",
+   "ecosystem": "npm",
+   "spec": "^2.10.2",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "package.json",
+     "line": 50,
+     "spec": "^2.10.2"
+    }
+   ],
+   "locked": {
+    "version": "2.10.2",
+    "file": "pnpm-lock.yaml",
+    "line": 88
+   },
+   "status": "allowed-by-range",
+   "latest": "2.17.5",
+   "latest_date": "2026-06-01",
+   "declared_date": "2024-07-04",
+   "majors_behind": 0,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/@remix-run/react"
+  },
+  {
+   "kind": "dependency",
+   "name": "@uiw/codemirror-theme-vscode",
+   "ecosystem": "npm",
+   "spec": "^4.23.0",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "package.json",
+     "line": 51,
+     "spec": "^4.23.0"
+    }
+   ],
+   "locked": {
+    "version": "4.23.0",
+    "file": "pnpm-lock.yaml",
+    "line": 91
+   },
+   "status": "allowed-by-range",
+   "latest": "4.25.12",
+   "latest_date": "2026-09-24",
+   "declared_date": "2024-07-04",
+   "majors_behind": 0,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/@uiw/codemirror-theme-vscode"
+  },
+  {
+   "kind": "dependency",
+   "name": "@unocss/reset",
+   "ecosystem": "npm",
+   "spec": "^0.61.0",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "package.json",
+     "line": 52,
+     "spec": "^0.61.0"
+    }
+   ],
+   "locked": {
+    "version": "0.61.3",
+    "file": "pnpm-lock.yaml",
+    "line": 94
+   },
+   "status": "behind",
+   "latest": "66.12.0",
+   "latest_date": "2026-10-26",
+   "declared_date": "2024-06-11",
+   "majors_behind": 66,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/@unocss/reset"
+  },
+  {
+   "kind": "dependency",
+   "name": "@webcontainer/api",
+   "ecosystem": "npm",
+   "spec": "1.3.0-internal.10",
+   "spec_kind": "exact",
+   "places": [
+    {
+     "file": "package.json",
+     "line": 53,
+     "spec": "1.3.0-internal.10"
+    }
+   ],
+   "locked": {
+    "version": "1.3.0-internal.10",
+    "file": "pnpm-lock.yaml",
+    "line": 97
+   },
+   "status": "behind",
+   "latest": "1.6.4",
+   "latest_date": "2026-04-14",
+   "declared_date": "2024-09-19",
+   "majors_behind": 0,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/@webcontainer/api"
+  },
+  {
+   "kind": "dependency",
+   "name": "@xterm/addon-fit",
+   "ecosystem": "npm",
+   "spec": "^0.10.0",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "package.json",
+     "line": 54,
+     "spec": "^0.10.0"
+    }
+   ],
+   "locked": {
+    "version": "0.10.0",
+    "file": "pnpm-lock.yaml",
+    "line": 100
+   },
+   "status": "behind",
+   "latest": "0.11.0",
+   "latest_date": "2025-12-22",
+   "declared_date": "2024-04-05",
+   "majors_behind": 0,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/@xterm/addon-fit"
+  },
+  {
+   "kind": "dependency",
+   "name": "@xterm/addon-web-links",
+   "ecosystem": "npm",
+   "spec": "^0.11.0",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "package.json",
+     "line": 55,
+     "spec": "^0.11.0"
+    }
+   ],
+   "locked": {
+    "version": "0.11.0",
+    "file": "pnpm-lock.yaml",
+    "line": 103
+   },
+   "status": "behind",
+   "latest": "0.12.0",
+   "latest_date": "2025-12-22",
+   "declared_date": "2024-04-05",
+   "majors_behind": 0,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/@xterm/addon-web-links"
+  },
+  {
+   "kind": "dependency",
+   "name": "@xterm/xterm",
+   "ecosystem": "npm",
+   "spec": "^5.5.0",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "package.json",
+     "line": 56,
+     "spec": "^5.5.0"
+    }
+   ],
+   "locked": {
+    "version": "5.5.0",
+    "file": "pnpm-lock.yaml",
+    "line": 106
+   },
+   "status": "behind",
+   "latest": "6.0.0",
+   "latest_date": "2025-12-22",
+   "declared_date": "2024-04-05",
+   "majors_behind": 1,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/@xterm/xterm"
+  },
+  {
+   "kind": "dependency",
+   "name": "ai",
+   "ecosystem": "npm",
+   "spec": "^3.3.4",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "package.json",
+     "line": 57,
+     "spec": "^3.3.4"
+    }
+   ],
+   "locked": {
+    "version": "3.3.4",
+    "file": "pnpm-lock.yaml",
+    "line": 109
+   },
+   "status": "behind",
+   "latest": "7.0.159",
+   "latest_date": "2026-10-30",
+   "declared_date": "2024-08-08",
+   "majors_behind": 4,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/ai",
+   "release_notes": {
+    "url": "https://github.com/vercel/ai/blob/main/packages/ai/CHANGELOG.md",
+    "gains": [
+     {
+      "version": "7.0.129",
+      "date": null,
+      "kind": "fix",
+      "text": "avoid duplicate slashes in chat reconnect URLs"
+     },
+     {
+      "version": "7.0.130",
+      "date": null,
+      "kind": "fix",
+      "text": "reject pending result promises and cancel the pending stream when the abort signal fires"
+     },
+     {
+      "version": "7.0.129",
+      "date": null,
+      "kind": "fix",
+      "text": "preserve V2 provider-reported total tokens in raw usage"
+     },
+     {
+      "version": "7.0.0",
+      "date": null,
+      "kind": "add",
+      "text": "add new top-level reasoning parameter to spec and support it in generateText and streamText"
+     }
+    ]
+   }
+  },
+  {
+   "kind": "dependency",
+   "name": "date-fns",
+   "ecosystem": "npm",
+   "spec": "^3.6.0",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "package.json",
+     "line": 58,
+     "spec": "^3.6.0"
+    }
+   ],
+   "locked": {
+    "version": "3.6.0",
+    "file": "pnpm-lock.yaml",
+    "line": 112
+   },
+   "status": "behind",
+   "latest": "4.4.0",
+   "latest_date": "2026-05-29",
+   "declared_date": "2024-03-18",
+   "majors_behind": 1,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/date-fns"
+  },
+  {
+   "kind": "dependency",
+   "name": "diff",
+   "ecosystem": "npm",
+   "spec": "^5.2.0",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "package.json",
+     "line": 59,
+     "spec": "^5.2.0"
+    }
+   ],
+   "locked": {
+    "version": "5.2.0",
+    "file": "pnpm-lock.yaml",
+    "line": 115
+   },
+   "status": "behind",
+   "latest": "9.0.0",
+   "latest_date": "2026-04-13",
+   "declared_date": "2024-02-12",
+   "majors_behind": 4,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/diff"
+  },
+  {
+   "kind": "dependency",
+   "name": "framer-motion",
+   "ecosystem": "npm",
+   "spec": "^11.2.12",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "package.json",
+     "line": 60,
+     "spec": "^11.2.12"
+    }
+   ],
+   "locked": {
+    "version": "11.2.12",
+    "file": "pnpm-lock.yaml",
+    "line": 118
+   },
+   "status": "behind",
+   "latest": "14.9.0",
+   "latest_date": "2026-10-30",
+   "declared_date": "2024-06-25",
+   "majors_behind": 3,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/framer-motion"
+  },
+  {
+   "kind": "dependency",
+   "name": "isbot",
+   "ecosystem": "npm",
+   "spec": "^4.1.0",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "package.json",
+     "line": 61,
+     "spec": "^4.1.0"
+    }
+   ],
+   "locked": {
+    "version": "4.4.0",
+    "file": "pnpm-lock.yaml",
+    "line": 121
+   },
+   "status": "behind",
+   "latest": "5.2.2",
+   "latest_date": "2026-08-27",
+   "declared_date": "2023-12-20",
+   "majors_behind": 1,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/isbot"
+  },
+  {
+   "kind": "dependency",
+   "name": "istextorbinary",
+   "ecosystem": "npm",
+   "spec": "^9.5.0",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "package.json",
+     "line": 62,
+     "spec": "^9.5.0"
+    }
+   ],
+   "locked": {
+    "version": "9.5.0",
+    "file": "pnpm-lock.yaml",
+    "line": 124
+   },
+   "status": "current",
+   "latest": "9.5.0",
+   "latest_date": "2023-12-29",
+   "declared_date": "2023-12-29",
+   "majors_behind": 0,
+   "stale": true,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/istextorbinary"
+  },
+  {
+   "kind": "dependency",
+   "name": "jose",
+   "ecosystem": "npm",
+   "spec": "^5.6.3",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "package.json",
+     "line": 63,
+     "spec": "^5.6.3"
+    }
+   ],
+   "locked": {
+    "version": "5.6.3",
+    "file": "pnpm-lock.yaml",
+    "line": 127
+   },
+   "status": "behind",
+   "latest": "6.2.14",
+   "latest_date": "2026-10-29",
+   "declared_date": "2024-07-03",
+   "majors_behind": 1,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/jose"
+  },
+  {
+   "kind": "dependency",
+   "name": "nanostores",
+   "ecosystem": "npm",
+   "spec": "^0.10.3",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "package.json",
+     "line": 64,
+     "spec": "^0.10.3"
+    }
+   ],
+   "locked": {
+    "version": "0.10.3",
+    "file": "pnpm-lock.yaml",
+    "line": 130
+   },
+   "status": "behind",
+   "latest": "1.5.5",
+   "latest_date": "2026-10-06",
+   "declared_date": "2024-04-05",
+   "majors_behind": 1,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/nanostores"
+  },
+  {
+   "kind": "dependency",
+   "name": "react",
+   "ecosystem": "npm",
+   "spec": "^18.2.0",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "package.json",
+     "line": 65,
+     "spec": "^18.2.0"
+    }
+   ],
+   "locked": {
+    "version": "18.3.1",
+    "file": "pnpm-lock.yaml",
+    "line": 133
+   },
+   "status": "behind",
+   "latest": "19.3.1",
+   "latest_date": "2026-10-14",
+   "declared_date": "2022-06-14",
+   "majors_behind": 1,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/react"
+  },
+  {
+   "kind": "dependency",
+   "name": "react-dom",
+   "ecosystem": "npm",
+   "spec": "^18.2.0",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "package.json",
+     "line": 66,
+     "spec": "^18.2.0"
+    }
+   ],
+   "locked": {
+    "version": "18.3.1",
+    "file": "pnpm-lock.yaml",
+    "line": 136
+   },
+   "status": "behind",
+   "latest": "19.3.1",
+   "latest_date": "2026-10-14",
+   "declared_date": "2022-06-14",
+   "majors_behind": 1,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/react-dom"
+  },
+  {
+   "kind": "dependency",
+   "name": "react-hotkeys-hook",
+   "ecosystem": "npm",
+   "spec": "^4.5.0",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "package.json",
+     "line": 67,
+     "spec": "^4.5.0"
+    }
+   ],
+   "locked": {
+    "version": "4.5.0",
+    "file": "pnpm-lock.yaml",
+    "line": 139
+   },
+   "status": "behind",
+   "latest": "5.3.3",
+   "latest_date": "2026-06-26",
+   "declared_date": "2024-02-01",
+   "majors_behind": 1,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/react-hotkeys-hook"
+  },
+  {
+   "kind": "dependency",
+   "name": "react-markdown",
+   "ecosystem": "npm",
+   "spec": "^9.0.1",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "package.json",
+     "line": 68,
+     "spec": "^9.0.1"
+    }
+   ],
+   "locked": {
+    "version": "9.0.1",
+    "file": "pnpm-lock.yaml",
+    "line": 142
+   },
+   "status": "behind",
+   "latest": "10.1.0",
+   "latest_date": "2025-03-07",
+   "declared_date": "2023-11-13",
+   "majors_behind": 1,
+   "stale": true,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/react-markdown"
+  },
+  {
+   "kind": "dependency",
+   "name": "react-resizable-panels",
+   "ecosystem": "npm",
+   "spec": "^2.0.20",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "package.json",
+     "line": 69,
+     "spec": "^2.0.20"
+    }
+   ],
+   "locked": {
+    "version": "2.0.20",
+    "file": "pnpm-lock.yaml",
+    "line": 145
+   },
+   "status": "behind",
+   "latest": "4.16.0",
+   "latest_date": "2026-10-31",
+   "declared_date": "2024-07-02",
+   "majors_behind": 2,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/react-resizable-panels"
+  },
+  {
+   "kind": "dependency",
+   "name": "react-toastify",
+   "ecosystem": "npm",
+   "spec": "^10.0.5",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "package.json",
+     "line": 70,
+     "spec": "^10.0.5"
+    }
+   ],
+   "locked": {
+    "version": "10.0.5",
+    "file": "pnpm-lock.yaml",
+    "line": 148
+   },
+   "status": "behind",
+   "latest": "11.2.0",
+   "latest_date": "2026-10-28",
+   "declared_date": "2024-03-15",
+   "majors_behind": 1,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/react-toastify"
+  },
+  {
+   "kind": "dependency",
+   "name": "rehype-raw",
+   "ecosystem": "npm",
+   "spec": "^7.0.0",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "package.json",
+     "line": 71,
+     "spec": "^7.0.0"
+    }
+   ],
+   "locked": {
+    "version": "7.0.0",
+    "file": "pnpm-lock.yaml",
+    "line": 151
+   },
+   "status": "current",
+   "latest": "7.0.0",
+   "latest_date": "2023-08-26",
+   "declared_date": "2023-08-26",
+   "majors_behind": 0,
+   "stale": true,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/rehype-raw"
+  },
+  {
+   "kind": "dependency",
+   "name": "rehype-sanitize",
+   "ecosystem": "npm",
+   "spec": "^6.0.0",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "package.json",
+     "line": 72,
+     "spec": "^6.0.0"
+    }
+   ],
+   "locked": {
+    "version": "6.0.0",
+    "file": "pnpm-lock.yaml",
+    "line": 154
+   },
+   "status": "current",
+   "latest": "6.0.0",
+   "latest_date": "2023-08-26",
+   "declared_date": "2023-08-26",
+   "majors_behind": 0,
+   "stale": true,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/rehype-sanitize"
+  },
+  {
+   "kind": "dependency",
+   "name": "remark-gfm",
+   "ecosystem": "npm",
+   "spec": "^4.0.0",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "package.json",
+     "line": 73,
+     "spec": "^4.0.0"
+    }
+   ],
+   "locked": {
+    "version": "4.0.0",
+    "file": "pnpm-lock.yaml",
+    "line": 157
+   },
+   "status": "allowed-by-range",
+   "latest": "4.0.1",
+   "latest_date": "2025-02-10",
+   "declared_date": "2023-09-18",
+   "majors_behind": 0,
+   "stale": true,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/remark-gfm"
+  },
+  {
+   "kind": "dependency",
+   "name": "remix-island",
+   "ecosystem": "npm",
+   "spec": "^0.2.0",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "package.json",
+     "line": 74,
+     "spec": "^0.2.0"
+    }
+   ],
+   "locked": {
+    "version": "0.2.0",
+    "file": "pnpm-lock.yaml",
+    "line": 160
+   },
+   "status": "current",
+   "latest": "0.2.0",
+   "latest_date": "2024-03-10",
+   "declared_date": "2024-03-10",
+   "majors_behind": 0,
+   "stale": true,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/remix-island"
+  },
+  {
+   "kind": "dependency",
+   "name": "remix-utils",
+   "ecosystem": "npm",
+   "spec": "^7.6.0",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "package.json",
+     "line": 75,
+     "spec": "^7.6.0"
+    }
+   ],
+   "locked": {
+    "version": "7.6.0",
+    "file": "pnpm-lock.yaml",
+    "line": 163
+   },
+   "status": "behind",
+   "latest": "10.0.1",
+   "latest_date": "2026-10-20",
+   "declared_date": "2024-04-08",
+   "majors_behind": 3,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/remix-utils"
+  },
+  {
+   "kind": "dependency",
+   "name": "shiki",
+   "ecosystem": "npm",
+   "spec": "^1.9.1",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "package.json",
+     "line": 76,
+     "spec": "^1.9.1"
+    }
+   ],
+   "locked": {
+    "version": "1.9.1",
+    "file": "pnpm-lock.yaml",
+    "line": 166
+   },
+   "status": "behind",
+   "latest": "4.5.0",
+   "latest_date": "2026-10-01",
+   "declared_date": "2024-06-25",
+   "majors_behind": 3,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/shiki"
+  },
+  {
+   "kind": "dependency",
+   "name": "unist-util-visit",
+   "ecosystem": "npm",
+   "spec": "^5.0.0",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "package.json",
+     "line": 77,
+     "spec": "^5.0.0"
+    }
+   ],
+   "locked": {
+    "version": "5.0.0",
+    "file": "pnpm-lock.yaml",
+    "line": 169
+   },
+   "status": "allowed-by-range",
+   "latest": "5.2.0",
+   "latest_date": "2026-10-24",
+   "declared_date": "2023-07-07",
+   "majors_behind": 0,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/unist-util-visit"
+  },
+  {
+   "kind": "dependency",
+   "name": "@blitz/eslint-plugin",
+   "ecosystem": "npm",
+   "spec": "0.1.0",
+   "spec_kind": "exact",
+   "places": [
+    {
+     "file": "package.json",
+     "line": 80,
+     "spec": "0.1.0"
+    }
+   ],
+   "locked": {
+    "version": "0.1.0",
+    "file": "pnpm-lock.yaml",
+    "line": 173
+   },
+   "status": "behind",
+   "latest": "0.1.5",
+   "latest_date": "2026-07-17",
+   "declared_date": "2024-06-25",
+   "majors_behind": 0,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/@blitz/eslint-plugin"
+  },
+  {
+   "kind": "dependency",
+   "name": "@cloudflare/workers-types",
+   "ecosystem": "npm",
+   "spec": "^4.20240620.0",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "package.json",
+     "line": 81,
+     "spec": "^4.20240620.0"
+    }
+   ],
+   "locked": {
+    "version": "4.20240620.0",
+    "file": "pnpm-lock.yaml",
+    "line": 176
+   },
+   "status": "behind",
+   "latest": "5.20261101.1",
+   "latest_date": "2026-11-01",
+   "declared_date": "2024-06-20",
+   "majors_behind": 1,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/@cloudflare/workers-types"
+  },
+  {
+   "kind": "dependency",
+   "name": "@remix-run/dev",
+   "ecosystem": "npm",
+   "spec": "^2.10.0",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "package.json",
+     "line": 82,
+     "spec": "^2.10.0"
+    }
+   ],
+   "locked": {
+    "version": "2.10.0",
+    "file": "pnpm-lock.yaml",
+    "line": 179
+   },
+   "status": "allowed-by-range",
+   "latest": "2.17.5",
+   "latest_date": "2026-06-01",
+   "declared_date": "2024-06-25",
+   "majors_behind": 0,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/@remix-run/dev"
+  },
+  {
+   "kind": "dependency",
+   "name": "@types/diff",
+   "ecosystem": "npm",
+   "spec": "^5.2.1",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "package.json",
+     "line": 83,
+     "spec": "^5.2.1"
+    }
+   ],
+   "locked": {
+    "version": "5.2.1",
+    "file": "pnpm-lock.yaml",
+    "line": 182
+   },
+   "status": "behind",
+   "latest": "8.0.0",
+   "latest_date": "2025-05-17",
+   "declared_date": "2024-05-06",
+   "majors_behind": 3,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/@types/diff"
+  },
+  {
+   "kind": "dependency",
+   "name": "@types/react",
+   "ecosystem": "npm",
+   "spec": "^18.2.20",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "package.json",
+     "line": 84,
+     "spec": "^18.2.20"
+    }
+   ],
+   "locked": {
+    "version": "18.3.3",
+    "file": "pnpm-lock.yaml",
+    "line": 185
+   },
+   "status": "behind",
+   "latest": "19.3.0",
+   "latest_date": "2026-09-09",
+   "declared_date": "2023-08-09",
+   "majors_behind": 1,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/@types/react"
+  },
+  {
+   "kind": "dependency",
+   "name": "@types/react-dom",
+   "ecosystem": "npm",
+   "spec": "^18.2.7",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "package.json",
+     "line": 85,
+     "spec": "^18.2.7"
+    }
+   ],
+   "locked": {
+    "version": "18.3.0",
+    "file": "pnpm-lock.yaml",
+    "line": 188
+   },
+   "status": "behind",
+   "latest": "19.3.0",
+   "latest_date": "2026-09-09",
+   "declared_date": "2023-07-12",
+   "majors_behind": 1,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/@types/react-dom"
+  },
+  {
+   "kind": "dependency",
+   "name": "fast-glob",
+   "ecosystem": "npm",
+   "spec": "^3.3.2",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "package.json",
+     "line": 86,
+     "spec": "^3.3.2"
+    }
+   ],
+   "locked": {
+    "version": "3.3.2",
+    "file": "pnpm-lock.yaml",
+    "line": 191
+   },
+   "status": "allowed-by-range",
+   "latest": "3.3.3",
+   "latest_date": "2025-01-05",
+   "declared_date": "2023-11-06",
+   "majors_behind": 0,
+   "stale": true,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/fast-glob"
+  },
+  {
+   "kind": "dependency",
+   "name": "is-ci",
+   "ecosystem": "npm",
+   "spec": "^3.0.1",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "package.json",
+     "line": 87,
+     "spec": "^3.0.1"
+    }
+   ],
+   "locked": {
+    "version": "3.0.1",
+    "file": "pnpm-lock.yaml",
+    "line": 194
+   },
+   "status": "behind",
+   "latest": "4.1.0",
+   "latest_date": "2024-12-08",
+   "declared_date": "2021-10-26",
+   "majors_behind": 1,
+   "stale": true,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/is-ci"
+  },
+  {
+   "kind": "dependency",
+   "name": "node-fetch",
+   "ecosystem": "npm",
+   "spec": "^3.3.2",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "package.json",
+     "line": 88,
+     "spec": "^3.3.2"
+    }
+   ],
+   "locked": {
+    "version": "3.3.2",
+    "file": "pnpm-lock.yaml",
+    "line": 197
+   },
+   "status": "current",
+   "latest": "3.3.2",
+   "latest_date": "2023-07-25",
+   "declared_date": "2023-07-25",
+   "majors_behind": 0,
+   "stale": true,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/node-fetch"
+  },
+  {
+   "kind": "dependency",
+   "name": "prettier",
+   "ecosystem": "npm",
+   "spec": "^3.3.2",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "package.json",
+     "line": 89,
+     "spec": "^3.3.2"
+    }
+   ],
+   "locked": {
+    "version": "3.3.2",
+    "file": "pnpm-lock.yaml",
+    "line": 200
+   },
+   "status": "allowed-by-range",
+   "latest": "3.9.10",
+   "latest_date": "2026-10-10",
+   "declared_date": "2024-06-11",
+   "majors_behind": 0,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/prettier"
+  },
+  {
+   "kind": "dependency",
+   "name": "typescript",
+   "ecosystem": "npm",
+   "spec": "^5.5.2",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "package.json",
+     "line": 90,
+     "spec": "^5.5.2"
+    }
+   ],
+   "locked": {
+    "version": "5.5.2",
+    "file": "pnpm-lock.yaml",
+    "line": 203
+   },
+   "status": "behind",
+   "latest": "7.0.2",
+   "latest_date": "2026-07-08",
+   "declared_date": "2024-06-20",
+   "majors_behind": 2,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/typescript"
+  },
+  {
+   "kind": "dependency",
+   "name": "unified",
+   "ecosystem": "npm",
+   "spec": "^11.0.5",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "package.json",
+     "line": 91,
+     "spec": "^11.0.5"
+    }
+   ],
+   "locked": {
+    "version": "11.0.5",
+    "file": "pnpm-lock.yaml",
+    "line": 206
+   },
+   "status": "current",
+   "latest": "11.0.5",
+   "latest_date": "2024-06-19",
+   "declared_date": "2024-06-19",
+   "majors_behind": 0,
+   "stale": true,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/unified"
+  },
+  {
+   "kind": "dependency",
+   "name": "unocss",
+   "ecosystem": "npm",
+   "spec": "^0.61.3",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "package.json",
+     "line": 92,
+     "spec": "^0.61.3"
+    }
+   ],
+   "locked": {
+    "version": "0.61.3",
+    "file": "pnpm-lock.yaml",
+    "line": 209
+   },
+   "status": "behind",
+   "latest": "66.12.0",
+   "latest_date": "2026-10-26",
+   "declared_date": "2024-07-07",
+   "majors_behind": 66,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/unocss"
+  },
+  {
+   "kind": "dependency",
+   "name": "vite",
+   "ecosystem": "npm",
+   "spec": "^5.3.1",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "package.json",
+     "line": 93,
+     "spec": "^5.3.1"
+    }
+   ],
+   "locked": {
+    "version": "5.3.1",
+    "file": "pnpm-lock.yaml",
+    "line": 212
+   },
+   "status": "behind",
+   "latest": "8.3.5",
+   "latest_date": "2026-10-21",
+   "declared_date": "2024-06-14",
+   "majors_behind": 3,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/vite"
+  },
+  {
+   "kind": "dependency",
+   "name": "vite-plugin-node-polyfills",
+   "ecosystem": "npm",
+   "spec": "^0.22.0",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "package.json",
+     "line": 94,
+     "spec": "^0.22.0"
+    }
+   ],
+   "locked": {
+    "version": "0.22.0",
+    "file": "pnpm-lock.yaml",
+    "line": 215
+   },
+   "status": "behind",
+   "latest": "0.28.0",
+   "latest_date": "2026-05-18",
+   "declared_date": "2024-05-19",
+   "majors_behind": 0,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/vite-plugin-node-polyfills"
+  },
+  {
+   "kind": "dependency",
+   "name": "vite-plugin-optimize-css-modules",
+   "ecosystem": "npm",
+   "spec": "^1.1.0",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "package.json",
+     "line": 95,
+     "spec": "^1.1.0"
+    }
+   ],
+   "locked": {
+    "version": "1.1.0",
+    "file": "pnpm-lock.yaml",
+    "line": 218
+   },
+   "status": "allowed-by-range",
+   "latest": "1.4.0",
+   "latest_date": "2026-04-03",
+   "declared_date": "2024-07-06",
+   "majors_behind": 0,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/vite-plugin-optimize-css-modules"
+  },
+  {
+   "kind": "dependency",
+   "name": "vite-tsconfig-paths",
+   "ecosystem": "npm",
+   "spec": "^4.3.2",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "package.json",
+     "line": 96,
+     "spec": "^4.3.2"
+    }
+   ],
+   "locked": {
+    "version": "4.3.2",
+    "file": "pnpm-lock.yaml",
+    "line": 221
+   },
+   "status": "behind",
+   "latest": "6.1.1",
+   "latest_date": "2026-02-11",
+   "declared_date": "2024-03-13",
+   "majors_behind": 2,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/vite-tsconfig-paths"
+  },
+  {
+   "kind": "dependency",
+   "name": "vitest",
+   "ecosystem": "npm",
+   "spec": "^2.0.1",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "package.json",
+     "line": 97,
+     "spec": "^2.0.1"
+    }
+   ],
+   "locked": {
+    "version": "2.0.1",
+    "file": "pnpm-lock.yaml",
+    "line": 224
+   },
+   "status": "behind",
+   "latest": "5.0.5",
+   "latest_date": "2026-10-15",
+   "declared_date": "2024-07-08",
+   "majors_behind": 3,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/vitest"
+  },
+  {
+   "kind": "dependency",
+   "name": "wrangler",
+   "ecosystem": "npm",
+   "spec": "^3.63.2",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "package.json",
+     "line": 98,
+     "spec": "^3.63.2"
+    }
+   ],
+   "locked": {
+    "version": "3.63.2",
+    "file": "pnpm-lock.yaml",
+    "line": 227
+   },
+   "status": "behind",
+   "latest": "4.156.0",
+   "latest_date": "2026-10-29",
+   "declared_date": "2024-07-09",
+   "majors_behind": 1,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/wrangler"
+  },
+  {
+   "kind": "dependency",
+   "name": "zod",
+   "ecosystem": "npm",
+   "spec": "^3.23.8",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "package.json",
+     "line": 99,
+     "spec": "^3.23.8"
+    }
+   ],
+   "locked": {
+    "version": "3.23.8",
+    "file": "pnpm-lock.yaml",
+    "line": 230
+   },
+   "status": "behind",
+   "latest": "4.6.7",
+   "latest_date": "2026-10-12",
+   "declared_date": "2024-05-08",
+   "majors_behind": 1,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/zod"
+  }
+ ],
+ "profile": {
+  "one_liner": "Bolt.new is a browser-based tool where you describe an app in chat and an AI writes the code, installs packages and runs it, for developers, PMs and designers. This repo is its open-source codebase.",
+  "stack": [
+   "TypeScript (Remix on Cloudflare Pages/Workers)",
+   "React 18 front end",
+   "Vercel AI SDK (ai, ai/react) for streaming chat",
+   "Anthropic Claude 3.5 Sonnet through @ai-sdk/anthropic",
+   "StackBlitz WebContainer API to run code in the browser"
+  ],
+  "jobs": [
+   {
+    "job": "Chat that writes and edits whole apps",
+    "how": "The server sends the chat history and a long system prompt to Claude 3.5 Sonnet via the Vercel AI SDK's streamText, with tool use turned off. The reply is streamed back and the browser reads it as it arrives.",
+    "where": [
+     {
+      "file": "app/lib/.server/llm/stream-text.ts",
+      "line": 26
+     },
+     {
+      "file": "app/lib/.server/llm/model.ts",
+      "line": 8
+     },
+     {
+      "file": "app/routes/api.chat.ts",
+      "line": 18
+     },
+     {
+      "file": "app/components/chat/Chat.client.tsx",
+      "line": 3
+     }
+    ],
+    "search_terms": [
+     "code generation",
+     "app builder",
+     "text to code",
+     "chat completion",
+     "streaming",
+     "llm gateway",
+     "prompt caching",
+     "coding model"
+    ],
+    "cited": [
+     {
+      "file": "app/lib/.server/llm/stream-text.ts",
+      "line": 26,
+      "text": "model: getAnthropicModel(getAPIKey(env)),"
+     },
+     {
+      "file": "app/lib/.server/llm/model.ts",
+      "line": 8,
+      "text": "return anthropic('claude-3-5-sonnet-20240620');"
+     },
+     {
+      "file": "app/routes/api.chat.ts",
+      "line": 18,
+      "text": "toolChoice: 'none',"
+     },
+     {
+      "file": "app/components/chat/Chat.client.tsx",
+      "line": 3,
+      "text": "import { useChat } from 'ai/react';"
+     }
+    ]
+   },
+   {
+    "job": "Run the AI's output as real actions in the browser",
+    "how": "The system prompt tells the model to wrap files and shell commands in special tags. A streaming parser reads them as they arrive and runs each action (write file, run shell command) in the in-browser WebContainer, shown in a workbench.",
+    "where": [
+     {
+      "file": "app/lib/hooks/useMessageParser.ts",
+      "line": 9
+     },
+     {
+      "file": "app/lib/hooks/useMessageParser.ts",
+      "line": 37
+     },
+     {
+      "file": "app/lib/.server/llm/prompts.ts",
+      "line": 6
+     }
+    ],
+    "search_terms": [
+     "sandbox",
+     "code execution",
+     "browser runtime",
+     "structured output",
+     "function calling",
+     "tool use",
+     "streaming parser",
+     "webassembly"
+    ],
+    "cited": [
+     {
+      "file": "app/lib/hooks/useMessageParser.ts",
+      "line": 9,
+      "text": "const messageParser = new StreamingMessageParser({"
+     },
+     {
+      "file": "app/lib/hooks/useMessageParser.ts",
+      "line": 37,
+      "text": "workbenchStore.runAction(data);"
+     },
+     {
+      "file": "app/lib/.server/llm/prompts.ts",
+      "line": 6,
+      "text": "You are Bolt, an expert AI assistant and exceptional senior software developer with vast knowledge across multiple programming languages, frameworks, and best practices."
+     }
+    ]
+   },
+   {
+    "job": "Continue replies that hit the length limit",
+    "how": "If Claude stops because of the token cap (8192), the server appends the partial reply plus a continue prompt and starts another call. It joins the streams, up to 2 segments.",
+    "where": [
+     {
+      "file": "app/routes/api.chat.ts",
+      "line": 20
+     },
+     {
+      "file": "app/routes/api.chat.ts",
+      "line": 33
+     },
+     {
+      "file": "app/lib/.server/llm/constants.ts",
+      "line": 5
+     }
+    ],
+    "search_terms": [
+     "long output",
+     "long context",
+     "token limit",
+     "stream",
+     "context window",
+     "text generation",
+     "response continuation"
+    ],
+    "cited": [
+     {
+      "file": "app/routes/api.chat.ts",
+      "line": 20,
+      "text": "if (finishReason !== 'length') {"
+     },
+     {
+      "file": "app/routes/api.chat.ts",
+      "line": 33,
+      "text": "messages.push({ role: 'user', content: CONTINUE_PROMPT });"
+     },
+     {
+      "file": "app/lib/.server/llm/constants.ts",
+      "line": 5,
+      "text": "export const MAX_RESPONSE_SEGMENTS = 2;"
+     }
+    ]
+   },
+   {
+    "job": "Rewrite the user's prompt to be better",
+    "how": "A separate endpoint sends the user's text to the same Claude model with an instruction to return only an improved prompt, and streams the plain text back.",
+    "where": [
+     {
+      "file": "app/routes/api.enhancer.ts",
+      "line": 22
+     },
+     {
+      "file": "app/routes/api.enhancer.ts",
+      "line": 17
+     }
+    ],
+    "search_terms": [
+     "prompt improvement",
+     "prompt optimizer",
+     "prompt rewriting",
+     "text rewriting",
+     "prompt engineering",
+     "writing assistant"
+    ],
+    "cited": [
+     {
+      "file": "app/routes/api.enhancer.ts",
+      "line": 22,
+      "text": "I want you to improve the user prompt that is wrapped in \\`<original_prompt>\\` tags."
+     },
+     {
+      "file": "app/routes/api.enhancer.ts",
+      "line": 17,
+      "text": "const result = await streamText("
+     }
+    ]
+   }
+  ],
+  "stack_lock": [
+   "TypeScript/Node app on Cloudflare Workers: new libraries must be npm packages that run in the Workers runtime, not Python or native-binary code",
+   "Model calls go through the Vercel AI SDK, so new models need an AI SDK provider or an HTTP API",
+   "No local models run today; any local model would have to run in the browser with ONNX or transformers.js weights",
+   "Code runs in the browser WebContainer, so tools must be pure JavaScript or WebAssembly with no native binaries, no pip and no git",
+   "Code is TypeScript: only libraries in TypeScript, unless they ship an MCP server or an API.",
+   "Local models: only ONNX or transformers.js weights.",
+   "APIs, MCP servers and skills always pass."
+  ]
+ },
+ "candidates_considered": 212,
+ "findings": [
+  {
+   "title": "Add tracing to the Claude calls so cost and failures become visible per request",
+   "effect": [
+    "better answers"
+   ],
+   "proof": "adoption only",
+   "effort": "Hours",
+   "where": [
+    {
+     "file": "app/lib/.server/llm/stream-text.ts",
+     "line": 25,
+     "text": "return _streamText({"
+    },
+    {
+     "file": "app/routes/api.chat.ts",
+     "line": 41,
+     "text": "const result = await streamText(messages, context.cloudflare.env, options);"
+    }
+   ],
+   "why": "Every chat call, including the continuation call at api.chat.ts:35, goes through one streamText wrapper, and nothing records what a call cost, how long it took or why it failed. Errors only reach console.log. Langfuse is a hosted service reachable by HTTP from a TypeScript app, so tracing can be wired in at that one wrapper. It needs a Langfuse project, and prompts leave the app unless Langfuse is self-hosted. Shows cost and latency per call. No gain number of its own.",
+   "options": [
+    {
+     "name": "Langfuse tracing",
+     "what": "Shows cost and latency per call. The listing gives no gain number of its own.",
+     "needs": "A Langfuse project. Prompts leave the app unless self-hosted.",
+     "source": "https://langfuse.com/docs/observability/overview"
+    }
+   ],
+   "sources": [
+    "https://langfuse.com/docs/observability/overview"
+   ],
+   "lever": "ADV-2026-1101-langfuse",
+   "pr": null,
+   "deadline": null,
+   "evidence": [],
+   "tier": "long_tail",
+   "value": {
+    "status": "no_number",
+    "lever": "ADV-2026-1101-langfuse",
+    "label": "absent",
+    "inputs": {
+     "calls_per_month": {
+      "value": 10000,
+      "label": "assumed"
+     },
+     "hourly_usd": {
+      "value": 100,
+      "label": "assumed"
+     },
+     "months": {
+      "value": 12,
+      "label": "assumed"
+     },
+     "change_hours": {
+      "value": 3,
+      "label": "assumed from the effort word"
+     },
+     "model": {
+      "value": "claude-sonnet-5-5",
+      "label": "example: this call's model is set at runtime"
+     }
+    },
+    "reason": "This lever has no cost formula yet.",
+    "formula": "lever value = (cost today - frontier cost) x frequency - cost of change",
+    "roi": {
+     "effort": "Hours",
+     "tokens": {
+      "input": 2000,
+      "input_label": "assumed: the prompt is built at runtime, so change this to yours",
+      "output": 300,
+      "output_label": "assumed"
+     },
+     "calls_per_month": 10000,
+     "change_usd": 300,
+     "change_label": "3 h at $100 an hour = $300 to change",
+     "money": false,
+     "options": [],
+     "statement": "Better answers · a few hours' work · no money figure: it changes what the product does, not what a call costs"
+    },
+    "lever_gain": "Shows cost and latency per call. No gain number of its own."
+   },
+   "rank": 1
+  },
+  {
+   "title": "Add a first test set so changes to the main prompt and model can be checked before they ship",
+   "effect": [
+    "better answers"
+   ],
+   "proof": "adoption only",
+   "effort": "A day",
+   "where": [
+    {
+     "file": "app/lib/.server/llm/stream-text.ts",
+     "line": 27,
+     "text": "system: getSystemPrompt(),"
+    },
+    {
+     "file": "app/routes/api.chat.ts",
+     "line": 41,
+     "text": "const result = await streamText(messages, context.cloudflare.env, options);"
+    }
+   ],
+   "why": "Every chat reply comes from one long system prompt sent to Claude through streamText, and nothing in the files shown tests how it behaves. Any edit to the prompt, the model or the continue-on-length logic is untested. promptfoo is a Node tool, so it fits this TypeScript repo: write 20 to 50 cases of typical app requests and check the replies. DeepEval needs Python, which this stack doesn't use. Lets every other lever be measured. No gain number of its own.",
+   "options": [
+    {
+     "name": "promptfoo",
+     "what": "Run npx promptfoo@latest init, then write 20 to 50 cases covering typical app requests and run them against the chat prompt.",
+     "needs": "Node. Cases need upkeep as the prompt changes.",
+     "source": "https://github.com/promptfoo/promptfoo"
+    }
+   ],
+   "sources": [
+    "https://github.com/promptfoo/promptfoo"
+   ],
+   "lever": "ADV-2026-1101-promptfoo",
+   "pr": null,
+   "deadline": null,
+   "evidence": [],
+   "tier": "long_tail",
+   "value": {
+    "status": "no_number",
+    "lever": "ADV-2026-1101-promptfoo",
+    "label": "absent",
+    "inputs": {
+     "calls_per_month": {
+      "value": 10000,
+      "label": "assumed"
+     },
+     "hourly_usd": {
+      "value": 100,
+      "label": "assumed"
+     },
+     "months": {
+      "value": 12,
+      "label": "assumed"
+     },
+     "change_hours": {
+      "value": 8,
+      "label": "assumed from the effort word"
+     },
+     "model": {
+      "value": "claude-sonnet-5-5",
+      "label": "example: this call's model is set at runtime"
+     }
+    },
+    "reason": "This lever has no cost formula yet.",
+    "formula": "lever value = (cost today - frontier cost) x frequency - cost of change",
+    "roi": {
+     "effort": "A day",
+     "tokens": {
+      "input": 2000,
+      "input_label": "assumed: the prompt is built at runtime, so change this to yours",
+      "output": 300,
+      "output_label": "assumed"
+     },
+     "calls_per_month": 10000,
+     "change_usd": 800,
+     "change_label": "8 h at $100 an hour = $800 to change",
+     "money": false,
+     "options": [],
+     "statement": "Better answers · a day's work · no money figure: it changes what the product does, not what a call costs"
+    },
+    "lever_gain": "Lets every other lever be measured. No gain number of its own."
+   },
+   "rank": 2
+  },
+  {
+   "title": "Anthropic has shut down claude-3-5-sonnet-20240620",
+   "effect": [
+    "keeps working"
+   ],
+   "proof": "vendor claim",
+   "effort": "A day",
+   "where": [
+    {
+     "file": "app/lib/.server/llm/model.ts",
+     "line": 8,
+     "text": "return anthropic('claude-3-5-sonnet-20240620');"
+    }
+   ],
+   "why": "claude-3-5-sonnet-20240620 was shut down on 28 Oct 2025. Announced on 13 Aug 2025. Named successor: claude-sonnet-5-5. Check before switching to Claude Sonnet 5.5: \"Forced tool use ( tool_choice types any and tool ) returns a 400 error.\" toolChoice is at app/routes/api.chat.ts:18 (toolChoice: 'none'). Bolt.new sends claude-3-5-sonnet-20240620 on every chat, continue and prompt-enhance call, so those requests now fail. Move to claude-sonnet-5-5, as the Claude 3 retirement page says, and run the tests. The code sets toolChoice to 'none', not forced tool use, so the forced-tool 400 error does not apply.",
+   "options": [
+    {
+     "name": "The Claude 3 family is retired; move to the named successors",
+     "what": "Follow the page per id: claude-3-haiku-20240307 and claude-3-5-haiku-20241022 to claude-haiku-4-5-20251001; claude-3-opus-20240229 to claude-opus-4-8; claude-3-sonnet-20240229, the claude-3-5-sonnet ids and claude-3-7-sonnet-20250219 to claude-sonnet-5-5.",
+     "needs": "Nothing new; the same Anthropic key.",
+     "source": "https://platform.claude.com/docs/en/about-claude/model-deprecations"
+    }
+   ],
+   "sources": [
+    "https://platform.claude.com/docs/en/release-notes/overview",
+    "https://platform.claude.com/docs/en/about-claude/model-deprecations"
+   ],
+   "lever": "ADV-2026-0420-claude-3-family-retired",
+   "pr": null,
+   "deadline": "2025-10-28",
+   "evidence": [
+    "We’ve retired the Claude Sonnet 3.5 models.",
+    "claude-3-5-sonnet-20240620 shuts down on 2025-10-28.",
+    "claude-3-5-sonnet-20240620 was announced on 2025-08-13.",
+    "Successors the provider names: claude-sonnet-5-5, claude-sonnet-5-5.",
+    "Forced tool use ( tool_choice types any and tool ) returns a 400 error.",
+    "{\"id\":\"[masked]\",\"name\":\"The Claude 3 family is retired; move to the named successors\",\"pattern\":\"PAT-retired-model-id\",\"kind\":\"model-successor\",\"providers\":[\"anthropic\"],\"effects\":[\"keeps working\"],\"gain\":\"Requests to these ids return an error on the Claude API. The last of them, Haiku 3, went on 20 Apr 2026.\",\"proof\":\"vendor claim\",\"source\":\"https://platform.claude.com/docs/en/about-claude/model-deprecations\",\"how\":\"Follow the page per id: claude-3-haiku-20240307 and claude-3-5-haiku-20241022 to claude-haiku-4-5-20251001; claude-3-opus-20240229 to claude-opus-4-8; claude-3-sonnet-20240229, the claude-3-5-sonnet ids and claude-3-7-sonnet-20250219 to claude-sonnet-5-5.\",\"replaces\":\"claude-3-haiku-20240307, claude-3-5-haiku-20241022, claude-3-opus-20240229, claude-3-sonnet-20240229, claude-3-5-sonnet-20240620, claude-3-5-sonnet-20241022, claude-3-7-sonnet-20250219\",\"trade_offs\":[\"Newer models reject parameters these accepted, so run your tests.\",\"Haiku 4.5's minimum cacheable prompt is 4,096 tokens, so a prompt cached on an older model may stop caching.\"],\"needs\":\"Nothing new; the same Anthropic key.\",\"models\":[\"claude-3-haiku-20240307\",\"claude-3-5-haiku-20241022\",\"claude-3-opus-20240229\",\"claude-3-sonnet-20240229\",\"claude-3-5-sonnet-20240620\",\"claude-3-5-sonnet-20241022\",\"claude-3-7-sonnet-20250219\"],\"checked\":\"2026-11-01\",\"checked_by\":\"agent\",\"usage_signal\":\"Usage API: calls on the affected model or parameter\",\"gain_model\":{\"formula\":\"no money figure: the call stops working or a capability is missing\",\"inputs\":[]},\"test_recipe\":{\"what_to_compare\":\"tests pass on the change\",\"samples\":20,\"can_run_with\":[\"ANTHROPIC_API_KEY\",\"OPENAI_API_KEY\"]},\"verify_rule\":\"The old id or parameter is gone and calls succeed over 7 days\",\"change_recipe\":{\"kind\":\"pull request with tests\",\"how\":\"Follow the page per id: claude-3-haiku-20240307 and claude-3-5-haiku-20241022 to claude-haiku-4-5-20251001; claude-3-opus-20240229 to claude-opus-4-8; claude-3-sonnet-20240229, the claude-3-5-sonnet ids and claude-3-7-sonnet-20250219 to claude-sonnet-5-5.\",\"left_off\":\"Nothing else changes; the new path sits behind a setting until a person turns it on\"},\"audience\":\"product\",\"gain_independent\":null,\"gain_vendor\":\"Requests to these ids return an error on the Claude API. The last of them, Haiku 3, went on 20 Apr 2026.\",\"tier\":\"long_tail\"}"
+   ],
+   "locked": "a model this code sends is retired or retiring",
+   "reach": "sent",
+   "rank": 3
+  }
+ ],
+ "watching": [],
+ "held_back": [
+  {
+   "thing": "@ai-sdk/anthropic is 4 major versions behind",
+   "date": null,
+   "reason": "@ai-sdk/anthropic is only used to build the Claude client in model.ts, and it works. Nothing in the code shown has the web_fetch tools or workflow serialization that these fixes touch. The model id must change anyway (see F1), and that may need a newer provider version.",
+   "source": "https://www.npmjs.com/package/@ai-sdk/anthropic"
+  },
+  {
+   "thing": "DeepEval for a first test set",
+   "date": null,
+   "reason": "It needs Python, and this product is a TypeScript app on Cloudflare Workers, so it is not an option here.",
+   "source": "https://github.com/confident-ai/deepeval"
+  },
+  {
+   "thing": "Arize Phoenix tracing",
+   "date": null,
+   "reason": "It is installed with pip and needs Python, but this product is a TypeScript app on Cloudflare Workers.",
+   "source": "https://github.com/Arize-ai/phoenix"
+  },
+  {
+   "thing": "Anthropic: lower prompt cache read price on Claude Sonnet 5.5",
+   "date": null,
+   "reason": "The code has no caching setting to switch on and does not use Claude Sonnet 5.5, so this price cut does not apply as a change to make here.",
+   "source": "https://platform.claude.com/docs/en/release-notes/overview"
+  },
+  {
+   "thing": "Anthropic: Claude Fable 5.1 (claude-fable-5-1)",
+   "date": null,
+   "reason": "Anthropic says it has a 1M token context window and 128k max output tokens, but the shown record gives no comparison against the current model for this job, and it is a newer model rather than something that will stop working.",
+   "source": "https://platform.claude.com/docs/en/release-notes/overview"
+  },
+  {
+   "thing": "Greta (AI app builder MCP server)",
+   "date": null,
+   "reason": "Greta is a competing AI app builder, so it is not a fit for Bolt.new.",
+   "source": "https://github.com/Questera-Marketing/greta-mcp"
+  },
+  {
+   "thing": "mohdel (self-hosted LLM gateway)",
+   "date": null,
+   "reason": "A gateway adds an extra hop. Bolt.new already calls Claude directly through the Vercel AI SDK, so there is no gain.",
+   "source": "https://www.npmjs.com/package/mohdel"
+  },
+  {
+   "thing": "@everruns/bashkit-wasm",
+   "date": "2026-10-30",
+   "reason": "Bolt's shell actions already run in WebContainer, which provides Node.js and a shell, so a separate bash interpreter replaces nothing the product lacks.",
+   "source": "https://www.npmjs.com/package/@everruns/bashkit-wasm"
+  },
+  {
+   "thing": "MoonshotAI: Kimi K3.1 Pro",
+   "date": "2026-10-23",
+   "reason": "Its source states a 1M-token context window, not a longer reply limit, and swapping the model that writes whole apps is a different decision from fixing reply continuation.",
+   "source": "https://openrouter.ai/moonshotai/kimi-k3.1-pro"
+  },
+  {
+   "thing": "@cloudflare/think",
+   "date": "2026-10-29",
+   "reason": "It is an opinionated chat agent framework with its own agent loop; adopting it would replace the existing streaming setup rather than improve how cut-off replies continue.",
+   "source": "https://www.npmjs.com/package/@cloudflare/think"
+  },
+  {
+   "thing": "@llumiverse/drivers",
+   "date": null,
+   "reason": "Its source lists openai, huggingface, bedrock and replicate drivers, not Anthropic, and the product already calls its model through the AI SDK.",
+   "source": "https://www.npmjs.com/package/@llumiverse/drivers"
+  }
+ ],
+ "checks": {
+  "passed": 17,
+  "dropped": [
+   {
+    "what": "E2B (e2b and @e2b/code-interpreter)",
+    "why": "the package @e2b/code-interpreter isn't in any record or manifest"
+   },
+   {
+    "what": "Mistral: Mistral Large 4",
+    "why": "8192 can't be read from any source"
+   },
+   {
+    "what": "langchain (with @langchain/core and @langchain/anthropic)",
+    "why": "the package @langchain/core isn't in any record or manifest"
+   }
+  ]
+ },
+ "rank_explanation": "Order: the biggest lever first, by (cost today - frontier cost) x assumed calls - cost of change. Then levers with no number, anything breaking within 30 days first, then the biggest proven gain per hour of work. A lever that doesn't pay back at that volume comes after those. Retired and retiring models come last.",
+ "usage": {
+  "model": "claude-sonnet-5-5",
+  "input_tokens": 0,
+  "output_tokens": 0,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 0,
+  "usd": 0,
+  "price_source": "https://openrouter.ai/anthropic/claude-sonnet-5.5",
+  "calls": 0,
+  "replayed_calls": 9,
+  "replayed_usd": 0.21971259999999998,
+  "max_usd": 1.5
+ },
+ "candidate_log": {
+  "stack_lock": [
+   "Code is TypeScript: only libraries in TypeScript, unless they ship an MCP server or an API.",
+   "Local models: only ONNX or transformers.js weights.",
+   "APIs, MCP servers and skills always pass."
+  ],
+  "provider_only": null,
+  "jobs": [
+   {
+    "job": "Chat that writes and edits whole apps",
+    "terms": [
+     "code generation",
+     "app builder",
+     "text to code",
+     "chat completion",
+     "streaming",
+     "llm gateway",
+     "prompt caching",
+     "coding model"
+    ],
+    "matched": 181,
+    "cut_by_stack_lock": 10,
+    "cut_mass_publisher": 3,
+    "cut_by_provider": 0,
+    "cut_seen_in_earlier_job": 0,
+    "cut_by_cap": 125,
+    "kept": 43,
+    "watch_only": 0
+   },
+   {
+    "job": "Run the AI's output as real actions in the browser",
+    "terms": [
+     "sandbox",
+     "code execution",
+     "browser runtime",
+     "structured output",
+     "function calling",
+     "tool use",
+     "streaming parser",
+     "webassembly"
+    ],
+    "matched": 235,
+    "cut_by_stack_lock": 6,
+    "cut_mass_publisher": 16,
+    "cut_by_provider": 0,
+    "cut_seen_in_earlier_job": 2,
+    "cut_by_cap": 165,
+    "kept": 46,
+    "watch_only": 0
+   },
+   {
+    "job": "Continue replies that hit the length limit",
+    "terms": [
+     "long output",
+     "long context",
+     "token limit",
+     "stream",
+     "context window",
+     "text generation",
+     "response continuation"
+    ],
+    "matched": 100,
+    "cut_by_stack_lock": 2,
+    "cut_mass_publisher": 9,
+    "cut_by_provider": 0,
+    "cut_seen_in_earlier_job": 9,
+    "cut_by_cap": 42,
+    "kept": 38,
+    "watch_only": 0
+   },
+   {
+    "job": "Rewrite the user's prompt to be better",
+    "terms": [
+     "prompt improvement",
+     "prompt optimizer",
+     "prompt rewriting",
+     "text rewriting",
+     "prompt engineering",
+     "writing assistant"
+    ],
+    "matched": 12,
+    "cut_by_stack_lock": 1,
+    "cut_mass_publisher": 0,
+    "cut_by_provider": 0,
+    "cut_seen_in_earlier_job": 0,
+    "cut_by_cap": 2,
+    "kept": 9,
+    "watch_only": 0
+   }
+  ]
+ },
+ "moves": [
+  {
+   "from": "claude-3-5-sonnet-20240620",
+   "to": [
+    "claude-sonnet-5-5"
+   ],
+   "places": [
+    "app/lib/.server/llm/model.ts:8"
+   ]
+  }
+ ],
+ "recommendations": []
+}

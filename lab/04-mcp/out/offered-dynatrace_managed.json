@@ -1,0 +1,98 @@
+{
+  "kind": "offered",
+  "ok": true,
+  "server": "dynatrace_managed",
+  "example": "examples/complete/incident-response-dynatrace-managed.toml",
+  "measuredAt": "2026-11-01T04:48:08.947Z",
+  "aura": "v0.2.18-nightly.9",
+  "alias": "incident-response/dynatrace-managed",
+  "credentials": "placeholder",
+  "toolNames": [
+    "dynatrace_managed_discover_entities",
+    "dynatrace_managed_get_entity_details",
+    "dynatrace_managed_get_entity_relationships",
+    "dynatrace_managed_get_entity_type_details",
+    "dynatrace_managed_get_environments_info",
+    "dynatrace_managed_get_event_details",
+    "dynatrace_managed_get_metric_details",
+    "dynatrace_managed_get_problem_details",
+    "dynatrace_managed_get_security_problem_details",
+    "dynatrace_managed_get_slo_details",
+    "dynatrace_managed_list_available_metrics",
+    "dynatrace_managed_list_entity_types",
+    "dynatrace_managed_list_events",
+    "dynatrace_managed_list_problems",
+    "dynatrace_managed_list_security_problems",
+    "dynatrace_managed_list_slos",
+    "dynatrace_managed_query_logs",
+    "dynatrace_managed_query_metrics_data"
+  ],
+  "otherTools": [],
+  "sentBytes": 23483,
+  "sizes": {
+    "measure": "UTF-8 bytes of each tool's JSON, as tools/list returned it",
+    "listed": {
+      "count": 18,
+      "bytes": 22176,
+      "names": [
+        "dynatrace_managed_discover_entities",
+        "dynatrace_managed_get_entity_details",
+        "dynatrace_managed_get_entity_relationships",
+        "dynatrace_managed_get_entity_type_details",
+        "dynatrace_managed_get_environments_info",
+        "dynatrace_managed_get_event_details",
+        "dynatrace_managed_get_metric_details",
+        "dynatrace_managed_get_problem_details",
+        "dynatrace_managed_get_security_problem_details",
+        "dynatrace_managed_get_slo_details",
+        "dynatrace_managed_list_available_metrics",
+        "dynatrace_managed_list_entity_types",
+        "dynatrace_managed_list_events",
+        "dynatrace_managed_list_problems",
+        "dynatrace_managed_list_security_problems",
+        "dynatrace_managed_list_slos",
+        "dynatrace_managed_query_logs",
+        "dynatrace_managed_query_metrics_data"
+      ]
+    },
+    "offered": {
+      "count": 18,
+      "bytes": 22176,
+      "names": [
+        "dynatrace_managed_discover_entities",
+        "dynatrace_managed_get_entity_details",
+        "dynatrace_managed_get_entity_relationships",
+        "dynatrace_managed_get_entity_type_details",
+        "dynatrace_managed_get_environments_info",
+        "dynatrace_managed_get_event_details",
+        "dynatrace_managed_get_metric_details",
+        "dynatrace_managed_get_problem_details",
+        "dynatrace_managed_get_security_problem_details",
+        "dynatrace_managed_get_slo_details",
+        "dynatrace_managed_list_available_metrics",
+        "dynatrace_managed_list_entity_types",
+        "dynatrace_managed_list_events",
+        "dynatrace_managed_list_problems",
+        "dynatrace_managed_list_security_problems",
+        "dynatrace_managed_list_slos",
+        "dynatrace_managed_query_logs",
+        "dynatrace_managed_query_metrics_data"
+      ]
+    },
+    "writeHeldBack": {
+      "count": 0,
+      "bytes": 0,
+      "names": []
+    },
+    "writeOffered": {
+      "count": 0,
+      "bytes": 0,
+      "names": []
+    },
+    "otherHeldBack": {
+      "count": 0,
+      "bytes": 0,
+      "names": []
+    }
+  }
+}

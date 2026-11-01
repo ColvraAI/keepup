@@ -1,0 +1,562 @@
+From 32cf96d1c9d4a8cdda6f846e3bcd9b068c62a126 Mon Sep 17 00:00:00 2001
+From: "keepup[bot]" <keepup[bot]@users.noreply.github.com>
+Date: Tue, 6 Oct 2026 12:00:00 +0000
+Subject: [PATCH 1/2] feat: route messages with the Decisions API behind a
+ setting
+
+The model router starts a headless agent whose only job is to call
+select_category with one label from a fixed list. That is a label-picking
+call, which is what OpenAI's Decisions API is for: it returns one choice
+from a supplied list and a probability for each option.
+
+With ROUTER_CLASSIFIER=decisions and an OPEN_AI_KEY, classifyWithDecisions()
+asks gpt-6-luna first. classifyWithLLM() is unchanged and stays the fallback
+when the chosen option's probability is under 0.70, the call fails or is
+refused, or there is no key.
+
+The log says which path answered: a fall back logs why before the agent runs,
+and what the agent returned after it has, so a failed agent never reads as an
+answer.
+
+A "none" at or above 0.70 is final and means no rule matched, so the agent
+isn't paid to repeat it. A "none" under 0.70 goes to the agent, because a
+weak "none" can hide a rule that should have matched.
+
+The default stays "agent", so nothing changes until a person switches it on.
+The pinned openai SDK (4.95.1) has no decisions resource, so this calls the
+endpoint with client.post.
+
+Replay date: 6 Oct 2026, Decisions API beta.
+Source: https://developers.openai.com/api/docs/changelog
+---
+ docker/.env.example                           |   6 +
+ server/.env.example                           |   6 +
+ .../aibitat/plugins/router-classifier.test.js | 276 ++++++++++++++++++
+ .../aibitat/plugins/router-classifier.js      | 143 ++++++++-
+ server/utils/helpers/updateENV.js             |   3 +
+ server/utils/router/index.js                  |   6 +-
+ 6 files changed, 436 insertions(+), 4 deletions(-)
+ create mode 100644 server/__tests__/utils/agents/aibitat/plugins/router-classifier.test.js
+
+diff --git a/docker/.env.example b/docker/.env.example
+index 758f0d8e..3de89378 100644
+--- a/docker/.env.example
++++ b/docker/.env.example
+@@ -574,6 +574,12 @@ GID='1000'
+ # Default is 7 days (604800000ms). A minimum of 1 hour (3600000ms) is enforced.
+ # DOCUMENT_SYNC_STALE_AFTER_MS=604800000
+ 
++# (optional) How the model router picks between its LLM rules. Default is "agent",
++# a headless agent on the router's fallback model. "decisions" asks the OpenAI
++# Decisions API (gpt-6-luna, needs OPEN_AI_KEY) first, and still uses the agent when
++# the answer's probability is under 0.70, the call fails, or there is no key.
++# ROUTER_CLASSIFIER="agent"
++
+ ###########################################
+ ######## Embed Widget Security ############
+ ###########################################
+diff --git a/server/.env.example b/server/.env.example
+index cc560bc6..ac640139 100644
+--- a/server/.env.example
++++ b/server/.env.example
+@@ -585,6 +585,12 @@ STT_PROVIDER="native"
+ # Default is 7 days (604800000ms). A minimum of 1 hour (3600000ms) is enforced.
+ # DOCUMENT_SYNC_STALE_AFTER_MS=604800000
+ 
++# (optional) How the model router picks between its LLM rules. Default is "agent",
++# a headless agent on the router's fallback model. "decisions" asks the OpenAI
++# Decisions API (gpt-6-luna, needs OPEN_AI_KEY) first, and still uses the agent when
++# the answer's probability is under 0.70, the call fails, or there is no key.
++# ROUTER_CLASSIFIER="agent"
++
+ ###########################################
+ ######## Embed Widget Security ############
+ ###########################################
+diff --git a/server/__tests__/utils/agents/aibitat/plugins/router-classifier.test.js b/server/__tests__/utils/agents/aibitat/plugins/router-classifier.test.js
+new file mode 100644
+index 00000000..c89ff4cb
+--- /dev/null
++++ b/server/__tests__/utils/agents/aibitat/plugins/router-classifier.test.js
+@@ -0,0 +1,276 @@
++/* eslint-env jest */
++const mockDecisionsPost = jest.fn();
++const mockAgentStart = jest.fn();
++
++jest.mock("openai", () => jest.fn(() => ({ post: mockDecisionsPost })));
++jest.mock("../../../../../utils/agents/aibitat/index.js", () =>
++  jest.fn().mockImplementation(() => {
++    const aibitat = {
++      use: jest.fn(),
++      agent: jest.fn(),
++      start: () => mockAgentStart(aibitat),
++    };
++    return aibitat;
++  })
++);
++
++const OpenAI = require("openai");
++const {
++  classifyMessage,
++  classifyWithDecisions,
++  DECISIONS_MIN_PROBABILITY,
++} = require("../../../../../utils/agents/aibitat/plugins/router-classifier");
++
++const CODING = { title: "coding", description: "Writing or fixing code." };
++const BILLING = { title: "billing", description: "Invoices and payments." };
++const RULES = [CODING, BILLING];
++const ROUTER = { fallback_provider: "openai", fallback_model: "gpt-5.6-luna" };
++
++function decisionAnswer(choice, probability) {
++  return {
++    answers: [
++      {
++        type: "choice",
++        name: "category",
++        choice,
++        probabilities: [
++          { value: choice, probability },
++          { value: "other", probability: 1 - probability },
++        ],
++        confidence: probability,
++      },
++    ],
++    usage: { input_tokens: 60, output_tokens: 0, total_tokens: 60 },
++  };
++}
++
++function agentAnswers(category) {
++  mockAgentStart.mockImplementation(async (aibitat) => {
++    aibitat.classifiedCategory = category;
++  });
++}
++
++describe("router classifier", () => {
++  const ORIGINAL_ENV = { ...process.env };
++  let logSpy;
++
++  beforeEach(() => {
++    jest.clearAllMocks();
++    process.env = {
++      ...ORIGINAL_ENV,
++      ROUTER_CLASSIFIER: "decisions",
++      OPEN_AI_KEY: "test-key",
++    };
++    logSpy = jest.spyOn(console, "log").mockImplementation(() => {});
++    jest.spyOn(console, "error").mockImplementation(() => {});
++  });
++
++  afterEach(() => {
++    process.env = ORIGINAL_ENV;
++    jest.restoreAllMocks();
++  });
++
++  const logged = () => logSpy.mock.calls.map((call) => call.join(" ")).join();
++
++  describe("classifyWithDecisions", () => {
++    it("sends the message and the categories in priority order, plus none", async () => {
++      mockDecisionsPost.mockResolvedValue(decisionAnswer("coding", 0.95));
++      await classifyWithDecisions(RULES, "fix my code");
++
++      const [path, { body }] = mockDecisionsPost.mock.calls[0];
++      expect(path).toBe("/decisions");
++      expect(body.model).toBe("gpt-6-luna");
++      expect(body.input).toBe("fix my code");
++      expect(body.questions).toHaveLength(1);
++      expect(body.questions[0].type).toBe("choice");
++      expect(body.questions[0].choices.map(({ value }) => value)).toEqual([
++        "coding",
++        "billing",
++        "none",
++      ]);
++      expect(body.questions[0].choices[0].description).toBe(CODING.description);
++    });
++
++    it("doesn't retry or wait long, since the agent is ready as a fallback", async () => {
++      mockDecisionsPost.mockResolvedValue(decisionAnswer("coding", 0.95));
++      await classifyWithDecisions(RULES, "fix my code");
++
++      const options = OpenAI.mock.calls[0][0];
++      expect(options.apiKey).toBe("test-key");
++      expect(options.maxRetries).toBe(0);
++      expect(options.timeout).toBeGreaterThan(0);
++    });
++
++    it("answers with the rule at or above the threshold", async () => {
++      mockDecisionsPost.mockResolvedValue(
++        decisionAnswer("billing", DECISIONS_MIN_PROBABILITY)
++      );
++      await expect(
++        classifyWithDecisions(RULES, "where is my invoice")
++      ).resolves.toEqual({
++        answered: true,
++        rule: BILLING,
++        probability: DECISIONS_MIN_PROBABILITY,
++      });
++    });
++
++    it("gates on the chosen option's probability, not on confidence", async () => {
++      const response = decisionAnswer("billing", 0.65);
++      response.answers[0].confidence = 0.99;
++      mockDecisionsPost.mockResolvedValue(response);
++      const result = await classifyWithDecisions(RULES, "an invoice?");
++      expect(result.answered).toBe(false);
++    });
++
++    it("doesn't answer on a refusal", async () => {
++      mockDecisionsPost.mockResolvedValue({
++        answers: [{ type: "refusal", name: "category" }],
++      });
++      const result = await classifyWithDecisions(RULES, "something");
++      expect(result).toEqual({
++        answered: false,
++        reason: expect.stringContaining("refusal"),
++      });
++    });
++
++    it("doesn't answer with a category it never offered", async () => {
++      mockDecisionsPost.mockResolvedValue(decisionAnswer("travel", 0.99));
++      const result = await classifyWithDecisions(RULES, "a flight");
++      expect(result.answered).toBe(false);
++    });
++
++    it("doesn't answer without a probability for the chosen option", async () => {
++      mockDecisionsPost.mockResolvedValue({
++        answers: [{ type: "choice", choice: "coding", probabilities: [] }],
++      });
++      const result = await classifyWithDecisions(RULES, "some code");
++      expect(result.answered).toBe(false);
++    });
++
++    it("skips rules with no description, as the agent path does", async () => {
++      mockDecisionsPost.mockResolvedValue(decisionAnswer("coding", 0.95));
++      await classifyWithDecisions(
++        [CODING, { title: "empty", description: null }],
++        "fix my code"
++      );
++      const { body } = mockDecisionsPost.mock.calls[0][1];
++      expect(body.questions[0].choices.map(({ value }) => value)).toEqual([
++        "coding",
++        "none",
++      ]);
++    });
++
++    it("keeps choices unique when a rule is itself titled none", async () => {
++      mockDecisionsPost.mockResolvedValue(decisionAnswer("coding", 0.95));
++      await classifyWithDecisions(
++        [CODING, { title: "none", description: "A rule named none." }],
++        "fix my code"
++      );
++      const { body } = mockDecisionsPost.mock.calls[0][1];
++      expect(body.questions[0].choices.map(({ value }) => value)).toEqual([
++        "coding",
++        "none",
++      ]);
++    });
++
++    it("doesn't call the API with nothing to classify", async () => {
++      const noRules = await classifyWithDecisions([], "hello");
++      const noPrompt = await classifyWithDecisions(RULES, "");
++      expect(noRules.answered).toBe(false);
++      expect(noPrompt.answered).toBe(false);
++      expect(mockDecisionsPost).not.toHaveBeenCalled();
++    });
++  });
++
++  describe("classifyMessage", () => {
++    it("uses the Decisions category and never starts the agent", async () => {
++      mockDecisionsPost.mockResolvedValue(decisionAnswer("coding", 0.95));
++      await expect(
++        classifyMessage(RULES, "fix my code", ROUTER)
++      ).resolves.toEqual(CODING);
++      expect(mockAgentStart).not.toHaveBeenCalled();
++      expect(logged()).toContain("decisions answered");
++    });
++
++    it("falls back to the agent on low confidence, and logs why", async () => {
++      mockDecisionsPost.mockResolvedValue(decisionAnswer("coding", 0.69));
++      agentAnswers("billing");
++      await expect(classifyMessage(RULES, "hmm", ROUTER)).resolves.toEqual(
++        BILLING
++      );
++      expect(mockAgentStart).toHaveBeenCalledTimes(1);
++      expect(logged()).toContain("agent answered");
++      expect(logged()).toContain("0.69");
++    });
++
++    it("falls back to the agent on an API error, and logs why", async () => {
++      mockDecisionsPost.mockRejectedValue(new Error("503 overloaded"));
++      agentAnswers("coding");
++      await expect(classifyMessage(RULES, "hmm", ROUTER)).resolves.toEqual(
++        CODING
++      );
++      expect(logged()).toContain("agent answered");
++      expect(logged()).toContain("503 overloaded");
++    });
++
++    it("doesn't say the agent answered when it failed", async () => {
++      mockDecisionsPost.mockResolvedValue(decisionAnswer("coding", 0.69));
++      mockAgentStart.mockRejectedValueOnce(new Error("provider down"));
++      await expect(classifyMessage(RULES, "hmm", ROUTER)).resolves.toBeNull();
++      expect(logged()).toContain("falling back to the agent");
++      expect(logged()).toContain("agent returned no rule");
++      expect(logged()).not.toContain("agent answered");
++    });
++
++    it("treats a confident none as final: no rule, and no agent call", async () => {
++      mockDecisionsPost.mockResolvedValue(decisionAnswer("none", 0.9));
++      await expect(
++        classifyMessage(RULES, "good morning", ROUTER)
++      ).resolves.toBeNull();
++      expect(mockAgentStart).not.toHaveBeenCalled();
++      expect(logged()).toContain("decisions answered");
++    });
++
++    it("lets the agent decide when none is under the threshold", async () => {
++      mockDecisionsPost.mockResolvedValue(decisionAnswer("none", 0.4));
++      agentAnswers("coding");
++      await expect(classifyMessage(RULES, "hmm", ROUTER)).resolves.toEqual(
++        CODING
++      );
++      expect(mockAgentStart).toHaveBeenCalledTimes(1);
++    });
++
++    it.each([[undefined], ["agent"], ["something-else"]])(
++      "never calls Decisions when the setting is %s",
++      async (setting) => {
++        if (setting === undefined) delete process.env.ROUTER_CLASSIFIER;
++        else process.env.ROUTER_CLASSIFIER = setting;
++        agentAnswers("coding");
++
++        await expect(classifyMessage(RULES, "hmm", ROUTER)).resolves.toEqual(
++          CODING
++        );
++        expect(OpenAI).not.toHaveBeenCalled();
++        expect(mockDecisionsPost).not.toHaveBeenCalled();
++      }
++    );
++
++    it("uses today's path without an error when there is no OpenAI key", async () => {
++      delete process.env.OPEN_AI_KEY;
++      agentAnswers("billing");
++
++      await expect(classifyMessage(RULES, "hmm", ROUTER)).resolves.toEqual(
++        BILLING
++      );
++      expect(OpenAI).not.toHaveBeenCalled();
++      expect(console.error).not.toHaveBeenCalled();
++      expect(logged()).toContain("agent answered");
++    });
++
++    it("returns no rule when both paths have nothing to classify", async () => {
++      await expect(classifyMessage([], "hello", ROUTER)).resolves.toBeNull();
++      expect(mockAgentStart).not.toHaveBeenCalled();
++      expect(mockDecisionsPost).not.toHaveBeenCalled();
++    });
++  });
++});
+diff --git a/server/utils/agents/aibitat/plugins/router-classifier.js b/server/utils/agents/aibitat/plugins/router-classifier.js
+index f3f4410c..6f0e0693 100644
+--- a/server/utils/agents/aibitat/plugins/router-classifier.js
++++ b/server/utils/agents/aibitat/plugins/router-classifier.js
+@@ -1,3 +1,4 @@
++const OpenAI = require("openai");
+ const AIbitat = require("../index.js");
+ 
+ /**
+@@ -58,6 +59,15 @@ Categories:
+ 
+ Do not respond with free text. Always call the tool.`;
+ 
++const DECISIONS_MODEL = "gpt-6-luna";
++const DECISIONS_QUESTION_NAME = "category";
++// Below this probability a Decisions answer isn't trusted and the agent decides.
++const DECISIONS_MIN_PROBABILITY = 0.7;
++// The agent is ready as a fallback, so a slow call shouldn't hold up the message.
++const DECISIONS_TIMEOUT_MS = 10_000;
++const NO_CATEGORY = "none";
++const DECISIONS_INSTRUCTIONS = `Which category best matches the user's message? The categories are listed in priority order: pick the FIRST category whose description matches the message. If no category matches, pick "${NO_CATEGORY}".`;
++
+ /**
+  * Classify a user prompt against a batch of LLM rules using the router's
+  * fallback provider/model. Runs a headless AIbitat instance with a single
+@@ -119,4 +129,135 @@ async function classifyWithLLM(rules, prompt, router) {
+   }
+ }
+ 
+-module.exports = { routerClassifier, classifyWithLLM };
++/**
++ * Classify a user prompt with the OpenAI Decisions API. This doesn't fall back
++ * by itself: `classifyMessage()` runs the agent when `answered` is false.
++ *
++ * "none" is a real answer: at or above the threshold it's final and means no
++ * rule matched, so we don't pay for the agent to repeat it. Under the threshold
++ * it's treated like any other unsure answer, because a weak "none" can hide a
++ * rule that should have matched, and the agent gets to decide.
++ * @param {Array} rules - Contiguous batch of enabled LLM-type rules (priority-sorted)
++ * @param {string} prompt - The user's message to classify
++ * @returns {Promise<{answered: true, rule: Object|null, probability: number}|{answered: false, reason: string}>}
++ */
++async function classifyWithDecisions(rules, prompt) {
++  // A rule titled "none" can't match on the agent path either, and the API
++  // rejects duplicate choices.
++  const validRules = rules.filter(
++    (rule) => rule.description && rule.title.toLowerCase() !== NO_CATEGORY
++  );
++  if (!validRules.length || !prompt)
++    return { answered: false, reason: "nothing to classify" };
++
++  try {
++    const client = new OpenAI({
++      apiKey: process.env.OPEN_AI_KEY,
++      timeout: DECISIONS_TIMEOUT_MS,
++      maxRetries: 0,
++    });
++    // The pinned SDK has no decisions resource, so call the endpoint directly.
++    const response = await client.post("/decisions", {
++      body: {
++        model: DECISIONS_MODEL,
++        input: prompt,
++        questions: [
++          {
++            type: "choice",
++            name: DECISIONS_QUESTION_NAME,
++            instructions: DECISIONS_INSTRUCTIONS,
++            choices: [
++              ...validRules.map((rule) => ({
++                value: rule.title,
++                description: rule.description,
++              })),
++              {
++                value: NO_CATEGORY,
++                description: "No other category matches the message.",
++              },
++            ],
++          },
++        ],
++      },
++    });
++    return readDecision(response?.answers?.[0], validRules);
++  } catch (error) {
++    return { answered: false, reason: error.message };
++  }
++}
++
++/**
++ * Turn a Decisions answer into a rule. The threshold is on the chosen option's
++ * probability, which reads directly as how likely that option is. The answer's
++ * separate `confidence` field isn't used.
++ * @param {Object} answer - One entry of the response's `answers`
++ * @param {Array} validRules - The rules that were offered as choices
++ * @returns {{answered: true, rule: Object|null, probability: number}|{answered: false, reason: string}}
++ */
++function readDecision(answer, validRules) {
++  if (answer?.type !== "choice")
++    return { answered: false, reason: `answer type was ${answer?.type}` };
++
++  const { choice, probabilities } = answer;
++  const probability = probabilities?.find(
++    (option) => option.value === choice
++  )?.probability;
++  if (typeof probability !== "number")
++    return { answered: false, reason: `no probability for "${choice}"` };
++  if (probability < DECISIONS_MIN_PROBABILITY)
++    return {
++      answered: false,
++      reason: `"${choice}" at ${probability} is under ${DECISIONS_MIN_PROBABILITY}`,
++    };
++  if (choice === NO_CATEGORY)
++    return { answered: true, rule: null, probability };
++
++  const rule = validRules.find((rule) => rule.title === choice);
++  if (!rule) return { answered: false, reason: `unknown category "${choice}"` };
++  return { answered: true, rule, probability };
++}
++
++/**
++ * Classify a user prompt on the path the ROUTER_CLASSIFIER setting asks for.
++ * The default is "agent", which is `classifyWithLLM()` alone. With "decisions"
++ * the Decisions API goes first and `classifyWithLLM()` is the fallback.
++ * @param {Array} rules - Contiguous batch of enabled LLM-type rules (priority-sorted)
++ * @param {string} prompt - The user's message to classify
++ * @param {Object} router - The router record (needs fallback_provider/fallback_model)
++ * @returns {Promise<Object|null>} The matched rule, or null if none matched
++ */
++async function classifyMessage(rules, prompt, router) {
++  if (process.env.ROUTER_CLASSIFIER !== "decisions")
++    return await classifyWithLLM(rules, prompt, router);
++
++  const decision = process.env.OPEN_AI_KEY
++    ? await classifyWithDecisions(rules, prompt)
++    : { answered: false, reason: "no OPEN_AI_KEY set" };
++
++  if (decision.answered) {
++    console.log(
++      `[RouterClassifier] decisions answered "${decision.rule?.title ?? NO_CATEGORY}" at ${decision.probability}`
++    );
++    return decision.rule;
++  }
++
++  console.log(
++    `[RouterClassifier] falling back to the agent: ${decision.reason}`
++  );
++  const matched = await classifyWithLLM(rules, prompt, router);
++  // Null means no rule matched or the agent failed, which it logs itself.
++  console.log(
++    matched
++      ? `[RouterClassifier] agent answered "${matched.title}"`
++      : "[RouterClassifier] agent returned no rule"
++  );
++  return matched;
++}
++
++module.exports = {
++  routerClassifier,
++  classifyWithLLM,
++  classifyWithDecisions,
++  classifyMessage,
++  DECISIONS_MIN_PROBABILITY,
++};
+diff --git a/server/utils/helpers/updateENV.js b/server/utils/helpers/updateENV.js
+index b9227681..6c975fd0 100644
+--- a/server/utils/helpers/updateENV.js
++++ b/server/utils/helpers/updateENV.js
+@@ -1619,6 +1619,9 @@ function dumpENV() {
+     // Deny-by-default for embed widgets that have no allowlist configured
+     "EMBED_REQUIRE_ALLOWLIST",
+ 
++    // Which path the model router uses to classify messages
++    "ROUTER_CLASSIFIER",
++
+     // Allow setting a custom timeout for tool call approval prompts
+     "TOOL_CALL_APPROVAL_TIMEOUT_MS",
+ 
+diff --git a/server/utils/router/index.js b/server/utils/router/index.js
+index c9c2e007..c7764236 100644
+--- a/server/utils/router/index.js
++++ b/server/utils/router/index.js
+@@ -1,6 +1,6 @@
+ const { ModelRouter } = require("../../models/modelRouter");
+ const {
+-  classifyWithLLM,
++  classifyMessage,
+ } = require("../agents/aibitat/plugins/router-classifier");
+ 
+ /**
+@@ -444,7 +444,7 @@ class ModelRouterService {
+    * @param {string} cacheKey - Key for LLM result caching
+    * @param {Array} rules - All rules (will be filtered to enabled LLM rules)
+    * @param {Object} context
+-   * @param {Object} router - The router config (needed for classifyWithLLM)
++   * @param {Object} router - The router config (needed for classifyMessage)
+    * @param {number} stickyMs - TTL for LLM cache
+    * @returns {Promise<{ route: Object|null, fromCache: boolean }>}
+    */
+@@ -466,7 +466,7 @@ class ModelRouterService {
+     this.log(
+       `Evaluating LLM batch of ${llmRules.length} rules: [${llmRules.map((r) => `"${r.title}"`).join(", ")}]`
+     );
+-    const matched = await classifyWithLLM(llmRules, context.prompt, router);
++    const matched = await classifyMessage(llmRules, context.prompt, router);
+     this.setCachedLLMResult(cacheKey, matched || null);
+ 
+     if (matched) {

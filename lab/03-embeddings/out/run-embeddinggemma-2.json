@@ -1,0 +1,74 @@
+{
+  "passages": 1000,
+  "queries": 200,
+  "dim": 768,
+  "segmentMs": [
+    {
+      "passages": 100,
+      "ms": 215961.430099
+    },
+    {
+      "passages": 100,
+      "ms": 258144.376243
+    },
+    {
+      "passages": 100,
+      "ms": 244551.531488
+    },
+    {
+      "passages": 100,
+      "ms": 346604.524702
+    },
+    {
+      "passages": 100,
+      "ms": 213090.354805
+    },
+    {
+      "passages": 100,
+      "ms": 218361.806601
+    },
+    {
+      "passages": 100,
+      "ms": 315886.035438
+    },
+    {
+      "passages": 100,
+      "ms": 234829.5099
+    },
+    {
+      "passages": 100,
+      "ms": 159973.850365
+    },
+    {
+      "passages": 100,
+      "ms": 168286.68616
+    }
+  ],
+  "queryMs": 31502.804805000003,
+  "loadMs": [
+    5034.868919,
+    4495.003294
+  ],
+  "peakRssKb": 2197712,
+  "sessions": 2,
+  "model": "onnx-community/embeddinggemma-2-ONNX",
+  "machine": {
+    "node": "v18.20.8",
+    "arch": "arm64",
+    "cpus": 8,
+    "totalMemMb": 3919,
+    "transformers": "4.3.2"
+  },
+  "prefixes": {
+    "passage": "title: none | text: ",
+    "query": "task: search result | query: "
+  },
+  "batch": 5,
+  "chunkChars": 2000,
+  "scores": {
+    "recallAt5": 0.9503333333333334,
+    "mrrAt10": 0.9114642857142856,
+    "queries": 200,
+    "passages": 1000
+  }
+}

@@ -1,0 +1,3690 @@
+{
+ "version": 1,
+ "repo": "rashadphz/farfalle",
+ "commit": "a9dd4939d21f4da6bb3ef7de138caba0f2ffab13",
+ "commit_date": "2024-09-27",
+ "scanned_at": "2026-11-01T14:24:19.628Z",
+ "as_of": "2026-10-31",
+ "db": {
+  "fetched": "2026-10-31",
+  "records": 41785,
+  "by_source": {
+   "mcp-registry": 35587,
+   "npm": 3953,
+   "github": 1088,
+   "huggingface": 455,
+   "pypi": 281,
+   "hn": 133,
+   "yc": 120,
+   "openrouter": 94,
+   "changelog": 70,
+   "skills": 4
+  },
+  "window": {
+   "since": "2026-09-01",
+   "until": "2026-10-31"
+  },
+  "reconciliation": {
+   "changelog_in_window": 70,
+   "changelog_year_blind": 84,
+   "records_year_blind": 41799,
+   "note": "14 of the 84 changelog entries counted without the year are OpenAI's Sep and Oct entries from earlier years; 70 are in the window."
+  }
+ },
+ "ran": {
+  "search": true,
+  "judge": true,
+  "online": true
+ },
+ "steps": [
+  {
+   "name": "List files",
+   "detail": "125 files to read, 27 skipped (vendored, generated, minified, binary or over 2 MB)",
+   "ms": 12
+  },
+  {
+   "name": "Read manifests",
+   "detail": "2 manifests, 75 declared dependencies",
+   "ms": 2
+  },
+  {
+   "name": "Read the README",
+   "detail": "README.md",
+   "ms": 0
+  },
+  {
+   "name": "Measure languages",
+   "detail": "TypeScript 62%, Python 28%, YAML 4%",
+   "ms": 0
+  },
+  {
+   "name": "Run signals",
+   "detail": "12 of 43 signals fired",
+   "ms": 24
+  },
+  {
+   "name": "Find model ids",
+   "detail": "3 distinct model ids in 6 places",
+   "ms": 6
+  },
+  {
+   "name": "Run patterns",
+   "detail": "5 hits in 101 files",
+   "ms": 35
+  },
+  {
+   "name": "Check model ids against provider changelogs and deprecation pages",
+   "detail": "2 ids retired, retiring or deprecated",
+   "ms": 8
+  },
+  {
+   "name": "Check dependencies against the registries",
+   "detail": "75 dependencies checked, 35 behind",
+   "ms": 15
+  },
+  {
+   "name": "Understand the product",
+   "detail": "6 AI jobs",
+   "ms": 95
+  },
+  {
+   "name": "Search the database",
+   "detail": "162 candidates",
+   "ms": 309
+  },
+  {
+   "name": "Judge each candidate against the code",
+   "detail": "2 fit, 18 held back",
+   "ms": 17
+  },
+  {
+   "name": "Check every claim",
+   "detail": "11 checks passed, 0 findings dropped",
+   "ms": 17
+  }
+ ],
+ "facts": {
+  "version": 1,
+  "repo": "rashadphz/farfalle",
+  "commit": "a9dd4939d21f4da6bb3ef7de138caba0f2ffab13",
+  "commit_date": "2024-09-27",
+  "languages": [
+   {
+    "language": "TypeScript",
+    "files": 63,
+    "lines": 4501,
+    "share": 0.62
+   },
+   {
+    "language": "Python",
+    "files": 27,
+    "lines": 2006,
+    "share": 0.276
+   },
+   {
+    "language": "YAML",
+    "files": 6,
+    "lines": 266,
+    "share": 0.037
+   },
+   {
+    "language": "Markdown",
+    "files": 3,
+    "lines": 157,
+    "share": 0.022
+   },
+   {
+    "language": "JSON",
+    "files": 4,
+    "lines": 119,
+    "share": 0.016
+   },
+   {
+    "language": "CSS",
+    "files": 1,
+    "lines": 83,
+    "share": 0.011
+   },
+   {
+    "language": "TOML",
+    "files": 2,
+    "lines": 52,
+    "share": 0.007
+   },
+   {
+    "language": "JavaScript",
+    "files": 3,
+    "lines": 48,
+    "share": 0.007
+   },
+   {
+    "language": "Shell",
+    "files": 1,
+    "lines": 28,
+    "share": 0.004
+   }
+  ],
+  "manifests": [
+   {
+    "file": "pyproject.toml",
+    "kind": "pyproject.toml",
+    "dependencies": [
+     {
+      "name": "pydantic",
+      "spec": "^2.7.0",
+      "ecosystem": "pypi",
+      "section": "tool.poetry.dependencies",
+      "file": "pyproject.toml",
+      "line": 11,
+      "source": "registry"
+     },
+     {
+      "name": "requests",
+      "spec": "^2.31.0",
+      "ecosystem": "pypi",
+      "section": "tool.poetry.dependencies",
+      "file": "pyproject.toml",
+      "line": 12,
+      "source": "registry"
+     },
+     {
+      "name": "httpx",
+      "spec": "^0.27.0",
+      "ecosystem": "pypi",
+      "section": "tool.poetry.dependencies",
+      "file": "pyproject.toml",
+      "line": 13,
+      "source": "registry"
+     },
+     {
+      "name": "starlette",
+      "spec": "^0.37.2",
+      "ecosystem": "pypi",
+      "section": "tool.poetry.dependencies",
+      "file": "pyproject.toml",
+      "line": 14,
+      "source": "registry"
+     },
+     {
+      "name": "sse-starlette",
+      "spec": "^2.1.0",
+      "ecosystem": "pypi",
+      "section": "tool.poetry.dependencies",
+      "file": "pyproject.toml",
+      "line": 15,
+      "source": "registry"
+     },
+     {
+      "name": "tavily-python",
+      "spec": "^0.3.3",
+      "ecosystem": "pypi",
+      "section": "tool.poetry.dependencies",
+      "file": "pyproject.toml",
+      "line": 16,
+      "source": "registry"
+     },
+     {
+      "name": "load-dotenv",
+      "spec": "^0.1.0",
+      "ecosystem": "pypi",
+      "section": "tool.poetry.dependencies",
+      "file": "pyproject.toml",
+      "line": 17,
+      "source": "registry"
+     },
+     {
+      "name": "llama-index",
+      "spec": "^0.10.33",
+      "ecosystem": "pypi",
+      "section": "tool.poetry.dependencies",
+      "file": "pyproject.toml",
+      "line": 18,
+      "source": "registry"
+     },
+     {
+      "name": "llama-index-llms-groq",
+      "spec": "^0.1.3",
+      "ecosystem": "pypi",
+      "section": "tool.poetry.dependencies",
+      "file": "pyproject.toml",
+      "line": 19,
+      "source": "registry"
+     },
+     {
+      "name": "instructor",
+      "spec": "^1.2.3",
+      "ecosystem": "pypi",
+      "section": "tool.poetry.dependencies",
+      "file": "pyproject.toml",
+      "line": 20,
+      "source": "registry"
+     },
+     {
+      "name": "cohere",
+      "spec": "^5.3.4",
+      "ecosystem": "pypi",
+      "section": "tool.poetry.dependencies",
+      "file": "pyproject.toml",
+      "line": 21,
+      "source": "registry"
+     },
+     {
+      "name": "llama-index-llms-azure-openai",
+      "spec": "^0.1.8",
+      "ecosystem": "pypi",
+      "section": "tool.poetry.dependencies",
+      "file": "pyproject.toml",
+      "line": 24,
+      "source": "registry"
+     },
+     {
+      "name": "llama-index-llms-openai",
+      "spec": "^0.1.19",
+      "ecosystem": "pypi",
+      "section": "tool.poetry.dependencies",
+      "file": "pyproject.toml",
+      "line": 25,
+      "source": "registry"
+     },
+     {
+      "name": "groq",
+      "spec": "^0.5.0",
+      "ecosystem": "pypi",
+      "section": "tool.poetry.dependencies",
+      "file": "pyproject.toml",
+      "line": 26,
+      "source": "registry"
+     },
+     {
+      "name": "slowapi",
+      "spec": "^0.1.9",
+      "ecosystem": "pypi",
+      "section": "tool.poetry.dependencies",
+      "file": "pyproject.toml",
+      "line": 27,
+      "source": "registry"
+     },
+     {
+      "name": "redis",
+      "spec": "^5.0.4",
+      "ecosystem": "pypi",
+      "section": "tool.poetry.dependencies",
+      "file": "pyproject.toml",
+      "line": 28,
+      "source": "registry"
+     },
+     {
+      "name": "llama-index-llms-ollama",
+      "spec": "^0.1.3",
+      "ecosystem": "pypi",
+      "section": "tool.poetry.dependencies",
+      "file": "pyproject.toml",
+      "line": 29,
+      "source": "registry"
+     },
+     {
+      "name": "llama-index-llms-litellm",
+      "spec": "^0.1.4",
+      "ecosystem": "pypi",
+      "section": "tool.poetry.dependencies",
+      "file": "pyproject.toml",
+      "line": 30,
+      "source": "registry"
+     },
+     {
+      "name": "alembic",
+      "spec": "^1.13.1",
+      "ecosystem": "pypi",
+      "section": "tool.poetry.dependencies",
+      "file": "pyproject.toml",
+      "line": 31,
+      "source": "registry"
+     },
+     {
+      "name": "psycopg2-binary",
+      "spec": "^2.9.9",
+      "ecosystem": "pypi",
+      "section": "tool.poetry.dependencies",
+      "file": "pyproject.toml",
+      "line": 32,
+      "source": "registry"
+     },
+     {
+      "name": "click",
+      "spec": "^8.1.7",
+      "ecosystem": "pypi",
+      "section": "tool.poetry.dependencies",
+      "file": "pyproject.toml",
+      "line": 33,
+      "source": "registry"
+     },
+     {
+      "name": "inquirer",
+      "spec": "^3.3.0",
+      "ecosystem": "pypi",
+      "section": "tool.poetry.dependencies",
+      "file": "pyproject.toml",
+      "line": 34,
+      "source": "registry"
+     }
+    ]
+   },
+   {
+    "file": "src/frontend/package.json",
+    "kind": "package.json",
+    "dependencies": [
+     {
+      "name": "@hey-api/openapi-ts",
+      "spec": "^0.43.0",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "src/frontend/package.json",
+      "line": 13,
+      "source": "registry"
+     },
+     {
+      "name": "@microsoft/fetch-event-source",
+      "spec": "^2.0.1",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "src/frontend/package.json",
+      "line": 14,
+      "source": "registry"
+     },
+     {
+      "name": "@next/env",
+      "spec": "^14.2.3",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "src/frontend/package.json",
+      "line": 15,
+      "source": "registry"
+     },
+     {
+      "name": "@radix-ui/react-accordion",
+      "spec": "^1.2.0",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "src/frontend/package.json",
+      "line": 16,
+      "source": "registry"
+     },
+     {
+      "name": "@radix-ui/react-dropdown-menu",
+      "spec": "^2.0.6",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "src/frontend/package.json",
+      "line": 17,
+      "source": "registry"
+     },
+     {
+      "name": "@radix-ui/react-hover-card",
+      "spec": "^1.0.7",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "src/frontend/package.json",
+      "line": 18,
+      "source": "registry"
+     },
+     {
+      "name": "@radix-ui/react-icons",
+      "spec": "^1.3.0",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "src/frontend/package.json",
+      "line": 19,
+      "source": "registry"
+     },
+     {
+      "name": "@radix-ui/react-label",
+      "spec": "^2.0.2",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "src/frontend/package.json",
+      "line": 20,
+      "source": "registry"
+     },
+     {
+      "name": "@radix-ui/react-select",
+      "spec": "^2.0.0",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "src/frontend/package.json",
+      "line": 21,
+      "source": "registry"
+     },
+     {
+      "name": "@radix-ui/react-separator",
+      "spec": "^1.0.3",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "src/frontend/package.json",
+      "line": 22,
+      "source": "registry"
+     },
+     {
+      "name": "@radix-ui/react-slot",
+      "spec": "^1.0.2",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "src/frontend/package.json",
+      "line": 23,
+      "source": "registry"
+     },
+     {
+      "name": "@radix-ui/react-switch",
+      "spec": "^1.0.3",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "src/frontend/package.json",
+      "line": 24,
+      "source": "registry"
+     },
+     {
+      "name": "@radix-ui/react-tabs",
+      "spec": "^1.1.0",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "src/frontend/package.json",
+      "line": 25,
+      "source": "registry"
+     },
+     {
+      "name": "@radix-ui/react-toast",
+      "spec": "^1.1.5",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "src/frontend/package.json",
+      "line": 26,
+      "source": "registry"
+     },
+     {
+      "name": "@radix-ui/react-toggle",
+      "spec": "^1.0.3",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "src/frontend/package.json",
+      "line": 27,
+      "source": "registry"
+     },
+     {
+      "name": "@radix-ui/react-tooltip",
+      "spec": "^1.0.7",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "src/frontend/package.json",
+      "line": 28,
+      "source": "registry"
+     },
+     {
+      "name": "@t3-oss/env-nextjs",
+      "spec": "^0.10.1",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "src/frontend/package.json",
+      "line": 29,
+      "source": "registry"
+     },
+     {
+      "name": "@tanstack/react-query",
+      "spec": "^5.32.0",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "src/frontend/package.json",
+      "line": 30,
+      "source": "registry"
+     },
+     {
+      "name": "@vercel/analytics",
+      "spec": "^1.2.2",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "src/frontend/package.json",
+      "line": 31,
+      "source": "registry"
+     },
+     {
+      "name": "class-variance-authority",
+      "spec": "^0.7.0",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "src/frontend/package.json",
+      "line": 32,
+      "source": "registry"
+     },
+     {
+      "name": "clsx",
+      "spec": "^2.1.1",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "src/frontend/package.json",
+      "line": 33,
+      "source": "registry"
+     },
+     {
+      "name": "framer-motion",
+      "spec": "^11.1.7",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "src/frontend/package.json",
+      "line": 34,
+      "source": "registry"
+     },
+     {
+      "name": "geist",
+      "spec": "^1.3.0",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "src/frontend/package.json",
+      "line": 35,
+      "source": "registry"
+     },
+     {
+      "name": "hast-util-from-dom",
+      "spec": "^5.0.0",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "src/frontend/package.json",
+      "line": 36,
+      "source": "registry"
+     },
+     {
+      "name": "lodash",
+      "spec": "^4.17.21",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "src/frontend/package.json",
+      "line": 37,
+      "source": "registry"
+     },
+     {
+      "name": "lucide-react",
+      "spec": "^0.376.0",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "src/frontend/package.json",
+      "line": 38,
+      "source": "registry"
+     },
+     {
+      "name": "moment",
+      "spec": "^2.30.1",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "src/frontend/package.json",
+      "line": 39,
+      "source": "registry"
+     },
+     {
+      "name": "next",
+      "spec": "14.2.3",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "src/frontend/package.json",
+      "line": 40,
+      "source": "registry"
+     },
+     {
+      "name": "next-themes",
+      "spec": "^0.3.0",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "src/frontend/package.json",
+      "line": 41,
+      "source": "registry"
+     },
+     {
+      "name": "react",
+      "spec": "^18",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "src/frontend/package.json",
+      "line": 42,
+      "source": "registry"
+     },
+     {
+      "name": "react-dom",
+      "spec": "^18",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "src/frontend/package.json",
+      "line": 43,
+      "source": "registry"
+     },
+     {
+      "name": "react-icons",
+      "spec": "^5.2.1",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "src/frontend/package.json",
+      "line": 44,
+      "source": "registry"
+     },
+     {
+      "name": "react-markdown",
+      "spec": "^9.0.1",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "src/frontend/package.json",
+      "line": 45,
+      "source": "registry"
+     },
+     {
+      "name": "react-textarea-autosize",
+      "spec": "^8.5.3",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "src/frontend/package.json",
+      "line": 46,
+      "source": "registry"
+     },
+     {
+      "name": "rehype-raw",
+      "spec": "^7.0.0",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "src/frontend/package.json",
+      "line": 47,
+      "source": "registry"
+     },
+     {
+      "name": "tailwind-merge",
+      "spec": "^2.3.0",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "src/frontend/package.json",
+      "line": 48,
+      "source": "registry"
+     },
+     {
+      "name": "tailwindcss-animate",
+      "spec": "^1.0.7",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "src/frontend/package.json",
+      "line": 49,
+      "source": "registry"
+     },
+     {
+      "name": "unist-util-visit",
+      "spec": "^5.0.0",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "src/frontend/package.json",
+      "line": 50,
+      "source": "registry"
+     },
+     {
+      "name": "unist-util-visit-parents",
+      "spec": "^6.0.1",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "src/frontend/package.json",
+      "line": 51,
+      "source": "registry"
+     },
+     {
+      "name": "zod",
+      "spec": "^3.23.8",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "src/frontend/package.json",
+      "line": 52,
+      "source": "registry"
+     },
+     {
+      "name": "zustand",
+      "spec": "^4.5.2",
+      "ecosystem": "npm",
+      "section": "dependencies",
+      "file": "src/frontend/package.json",
+      "line": 53,
+      "source": "registry"
+     },
+     {
+      "name": "@tailwindcss/typography",
+      "spec": "^0.5.13",
+      "ecosystem": "npm",
+      "section": "devDependencies",
+      "file": "src/frontend/package.json",
+      "line": 56,
+      "source": "registry"
+     },
+     {
+      "name": "@types/lodash",
+      "spec": "^4.17.0",
+      "ecosystem": "npm",
+      "section": "devDependencies",
+      "file": "src/frontend/package.json",
+      "line": 57,
+      "source": "registry"
+     },
+     {
+      "name": "@types/node",
+      "spec": "^20",
+      "ecosystem": "npm",
+      "section": "devDependencies",
+      "file": "src/frontend/package.json",
+      "line": 58,
+      "source": "registry"
+     },
+     {
+      "name": "@types/react",
+      "spec": "^18",
+      "ecosystem": "npm",
+      "section": "devDependencies",
+      "file": "src/frontend/package.json",
+      "line": 59,
+      "source": "registry"
+     },
+     {
+      "name": "@types/react-dom",
+      "spec": "^18",
+      "ecosystem": "npm",
+      "section": "devDependencies",
+      "file": "src/frontend/package.json",
+      "line": 60,
+      "source": "registry"
+     },
+     {
+      "name": "eslint",
+      "spec": "^8",
+      "ecosystem": "npm",
+      "section": "devDependencies",
+      "file": "src/frontend/package.json",
+      "line": 61,
+      "source": "registry"
+     },
+     {
+      "name": "eslint-config-next",
+      "spec": "14.2.3",
+      "ecosystem": "npm",
+      "section": "devDependencies",
+      "file": "src/frontend/package.json",
+      "line": 62,
+      "source": "registry"
+     },
+     {
+      "name": "openapi-typescript-codegen",
+      "spec": "^0.29.0",
+      "ecosystem": "npm",
+      "section": "devDependencies",
+      "file": "src/frontend/package.json",
+      "line": 63,
+      "source": "registry"
+     },
+     {
+      "name": "postcss",
+      "spec": "^8",
+      "ecosystem": "npm",
+      "section": "devDependencies",
+      "file": "src/frontend/package.json",
+      "line": 64,
+      "source": "registry"
+     },
+     {
+      "name": "prettier",
+      "spec": "^3.2.5",
+      "ecosystem": "npm",
+      "section": "devDependencies",
+      "file": "src/frontend/package.json",
+      "line": 65,
+      "source": "registry"
+     },
+     {
+      "name": "tailwindcss",
+      "spec": "^3.4.1",
+      "ecosystem": "npm",
+      "section": "devDependencies",
+      "file": "src/frontend/package.json",
+      "line": 66,
+      "source": "registry"
+     },
+     {
+      "name": "typescript",
+      "spec": "^5",
+      "ecosystem": "npm",
+      "section": "devDependencies",
+      "file": "src/frontend/package.json",
+      "line": 67,
+      "source": "registry"
+     }
+    ]
+   }
+  ],
+  "readme": {
+   "file": "README.md",
+   "head": "# Farfalle\n\nOpen-source AI-powered search engine. (Perplexity Clone)\n\nRun local LLMs (**llama3**, **gemma**, **mistral**, **phi3**), custom LLMs through **LiteLLM**, or use cloud models (**Groq/Llama3**, **OpenAI/gpt4-o**)\n\nhttps://github.com/rashadphz/farfalle/assets/20783686/9527a8c9-a13b-4e53-9cda-a3ab28d671b2\n\nPlease feel free to contact me on [Twitter](https://twitter.com/rashadphz) or [create an issue](https://github.com/rashadphz/farfalle/issues/new) if you have any questions.\n\n## 💻 Live Demo\n\n[farfalle.dev](https://farfalle.dev/) (Cloud models only)\n\n## 📖 Overview\n\n- 🛠️ [Tech Stack](#%EF%B8%8F-tech-stack)\n- 🏃🏿‍♂️ [Getting Started](#%EF%B8%8F-getting-started)\n- 🚀 [Deploy](#-deploy)\n\n## 🛣️ Roadmap\n\n- [x] Add support for local LLMs through Ollama\n- [x] Docker deployment setup\n- [x] Add support for [searxng](https://github.com/searxng/searxng). Eliminates the need for external dependencies.\n- [x] Create a pre-built Docker Image\n- [x] Add support for custom LLMs through LiteLLM\n- [x] Chat History\n- [x] Expert Search\n- [ ] Chat with local files\n\n\n\n## 🛠️ Tech Stack\n\n- Frontend: [Next.js](https://nextjs.org/)\n- Backend: [FastAPI](https://fastapi.tiangolo.com/)\n- Search API: [SearXNG](https://github.com/searxng/searxng), [Tavily](https://tavily.com/), [Serper](https://serper.dev/), [Bing](https://www.microsoft.com/en-us/bing/apis/bing-web-search-api)\n- Logging: [Logfire](https://pydantic.dev/logfire)\n- Rate Limiting: [Redis](https://redis.io/)\n- Components: [shadcn/ui](https://ui.shadcn.com/)\n\n\n## Features\n- Search with multiple search providers (Tavily, Searxng, Serper, Bing)\n- Answer questions with cloud models (OpenAI/gpt4-o, OpenAI/gpt3.5-turbo, Groq/Llama3)\n- Answer questions with local models (llama3, mistral, gemma, phi3)\n- Answer questions with any custom LLMs through [LiteLLM](https://litellm.vercel.app/docs/providers)\n- Search with an agent that plans and executes the search for better results\n\n## 🏃🏿‍♂️ Getting Started Locally\n\n### Prerequisites\n\n- [Docker](https://docs.docker.com/get-docker/)\n- [Ollama](https://ollama.com/download) (If running local models)\n  - Download any of the supported models: **llama3**, **mistral**, **gemma**, **phi3**\n  - Start ollama server `ollama serve`\n\n### Get API Keys\n\n- [Tavily (Optional)](https://app.tavily.com/home)\n- [Serper (Optional)](https://serper.dev/dashboard)\n- [OpenAI (Optional)](https://platform.openai.com/api-keys)\n- [Bing (Optional)](https://www.microsoft.com/en-us/bing/apis/bing-web-search-api)\n- [Groq (Optional)](https://console.groq.com/keys)\n\n### Quick Start:\n```\ngit clone https://github.com/rashadphz/farfalle.git\ncd farfalle && cp .env-template .env\n```\nModify .env with your API keys (Optional, not required if using Ollama)\n\nStart the app:\n```\ndocker-compose -f docker-compose.dev.yaml up -d\n```\n\nWait for the app to start then visit [http://localhost:3000](http://localhost:3000)."
+  },
+  "ai_call_sites": [
+   {
+    "signal": "llm_call",
+    "file": "src/backend/llm/base.py",
+    "line": 56,
+    "text": "        return self.client.chat.completions.create("
+   },
+   {
+    "signal": "sdk_litellm",
+    "file": "src/backend/llm/base.py",
+    "line": 7,
+    "text": "from litellm import completion"
+   },
+   {
+    "signal": "sdk_litellm",
+    "file": "src/backend/llm/base.py",
+    "line": 8,
+    "text": "from litellm.utils import validate_environment"
+   },
+   {
+    "signal": "sdk_llamaindex",
+    "file": "src/backend/llm/base.py",
+    "line": 9,
+    "text": "from llama_index.core.base.llms.types import ("
+   },
+   {
+    "signal": "sdk_llamaindex",
+    "file": "src/backend/llm/base.py",
+    "line": 13,
+    "text": "from llama_index.llms.litellm import LiteLLM"
+   }
+  ],
+  "signals": {
+   "structured_out": {
+    "hits": 5,
+    "files": 2,
+    "samples": [
+     {
+      "file": "src/backend/agent_search.py",
+      "line": 116,
+      "text": "        response_model=QueryPlan, prompt=query_plan_prompt"
+     },
+     {
+      "file": "src/backend/agent_search.py",
+      "line": 144,
+      "text": "                response_model=QueryStepExecution, prompt=search_prompt"
+     },
+     {
+      "file": "src/backend/llm/base.py",
+      "line": 4,
+      "text": "import instructor"
+     },
+     {
+      "file": "src/backend/llm/base.py",
+      "line": 6,
+      "text": "from instructor.client import T"
+     }
+    ]
+   },
+   "hand_history": {
+    "hits": 5,
+    "files": 4,
+    "samples": [
+     {
+      "file": "src/backend/chat.py",
+      "line": 38,
+      "text": "            chat_history=history_str, question=question"
+     },
+     {
+      "file": "src/backend/db/chat.py",
+      "line": 156,
+      "text": "def get_chat_history(*, session: Session) -> list[ChatSnapshot]:"
+     },
+     {
+      "file": "src/backend/main.py",
+      "line": 20,
+      "text": "from backend.db.chat import get_chat_history, get_thread"
+     },
+     {
+      "file": "src/backend/main.py",
+      "line": 130,
+      "text": "            history = get_chat_history(session=session)"
+     }
+    ]
+   },
+   "ollama_local": {
+    "hits": 11,
+    "files": 4,
+    "samples": [
+     {
+      "file": "src/backend/constants.py",
+      "line": 29,
+      "text": "    ChatModel.LOCAL_LLAMA_3: \"ollama_chat/llama3.1\","
+     },
+     {
+      "file": "src/backend/constants.py",
+      "line": 30,
+      "text": "    ChatModel.LOCAL_GEMMA: \"ollama_chat/gemma\","
+     },
+     {
+      "file": "src/backend/constants.py",
+      "line": 31,
+      "text": "    ChatModel.LOCAL_MISTRAL: \"ollama_chat/mistral\","
+     },
+     {
+      "file": "src/backend/constants.py",
+      "line": 32,
+      "text": "    ChatModel.LOCAL_PHI3_14B: \"ollama_chat/phi3:14b\","
+     }
+    ]
+   },
+   "model_old": {
+    "hits": 7,
+    "files": 2,
+    "samples": [
+     {
+      "file": "src/backend/constants.py",
+      "line": 11,
+      "text": "    GPT_4o = \"gpt-4o\""
+     },
+     {
+      "file": "src/backend/constants.py",
+      "line": 12,
+      "text": "    GPT_4o_mini = \"gpt-4o-mini\""
+     },
+     {
+      "file": "src/backend/constants.py",
+      "line": 26,
+      "text": "    ChatModel.GPT_4o: \"openai/gpt-4o\","
+     },
+     {
+      "file": "src/backend/constants.py",
+      "line": 27,
+      "text": "    ChatModel.GPT_4o_mini: \"openai/gpt-4o-mini\","
+     }
+    ]
+   },
+   "env_model": {
+    "hits": 3,
+    "files": 3,
+    "samples": [
+     {
+      "file": "src/backend/constants.py",
+      "line": 38,
+      "text": "        custom_model = os.environ.get(\"CUSTOM_MODEL\")"
+     },
+     {
+      "file": "src/backend/schemas.py",
+      "line": 31,
+      "text": "LOCAL_MODELS_ENABLED = strtobool(os.getenv(\"ENABLE_LOCAL_MODELS\", False))"
+     },
+     {
+      "file": "src/backend/validators.py",
+      "line": 24,
+      "text": "        LOCAL_MODELS_ENABLED = strtobool(os.getenv(\"ENABLE_LOCAL_MODELS\", True))"
+     }
+    ]
+   },
+   "fragile_json": {
+    "hits": 3,
+    "files": 3,
+    "samples": [
+     {
+      "file": "src/backend/db/chat.py",
+      "line": 216,
+      "text": "                    **json.loads(message.agent_search_full_response)"
+     },
+     {
+      "file": "src/backend/search/search_service.py",
+      "line": 91,
+      "text": "            cached_json = json.loads(json.loads(cached_results.decode(\"utf-8\")))  # type: ignore"
+     },
+     {
+      "file": "src/frontend/src/hooks/chat.ts",
+      "line": 223,
+      "text": "          const eventItem: ChatResponseEvent = JSON.parse(event.data);"
+     }
+    ]
+   },
+   "sdk_litellm": {
+    "hits": 2,
+    "files": 1,
+    "samples": [
+     {
+      "file": "src/backend/llm/base.py",
+      "line": 7,
+      "text": "from litellm import completion"
+     },
+     {
+      "file": "src/backend/llm/base.py",
+      "line": 8,
+      "text": "from litellm.utils import validate_environment"
+     }
+    ]
+   },
+   "sdk_llamaindex": {
+    "hits": 2,
+    "files": 1,
+    "samples": [
+     {
+      "file": "src/backend/llm/base.py",
+      "line": 9,
+      "text": "from llama_index.core.base.llms.types import ("
+     },
+     {
+      "file": "src/backend/llm/base.py",
+      "line": 13,
+      "text": "from llama_index.llms.litellm import LiteLLM"
+     }
+    ]
+   },
+   "llm_call": {
+    "hits": 1,
+    "files": 1,
+    "samples": [
+     {
+      "file": "src/backend/llm/base.py",
+      "line": 56,
+      "text": "        return self.client.chat.completions.create("
+     }
+    ]
+   },
+   "http_api": {
+    "hits": 4,
+    "files": 1,
+    "samples": [
+     {
+      "file": "src/backend/main.py",
+      "line": 86,
+      "text": "    app = FastAPI()"
+     },
+     {
+      "file": "src/backend/main.py",
+      "line": 100,
+      "text": "@app.post(\"/chat\")"
+     },
+     {
+      "file": "src/backend/main.py",
+      "line": 125,
+      "text": "@app.get(\"/history\")"
+     },
+     {
+      "file": "src/backend/main.py",
+      "line": 141,
+      "text": "@app.get(\"/thread/{thread_id}\")"
+     }
+    ]
+   },
+   "openapi": {
+    "hits": 2,
+    "files": 2,
+    "samples": [
+     {
+      "file": "src/backend/main.py",
+      "line": 86,
+      "text": "    app = FastAPI()"
+     },
+     {
+      "file": "src/frontend/openapi-ts.config.ts",
+      "line": 4,
+      "text": "  input: \"http://localhost:8000/openapi.json\","
+     }
+    ]
+   },
+   "observability": {
+    "hits": 2,
+    "files": 1,
+    "samples": [
+     {
+      "file": "src/backend/prompts.py",
+      "line": 69,
+      "text": "4. Always include a final step to summarize/combine/compare information from previous steps."
+     },
+     {
+      "file": "src/backend/prompts.py",
+      "line": 101,
+      "text": "Query Plan (with a final summarize/combine/compare step):"
+     }
+    ]
+   }
+  },
+  "model_ids": [
+   {
+    "id": "gpt-35-turbo",
+    "provider": "openai",
+    "places": [
+     {
+      "file": "src/backend/constants.py",
+      "line": 46,
+      "text": "# Currently deployments are named \"gpt-35-turbo\" and \"gpt-4o\"",
+      "route": "direct",
+      "context": "code",
+      "commented": true
+     }
+    ]
+   },
+   {
+    "id": "gpt-4o",
+    "provider": "openai",
+    "places": [
+     {
+      "file": "src/backend/constants.py",
+      "line": 11,
+      "text": "GPT_4o = \"gpt-4o\"",
+      "route": "direct",
+      "context": "code",
+      "commented": false
+     },
+     {
+      "file": "src/backend/constants.py",
+      "line": 26,
+      "text": "ChatModel.GPT_4o: \"openai/gpt-4o\",",
+      "route": "gateway",
+      "context": "code",
+      "commented": false
+     },
+     {
+      "file": "src/backend/constants.py",
+      "line": 46,
+      "text": "# Currently deployments are named \"gpt-35-turbo\" and \"gpt-4o\"",
+      "route": "direct",
+      "context": "code",
+      "commented": true
+     }
+    ]
+   },
+   {
+    "id": "gpt-4o-mini",
+    "provider": "openai",
+    "places": [
+     {
+      "file": "src/backend/constants.py",
+      "line": 12,
+      "text": "GPT_4o_mini = \"gpt-4o-mini\"",
+      "route": "direct",
+      "context": "code",
+      "commented": false
+     },
+     {
+      "file": "src/backend/constants.py",
+      "line": 27,
+      "text": "ChatModel.GPT_4o_mini: \"openai/gpt-4o-mini\",",
+      "route": "gateway",
+      "context": "code",
+      "commented": false
+     }
+    ]
+   }
+  ],
+  "steps": [
+   {
+    "name": "List files",
+    "detail": "125 files to read, 27 skipped (vendored, generated, minified, binary or over 2 MB)",
+    "ms": 12
+   },
+   {
+    "name": "Read manifests",
+    "detail": "2 manifests, 75 declared dependencies",
+    "ms": 2
+   },
+   {
+    "name": "Read the README",
+    "detail": "README.md",
+    "ms": 0
+   },
+   {
+    "name": "Measure languages",
+    "detail": "TypeScript 62%, Python 28%, YAML 4%",
+    "ms": 0
+   },
+   {
+    "name": "Run signals",
+    "detail": "12 of 43 signals fired",
+    "ms": 24
+   },
+   {
+    "name": "Find model ids",
+    "detail": "3 distinct model ids in 6 places",
+    "ms": 6
+   }
+  ],
+  "checked": {
+   "files": 125,
+   "lines": 8068
+  }
+ },
+ "pattern_hits": [
+  {
+   "file": "src/backend/constants.py",
+   "line": 11,
+   "pattern": "PAT-retired-model-id",
+   "text": "    GPT_4o = \"gpt-4o\""
+  },
+  {
+   "file": "src/backend/constants.py",
+   "line": 12,
+   "pattern": "PAT-retired-model-id",
+   "text": "    GPT_4o_mini = \"gpt-4o-mini\""
+  },
+  {
+   "file": "src/backend/llm/base.py",
+   "line": 56,
+   "pattern": "PAT-no-test-set",
+   "text": "        return self.client.chat.completions.create("
+  },
+  {
+   "file": "src/backend/main.py",
+   "line": 86,
+   "pattern": "PAT-http-api-no-mcp",
+   "text": "    app = FastAPI()"
+  },
+  {
+   "file": "src/frontend/src/app/layout.tsx",
+   "line": 10,
+   "pattern": "PAT-uses-vercel",
+   "text": "import { Analytics } from \"@vercel/analytics/react\";"
+  }
+ ],
+ "exact": [
+  {
+   "kind": "model",
+   "model": "gpt-4o",
+   "provider": "openai",
+   "status": "retiring",
+   "announced": null,
+   "effective": "2027-01-14",
+   "successors": [
+    "gpt-6-luna"
+   ],
+   "source": "https://developers.openai.com/api/docs/deprecations",
+   "sentence": "openai: shuts down on 2027-01-14. Provider's named successor: gpt-6-luna.",
+   "live_places": [
+    {
+     "file": "src/backend/constants.py",
+     "line": 11,
+     "text": "GPT_4o = \"gpt-4o\"",
+     "route": "direct",
+     "context": "code",
+     "commented": false
+    }
+   ],
+   "not_live": [
+    {
+     "file": "src/backend/constants.py",
+     "line": 26,
+     "text": "ChatModel.GPT_4o: \"openai/gpt-4o\",",
+     "route": "gateway",
+     "context": "code",
+     "commented": false,
+     "why": "gateway"
+    },
+    {
+     "file": "src/backend/constants.py",
+     "line": 46,
+     "text": "# Currently deployments are named \"gpt-35-turbo\" and \"gpt-4o\"",
+     "route": "direct",
+     "context": "code",
+     "commented": true,
+     "why": "comment"
+    }
+   ],
+   "successors_from_page": true
+  },
+  {
+   "kind": "model",
+   "model": "gpt-4o-mini",
+   "provider": "openai",
+   "status": "retiring",
+   "announced": null,
+   "effective": "2027-01-14",
+   "successors": [
+    "gpt-6-luna"
+   ],
+   "source": "https://developers.openai.com/api/docs/deprecations",
+   "sentence": "openai: shuts down on 2027-01-14. Provider's named successor: gpt-6-luna.",
+   "live_places": [
+    {
+     "file": "src/backend/constants.py",
+     "line": 12,
+     "text": "GPT_4o_mini = \"gpt-4o-mini\"",
+     "route": "direct",
+     "context": "code",
+     "commented": false
+    }
+   ],
+   "not_live": [
+    {
+     "file": "src/backend/constants.py",
+     "line": 27,
+     "text": "ChatModel.GPT_4o_mini: \"openai/gpt-4o-mini\",",
+     "route": "gateway",
+     "context": "code",
+     "commented": false,
+     "why": "gateway"
+    }
+   ],
+   "successors_from_page": true
+  },
+  {
+   "kind": "dependency",
+   "name": "@hey-api/openapi-ts",
+   "ecosystem": "npm",
+   "spec": "^0.43.0",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "src/frontend/package.json",
+     "line": 13,
+     "spec": "^0.43.0"
+    }
+   ],
+   "status": "behind",
+   "latest": "0.99.0",
+   "latest_date": "2026-06-22",
+   "declared_date": "2024-05-02",
+   "majors_behind": 0,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/@hey-api/openapi-ts"
+  },
+  {
+   "kind": "dependency",
+   "name": "@microsoft/fetch-event-source",
+   "ecosystem": "npm",
+   "spec": "^2.0.1",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "src/frontend/package.json",
+     "line": 14,
+     "spec": "^2.0.1"
+    }
+   ],
+   "status": "current",
+   "latest": "2.0.1",
+   "latest_date": "2021-04-25",
+   "declared_date": "2021-04-25",
+   "majors_behind": 0,
+   "stale": true,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/@microsoft/fetch-event-source"
+  },
+  {
+   "kind": "dependency",
+   "name": "@next/env",
+   "ecosystem": "npm",
+   "spec": "^14.2.3",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "src/frontend/package.json",
+     "line": 15,
+     "spec": "^14.2.3"
+    }
+   ],
+   "status": "behind",
+   "latest": "16.4.3",
+   "latest_date": "2026-10-23",
+   "declared_date": "2024-04-24",
+   "majors_behind": 2,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/@next/env"
+  },
+  {
+   "kind": "dependency",
+   "name": "@radix-ui/react-accordion",
+   "ecosystem": "npm",
+   "spec": "^1.2.0",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "src/frontend/package.json",
+     "line": 16,
+     "spec": "^1.2.0"
+    }
+   ],
+   "status": "allowed-by-range",
+   "latest": "1.3.1",
+   "latest_date": "2026-10-12",
+   "declared_date": "2024-06-19",
+   "majors_behind": 0,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/@radix-ui/react-accordion"
+  },
+  {
+   "kind": "dependency",
+   "name": "@radix-ui/react-dropdown-menu",
+   "ecosystem": "npm",
+   "spec": "^2.0.6",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "src/frontend/package.json",
+     "line": 17,
+     "spec": "^2.0.6"
+    }
+   ],
+   "status": "allowed-by-range",
+   "latest": "2.2.1",
+   "latest_date": "2026-10-12",
+   "declared_date": "2023-09-25",
+   "majors_behind": 0,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/@radix-ui/react-dropdown-menu"
+  },
+  {
+   "kind": "dependency",
+   "name": "@radix-ui/react-hover-card",
+   "ecosystem": "npm",
+   "spec": "^1.0.7",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "src/frontend/package.json",
+     "line": 18,
+     "spec": "^1.0.7"
+    }
+   ],
+   "status": "allowed-by-range",
+   "latest": "1.2.1",
+   "latest_date": "2026-10-12",
+   "declared_date": "2023-09-25",
+   "majors_behind": 0,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/@radix-ui/react-hover-card"
+  },
+  {
+   "kind": "dependency",
+   "name": "@radix-ui/react-icons",
+   "ecosystem": "npm",
+   "spec": "^1.3.0",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "src/frontend/package.json",
+     "line": 19,
+     "spec": "^1.3.0"
+    }
+   ],
+   "status": "allowed-by-range",
+   "latest": "1.3.2",
+   "latest_date": "2024-11-14",
+   "declared_date": "2023-03-21",
+   "majors_behind": 0,
+   "stale": true,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/@radix-ui/react-icons"
+  },
+  {
+   "kind": "dependency",
+   "name": "@radix-ui/react-label",
+   "ecosystem": "npm",
+   "spec": "^2.0.2",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "src/frontend/package.json",
+     "line": 20,
+     "spec": "^2.0.2"
+    }
+   ],
+   "status": "allowed-by-range",
+   "latest": "2.1.17",
+   "latest_date": "2026-10-12",
+   "declared_date": "2023-05-26",
+   "majors_behind": 0,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/@radix-ui/react-label"
+  },
+  {
+   "kind": "dependency",
+   "name": "@radix-ui/react-select",
+   "ecosystem": "npm",
+   "spec": "^2.0.0",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "src/frontend/package.json",
+     "line": 21,
+     "spec": "^2.0.0"
+    }
+   ],
+   "status": "allowed-by-range",
+   "latest": "2.4.1",
+   "latest_date": "2026-10-12",
+   "declared_date": "2023-09-25",
+   "majors_behind": 0,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/@radix-ui/react-select"
+  },
+  {
+   "kind": "dependency",
+   "name": "@radix-ui/react-separator",
+   "ecosystem": "npm",
+   "spec": "^1.0.3",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "src/frontend/package.json",
+     "line": 22,
+     "spec": "^1.0.3"
+    }
+   ],
+   "status": "allowed-by-range",
+   "latest": "1.2.0",
+   "latest_date": "2026-10-12",
+   "declared_date": "2023-05-26",
+   "majors_behind": 0,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/@radix-ui/react-separator"
+  },
+  {
+   "kind": "dependency",
+   "name": "@radix-ui/react-slot",
+   "ecosystem": "npm",
+   "spec": "^1.0.2",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "src/frontend/package.json",
+     "line": 23,
+     "spec": "^1.0.2"
+    }
+   ],
+   "status": "allowed-by-range",
+   "latest": "1.5.0",
+   "latest_date": "2026-10-12",
+   "declared_date": "2023-05-26",
+   "majors_behind": 0,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/@radix-ui/react-slot"
+  },
+  {
+   "kind": "dependency",
+   "name": "@radix-ui/react-switch",
+   "ecosystem": "npm",
+   "spec": "^1.0.3",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "src/frontend/package.json",
+     "line": 24,
+     "spec": "^1.0.3"
+    }
+   ],
+   "status": "allowed-by-range",
+   "latest": "1.4.1",
+   "latest_date": "2026-10-12",
+   "declared_date": "2023-05-26",
+   "majors_behind": 0,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/@radix-ui/react-switch"
+  },
+  {
+   "kind": "dependency",
+   "name": "@radix-ui/react-tabs",
+   "ecosystem": "npm",
+   "spec": "^1.1.0",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "src/frontend/package.json",
+     "line": 25,
+     "spec": "^1.1.0"
+    }
+   ],
+   "status": "allowed-by-range",
+   "latest": "1.2.1",
+   "latest_date": "2026-10-12",
+   "declared_date": "2024-06-19",
+   "majors_behind": 0,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/@radix-ui/react-tabs"
+  },
+  {
+   "kind": "dependency",
+   "name": "@radix-ui/react-toast",
+   "ecosystem": "npm",
+   "spec": "^1.1.5",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "src/frontend/package.json",
+     "line": 26,
+     "spec": "^1.1.5"
+    }
+   ],
+   "status": "allowed-by-range",
+   "latest": "1.3.1",
+   "latest_date": "2026-10-12",
+   "declared_date": "2023-09-25",
+   "majors_behind": 0,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/@radix-ui/react-toast"
+  },
+  {
+   "kind": "dependency",
+   "name": "@radix-ui/react-toggle",
+   "ecosystem": "npm",
+   "spec": "^1.0.3",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "src/frontend/package.json",
+     "line": 27,
+     "spec": "^1.0.3"
+    }
+   ],
+   "status": "allowed-by-range",
+   "latest": "1.2.1",
+   "latest_date": "2026-10-12",
+   "declared_date": "2023-05-26",
+   "majors_behind": 0,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/@radix-ui/react-toggle"
+  },
+  {
+   "kind": "dependency",
+   "name": "@radix-ui/react-tooltip",
+   "ecosystem": "npm",
+   "spec": "^1.0.7",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "src/frontend/package.json",
+     "line": 28,
+     "spec": "^1.0.7"
+    }
+   ],
+   "status": "allowed-by-range",
+   "latest": "1.4.1",
+   "latest_date": "2026-10-12",
+   "declared_date": "2023-09-25",
+   "majors_behind": 0,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/@radix-ui/react-tooltip"
+  },
+  {
+   "kind": "dependency",
+   "name": "@t3-oss/env-nextjs",
+   "ecosystem": "npm",
+   "spec": "^0.10.1",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "src/frontend/package.json",
+     "line": 29,
+     "spec": "^0.10.1"
+    }
+   ],
+   "status": "behind",
+   "latest": "0.13.11",
+   "latest_date": "2026-03-22",
+   "declared_date": "2024-04-23",
+   "majors_behind": 0,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/@t3-oss/env-nextjs"
+  },
+  {
+   "kind": "dependency",
+   "name": "@tanstack/react-query",
+   "ecosystem": "npm",
+   "spec": "^5.32.0",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "src/frontend/package.json",
+     "line": 30,
+     "spec": "^5.32.0"
+    }
+   ],
+   "status": "allowed-by-range",
+   "latest": "5.105.0",
+   "latest_date": "2026-10-26",
+   "declared_date": "2024-04-23",
+   "majors_behind": 0,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/@tanstack/react-query"
+  },
+  {
+   "kind": "dependency",
+   "name": "@vercel/analytics",
+   "ecosystem": "npm",
+   "spec": "^1.2.2",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "src/frontend/package.json",
+     "line": 31,
+     "spec": "^1.2.2"
+    }
+   ],
+   "status": "behind",
+   "latest": "2.0.1",
+   "latest_date": "2026-03-12",
+   "declared_date": "2024-02-20",
+   "majors_behind": 1,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/@vercel/analytics"
+  },
+  {
+   "kind": "dependency",
+   "name": "class-variance-authority",
+   "ecosystem": "npm",
+   "spec": "^0.7.0",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "src/frontend/package.json",
+     "line": 32,
+     "spec": "^0.7.0"
+    }
+   ],
+   "status": "allowed-by-range",
+   "latest": "0.7.1",
+   "latest_date": "2024-11-26",
+   "declared_date": "2023-07-17",
+   "majors_behind": 0,
+   "stale": true,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/class-variance-authority"
+  },
+  {
+   "kind": "dependency",
+   "name": "clsx",
+   "ecosystem": "npm",
+   "spec": "^2.1.1",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "src/frontend/package.json",
+     "line": 33,
+     "spec": "^2.1.1"
+    }
+   ],
+   "status": "current",
+   "latest": "2.1.1",
+   "latest_date": "2024-04-23",
+   "declared_date": "2024-04-23",
+   "majors_behind": 0,
+   "stale": true,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/clsx"
+  },
+  {
+   "kind": "dependency",
+   "name": "framer-motion",
+   "ecosystem": "npm",
+   "spec": "^11.1.7",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "src/frontend/package.json",
+     "line": 34,
+     "spec": "^11.1.7"
+    }
+   ],
+   "status": "behind",
+   "latest": "14.9.0",
+   "latest_date": "2026-10-30",
+   "declared_date": "2024-04-19",
+   "majors_behind": 3,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/framer-motion"
+  },
+  {
+   "kind": "dependency",
+   "name": "geist",
+   "ecosystem": "npm",
+   "spec": "^1.3.0",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "src/frontend/package.json",
+     "line": 35,
+     "spec": "^1.3.0"
+    }
+   ],
+   "status": "allowed-by-range",
+   "latest": "1.9.0",
+   "latest_date": "2026-10-30",
+   "declared_date": "2024-03-25",
+   "majors_behind": 0,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/geist"
+  },
+  {
+   "kind": "dependency",
+   "name": "hast-util-from-dom",
+   "ecosystem": "npm",
+   "spec": "^5.0.0",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "src/frontend/package.json",
+     "line": 36,
+     "spec": "^5.0.0"
+    }
+   ],
+   "status": "allowed-by-range",
+   "latest": "5.0.1",
+   "latest_date": "2024-11-19",
+   "declared_date": "2023-08-04",
+   "majors_behind": 0,
+   "stale": true,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/hast-util-from-dom"
+  },
+  {
+   "kind": "dependency",
+   "name": "lodash",
+   "ecosystem": "npm",
+   "spec": "^4.17.21",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "src/frontend/package.json",
+     "line": 37,
+     "spec": "^4.17.21"
+    }
+   ],
+   "status": "allowed-by-range",
+   "latest": "4.18.1",
+   "latest_date": "2026-04-01",
+   "declared_date": "2021-02-20",
+   "majors_behind": 0,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/lodash"
+  },
+  {
+   "kind": "dependency",
+   "name": "lucide-react",
+   "ecosystem": "npm",
+   "spec": "^0.376.0",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "src/frontend/package.json",
+     "line": 38,
+     "spec": "^0.376.0"
+    }
+   ],
+   "status": "behind",
+   "latest": "1.66.0",
+   "latest_date": "2026-10-31",
+   "declared_date": "2024-04-26",
+   "majors_behind": 1,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/lucide-react"
+  },
+  {
+   "kind": "dependency",
+   "name": "moment",
+   "ecosystem": "npm",
+   "spec": "^2.30.1",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "src/frontend/package.json",
+     "line": 39,
+     "spec": "^2.30.1"
+    }
+   ],
+   "status": "allowed-by-range",
+   "latest": "2.31.0",
+   "latest_date": "2026-09-15",
+   "declared_date": "2023-12-27",
+   "majors_behind": 0,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/moment"
+  },
+  {
+   "kind": "dependency",
+   "name": "next",
+   "ecosystem": "npm",
+   "spec": "14.2.3",
+   "spec_kind": "exact",
+   "places": [
+    {
+     "file": "src/frontend/package.json",
+     "line": 40,
+     "spec": "14.2.3"
+    }
+   ],
+   "status": "behind",
+   "latest": "16.4.3",
+   "latest_date": "2026-10-23",
+   "declared_date": "2024-04-24",
+   "majors_behind": 2,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/next"
+  },
+  {
+   "kind": "dependency",
+   "name": "next-themes",
+   "ecosystem": "npm",
+   "spec": "^0.3.0",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "src/frontend/package.json",
+     "line": 41,
+     "spec": "^0.3.0"
+    }
+   ],
+   "status": "behind",
+   "latest": "0.4.6",
+   "latest_date": "2025-03-11",
+   "declared_date": "2024-03-13",
+   "majors_behind": 0,
+   "stale": true,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/next-themes"
+  },
+  {
+   "kind": "dependency",
+   "name": "react",
+   "ecosystem": "npm",
+   "spec": "^18",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "src/frontend/package.json",
+     "line": 42,
+     "spec": "^18"
+    }
+   ],
+   "status": "behind",
+   "latest": "19.3.1",
+   "latest_date": "2026-10-14",
+   "declared_date": null,
+   "majors_behind": 1,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/react"
+  },
+  {
+   "kind": "dependency",
+   "name": "react-dom",
+   "ecosystem": "npm",
+   "spec": "^18",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "src/frontend/package.json",
+     "line": 43,
+     "spec": "^18"
+    }
+   ],
+   "status": "behind",
+   "latest": "19.3.1",
+   "latest_date": "2026-10-14",
+   "declared_date": null,
+   "majors_behind": 1,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/react-dom"
+  },
+  {
+   "kind": "dependency",
+   "name": "react-icons",
+   "ecosystem": "npm",
+   "spec": "^5.2.1",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "src/frontend/package.json",
+     "line": 44,
+     "spec": "^5.2.1"
+    }
+   ],
+   "status": "allowed-by-range",
+   "latest": "5.7.0",
+   "latest_date": "2026-06-30",
+   "declared_date": "2024-05-07",
+   "majors_behind": 0,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/react-icons"
+  },
+  {
+   "kind": "dependency",
+   "name": "react-markdown",
+   "ecosystem": "npm",
+   "spec": "^9.0.1",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "src/frontend/package.json",
+     "line": 45,
+     "spec": "^9.0.1"
+    }
+   ],
+   "status": "behind",
+   "latest": "10.1.0",
+   "latest_date": "2025-03-07",
+   "declared_date": "2023-11-13",
+   "majors_behind": 1,
+   "stale": true,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/react-markdown"
+  },
+  {
+   "kind": "dependency",
+   "name": "react-textarea-autosize",
+   "ecosystem": "npm",
+   "spec": "^8.5.3",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "src/frontend/package.json",
+     "line": 46,
+     "spec": "^8.5.3"
+    }
+   ],
+   "status": "allowed-by-range",
+   "latest": "8.5.9",
+   "latest_date": "2025-03-30",
+   "declared_date": "2023-08-22",
+   "majors_behind": 0,
+   "stale": true,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/react-textarea-autosize"
+  },
+  {
+   "kind": "dependency",
+   "name": "rehype-raw",
+   "ecosystem": "npm",
+   "spec": "^7.0.0",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "src/frontend/package.json",
+     "line": 47,
+     "spec": "^7.0.0"
+    }
+   ],
+   "status": "current",
+   "latest": "7.0.0",
+   "latest_date": "2023-08-26",
+   "declared_date": "2023-08-26",
+   "majors_behind": 0,
+   "stale": true,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/rehype-raw"
+  },
+  {
+   "kind": "dependency",
+   "name": "tailwind-merge",
+   "ecosystem": "npm",
+   "spec": "^2.3.0",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "src/frontend/package.json",
+     "line": 48,
+     "spec": "^2.3.0"
+    }
+   ],
+   "status": "behind",
+   "latest": "3.7.0",
+   "latest_date": "2026-09-12",
+   "declared_date": "2024-04-19",
+   "majors_behind": 1,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/tailwind-merge"
+  },
+  {
+   "kind": "dependency",
+   "name": "tailwindcss-animate",
+   "ecosystem": "npm",
+   "spec": "^1.0.7",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "src/frontend/package.json",
+     "line": 49,
+     "spec": "^1.0.7"
+    }
+   ],
+   "status": "current",
+   "latest": "1.0.7",
+   "latest_date": "2023-08-28",
+   "declared_date": "2023-08-28",
+   "majors_behind": 0,
+   "stale": true,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/tailwindcss-animate"
+  },
+  {
+   "kind": "dependency",
+   "name": "unist-util-visit",
+   "ecosystem": "npm",
+   "spec": "^5.0.0",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "src/frontend/package.json",
+     "line": 50,
+     "spec": "^5.0.0"
+    }
+   ],
+   "status": "allowed-by-range",
+   "latest": "5.2.0",
+   "latest_date": "2026-10-24",
+   "declared_date": "2023-07-07",
+   "majors_behind": 0,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/unist-util-visit"
+  },
+  {
+   "kind": "dependency",
+   "name": "unist-util-visit-parents",
+   "ecosystem": "npm",
+   "spec": "^6.0.1",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "src/frontend/package.json",
+     "line": 51,
+     "spec": "^6.0.1"
+    }
+   ],
+   "status": "allowed-by-range",
+   "latest": "6.1.0",
+   "latest_date": "2026-10-24",
+   "declared_date": "2023-07-07",
+   "majors_behind": 0,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/unist-util-visit-parents"
+  },
+  {
+   "kind": "dependency",
+   "name": "zod",
+   "ecosystem": "npm",
+   "spec": "^3.23.8",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "src/frontend/package.json",
+     "line": 52,
+     "spec": "^3.23.8"
+    }
+   ],
+   "status": "behind",
+   "latest": "4.6.7",
+   "latest_date": "2026-10-12",
+   "declared_date": "2024-05-08",
+   "majors_behind": 1,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/zod"
+  },
+  {
+   "kind": "dependency",
+   "name": "zustand",
+   "ecosystem": "npm",
+   "spec": "^4.5.2",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "src/frontend/package.json",
+     "line": 53,
+     "spec": "^4.5.2"
+    }
+   ],
+   "status": "behind",
+   "latest": "5.0.16",
+   "latest_date": "2026-10-22",
+   "declared_date": "2024-03-02",
+   "majors_behind": 1,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/zustand"
+  },
+  {
+   "kind": "dependency",
+   "name": "@tailwindcss/typography",
+   "ecosystem": "npm",
+   "spec": "^0.5.13",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "src/frontend/package.json",
+     "line": 56,
+     "spec": "^0.5.13"
+    }
+   ],
+   "status": "allowed-by-range",
+   "latest": "0.5.20",
+   "latest_date": "2026-06-08",
+   "declared_date": "2024-04-26",
+   "majors_behind": 0,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/@tailwindcss/typography"
+  },
+  {
+   "kind": "dependency",
+   "name": "@types/lodash",
+   "ecosystem": "npm",
+   "spec": "^4.17.0",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "src/frontend/package.json",
+     "line": 57,
+     "spec": "^4.17.0"
+    }
+   ],
+   "status": "allowed-by-range",
+   "latest": "4.17.27",
+   "latest_date": "2026-10-21",
+   "declared_date": "2024-03-12",
+   "majors_behind": 0,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/@types/lodash"
+  },
+  {
+   "kind": "dependency",
+   "name": "@types/node",
+   "ecosystem": "npm",
+   "spec": "^20",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "src/frontend/package.json",
+     "line": 58,
+     "spec": "^20"
+    }
+   ],
+   "status": "behind",
+   "latest": "26.6.6",
+   "latest_date": "2026-10-28",
+   "declared_date": null,
+   "majors_behind": 6,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/@types/node"
+  },
+  {
+   "kind": "dependency",
+   "name": "@types/react",
+   "ecosystem": "npm",
+   "spec": "^18",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "src/frontend/package.json",
+     "line": 59,
+     "spec": "^18"
+    }
+   ],
+   "status": "behind",
+   "latest": "19.3.0",
+   "latest_date": "2026-09-09",
+   "declared_date": null,
+   "majors_behind": 1,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/@types/react"
+  },
+  {
+   "kind": "dependency",
+   "name": "@types/react-dom",
+   "ecosystem": "npm",
+   "spec": "^18",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "src/frontend/package.json",
+     "line": 60,
+     "spec": "^18"
+    }
+   ],
+   "status": "behind",
+   "latest": "19.3.0",
+   "latest_date": "2026-09-09",
+   "declared_date": null,
+   "majors_behind": 1,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/@types/react-dom"
+  },
+  {
+   "kind": "dependency",
+   "name": "eslint",
+   "ecosystem": "npm",
+   "spec": "^8",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "src/frontend/package.json",
+     "line": 61,
+     "spec": "^8"
+    }
+   ],
+   "status": "behind",
+   "latest": "10.14.0",
+   "latest_date": "2026-10-30",
+   "declared_date": null,
+   "majors_behind": 2,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/eslint"
+  },
+  {
+   "kind": "dependency",
+   "name": "eslint-config-next",
+   "ecosystem": "npm",
+   "spec": "14.2.3",
+   "spec_kind": "exact",
+   "places": [
+    {
+     "file": "src/frontend/package.json",
+     "line": 62,
+     "spec": "14.2.3"
+    }
+   ],
+   "status": "behind",
+   "latest": "16.4.3",
+   "latest_date": "2026-10-23",
+   "declared_date": "2024-04-24",
+   "majors_behind": 2,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/eslint-config-next"
+  },
+  {
+   "kind": "dependency",
+   "name": "openapi-typescript-codegen",
+   "ecosystem": "npm",
+   "spec": "^0.29.0",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "src/frontend/package.json",
+     "line": 63,
+     "spec": "^0.29.0"
+    }
+   ],
+   "status": "behind",
+   "latest": "0.31.0",
+   "latest_date": "2026-06-20",
+   "declared_date": "2024-04-07",
+   "majors_behind": 0,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/openapi-typescript-codegen"
+  },
+  {
+   "kind": "dependency",
+   "name": "postcss",
+   "ecosystem": "npm",
+   "spec": "^8",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "src/frontend/package.json",
+     "line": 64,
+     "spec": "^8"
+    }
+   ],
+   "status": "allowed-by-range",
+   "latest": "8.5.32",
+   "latest_date": "2026-10-26",
+   "declared_date": null,
+   "majors_behind": 0,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/postcss"
+  },
+  {
+   "kind": "dependency",
+   "name": "prettier",
+   "ecosystem": "npm",
+   "spec": "^3.2.5",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "src/frontend/package.json",
+     "line": 65,
+     "spec": "^3.2.5"
+    }
+   ],
+   "status": "allowed-by-range",
+   "latest": "3.9.10",
+   "latest_date": "2026-10-10",
+   "declared_date": "2024-02-04",
+   "majors_behind": 0,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/prettier"
+  },
+  {
+   "kind": "dependency",
+   "name": "tailwindcss",
+   "ecosystem": "npm",
+   "spec": "^3.4.1",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "src/frontend/package.json",
+     "line": 66,
+     "spec": "^3.4.1"
+    }
+   ],
+   "status": "behind",
+   "latest": "4.3.3",
+   "latest_date": "2026-07-16",
+   "declared_date": "2024-01-05",
+   "majors_behind": 1,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/tailwindcss"
+  },
+  {
+   "kind": "dependency",
+   "name": "typescript",
+   "ecosystem": "npm",
+   "spec": "^5",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "src/frontend/package.json",
+     "line": 67,
+     "spec": "^5"
+    }
+   ],
+   "status": "behind",
+   "latest": "7.0.2",
+   "latest_date": "2026-07-08",
+   "declared_date": null,
+   "majors_behind": 2,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://www.npmjs.com/package/typescript"
+  },
+  {
+   "kind": "dependency",
+   "name": "pydantic",
+   "ecosystem": "pypi",
+   "spec": "^2.7.0",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "pyproject.toml",
+     "line": 11,
+     "spec": "^2.7.0"
+    }
+   ],
+   "status": "allowed-by-range",
+   "latest": "2.14.2",
+   "latest_date": "2026-10-29",
+   "declared_date": "2024-04-11",
+   "majors_behind": 0,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://pypi.org/project/pydantic/"
+  },
+  {
+   "kind": "dependency",
+   "name": "requests",
+   "ecosystem": "pypi",
+   "spec": "^2.31.0",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "pyproject.toml",
+     "line": 12,
+     "spec": "^2.31.0"
+    }
+   ],
+   "status": "allowed-by-range",
+   "latest": "2.34.2",
+   "latest_date": "2026-05-14",
+   "declared_date": "2023-05-22",
+   "majors_behind": 0,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://pypi.org/project/requests/"
+  },
+  {
+   "kind": "dependency",
+   "name": "httpx",
+   "ecosystem": "pypi",
+   "spec": "^0.27.0",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "pyproject.toml",
+     "line": 13,
+     "spec": "^0.27.0"
+    }
+   ],
+   "status": "behind",
+   "latest": "0.28.1",
+   "latest_date": "2024-12-06",
+   "declared_date": "2024-02-21",
+   "majors_behind": 0,
+   "stale": true,
+   "basis": "registry",
+   "source": "https://pypi.org/project/httpx/"
+  },
+  {
+   "kind": "dependency",
+   "name": "starlette",
+   "ecosystem": "pypi",
+   "spec": "^0.37.2",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "pyproject.toml",
+     "line": 14,
+     "spec": "^0.37.2"
+    }
+   ],
+   "status": "behind",
+   "latest": "1.10.0",
+   "latest_date": "2026-10-24",
+   "declared_date": "2024-03-05",
+   "majors_behind": 1,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://pypi.org/project/starlette/"
+  },
+  {
+   "kind": "dependency",
+   "name": "sse-starlette",
+   "ecosystem": "pypi",
+   "spec": "^2.1.0",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "pyproject.toml",
+     "line": 15,
+     "spec": "^2.1.0"
+    }
+   ],
+   "status": "behind",
+   "latest": "3.6.0",
+   "latest_date": "2026-10-25",
+   "declared_date": "2024-04-05",
+   "majors_behind": 1,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://pypi.org/project/sse-starlette/"
+  },
+  {
+   "kind": "dependency",
+   "name": "tavily-python",
+   "ecosystem": "pypi",
+   "spec": "^0.3.3",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "pyproject.toml",
+     "line": 16,
+     "spec": "^0.3.3"
+    }
+   ],
+   "status": "behind",
+   "latest": "0.8.5",
+   "latest_date": "2026-10-06",
+   "declared_date": "2024-03-29",
+   "majors_behind": 0,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://pypi.org/project/tavily-python/"
+  },
+  {
+   "kind": "dependency",
+   "name": "load-dotenv",
+   "ecosystem": "pypi",
+   "spec": "^0.1.0",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "pyproject.toml",
+     "line": 17,
+     "spec": "^0.1.0"
+    }
+   ],
+   "status": "current",
+   "latest": "0.1.0",
+   "latest_date": "2022-09-02",
+   "declared_date": "2022-09-02",
+   "majors_behind": 0,
+   "stale": true,
+   "basis": "registry",
+   "source": "https://pypi.org/project/load-dotenv/"
+  },
+  {
+   "kind": "dependency",
+   "name": "llama-index",
+   "ecosystem": "pypi",
+   "spec": "^0.10.33",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "pyproject.toml",
+     "line": 18,
+     "spec": "^0.10.33"
+    }
+   ],
+   "status": "behind",
+   "latest": "0.14.25",
+   "latest_date": "2026-09-21",
+   "declared_date": "2024-04-28",
+   "majors_behind": 0,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://pypi.org/project/llama-index/"
+  },
+  {
+   "kind": "dependency",
+   "name": "llama-index-llms-groq",
+   "ecosystem": "pypi",
+   "spec": "^0.1.3",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "pyproject.toml",
+     "line": 19,
+     "spec": "^0.1.3"
+    }
+   ],
+   "status": "behind",
+   "latest": "0.6.1",
+   "latest_date": "2026-08-31",
+   "declared_date": "2024-02-23",
+   "majors_behind": 0,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://pypi.org/project/llama-index-llms-groq/"
+  },
+  {
+   "kind": "dependency",
+   "name": "instructor",
+   "ecosystem": "pypi",
+   "spec": "^1.2.3",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "pyproject.toml",
+     "line": 20,
+     "spec": "^1.2.3"
+    }
+   ],
+   "status": "allowed-by-range",
+   "latest": "1.17.0",
+   "latest_date": "2026-09-09",
+   "declared_date": "2024-04-27",
+   "majors_behind": 0,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://pypi.org/project/instructor/"
+  },
+  {
+   "kind": "dependency",
+   "name": "cohere",
+   "ecosystem": "pypi",
+   "spec": "^5.3.4",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "pyproject.toml",
+     "line": 21,
+     "spec": "^5.3.4"
+    }
+   ],
+   "status": "behind",
+   "latest": "7.3.0",
+   "latest_date": "2026-10-21",
+   "declared_date": "2024-04-30",
+   "majors_behind": 2,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://pypi.org/project/cohere/"
+  },
+  {
+   "kind": "dependency",
+   "name": "llama-index-llms-azure-openai",
+   "ecosystem": "pypi",
+   "spec": "^0.1.8",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "pyproject.toml",
+     "line": 24,
+     "spec": "^0.1.8"
+    }
+   ],
+   "status": "behind",
+   "latest": "0.6.1",
+   "latest_date": "2026-09-25",
+   "declared_date": "2024-05-08",
+   "majors_behind": 0,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://pypi.org/project/llama-index-llms-azure-openai/"
+  },
+  {
+   "kind": "dependency",
+   "name": "llama-index-llms-openai",
+   "ecosystem": "pypi",
+   "spec": "^0.1.19",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "pyproject.toml",
+     "line": 25,
+     "spec": "^0.1.19"
+    }
+   ],
+   "status": "behind",
+   "latest": "0.8.3",
+   "latest_date": "2026-10-12",
+   "declared_date": "2024-05-13",
+   "majors_behind": 0,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://pypi.org/project/llama-index-llms-openai/"
+  },
+  {
+   "kind": "dependency",
+   "name": "groq",
+   "ecosystem": "pypi",
+   "spec": "^0.5.0",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "pyproject.toml",
+     "line": 26,
+     "spec": "^0.5.0"
+    }
+   ],
+   "status": "behind",
+   "latest": "1.7.0",
+   "latest_date": "2026-08-26",
+   "declared_date": "2024-04-11",
+   "majors_behind": 1,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://pypi.org/project/groq/"
+  },
+  {
+   "kind": "dependency",
+   "name": "slowapi",
+   "ecosystem": "pypi",
+   "spec": "^0.1.9",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "pyproject.toml",
+     "line": 27,
+     "spec": "^0.1.9"
+    }
+   ],
+   "status": "allowed-by-range",
+   "latest": "0.1.10",
+   "latest_date": "2026-06-13",
+   "declared_date": "2024-02-05",
+   "majors_behind": 0,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://pypi.org/project/slowapi/"
+  },
+  {
+   "kind": "dependency",
+   "name": "redis",
+   "ecosystem": "pypi",
+   "spec": "^5.0.4",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "pyproject.toml",
+     "line": 28,
+     "spec": "^5.0.4"
+    }
+   ],
+   "status": "behind",
+   "latest": "8.1.0",
+   "latest_date": "2026-07-30",
+   "declared_date": "2024-04-23",
+   "majors_behind": 3,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://pypi.org/project/redis/"
+  },
+  {
+   "kind": "dependency",
+   "name": "llama-index-llms-ollama",
+   "ecosystem": "pypi",
+   "spec": "^0.1.3",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "pyproject.toml",
+     "line": 29,
+     "spec": "^0.1.3"
+    }
+   ],
+   "status": "behind",
+   "latest": "0.11.0",
+   "latest_date": "2026-08-31",
+   "declared_date": "2024-04-29",
+   "majors_behind": 0,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://pypi.org/project/llama-index-llms-ollama/"
+  },
+  {
+   "kind": "dependency",
+   "name": "llama-index-llms-litellm",
+   "ecosystem": "pypi",
+   "spec": "^0.1.4",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "pyproject.toml",
+     "line": 30,
+     "spec": "^0.1.4"
+    }
+   ],
+   "status": "behind",
+   "latest": "0.8.0",
+   "latest_date": "2026-08-31",
+   "declared_date": "2024-03-31",
+   "majors_behind": 0,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://pypi.org/project/llama-index-llms-litellm/"
+  },
+  {
+   "kind": "dependency",
+   "name": "alembic",
+   "ecosystem": "pypi",
+   "spec": "^1.13.1",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "pyproject.toml",
+     "line": 31,
+     "spec": "^1.13.1"
+    }
+   ],
+   "status": "allowed-by-range",
+   "latest": "1.20.1",
+   "latest_date": "2026-10-22",
+   "declared_date": "2023-12-20",
+   "majors_behind": 0,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://pypi.org/project/alembic/"
+  },
+  {
+   "kind": "dependency",
+   "name": "psycopg2-binary",
+   "ecosystem": "pypi",
+   "spec": "^2.9.9",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "pyproject.toml",
+     "line": 32,
+     "spec": "^2.9.9"
+    }
+   ],
+   "status": "allowed-by-range",
+   "latest": "2.9.13",
+   "latest_date": "2026-09-09",
+   "declared_date": "2023-10-03",
+   "majors_behind": 0,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://pypi.org/project/psycopg2-binary/"
+  },
+  {
+   "kind": "dependency",
+   "name": "click",
+   "ecosystem": "pypi",
+   "spec": "^8.1.7",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "pyproject.toml",
+     "line": 33,
+     "spec": "^8.1.7"
+    }
+   ],
+   "status": "allowed-by-range",
+   "latest": "8.5.0",
+   "latest_date": "2026-08-26",
+   "declared_date": "2023-08-17",
+   "majors_behind": 0,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://pypi.org/project/click/"
+  },
+  {
+   "kind": "dependency",
+   "name": "inquirer",
+   "ecosystem": "pypi",
+   "spec": "^3.3.0",
+   "spec_kind": "range",
+   "places": [
+    {
+     "file": "pyproject.toml",
+     "line": 34,
+     "spec": "^3.3.0"
+    }
+   ],
+   "status": "allowed-by-range",
+   "latest": "3.4.1",
+   "latest_date": "2025-08-02",
+   "declared_date": "2024-06-25",
+   "majors_behind": 0,
+   "stale": false,
+   "basis": "registry",
+   "source": "https://pypi.org/project/inquirer/"
+  }
+ ],
+ "profile": {
+  "one_liner": "Farfalle is an open-source answer engine like Perplexity: you ask a question, it searches the web and writes a cited answer. It is for people who want to self-host it with local or cloud models.",
+  "stack": [
+   "Python (FastAPI backend)",
+   "TypeScript (Next.js frontend)",
+   "LiteLLM for calling models",
+   "LlamaIndex LLM wrappers",
+   "instructor for structured output",
+   "Ollama for local models",
+   "Redis, Postgres, SearXNG"
+  ],
+  "jobs": [
+   {
+    "job": "Write cited answers from web results",
+    "how": "Search results are put into a prompt that tells the model to answer only from them and cite with [number]. The text streams back through LiteLLM via LlamaIndex.",
+    "where": [
+     {
+      "file": "src/backend/prompts.py",
+      "line": 2
+     },
+     {
+      "file": "src/backend/llm/base.py",
+      "line": 50
+     }
+    ],
+    "search_terms": [
+     "citation",
+     "question answering",
+     "retrieval augmented generation",
+     "answer engine",
+     "summarization",
+     "streaming",
+     "web search"
+    ],
+    "cited": [
+     {
+      "file": "src/backend/prompts.py",
+      "line": 2,
+      "text": "Generate a comprehensive and informative answer for a given question solely based on the provided web Search Results (URL, Page Title, Summary). You must only use information from the provided search results. Use an unbiased and journalistic tone."
+     },
+     {
+      "file": "src/backend/llm/base.py",
+      "line": 50,
+      "text": "return await self.llm.astream_complete(prompt)"
+     }
+    ]
+   },
+   {
+    "job": "Switch between cloud, local and custom models",
+    "how": "A model map sends each choice to a LiteLLM model string: OpenAI gpt-4o, Groq llama-3.1-70b, Ollama llama3.1, gemma, mistral, phi3, or a custom one set in an env var.",
+    "where": [
+     {
+      "file": "src/backend/constants.py",
+      "line": 28
+     },
+     {
+      "file": "src/backend/constants.py",
+      "line": 29
+     },
+     {
+      "file": "src/backend/llm/base.py",
+      "line": 43
+     }
+    ],
+    "search_terms": [
+     "llm gateway",
+     "model router",
+     "local inference",
+     "openai compatible",
+     "model proxy",
+     "llm provider",
+     "inference server"
+    ],
+    "cited": [
+     {
+      "file": "src/backend/constants.py",
+      "line": 28,
+      "text": "ChatModel.LLAMA_3_70B: \"groq/llama-3.1-70b-versatile\","
+     },
+     {
+      "file": "src/backend/constants.py",
+      "line": 29,
+      "text": "ChatModel.LOCAL_LLAMA_3: \"ollama_chat/llama3.1\","
+     },
+     {
+      "file": "src/backend/llm/base.py",
+      "line": 43,
+      "text": "self.llm = LiteLLM(model=model)"
+     }
+    ]
+   },
+   {
+    "job": "Plan multi-step searches (pro search)",
+    "how": "The model is asked for a structured query plan of up to 4 steps with dependencies, then for search queries per step. instructor validates the output into Pydantic models.",
+    "where": [
+     {
+      "file": "src/backend/agent_search.py",
+      "line": 115
+     },
+     {
+      "file": "src/backend/agent_search.py",
+      "line": 143
+     },
+     {
+      "file": "src/backend/llm/base.py",
+      "line": 56
+     }
+    ],
+    "search_terms": [
+     "structured output",
+     "task planning",
+     "json schema",
+     "query decomposition",
+     "multi-step reasoning",
+     "function calling",
+     "constrained decoding"
+    ],
+    "cited": [
+     {
+      "file": "src/backend/agent_search.py",
+      "line": 115,
+      "text": "query_plan = llm.structured_complete("
+     },
+     {
+      "file": "src/backend/agent_search.py",
+      "line": 143,
+      "text": "query_step_execution = llm.structured_complete("
+     },
+     {
+      "file": "src/backend/llm/base.py",
+      "line": 56,
+      "text": "return self.client.chat.completions.create("
+     }
+    ]
+   },
+   {
+    "job": "Rewrite follow-up questions using chat history",
+    "how": "With earlier messages present, the model is prompted to turn the new question into a standalone search query.",
+    "where": [
+     {
+      "file": "src/backend/chat.py",
+      "line": 37
+     },
+     {
+      "file": "src/backend/chat.py",
+      "line": 40
+     }
+    ],
+    "search_terms": [
+     "query rewriting",
+     "conversational search",
+     "query expansion",
+     "chat memory",
+     "context compression"
+    ],
+    "cited": [
+     {
+      "file": "src/backend/chat.py",
+      "line": 37,
+      "text": "formatted_query = HISTORY_QUERY_REPHRASE.format("
+     },
+     {
+      "file": "src/backend/chat.py",
+      "line": 40,
+      "text": "question = llm.complete(formatted_query).text.replace('\"', \"\")"
+     }
+    ]
+   },
+   {
+    "job": "Suggest related follow-up questions",
+    "how": "A prompt gives the model the question and search context and asks for exactly three follow-up questions.",
+    "where": [
+     {
+      "file": "src/backend/prompts.py",
+      "line": 28
+     },
+     {
+      "file": "src/backend/schemas.py",
+      "line": 43
+     }
+    ],
+    "search_terms": [
+     "question generation",
+     "follow-up questions",
+     "suggested queries",
+     "structured output",
+     "query suggestion"
+    ],
+    "cited": [
+     {
+      "file": "src/backend/prompts.py",
+      "line": 28,
+      "text": "Given a question and search result context, generate 3 follow-up questions the user might ask. Use the original question and context."
+     },
+     {
+      "file": "src/backend/schemas.py",
+      "line": 43,
+      "text": "related_questions: List[str] = Field(..., min_length=3, max_length=3)"
+     }
+    ]
+   },
+   {
+    "job": "Fetch web results to ground answers",
+    "how": "Pluggable search providers (SearXNG, Tavily, Serper, Bing) return text results and images, cached in Redis for two hours.",
+    "where": [
+     {
+      "file": "src/backend/search/providers/tavily.py",
+      "line": 13
+     },
+     {
+      "file": "src/backend/search/providers/searxng.py",
+      "line": 27
+     },
+     {
+      "file": "src/backend/search/search_service.py",
+      "line": 97
+     }
+    ],
+    "search_terms": [
+     "web search",
+     "search api",
+     "metasearch",
+     "web scraping",
+     "crawler",
+     "page content extraction",
+     "image search"
+    ],
+    "cited": [
+     {
+      "file": "src/backend/search/providers/tavily.py",
+      "line": 13,
+      "text": "response = self.tavily.search("
+     },
+     {
+      "file": "src/backend/search/providers/searxng.py",
+      "line": 27,
+      "text": "params={\"q\": query, \"format\": \"json\"},"
+     },
+     {
+      "file": "src/backend/search/search_service.py",
+      "line": 97,
+      "text": "redis_client.set(cache_key, json.dumps(results.model_dump_json()), ex=7200)"
+     }
+    ]
+   }
+  ],
+  "stack_lock": [
+   "Backend is Python, so new Python libraries, LiteLLM-supported models and HTTP APIs can be adopted directly.",
+   "Local models run through Ollama, so new local models must be available as Ollama or GGUF builds.",
+   "Frontend is Next.js/TypeScript and only talks to the backend over HTTP and server-sent events, so AI changes mostly belong in the backend.",
+   "New search sources fit as another provider class behind the existing search interface.",
+   "Code is TypeScript and Python: only libraries in TypeScript and Python, unless they ship an MCP server or an API.",
+   "Local models: any format.",
+   "APIs, MCP servers and skills always pass."
+  ]
+ },
+ "candidates_considered": 243,
+ "findings": [
+  {
+   "title": "Add a first test set so prompt and model changes can be checked before they ship",
+   "effect": [
+    "better answers"
+   ],
+   "proof": "adoption only",
+   "effort": "A day",
+   "where": [
+    {
+     "file": "src/backend/llm/base.py",
+     "line": 56,
+     "text": "return self.client.chat.completions.create("
+    }
+   ],
+   "why": "The product sends several prompts to many models (cloud, Ollama, custom) through one call path, and the files shown include no test set for any of it. Without cases, a model swap or prompt edit can quietly make answers worse. DeepEval fits the Python backend as pytest-style cases. promptfoo is a Node tool that runs separately and needs 20 to 50 cases written. Lets every other lever be measured. No gain number of its own.",
+   "options": [
+    {
+     "name": "DeepEval",
+     "what": "Write pytest-style cases for the answer, query-plan and follow-up prompts, run from the Python backend with pip install -U deepeval.",
+     "needs": "Python. Some metrics call a model and cost tokens.",
+     "source": "https://github.com/confident-ai/deepeval"
+    },
+    {
+     "name": "promptfoo",
+     "what": "Run npx promptfoo@latest init, then write 20 to 50 cases against the same prompts and models.",
+     "needs": "Node. Cases need upkeep.",
+     "source": "https://github.com/promptfoo/promptfoo"
+    }
+   ],
+   "sources": [
+    "https://github.com/confident-ai/deepeval",
+    "https://github.com/promptfoo/promptfoo"
+   ],
+   "lever": "ADV-2026-1101-deepeval",
+   "pr": null,
+   "deadline": null,
+   "evidence": [],
+   "tier": "long_tail",
+   "value": {
+    "status": "no_number",
+    "lever": "ADV-2026-1101-deepeval",
+    "label": "absent",
+    "inputs": {
+     "calls_per_month": {
+      "value": 10000,
+      "label": "assumed"
+     },
+     "hourly_usd": {
+      "value": 100,
+      "label": "assumed"
+     },
+     "months": {
+      "value": 12,
+      "label": "assumed"
+     },
+     "change_hours": {
+      "value": 8,
+      "label": "assumed from the effort word"
+     },
+     "model": {
+      "value": "claude-sonnet-5-5",
+      "label": "example: this call's model is set at runtime"
+     }
+    },
+    "reason": "This lever has no cost formula yet.",
+    "formula": "lever value = (cost today - frontier cost) x frequency - cost of change",
+    "roi": {
+     "effort": "A day",
+     "tokens": {
+      "input": 2000,
+      "input_label": "assumed: the prompt is built at runtime, so change this to yours",
+      "output": 300,
+      "output_label": "assumed"
+     },
+     "calls_per_month": 10000,
+     "change_usd": 800,
+     "change_label": "8 h at $100 an hour = $800 to change",
+     "money": false,
+     "options": [],
+     "statement": "Better answers · a day's work · no money figure: it changes what the product does, not what a call costs"
+    },
+    "lever_gain": "Lets every other lever be measured. No gain number of its own."
+   },
+   "rank": 1
+  },
+  {
+   "title": "gpt-4o and 1 more OpenAI model shut down on 14 Jan 2027",
+   "effect": [
+    "keeps working"
+   ],
+   "proof": "vendor claim",
+   "effort": "A day",
+   "where": [
+    {
+     "file": "src/backend/constants.py",
+     "line": 11,
+     "text": "GPT_4o = \"gpt-4o\""
+    },
+    {
+     "file": "src/backend/constants.py",
+     "line": 12,
+     "text": "GPT_4o_mini = \"gpt-4o-mini\""
+    }
+   ],
+   "why": "gpt-4o shuts down on 14 Jan 2027. Named successor: gpt-6-luna. gpt-4o-mini shuts down on 14 Jan 2027. Named successor: gpt-6-luna. Farfalle sends gpt-4o and gpt-4o-mini to OpenAI, and both are offered in its model list, so both stop working on 14 Jan 2027. Move both to gpt-6-luna, which OpenAI lists at a lower price. Unless reasoning effort is none, gpt-6-luna rejects temperature and top_p, and it supports function calling only with effort none. The pro-search planning calls use structured output, so test them first, and check answer quality on your own prompts.",
+   "options": [
+    {
+     "name": "GPT-4o and GPT-4.1 shut down on 14 Jan 2027; move to gpt-6-luna",
+     "what": "Change the id to gpt-6-luna. Set reasoning effort to none if the call sends temperature, top_p or tools on Chat Completions, and run your tests first.",
+     "needs": "Nothing new; the same OpenAI key.",
+     "source": "https://developers.openai.com/api/docs/deprecations"
+    }
+   ],
+   "sources": [
+    "https://developers.openai.com/api/docs/deprecations"
+   ],
+   "lever": "ADV-2026-1014-openai-gpt-4o-4-1-retire",
+   "pr": null,
+   "deadline": "2027-01-14",
+   "evidence": [
+    "openai: shuts down on 2027-01-14. Provider's named successor: gpt-6-luna.",
+    "gpt-4o shuts down on 2027-01-14.",
+    "Successors the provider names: gpt-6-luna, gpt-6-luna.",
+    "openai: shuts down on 2027-01-14. Provider's named successor: gpt-6-luna.",
+    "gpt-4o-mini shuts down on 2027-01-14.",
+    "Successors the provider names: gpt-6-luna, gpt-6-luna.",
+    "{\"id\":\"ADV-2026-1014-openai-gpt-4o-4-1-retire\",\"name\":\"GPT-4o and GPT-4.1 shut down on 14 Jan 2027; move to gpt-6-luna\",\"pattern\":\"PAT-retired-model-id\",\"kind\":\"model-successor\",\"providers\":[\"openai\"],\"effects\":[\"keeps working\",\"cheaper\"],\"gain\":\"Requests fail after 14 Jan 2027. OpenAI's listed gpt-6-luna price is $0.10 / $0.50 per 1M tokens, against gpt-4o's $2.50 / $10 and gpt-4o-mini's $0.15 / $0.60.\",\"proof\":\"vendor claim\",\"source\":\"https://developers.openai.com/api/docs/deprecations\",\"how\":\"Change the id to gpt-6-luna. Set reasoning effort to none if the call sends temperature, top_p or tools on Chat Completions, and run your tests first.\",\"replaces\":\"gpt-4o, gpt-4o-mini, gpt-4.1, gpt-4.1-mini and their dated snapshots\",\"trade_offs\":[\"Unless reasoning effort is none, gpt-6-luna rejects temperature, top_p and top_logprobs.\",\"On Chat Completions it supports function calling only with reasoning effort none.\",\"Answer quality on your prompts is unmeasured, and a cheaper model can be a worse fit.\"],\"needs\":\"Nothing new; the same OpenAI key.\",\"price\":\"gpt-6-luna $0.10 input, $0.01 cached input, $0.50 output per 1M tokens.\",\"models\":[\"gpt-4o\",\"gpt-4o-2024-08-06\",\"gpt-4o-2024-11-20\",\"gpt-4o-mini\",\"gpt-4o-mini-2024-07-18\",\"gpt-4.1\",\"gpt-4.1-2025-04-14\",\"gpt-4.1-mini\",\"gpt-4.1-mini-2025-04-14\"],\"checked\":\"2026-11-01\",\"checked_by\":\"agent\",\"usage_signal\":\"Usage API: calls on the affected model or parameter\",\"gain_model\":{\"formula\":\"no money figure: the call stops working or a capability is missing\",\"inputs\":[]},\"test_recipe\":{\"what_to_compare\":\"tests pass on the change\",\"samples\":20,\"can_run_with\":[\"ANTHROPIC_API_KEY\",\"OPENAI_API_KEY\"]},\"verify_rule\":\"The old id or parameter is gone and calls succeed over 7 days\",\"change_recipe\":{\"kind\":\"pull request, off by default\",\"how\":\"Change the id to gpt-6-luna. Set reasoning effort to none if the call sends temperature, top_p or tools on Chat Completions, and run your tests first.\",\"left_off\":\"Nothing else changes; the new path sits behind a setting until a person turns it on\"},\"audience\":\"product\",\"gain_independent\":null,\"gain_vendor\":\"Requests fail after 14 Jan 2027. OpenAI's listed gpt-6-luna price is $0.10 / $0.50 per 1M tokens, against gpt-4o's $2.50 / $10 and gpt-4o-mini's $0.15 / $0.60.\",\"tier\":\"long_tail\"}"
+   ],
+   "locked": "a model this code sends is retired or retiring",
+   "reach": "sent",
+   "rank": 2
+  }
+ ],
+ "watching": [],
+ "held_back": [
+  {
+   "thing": "An MCP server for this API, with FastMCP or the official SDK",
+   "date": null,
+   "reason": "Farfalle is a search app for people at a browser, with a chat endpoint that streams answers and a history endpoint, so nothing in the code shows an agent would call it, and the pattern is information only.",
+   "source": "https://pypi.org/project/fastmcp/"
+  },
+  {
+   "thing": "Exa's own MCP server (ai.exa/exa)",
+   "date": null,
+   "reason": "Farfalle fetches web results through its own pluggable search providers, so an MCP server adds no fit for the cited-answer job.",
+   "source": "https://github.com/exa-labs/exa-mcp-server"
+  },
+  {
+   "thing": "Anthropic's lower prompt cache read price on Claude Sonnet 5.5",
+   "date": null,
+   "reason": "The cited-answer prompt in the code is built fresh from each search's results, there is no caching setting to turn on, and no Anthropic model is offered.",
+   "source": "https://platform.claude.com/docs/en/release-notes/overview"
+  },
+  {
+   "thing": "antirion (open-source LLM gateway in Rust)",
+   "date": null,
+   "reason": "LiteLLM already routes every model choice here, so a gateway would add a hop the product doesn't need.",
+   "source": "https://github.com/eliasbiondo/antirion"
+  },
+  {
+   "thing": "respan-gateway (open-source LLM gateway in Rust)",
+   "date": null,
+   "reason": "The model map already sends each choice through LiteLLM, so another gateway layer adds nothing.",
+   "source": "https://github.com/respanai/respan-gateway"
+  },
+  {
+   "thing": "LLM Gateway MCP server (theopenco/llmgateway)",
+   "date": null,
+   "reason": "The product doesn't connect users to MCP servers, and it already switches models through LiteLLM.",
+   "source": "https://github.com/theopenco/llmgateway"
+  },
+  {
+   "thing": "ollama-ai-provider-v2 (npm)",
+   "date": null,
+   "reason": "It is a TypeScript package for the Vercel AI SDK, while the Python backend already calls Ollama through LiteLLM.",
+   "source": "https://www.npmjs.com/package/ollama-ai-provider-v2"
+  },
+  {
+   "thing": "agent-json-reliability (Python JSON repair and schema validation)",
+   "date": null,
+   "reason": "instructor already validates the query plan into Pydantic models and retries, so a separate JSON repair library adds nothing here.",
+   "source": "https://pypi.org/project/agent-json-reliability/"
+  },
+  {
+   "thing": "Google: Gemini 3.8 Flash",
+   "date": null,
+   "reason": "The listing only says it is newer and stronger at multi-step reasoning, with no concrete gain for the query plan that the page states. A newer model alone is not a reason to switch.",
+   "source": "https://openrouter.ai/google/gemini-3.8-flash"
+  },
+  {
+   "thing": "ragleap-rag (self-hosted RAG engine with query rewriting)",
+   "date": "2026-07-19",
+   "reason": "It is a whole retrieval engine, not a small piece. The product already rewrites follow-ups with one prompt, and adopting it would replace the search flow rather than improve that step.",
+   "source": "https://pypi.org/project/ragleap-rag/"
+  },
+  {
+   "thing": "billion-context and other context-compression packages",
+   "date": "2026-10-31",
+   "reason": "They target coding agents with long sessions. Farfalle's rewrite step sends a short chat history, so there is nothing to compress.",
+   "source": "https://www.npmjs.com/package/billion-context"
+  },
+  {
+   "thing": "@luanpoppe/ai (TypeScript LLM SDK)",
+   "date": null,
+   "reason": "It is a TypeScript SDK, and the follow-up question job runs in the Python backend through LiteLLM and instructor, which already handle structured output.",
+   "source": "https://www.npmjs.com/package/@luanpoppe/ai"
+  },
+  {
+   "thing": "@hilbras/sdk (provider-agnostic LLM client)",
+   "date": null,
+   "reason": "It would replace LiteLLM, which the Python backend already uses, with a TypeScript client that adds nothing the follow-up question job needs.",
+   "source": "https://www.npmjs.com/package/@hilbras/sdk"
+  },
+  {
+   "thing": "Trust Switchboard (MCP server)",
+   "date": null,
+   "reason": "It reads privacy policies and is not a tool for generating follow-up questions on web search answers.",
+   "source": "https://github.com/paul-salviani/trust-switchboard"
+  },
+  {
+   "thing": "Exa MCP server (exa-mcp-server)",
+   "date": null,
+   "reason": "The search job already runs through four pluggable providers behind a common interface, and an MCP server adds a tool-calling layer this fixed search-then-answer flow doesn't use; the code has no sign it would give better results.",
+   "source": "https://www.npmjs.com/package/exa-mcp-server"
+  },
+  {
+   "thing": "@perplexity-ai/mcp-server",
+   "date": null,
+   "reason": "Perplexity's API is a competing answer engine for this Perplexity clone, so it is never a fit.",
+   "source": "https://www.npmjs.com/package/@perplexity-ai/mcp-server"
+  },
+  {
+   "thing": "@mastra/tavily",
+   "date": null,
+   "reason": "Tavily is already integrated in tavily.py, and this package is a JavaScript wrapper for another agent framework, while the search code is Python.",
+   "source": "https://www.npmjs.com/package/@mastra/tavily"
+  },
+  {
+   "thing": "firecrawl-cli",
+   "date": null,
+   "reason": "It is a command-line tool for terminals, not a search provider for the Python backend, and nothing in the code shows a gap it would fill.",
+   "source": "https://www.npmjs.com/package/firecrawl-cli"
+  },
+  {
+   "thing": "cohere is 2 major versions behind",
+   "date": "2026-10-21",
+   "reason": "Being behind isn't enough, and no release notes were read that name what this code would gain.",
+   "source": "https://pypi.org/project/cohere/"
+  }
+ ],
+ "checks": {
+  "passed": 11,
+  "dropped": []
+ },
+ "rank_explanation": "Order: the biggest lever first, by (cost today - frontier cost) x assumed calls - cost of change. Then levers with no number, anything breaking within 30 days first, then the biggest proven gain per hour of work. A lever that doesn't pay back at that volume comes after those. Retired and retiring models come last.",
+ "usage": {
+  "model": "claude-sonnet-5-5",
+  "input_tokens": 0,
+  "output_tokens": 0,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 0,
+  "usd": 0,
+  "price_source": "https://openrouter.ai/anthropic/claude-sonnet-5.5",
+  "calls": 0,
+  "replayed_calls": 11,
+  "replayed_usd": 0.28136259999999996,
+  "max_usd": 1.5
+ },
+ "candidate_log": {
+  "stack_lock": [
+   "Code is TypeScript and Python: only libraries in TypeScript and Python, unless they ship an MCP server or an API.",
+   "Local models: any format.",
+   "APIs, MCP servers and skills always pass."
+  ],
+  "provider_only": null,
+  "jobs": [
+   {
+    "job": "Write cited answers from web results",
+    "terms": [
+     "citation",
+     "question answering",
+     "retrieval augmented generation",
+     "answer engine",
+     "summarization",
+     "streaming",
+     "web search"
+    ],
+    "matched": 446,
+    "cut_by_stack_lock": 3,
+    "cut_mass_publisher": 70,
+    "cut_by_provider": 0,
+    "cut_seen_in_earlier_job": 0,
+    "cut_by_cap": 324,
+    "kept": 49,
+    "watch_only": 0
+   },
+   {
+    "job": "Switch between cloud, local and custom models",
+    "terms": [
+     "llm gateway",
+     "model router",
+     "local inference",
+     "openai compatible",
+     "model proxy",
+     "llm provider",
+     "inference server"
+    ],
+    "matched": 47,
+    "cut_by_stack_lock": 3,
+    "cut_mass_publisher": 1,
+    "cut_by_provider": 0,
+    "cut_seen_in_earlier_job": 1,
+    "cut_by_cap": 17,
+    "kept": 25,
+    "watch_only": 0
+   },
+   {
+    "job": "Plan multi-step searches (pro search)",
+    "terms": [
+     "structured output",
+     "task planning",
+     "json schema",
+     "query decomposition",
+     "multi-step reasoning",
+     "function calling",
+     "constrained decoding"
+    ],
+    "matched": 57,
+    "cut_by_stack_lock": 0,
+    "cut_mass_publisher": 16,
+    "cut_by_provider": 0,
+    "cut_seen_in_earlier_job": 0,
+    "cut_by_cap": 6,
+    "kept": 35,
+    "watch_only": 0
+   },
+   {
+    "job": "Rewrite follow-up questions using chat history",
+    "terms": [
+     "query rewriting",
+     "conversational search",
+     "query expansion",
+     "chat memory",
+     "context compression"
+    ],
+    "matched": 11,
+    "cut_by_stack_lock": 0,
+    "cut_mass_publisher": 0,
+    "cut_by_provider": 0,
+    "cut_seen_in_earlier_job": 0,
+    "cut_by_cap": 0,
+    "kept": 11,
+    "watch_only": 0
+   },
+   {
+    "job": "Suggest related follow-up questions",
+    "terms": [
+     "question generation",
+     "follow-up questions",
+     "suggested queries",
+     "structured output",
+     "query suggestion"
+    ],
+    "matched": 17,
+    "cut_by_stack_lock": 0,
+    "cut_mass_publisher": 8,
+    "cut_by_provider": 0,
+    "cut_seen_in_earlier_job": 3,
+    "cut_by_cap": 0,
+    "kept": 6,
+    "watch_only": 0
+   },
+   {
+    "job": "Fetch web results to ground answers",
+    "terms": [
+     "web search",
+     "search api",
+     "metasearch",
+     "web scraping",
+     "crawler",
+     "page content extraction",
+     "image search"
+    ],
+    "matched": 271,
+    "cut_by_stack_lock": 0,
+    "cut_mass_publisher": 26,
+    "cut_by_provider": 0,
+    "cut_seen_in_earlier_job": 14,
+    "cut_by_cap": 195,
+    "kept": 36,
+    "watch_only": 0
+   }
+  ]
+ },
+ "moves": [
+  {
+   "from": "gpt-4o",
+   "to": [
+    "gpt-6-luna"
+   ],
+   "places": [
+    "src/backend/constants.py:11"
+   ]
+  },
+  {
+   "from": "gpt-4o-mini",
+   "to": [
+    "gpt-6-luna"
+   ],
+   "places": [
+    "src/backend/constants.py:12"
+   ]
+  }
+ ],
+ "recommendations": [
+  {
+   "name": "The vercel plugin from the official Claude Code marketplace",
+   "kind": "plugin",
+   "why": "src/frontend/src/app/layout.tsx:10 uses this. Vercel tools in a session. No gain measured.",
+   "install": "claude plugin install vercel@claude-plugins-official",
+   "source": "https://raw.githubusercontent.com/anthropics/claude-plugins-official/main/.claude-plugin/marketplace.json"
+  }
+ ]
+}

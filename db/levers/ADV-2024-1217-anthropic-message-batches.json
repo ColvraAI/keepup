@@ -1,0 +1,68 @@
+{
+  "id": "ADV-2024-1217-anthropic-message-batches",
+  "name": "Claude's Message Batches for jobs nobody is waiting on",
+  "pattern": "PAT-scheduled-llm-no-batch",
+  "kind": "api-feature",
+  "providers": [
+    "anthropic"
+  ],
+  "effects": [
+    "cheaper"
+  ],
+  "gain": "Anthropic's listed batch price is 50% of standard: Sonnet 5.5 is $1 / $5 per 1M tokens against $2 / $10. Most batches finish within an hour.",
+  "proof": "vendor claim",
+  "source": "https://platform.claude.com/docs/en/build-with-claude/batch-processing",
+  "how": "Collect the job's requests into one batch, poll for the end, then read the results. Keep the real-time path as the fallback for a batch that expires.",
+  "replaces": "A scheduled job that calls messages.create in a loop.",
+  "trade_offs": [
+    "Results can take up to 24 hours, and a batch that runs longer expires.",
+    "A batch holds at most 100,000 requests or 256 MB.",
+    "Not eligible for zero data retention: results are kept 29 days."
+  ],
+  "needs": "A job that can wait.",
+  "price": "50% of standard token prices.",
+  "checked": "2026-11-01",
+  "checked_by": "agent",
+  "usage_signal": "Usage and Cost API: synchronous tokens arriving in a regular scheduled burst",
+  "gain_model": {
+    "formula": "scheduled_tokens * price * batch_discount",
+    "inputs": [
+      {
+        "name": "scheduled_tokens",
+        "value": null,
+        "source": "the product's usage data or the bill",
+        "assumed": false
+      },
+      {
+        "name": "price",
+        "value": null,
+        "source": "the product's usage data or the bill",
+        "assumed": false
+      },
+      {
+        "name": "batch_discount",
+        "value": 0.5,
+        "source": "https://platform.claude.com/docs/en/build-with-claude/batch-processing",
+        "assumed": false
+      }
+    ]
+  },
+  "test_recipe": {
+    "what_to_compare": "same outputs and completion time inside the window",
+    "samples": 100,
+    "can_run_with": [
+      "ANTHROPIC_API_KEY",
+      "OPENAI_API_KEY"
+    ]
+  },
+  "verify_rule": "Batch-tier tokens over two scheduled runs",
+  "change_recipe": {
+    "kind": "pull request, off by default",
+    "how": "Collect the job's requests into one batch, poll for the end, then read the results. Keep the real-time path as the fallback for a batch that expires.",
+    "left_off": "Nothing else changes; the new path sits behind a setting until a person turns it on"
+  },
+  "audience": "product",
+  "gain_independent": null,
+  "gain_vendor": "Anthropic's listed batch price is 50% of standard: Sonnet 5.5 is $1 / $5 per 1M tokens against $2 / $10. Most batches finish within an hour.",
+  "tier": "huge"
+}

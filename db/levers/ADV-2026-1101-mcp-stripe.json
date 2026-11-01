@@ -1,0 +1,43 @@
+{
+  "id": "ADV-2026-1101-mcp-stripe",
+  "name": "Stripe's own MCP server",
+  "pattern": "PAT-uses-stripe",
+  "kind": "install",
+  "providers": [],
+  "effects": [
+    "new capability"
+  ],
+  "gain": "The team's coding agent can read Stripe directly. No gain measured.",
+  "proof": "adoption only",
+  "source": "https://docs.stripe.com/mcp",
+  "how": "claude mcp add --transport http stripe https://mcp.stripe.com/",
+  "replaces": "Copying from the dashboard by hand.",
+  "trade_offs": [
+    "It holds access to your account, so scope the token."
+  ],
+  "needs": "A Stripe account.",
+  "install": "claude mcp add --transport http stripe https://mcp.stripe.com/",
+  "audience": "team",
+  "vendor_owned": true,
+  "checked": "2026-11-01",
+  "checked_by": "agent",
+  "usage_signal": "Not visible in the bill",
+  "gain_model": {
+    "formula": "no money figure: developer time, unmeasured",
+    "inputs": []
+  },
+  "test_recipe": {
+    "what_to_compare": "a developer tries it on one task",
+    "samples": 1,
+    "can_run_with": []
+  },
+  "verify_rule": "Whether the team keeps it installed after 30 days",
+  "change_recipe": {
+    "kind": "written steps",
+    "how": "claude mcp add --transport http stripe https://mcp.stripe.com/",
+    "left_off": "Never a pull request: a brief line"
+  },
+  "gain_independent": null,
+  "gain_vendor": null,
+  "tier": "long_tail"
+}

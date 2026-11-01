@@ -1,0 +1,51 @@
+{
+  "summary": "215 of 215 aura-config tests pass in the sandbox at the tip, and at each of the 3 stages, 0 ignored. They include test_all_shipped_configs_parse, which parses the shipped configs, both changed examples among them. This is the command the fork's CI runs; the rest of the workspace's tests didn't run, since only example TOML files change.",
+  "commit": "980842fe218b7c11efab18af13baaa24fecb75b2",
+  "ran_on": "2026-11-01",
+  "command": "cargo test -p aura-config --locked",
+  "tests": {
+    "total": 215,
+    "passed": 215,
+    "failed": 0,
+    "ignored": 0
+  },
+  "failed_tests": [],
+  "stages": [
+    {
+      "date": "2026-09-01",
+      "exit": 0,
+      "test_all_shipped_configs_parse": "ok",
+      "passed": 215,
+      "failed": 0,
+      "result_lines": [
+        "test result: ok. 214 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.49s",
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s",
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s"
+      ]
+    },
+    {
+      "date": "2026-09-28",
+      "exit": 0,
+      "test_all_shipped_configs_parse": "ok",
+      "passed": 215,
+      "failed": 0,
+      "result_lines": [
+        "test result: ok. 214 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.42s",
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s",
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s"
+      ]
+    },
+    {
+      "date": "2026-09-30",
+      "exit": 0,
+      "test_all_shipped_configs_parse": "ok",
+      "passed": 215,
+      "failed": 0,
+      "result_lines": [
+        "test result: ok. 214 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.66s",
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s",
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s"
+      ]
+    }
+  ]
+}

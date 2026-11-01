@@ -1,0 +1,66 @@
+{
+  "version": 1,
+  "id": "PAT-http-api-no-mcp",
+  "name": "An HTTP API with no MCP server",
+  "find": [
+    {
+      "regex": "^(?!\\s*(?:#|//|\\*|/\\*|--|\"\"\"|''')).*=\\s*(?:FastAPI\\(|express\\(\\)|new Hono\\(|new Elysia\\(|Flask\\(__name__\\))",
+      "note": "Where this product starts an HTTP API"
+    }
+  ],
+  "skip_if_near": [
+    "FastMCP",
+    "McpServer",
+    "@modelcontextprotocol",
+    "\\bmcp_server\\b",
+    "\\bfrom mcp\\b"
+  ],
+  "skip_if_in_file": [
+    "FastMCP",
+    "McpServer",
+    "@modelcontextprotocol/sdk/server"
+  ],
+  "files": [
+    "**/*.py",
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.js",
+    "**/*.jsx",
+    "**/*.mjs",
+    "**/*.cjs"
+  ],
+  "skip_files": [
+    "**/__tests__/**",
+    "**/test/**",
+    "**/tests/**",
+    "**/testdata/**",
+    "**/fixtures/**",
+    "**/spec/**",
+    "**/e2e/**",
+    "**/*.test.*",
+    "**/*.spec.*",
+    "**/*_test.*",
+    "**/test_*",
+    "**/test-*",
+    "**/conftest.py",
+    "**/samples/**",
+    "**/sample/**",
+    "**/examples/**",
+    "**/example/**",
+    "**/docs/**",
+    "**/website/**",
+    "**/cookbook/**",
+    "**/cookbooks/**",
+    "**/*mock*",
+    "**/*smoke*",
+    "**/loadtest/**",
+    "**/scripts/**",
+    "**/tools/**"
+  ],
+  "why": "An MCP server lets other people's agents use this API. It only matters where an agent would plausibly call it, and a line of code can't show that, so this stays information only.",
+  "status": "info",
+  "effect": [
+    "new capability"
+  ],
+  "live_from": "v0.2"
+}

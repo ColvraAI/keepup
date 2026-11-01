@@ -1,0 +1,11 @@
+{
+  "check": "new-first",
+  "node": "v18.20.8",
+  "order": "new-first",
+  "dim": 384,
+  "rerankScores": [
+    0.9647994041442871,
+    0.017393307760357857
+  ],
+  "sameVectorsAfter": 1
+}

@@ -1,0 +1,69 @@
+{
+  "id": "ADV-2026-1101-cheaper-tier",
+  "name": "A cheaper tier for simple calls",
+  "pattern": "PAT-one-top-model",
+  "kind": "technique",
+  "providers": [],
+  "effects": [
+    "cheaper"
+  ],
+  "gain": "Projected from your bill and the provider's listed prices, once a test set passes on the cheaper model.",
+  "proof": "projected",
+  "source": "https://platform.claude.com/docs/en/about-claude/pricing",
+  "how": "Move calls that pass the test set to the next tier down",
+  "replaces": "A top model on simple work.",
+  "trade_offs": [
+    "Quality may drop on hard calls; the test set decides."
+  ],
+  "needs": "A test set.",
+  "checked": "2026-11-01",
+  "checked_by": "agent",
+  "usage_signal": "Usage and Cost API: one model holds nearly all spend across differently shaped calls",
+  "gain_model": {
+    "formula": "calls_moved * (top_cost_per_call - cheaper_cost_per_call)",
+    "inputs": [
+      {
+        "name": "calls_moved",
+        "value": null,
+        "source": "the product's usage data or the bill",
+        "assumed": false
+      },
+      {
+        "name": "top_cost_per_call",
+        "value": null,
+        "source": "the product's usage data or the bill",
+        "assumed": false
+      },
+      {
+        "name": "cheaper_cost_per_call",
+        "value": null,
+        "source": "the product's usage data or the bill",
+        "assumed": false
+      },
+      {
+        "name": "list_prices_per_m",
+        "value": "claude-opus-5-5 $4/$20, claude-sonnet-5-5 $2/$10, claude-haiku-5-5 $0.10/$0.50 input/output",
+        "source": "https://platform.claude.com/docs/en/about-claude/pricing",
+        "assumed": false
+      }
+    ]
+  },
+  "test_recipe": {
+    "what_to_compare": "quality on the product's own test set, cost",
+    "samples": 200,
+    "can_run_with": [
+      "ANTHROPIC_API_KEY",
+      "OPENAI_API_KEY"
+    ]
+  },
+  "verify_rule": "Spend by model and the eval score over 14 days",
+  "change_recipe": {
+    "kind": "pull request, off by default",
+    "how": "Move calls that pass the test set to the next tier down",
+    "left_off": "Nothing else changes; the new path sits behind a setting until a person turns it on"
+  },
+  "audience": "product",
+  "gain_independent": null,
+  "gain_vendor": null,
+  "tier": "long_tail"
+}

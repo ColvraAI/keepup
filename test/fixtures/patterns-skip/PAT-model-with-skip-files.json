@@ -1,0 +1,12 @@
+{
+  "id": "PAT-model-with-skip-files",
+  "name": "A model id, not in tests",
+  "find": [{ "regex": "old-model-1" }],
+  "skip_if_near": [],
+  "files": ["**/*.js"],
+  "skip_files": ["**/__tests__/**", "**/*.test.*"],
+  "why": "Fixture for skip_files.",
+  "status": "live",
+  "effect": ["keeps working"],
+  "live_from": "v0.1"
+}

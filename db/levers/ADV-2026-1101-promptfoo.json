@@ -1,0 +1,42 @@
+{
+  "id": "ADV-2026-1101-promptfoo",
+  "name": "promptfoo for a first test set",
+  "pattern": "PAT-no-test-set",
+  "kind": "eval",
+  "providers": [],
+  "effects": [
+    "better answers"
+  ],
+  "gain": "Lets every other lever be measured. No gain number of its own.",
+  "proof": "adoption only",
+  "source": "https://github.com/promptfoo/promptfoo",
+  "how": "npx promptfoo@latest init, then 20 to 50 cases",
+  "replaces": "No regression suite for prompts.",
+  "trade_offs": [
+    "Cases need upkeep."
+  ],
+  "needs": "Node.",
+  "install": "npx promptfoo@latest init",
+  "checked": "2026-11-01",
+  "checked_by": "agent",
+  "usage_signal": "Not visible in the bill",
+  "gain_model": {
+    "formula": "no direct money; it lets every other lever be measured",
+    "inputs": []
+  },
+  "test_recipe": {
+    "what_to_compare": "prompts run with and without a change",
+    "samples": 30,
+    "can_run_with": []
+  },
+  "verify_rule": "A CI job runs the set on each prompt change",
+  "change_recipe": {
+    "kind": "pull request, off by default",
+    "how": "npx promptfoo@latest init, then 20 to 50 cases",
+    "left_off": "Nothing else changes; the new path sits behind a setting until a person turns it on"
+  },
+  "audience": "product",
+  "gain_independent": null,
+  "gain_vendor": null,
+  "tier": "long_tail"
+}

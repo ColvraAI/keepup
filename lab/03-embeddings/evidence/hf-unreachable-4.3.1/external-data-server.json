@@ -1,0 +1,13 @@
+{
+  "scenario": "external-data-server",
+  "node": "v18.20.8",
+  "transformers": "4.3.1",
+  "exitCode": 1,
+  "signal": null,
+  "documentsBefore": "1",
+  "documentsAfter": "0",
+  "updateError": "false",
+  "serverStillUp": false,
+  "stdoutTail": "prisma:info Starting a sqlite pool with 17 connections.\nDOCUMENTS_BEFORE=1\nEmbeddingModelPref changed from Xenova/all-MiniLM-L6-v2 to onnx-community/embeddinggemma-2-ONNX - resetting lancedb namespaces\n\u001b[36m[EncryptionManager]\u001b[0m Loaded existing key & salt for encrypting arbitrary data.\n\u001b[32m[Event Logged]\u001b[0m - workspace_vectors_reset\nResetting anythingllm managed vector namespaces for lancedb\n\u001b[36m[NativeEmbedder]\u001b[0m Initialized onnx-community/embeddinggemma-2-ONNX\n\u001b[36m[NativeEmbedder]\u001b[0m The native embedding model has never been run and will be downloaded right now. Subsequent runs will be faster. (~175MB)\nUPDATE_ERROR=false\nDOCUMENTS_AFTER=0\n\u001b[36m[NativeEmbedder]\u001b[0m Downloading onnx-community/embeddinggemma-2-ONNX from https://huggingface.co/\n",
+  "stderrTail": "Namespace by that name does not exist.\nNamespace by that name does not exist.\nUnable to fetch model file metadata for total progress tracking: Error: simulated failure of the external data download\n/lab/03-embeddings/harness/hf-unreachable.cjs:105\n    if (String(url?.url ?? url).includes(\".onnx_data\")) throw new Error(\"simulated failure of the external data download\");\n                                                              ^\n\nError: simulated failure of the external data download\n    at global.fetch (/lab/03-embeddings/harness/hf-unreachable.cjs:105:63)\n    at getFile (file:///tmp/t431/package/dist/transformers.node.mjs:7429:16)\n    at loadResourceFile (file:///tmp/t431/package/dist/transformers.node.mjs:7566:24)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async getModelFile (file:///tmp/t431/package/dist/transformers.node.mjs:7703:10)\n    at async file:///tmp/t431/package/dist/transformers.node.mjs:23655:24\n\nNode.js v18.20.8\n"
+}

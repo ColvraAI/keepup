@@ -1,0 +1,23 @@
+# Nemotron-3.5-Rerank-8B-BF16 Overview
+## Description: 
+**Nemotron-3.5-Rerank-8B-BF16** was developed by NVIDIA for multilingual and multimodal question-answering retrieval. It is a world-class reranker optimized to produce a logit representing the relevance of a document to a text query. Documents may contain text, page images, or both, including charts, tables, and infographics. The model can be integrated into classical or agentic vision RAG pipelines. For text retrieval, the model was evaluated across 34 languages: English, Arabic, Assamese, Bengali, Bulgarian, Chinese, Danish, Dutch, Finnish, French, German, Hindi, Hinglish, Indonesian, Italian, Japanese, Korean, Malay, Marathi, Nepali, Norwegian, Persian, Portuguese, Romanian, Russian, Spanish, Swahili, Swedish, Tamil, Telugu, Thai, Ukrainian, Urdu, and Vietnamese. For image retrieval, it was evaluated across 18 languages: Arabic, Bengali, Chinese, English, Persian, Finnish, French, German, Hindi, Indonesian, Japanese, Korean, Russian, Spanish, Swahili, Telugu, Thai, and Yoruba. The model may support additional languages beyond these evaluation sets.
+Nemotron-3.5-Rerank-8B-BF16 achieves state-of-the-art results on the new [ViDoRe v3.1 Reranking leaderboard](https://leaderboard.mteb.org/benchmark/ViDoRe(v3.1)) as of October 20, 2026. Read more details in our Blog Post.
+This model is ready for commercial or non-commercial use.
+### License/Terms of Use:
+**Governing Download Terms:** Use of the model is governed by the OpenMDW License Agreement, version 1.1 (OpenMDW-1.1). 
+**Additional Information:** The Ministral-3-8B-Instruct-2512-BF16 base model is governed by the Apache License, Version 2.0.
+### Deployment Geography:
+Global
+### Use Case: 
+The reranking model serves as a key component of a multimodal retrieval system, such as a vision RAG pipeline, where it helps improve overall retrieval accuracy. A multimodal retrieval system typically uses a multimodal embedding model (dense retrieval) to return a set of potentially relevant documents given an input query. The reranking model then evaluates these candidate documents in greater detail and reorders them based on their relevance to the query, producing a final ranking. By refining the initial retrieval results, the reranking stage can improve the precision of the retrieved documents and ultimately lead to more accurate downstream responses. 
+### Release Date:
+Hugging Face 10/20/2026 via https://huggingface.co/nvidia/Nemotron-3.5-Rerank-8B-BF16
+## Model Architecture: 
+**Architecture Type:** Transformer 
+**Network Architecture:** The released model contains a Pixtral-based vision encoder and a bidirectional Ministral3 language-model tower. Training proceeded in two stages. In the first stage, an 8B reranker checkpoint derived from the Ministral-3-8B-Instruct-2512-BF16 backbone was trained on a blend of text-only datasets. In the second stage, the 8B reranker model initialized from the first-stage checkpoint was trained on image and combined image-text datasets.
+**Number of Model Parameters:** 8.38B
+## Input: 
+**Input Type(s):** Text, Image 
+**Input Format(s):** Text: String; Image: Red, Green, Blue (RGB) 
+**Input Parameters:** Text: One-Dimensional (1D), Image: Two-Dimensional (2D) 
+**Other Properties Related to Input:** Each input is one text query paired with one document. The document may be an image, text, or a combination of image and text. The default image `longest_edge` is 1,120 pixels and can be increased to 1,540. The maxim

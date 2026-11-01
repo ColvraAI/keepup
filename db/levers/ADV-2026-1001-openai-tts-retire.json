@@ -1,0 +1,54 @@
+{
+  "id": "ADV-2026-1001-openai-tts-retire",
+  "name": "tts-1 and gpt-4o-mini-tts shut down on 6 Jan 2027",
+  "pattern": "PAT-retired-model-id",
+  "kind": "model-successor",
+  "providers": [
+    "openai"
+  ],
+  "effects": [
+    "keeps working"
+  ],
+  "gain": "Speech generation on these models fails after 6 Jan 2027.",
+  "proof": "vendor claim",
+  "source": "https://developers.openai.com/api/docs/deprecations",
+  "how": "Plan a move to gpt-realtime-2.1-mini using OpenAI's Realtime API guide. This is a bigger change than an id swap, so test speech output on it well before the date.",
+  "replaces": "tts-1, tts-1-hd, gpt-4o-mini-tts",
+  "trade_offs": [
+    "The successor is a Realtime API model, so the code changes rather than just the id.",
+    "Audio output is dearer than gpt-4o-mini-tts on OpenAI's price list: $20 against $12 per 1M tokens."
+  ],
+  "needs": "Work with the Realtime API.",
+  "models": [
+    "tts-1",
+    "tts-1-hd",
+    "gpt-4o-mini-tts",
+    "gpt-4o-mini-tts-2025-03-20",
+    "gpt-4o-mini-tts-2025-12-15"
+  ],
+  "checked": "2026-11-01",
+  "checked_by": "agent",
+  "usage_signal": "Usage API: calls on the affected model or parameter",
+  "gain_model": {
+    "formula": "no money figure: the call stops working or a capability is missing",
+    "inputs": []
+  },
+  "test_recipe": {
+    "what_to_compare": "tests pass on the change",
+    "samples": 20,
+    "can_run_with": [
+      "ANTHROPIC_API_KEY",
+      "OPENAI_API_KEY"
+    ]
+  },
+  "verify_rule": "The old id or parameter is gone and calls succeed over 7 days",
+  "change_recipe": {
+    "kind": "pull request with tests",
+    "how": "Plan a move to gpt-realtime-2.1-mini using OpenAI's Realtime API guide. This is a bigger change than an id swap, so test speech output on it well before the date.",
+    "left_off": "Nothing else changes; the new path sits behind a setting until a person turns it on"
+  },
+  "audience": "product",
+  "gain_independent": null,
+  "gain_vendor": "Speech generation on these models fails after 6 Jan 2027.",
+  "tier": "long_tail"
+}

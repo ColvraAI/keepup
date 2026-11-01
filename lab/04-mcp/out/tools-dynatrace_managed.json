@@ -1,0 +1,707 @@
+{
+  "kind": "tools",
+  "server": "dynatrace_managed",
+  "example": "examples/complete/incident-response-dynatrace-managed.toml",
+  "ok": true,
+  "measuredAt": "2026-11-01T04:47:46.206Z",
+  "transport": "stdio",
+  "startedAs": "npx -y @dynatrace-oss/dynatrace-managed-mcp-server@2.0.0",
+  "credentials": "placeholder",
+  "client": "@modelcontextprotocol/sdk 1.32.2",
+  "serverInfo": {
+    "name": "Dynatrace Managed MCP Server",
+    "version": "2.0.0"
+  },
+  "elapsedMs": 17664,
+  "toolNames": [
+    "dynatrace_managed_discover_entities",
+    "dynatrace_managed_get_entity_details",
+    "dynatrace_managed_get_entity_relationships",
+    "dynatrace_managed_get_entity_type_details",
+    "dynatrace_managed_get_environments_info",
+    "dynatrace_managed_get_event_details",
+    "dynatrace_managed_get_metric_details",
+    "dynatrace_managed_get_problem_details",
+    "dynatrace_managed_get_security_problem_details",
+    "dynatrace_managed_get_slo_details",
+    "dynatrace_managed_list_available_metrics",
+    "dynatrace_managed_list_entity_types",
+    "dynatrace_managed_list_events",
+    "dynatrace_managed_list_problems",
+    "dynatrace_managed_list_security_problems",
+    "dynatrace_managed_list_slos",
+    "dynatrace_managed_query_logs",
+    "dynatrace_managed_query_metrics_data"
+  ],
+  "tools": [
+    {
+      "name": "dynatrace_managed_get_environments_info",
+      "description": "Get information about all connected Dynatrace Managed clusters and verify the connections and authentication services.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      },
+      "annotations": {
+        "readOnlyHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "dynatrace_managed_list_available_metrics",
+      "description": "List available metrics in the Managed cluster, optionally filtered by entity. Results include aggregation\n    types, dimension definitions, and technical metadata for advanced metric analysis.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "entitySelector": {
+            "description": "Entity selector to filter metrics. Must use at most one entity type per query.\n          Examples include:\n           * type(SERVICE)\n           * entityId(\"id1\",\"id2\")\n           * type(HOST)\n          Can combine with things like: entityName.contains(\"name\"), tag(\"key:value\"), mzName(\"zone\").",
+            "type": "string"
+          },
+          "searchText": {
+            "description": "Text to search for in metric names and descriptions.\n          **RECOMMENDED SEARCHES**: \"response.time\" (latency), \"cpu.usage\" (CPU), \"memory\" (memory),\n          \"error.rate\" (errors), \"throughput\" (performance), \"availability\" (uptime)",
+            "type": "string"
+          },
+          "limit": {
+            "description": "Maximum number of metrics to return. Use this when user specifies a count\n          (e.g., \"first 16 metrics\" → limit: 16, \"500 metrics\" → limit: 500).\n          If not specified, returns up to API limit: 500. Cannot exceed 500",
+            "type": "number",
+            "maximum": 500
+          },
+          "environment_alias": {
+            "type": "string",
+            "description": "Specify which environment to be queried, by supplying the environment alias as returned by get_environments_info. Can use `ALL_ENVIRONMENTS` to retrieve data from all environments in one request to MCP."
+          }
+        },
+        "required": [
+          "environment_alias"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "dynatrace_managed_query_metrics_data",
+      "description": "Query metric data for a specific time range and metric selector.\n    Must limit the amount of data being retrieved:\n    must use a specific entitySelector, such as using specific entityIds;\n    must use a narrow timerange (with from and to);\n    must use a resolution in line with the timerange, for example if getting data covering several days then the resolution should be hours rather than minutes.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "metricSelector": {
+            "type": "string",
+            "description": "Metric selector (e.g., \"builtin:service.response.time\" for latency,\n        \"builtin:tech.generic.cpu.usage\" for container CPU, \"builtin:host.mem.usage\" for memory).\n        Consider first using the tool list_available_metrics to identity the right metric."
+          },
+          "from": {
+            "type": "string",
+            "description": "Start time (ISO format or relative like \"now-1h\")"
+          },
+          "to": {
+            "type": "string",
+            "description": "End time (ISO format or relative like \"now\")"
+          },
+          "resolution": {
+            "description": "Data resolution. Use a bigger resolution when the timerange is larger.\n          For example, use \"5m\" for detailed analysis of data over hour(s), use \"1h\" for trends of data over a day, use 6h or 1d for data over many days.",
+            "type": "string"
+          },
+          "entitySelector": {
+            "description": "Entity selector to filter metrics data. CRITICAL: Only ONE entity type per query.\n          Use discover_entities() first to get exact names/IDs, then use entityId(\"exact-id\") or\n          type(SERVICE),entityName.equals(\"exact-name\"). Examples: entityId(\"SERVICE-123\"),\n          type(SERVICE),entityName(\"payment-service\"), type(AWS_LAMBDA_FUNCTION),tag(\"AWS_REGION:us-west-2\")",
+            "type": "string"
+          },
+          "environment_alias": {
+            "type": "string",
+            "description": "Specify which environment to be queried, by supplying the environment alias as returned by get_environments_info. Can use `ALL_ENVIRONMENTS` to retrieve data from all environments in one request to MCP."
+          }
+        },
+        "required": [
+          "metricSelector",
+          "from",
+          "to",
+          "environment_alias"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "dynatrace_managed_get_metric_details",
+      "description": "Get detailed information about a specific metric.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "metricId": {
+            "type": "string",
+            "description": "The metric ID to get details for"
+          },
+          "environment_alias": {
+            "type": "string",
+            "description": "Specify which environment to be queried, by supplying the environment alias as returned by get_environments_info. Can use `ALL_ENVIRONMENTS` to retrieve data from all environments in one request to MCP."
+          }
+        },
+        "required": [
+          "metricId",
+          "environment_alias"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "dynatrace_managed_query_logs",
+      "description": "Search logs using simple text queries. Results include event types, expanded metadata fields\n    (up to 8 fields), and enhanced error detection. Managed clusters support basic text search but\n    not structured syntax like \"content:\" or \"loglevel:\".",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "Simple text to search for in log content (e.g., \"error\", \"exception\", \"timeout\").\n          Do NOT use structured syntax like \"content:error\" - just use \"error\"."
+          },
+          "from": {
+            "type": "string",
+            "description": "Start time (ISO format or relative like \"now-1h\")"
+          },
+          "to": {
+            "type": "string",
+            "description": "End time (ISO format or relative like \"now\")"
+          },
+          "limit": {
+            "description": "Maximum number of logs to return (default: 100). Cannot exceed 1000",
+            "type": "number",
+            "maximum": 1000
+          },
+          "sort": {
+            "description": "Sort order for logs. Use \"-timestamp\" for most recent first.",
+            "type": "string"
+          },
+          "environment_alias": {
+            "type": "string",
+            "description": "Specify which environment to be queried, by supplying the environment alias as returned by get_environments_info. Can use `ALL_ENVIRONMENTS` to retrieve data from all environments in one request to MCP."
+          }
+        },
+        "required": [
+          "query",
+          "from",
+          "to",
+          "environment_alias"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "dynatrace_managed_list_events",
+      "description": "List events from the Managed cluster within a specified timeframe. Results include event properties,\n    management zones, severity/impact levels, and detailed metadata for comprehensive analysis.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "from": {
+            "type": "string",
+            "description": "Start time (ISO format or relative like \"now-1h\")"
+          },
+          "to": {
+            "type": "string",
+            "description": "End time (ISO format or relative like \"now\")"
+          },
+          "eventType": {
+            "description": "Filter by event type (e.g., \"CONTAINER_RESTART\" for certain container issues,\n          \"CUSTOM_DEPLOYMENT\" for deployments, \"RESOURCE_CONTENTION_EVENT\" for resource issues)",
+            "type": "string"
+          },
+          "entitySelector": {
+            "description": "Entity selector to filter events. CRITICAL: Only ONE entity type per query.\n          Use discover_entities() first to get exact names/IDs, then use entityId(\"exact-id\") or\n          type(SERVICE),entityName.equals(\"exact-name\"). Examples: entityId(\"SERVICE-123\"),\n          type(SERVICE),entityName(\"payment-service\"), type(AWS_LAMBDA_FUNCTION),tag(\"AWS_REGION:us-west-2\")",
+            "type": "string"
+          },
+          "limit": {
+            "description": "Maximum number of events to return. Use this when user specifies a count (e.g., \"first 20 events\" → limit: 20). If not specified, returns up to API limit: 100. Cannot exceed 100",
+            "type": "number",
+            "maximum": 100
+          },
+          "environment_alias": {
+            "type": "string",
+            "description": "Specify which environment to be queried, by supplying the environment alias as returned by get_environments_info. Can use `ALL_ENVIRONMENTS` to retrieve data from all environments in one request to MCP."
+          }
+        },
+        "required": [
+          "from",
+          "to",
+          "environment_alias"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "dynatrace_managed_get_event_details",
+      "description": "Get detailed information about a specific event.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "description": "The event ID to get details for"
+          },
+          "environment_alias": {
+            "type": "string",
+            "description": "Specify which environment to be queried, by supplying the environment alias as returned by get_environments_info. Can use `ALL_ENVIRONMENTS` to retrieve data from all environments in one request to MCP."
+          }
+        },
+        "required": [
+          "eventId",
+          "environment_alias"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "dynatrace_managed_list_entity_types",
+      "description": "List all available entity types in the Managed cluster to understand what types of entities can be monitored.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "environment_alias": {
+            "type": "string",
+            "description": "Specify which environment to be queried, by supplying the environment alias as returned by get_environments_info. Can use `ALL_ENVIRONMENTS` to retrieve data from all environments in one request to MCP."
+          }
+        },
+        "required": [
+          "environment_alias"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "dynatrace_managed_get_entity_type_details",
+      "description": "Get details of an entity type.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "Name of the entity type, such as SERVICE, APPLICATION, HOST, etc"
+          },
+          "environment_alias": {
+            "type": "string",
+            "description": "Specify which environment to be queried, by supplying the environment alias as returned by get_environments_info. Can use `ALL_ENVIRONMENTS` to retrieve data from all environments in one request to MCP."
+          }
+        },
+        "required": [
+          "type",
+          "environment_alias"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "dynatrace_managed_discover_entities",
+      "description": "Discover entities in the Managed cluster using EntitySelector syntax. REQUIRED: Must specify\n    entitySelector with exactly ONE entity type only. Results include entity properties, tags,\n    management zones, and relationship counts for comprehensive topology analysis.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "entitySelector": {
+            "type": "string",
+            "description": "Entity selector to filter the entities. CRITICAL: Must include exactly ONE entity type\n          like type(\"SERVICE\") - multiple types NOT supported. Examples: type(\"SERVICE\"),\n          entityId(\"ID1\"), entityName.contains(\"name\"), entityName.equals(\"exact\"), tag(\"key:value\"), mzName(\"zone\"),\n          healthState(\"HEALTHY\")."
+          },
+          "mzSelector": {
+            "description": "Optional management zone selector to further scope the query. Use mzId(123,456) for zone IDs\n          or mzName(\"Bookstore-FS\",\"Stocks\") for zone names. Can combine: mzId(123),mzName(\"Production\").\n          Works alongside entitySelector.",
+            "type": "string"
+          },
+          "from": {
+            "description": "Start time for entity observation timeframe (ISO format or relative like \"now-3d\")",
+            "type": "string"
+          },
+          "to": {
+            "description": "End time for entity observation timeframe (ISO format or relative like \"now\")",
+            "type": "string"
+          },
+          "limit": {
+            "description": "Maximum number of entities to return. Use this when user specifies a count (e.g., \"first 10 entities\" → limit: 10). If not specified, returns up to API limit: 10. Cannot exceed 50",
+            "type": "number",
+            "maximum": 50
+          },
+          "sort": {
+            "description": "Sort order for entities. Use \"name\" for ascending, \"-name\" for descending by display name.",
+            "type": "string"
+          },
+          "environment_alias": {
+            "type": "string",
+            "description": "Specify which environment to be queried, by supplying the environment alias as returned by get_environments_info. Can use `ALL_ENVIRONMENTS` to retrieve data from all environments in one request to MCP."
+          }
+        },
+        "required": [
+          "entitySelector",
+          "environment_alias"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "dynatrace_managed_get_entity_details",
+      "description": "Get detailed information about a specific entity.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "entityId": {
+            "type": "string",
+            "description": "The entity ID to get details for"
+          },
+          "environment_alias": {
+            "type": "string",
+            "description": "Specify which environment to be queried, by supplying the environment alias as returned by get_environments_info. Can use `ALL_ENVIRONMENTS` to retrieve data from all environments in one request to MCP."
+          }
+        },
+        "required": [
+          "entityId",
+          "environment_alias"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "dynatrace_managed_get_entity_relationships",
+      "description": "Get relationships that a specific entity has \"to\" and \"from\" other entities.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "entityId": {
+            "type": "string",
+            "description": "The entity ID to get relationships for"
+          },
+          "environment_alias": {
+            "type": "string",
+            "description": "Specify which environment to be queried, by supplying the environment alias as returned by get_environments_info. Can use `ALL_ENVIRONMENTS` to retrieve data from all environments in one request to MCP."
+          }
+        },
+        "required": [
+          "entityId",
+          "environment_alias"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "dynatrace_managed_list_problems",
+      "description": "List problems from the Managed cluster with optional filtering.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "from": {
+            "description": "Start time (default: \"now-24h\")",
+            "type": "string"
+          },
+          "to": {
+            "description": "End time (default: \"now\")",
+            "type": "string"
+          },
+          "status": {
+            "description": "Problem status - use \"OPEN\" for active issues, \"CLOSED\" for resolved problems",
+            "type": "string",
+            "enum": [
+              "OPEN",
+              "CLOSED"
+            ]
+          },
+          "impactLevel": {
+            "description": "Impact level - use \"SERVICE\" for application issues, \"INFRASTRUCTURE\" for host/container problems, \"APPLICATION\" for user-facing issues",
+            "type": "string",
+            "enum": [
+              "APPLICATION",
+              "ENVIRONMENT",
+              "INFRASTRUCTURE",
+              "SERVICES"
+            ]
+          },
+          "entitySelector": {
+            "description": "Entity selector to filter problems. CRITICAL: Only ONE entity type per query. Use discover_entities() first to get exact names/IDs, then use entityId(\"exact-id\") or type(SERVICE),entityName.equals(\"exact-name\"). Examples: entityId(\"SERVICE-123\"), type(SERVICE),entityName(\"payment-service\"), type(AWS_LAMBDA_FUNCTION),tag(\"AWS_REGION:us-west-2\")",
+            "type": "string"
+          },
+          "limit": {
+            "description": "Maximum number of problems to return. Use this when user specifies a count (e.g., \"first 10 problems\" → limit: 10). If not specified, returns up to API limit: 50. Cannot exceed 50",
+            "type": "number",
+            "maximum": 50
+          },
+          "sort": {
+            "description": "Sort order. Use \"+status\" (open first), \"-status\" (closed first), \"+startTime\" (old first), \"-startTime\" (new first), or \"+relevance\"/\"-relevance\" (with text search).",
+            "type": "string"
+          },
+          "environment_alias": {
+            "type": "string",
+            "description": "Specify which environment to be queried, by supplying the environment alias as returned by get_environments_info. Can use `ALL_ENVIRONMENTS` to retrieve data from all environments in one request to MCP."
+          }
+        },
+        "required": [
+          "environment_alias"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "dynatrace_managed_get_problem_details",
+      "description": "Get detailed information about a specific problem including evidence details for root cause analysis, affected entities, entity tags, and management zones. Use the problemId (UUID format) from list_problems output, NOT the displayId.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "problemId": {
+            "type": "string",
+            "description": "The internal problem ID (UUID format) from list_problems - NOT the displayId (P-XXXXX)"
+          },
+          "environment_alias": {
+            "type": "string",
+            "description": "Specify which environment to be queried, by supplying the environment alias as returned by get_environments_info. Can use `ALL_ENVIRONMENTS` to retrieve data from all environments in one request to MCP."
+          }
+        },
+        "required": [
+          "problemId",
+          "environment_alias"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "dynatrace_managed_list_security_problems",
+      "description": "List security problems and vulnerabilities from the Managed cluster. Results include package names, technology details, vulnerable components, and comprehensive risk assessment data.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "riskLevel": {
+            "description": "Filter by risk level (NONE, LOW, MEDIUM, HIGH, CRITICAL)",
+            "type": "string",
+            "enum": [
+              "CRITICAL",
+              "HIGH",
+              "LOW",
+              "MEDIUM",
+              "NONE"
+            ]
+          },
+          "status": {
+            "description": "Filter by status (OPEN, RESOLVED)",
+            "type": "string",
+            "enum": [
+              "OPEN",
+              "RESOLVED"
+            ]
+          },
+          "entitySelector": {
+            "description": "Entity selector to filter vulnerabilities. CRITICAL: Only ONE entity type per query. Use discover_entities() first to get exact names/IDs, then use entityId(\"exact-id\") or type(SERVICE),entityName.equals(\"exact-name\"). Examples: entityId(\"SERVICE-123\"), type(SERVICE),entityName(\"payment-service\"), type(AWS_LAMBDA_FUNCTION),tag(\"AWS_REGION:us-west-2\")",
+            "type": "string"
+          },
+          "from": {
+            "description": "Start time (default: \"now-30d\")",
+            "type": "string"
+          },
+          "to": {
+            "description": "End time (default: \"now\")",
+            "type": "string"
+          },
+          "limit": {
+            "description": "Maximum number of security problems to return. Use this when user specifies a count (e.g., \"first 25 vulnerabilities\" → limit: 25). If not specified, returns up to API limit: 100. Cannot exceed 100",
+            "type": "number",
+            "maximum": 100
+          },
+          "sort": {
+            "description": "Sort order. Examples: \"+status\" (open first), \"-riskAssessment.riskScore\" (highest risk first), \"+firstSeenTimestamp\" (newest first), \"-lastUpdatedTimestamp\" (recently updated first).",
+            "type": "string"
+          },
+          "environment_alias": {
+            "type": "string",
+            "description": "Specify which environment to be queried, by supplying the environment alias as returned by get_environments_info. Can use `ALL_ENVIRONMENTS` to retrieve data from all environments in one request to MCP."
+          }
+        },
+        "required": [
+          "environment_alias"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "dynatrace_managed_get_security_problem_details",
+      "description": "Get detailed information about a specific security problem including CVE details, affected entities, vulnerable components, code locations, and comprehensive technical analysis.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "securityProblemId": {
+            "type": "string",
+            "description": "The security problem ID (UUID format) from list_security_problems - NOT the displayId (S-XXXXX)"
+          },
+          "environment_alias": {
+            "type": "string",
+            "description": "Specify which environment to be queried, by supplying the environment alias as returned by get_environments_info. Can use `ALL_ENVIRONMENTS` to retrieve data from all environments in one request to MCP."
+          }
+        },
+        "required": [
+          "securityProblemId",
+          "environment_alias"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "dynatrace_managed_list_slos",
+      "description": "List Service Level Objectives (SLOs) from the Managed cluster. Results include timeframe details, management zones, error budget burn rates, and comprehensive SLO configuration data. IMPORTANT: When evaluate=true, the query must be limited to 25 or fewer results using the limit parameter.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "sloSelector": {
+            "description": "SLO selector to filter results. Syntax: id(\"id-1\",\"id-2\") for SLO IDs, name(\"Service Availability\") for exact name match (case-sensitive), healthState(\"HEALTHY\"|\"UNHEALTHY\") [requires evaluate=true], text(\"value\") for case-insensitive text search, problemDisplayName(\"P-12345\") for problem display names, managementZone(\"MZ-A\") or managementZoneID(\"123\") for management zones. Combine with commas. Escape special characters ~ and \" with ~.",
+            "type": "string"
+          },
+          "timeFrame": {
+            "description": "Time frame for SLO evaluation: \"CURRENT\" for SLO's own timeframe, \"GTF\" for custom timeframe specified by from/to parameters",
+            "type": "string"
+          },
+          "from": {
+            "description": "Start time (ISO format or relative like \"now-2w\"). Used when timeFrame=\"GTF\"",
+            "type": "string"
+          },
+          "to": {
+            "description": "End time (ISO format or relative like \"now\"). Used when timeFrame=\"GTF\"",
+            "type": "string"
+          },
+          "evaluate": {
+            "description": "Set to true to enable SLO evaluation. Required when using healthState in sloSelector.",
+            "type": "boolean"
+          },
+          "sort": {
+            "description": "Sorting of SLO entries: \"name\" for ascending order, \"-name\" for descending order. Default: \"name\"",
+            "type": "string"
+          },
+          "enabledSlos": {
+            "description": "Filter by SLO status: \"true\" for enabled SLOs only, \"false\" for disabled only, \"all\" for both. Default: \"true\"",
+            "type": "string"
+          },
+          "showGlobalSlos": {
+            "description": "Include global SLOs in results regardless of other filters. Default: true",
+            "type": "boolean"
+          },
+          "demo": {
+            "description": "Get demo SLOs instead of real ones. Default: false",
+            "type": "boolean"
+          },
+          "limit": {
+            "description": "Maximum number of SLOs to return. Use this when user specifies a count (e.g., \"first 15 SLOs\" → limit: 15). If not specified, returns up to API limit: 100. Cannot exceed 100",
+            "type": "number",
+            "maximum": 100
+          },
+          "environment_alias": {
+            "type": "string",
+            "description": "Specify which environment to be queried, by supplying the environment alias as returned by get_environments_info. Can use `ALL_ENVIRONMENTS` to retrieve data from all environments in one request to MCP."
+          }
+        },
+        "required": [
+          "environment_alias"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "dynatrace_managed_get_slo_details",
+      "description": "Get detailed information about a specific SLO.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "sloId": {
+            "type": "string",
+            "description": "The SLO ID to get details for"
+          },
+          "from": {
+            "description": "Start time (ISO format or relative like \"now-1w\"). Used when timeFrame=\"GTF\"",
+            "type": "string"
+          },
+          "to": {
+            "description": "End time (ISO format or relative like \"now\"). Used when timeFrame=\"GTF\"",
+            "type": "string"
+          },
+          "timeFrame": {
+            "description": "Time frame for SLO evaluation: \"CURRENT\" for SLO's own timeframe, \"GTF\" for custom timeframe specified by from and to parameters",
+            "type": "string"
+          },
+          "environment_alias": {
+            "type": "string",
+            "description": "Specify which environment to be queried, by supplying the environment alias as returned by get_environments_info. Can use `ALL_ENVIRONMENTS` to retrieve data from all environments in one request to MCP."
+          }
+        },
+        "required": [
+          "sloId",
+          "environment_alias"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    }
+  ]
+}

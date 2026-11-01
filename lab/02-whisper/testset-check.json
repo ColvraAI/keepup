@@ -1,0 +1,123 @@
+{
+  "checked": "2026-11-01",
+  "model": "Xenova/whisper-base.en",
+  "recordings": [
+    {
+      "id": "gettysburg-address",
+      "transcript": "This is the Liberty Box Recording, all the Liberty Box Recording from the Public Domain. To find out more or see how you can volunteer, please visit Liberty Box.org. The Gettysburg Address by Abraham Lincoln on November 19th, 1863. Four score and seven years ago, our father has brought forth on this continent a new nation conceived in liberty and dedicated to the proposition that all men are created equal. Now we are engaged in great a war testing whether that nation or any nation so conceived and so dedicated can long endure. We are met on a great battlefield of that war. We have come to dedicate a portion of that field as a final resting place for those who here gave their lives that that nation might live. It is also the other fitting and proper that we should do this. But in the larger sense we cannot dedicate, we cannot consecrate, we cannot halo this ground The brave men living in debt who struggled here have consecrated far above our poor power to add or detract. The world will little note nor long remember what we say here, but it can never forget what they did here. It is for us the living rather to be dedicated here to this unfinished work, which they who fought here have thus far so nobly advanced. It is rather for us to be here dedicated to the great task remaining for us, that from these honour dead we take increased devotion to that cause for which they gave the last full measure of devotion, that we here highly resolve that these dead shall not have died in vain, that this nation under God shall have a new birth of freedom, and that government of the people, by the people, for the people shall not perish from this earth, and if the guest burgers rests.\" you",
+      "wer": 0.06343283582089553,
+      "droppedBefore": [
+        "this",
+        "is",
+        "the",
+        "liberty",
+        "box",
+        "recording",
+        "all",
+        "the",
+        "liberty",
+        "box",
+        "recording",
+        "from",
+        "the",
+        "public",
+        "domain",
+        "to",
+        "find",
+        "out",
+        "more",
+        "or",
+        "see",
+        "how",
+        "you",
+        "can",
+        "volunteer",
+        "please",
+        "visit",
+        "liberty",
+        "boxorg",
+        "the",
+        "gettysburg",
+        "address",
+        "by",
+        "abraham",
+        "lincoln",
+        "on",
+        "november",
+        "19th",
+        "1863"
+      ],
+      "droppedAfter": [
+        "and",
+        "if",
+        "the",
+        "guest",
+        "burgers",
+        "rests",
+        "you"
+      ]
+    },
+    {
+      "id": "in-flanders-fields",
+      "transcript": "In Flanders Fields, by John McCray, Retro Libbybox.org, by Algie Pug. In Flanders Fields, the poppies blow between the crosses, row on row, that mark our place, and in the sky the larks, still bravely singing, \"Fly!\" Schies heard amid the guns below. We are the dead. Short days ago we lived, felt dawn, saw sunset glow, loved and were loved, and now we lie in Flanders Fields. Take up our quarrel with the foe. To you, from failing hands, we throw the torch, be yours to hold it high. If ye break faith with us who die, we shall not sleep, though poppies grow in flanders' fields. End of poem. This recording is in the public domain.",
+      "wer": 0.010309278350515464,
+      "droppedBefore": [
+        "in",
+        "flanders",
+        "fields",
+        "by",
+        "john",
+        "mccray",
+        "retro",
+        "libbyboxorg",
+        "by",
+        "algie",
+        "pug"
+      ],
+      "droppedAfter": [
+        "end",
+        "of",
+        "poem",
+        "this",
+        "recording",
+        "is",
+        "in",
+        "the",
+        "public",
+        "domain"
+      ]
+    },
+    {
+      "id": "ozymandias",
+      "transcript": "Ozzimandis of Egypt by Percy Biss Shelley. Redforlebravox.org by Alan Davis Drake. I met a traveler from an antique land who said, \"Too vast and trunkless legs of stone stand in the desert.\" Near them on the sand half-sunk, a shattered visagilize, whose frown and wrinkled lip and sneer of cold command tell that its sculptor well those passions read which yet survive. stamped on these lifeless things, the hand that mocked them and the heart that fed. And on the pedestal these words appear. My name is Aussie Mantis, King of Kings. Look on my work, see my tiannis bear. Nothing beside remains. Round the decay of that colossal wreck, boundless and bear, the lone and level sands stretch far way. End of poem. This recording is in the public domain.",
+      "wer": 0.11711711711711711,
+      "droppedBefore": [
+        "ozzimandis",
+        "of",
+        "egypt",
+        "by",
+        "percy",
+        "biss",
+        "shelley",
+        "redforlebravoxorg",
+        "by",
+        "alan",
+        "davis",
+        "drake"
+      ],
+      "droppedAfter": [
+        "way",
+        "end",
+        "of",
+        "poem",
+        "this",
+        "recording",
+        "is",
+        "in",
+        "the",
+        "public",
+        "domain"
+      ]
+    }
+  ]
+}

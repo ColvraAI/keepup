@@ -1,0 +1,6 @@
+{
+  "name": "root-app",
+  "dependencies": {
+    "openai": "4.20.0"
+  }
+}

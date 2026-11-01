@@ -1,0 +1,67 @@
+{
+  "lab": "03-embeddings",
+  "variant": null,
+  "result_sha256": "3bac6aad4a5a70e73282f5f42823af72bd5bb559d1a6f248af48c9a7aef0d6bb",
+  "files": [
+    {
+      "path": "compat-batching.json",
+      "sha256": "709f5fd4d9b6f17d827a8933bf93d2c3763d5e26ecd3b84c9b9d07cd7ed972f7"
+    },
+    {
+      "path": "compat-e5.json",
+      "sha256": "0c372f2f6ed526d873838af1b00245e991974e90b41b434205a72866eaf0a33e"
+    },
+    {
+      "path": "compat-new-first.json",
+      "sha256": "7d21c8e9c3d57dedf06e3b3a79e3d04c930b461946ca309e95e7bbe38c0561ba"
+    },
+    {
+      "path": "compat-nomic.json",
+      "sha256": "ca3d77767021f3cec0b2f845d3bdd15bdf93c386b6ae9df1ac2bd4c63f20fd23"
+    },
+    {
+      "path": "compat-old-first.json",
+      "sha256": "49a868e4dece76738b38d711b1f0747a9160f6f61ac57ac5bb1147d465b8d452"
+    },
+    {
+      "path": "compat-parity.json",
+      "sha256": "7c1594669ca9e3cc176a112cd96dcd8597af52a3080fdf645dbec95662e30869"
+    },
+    {
+      "path": "compat-reuse.json",
+      "sha256": "6ab7544fde47d117d8fc1d11ee06fddf7c5990a74f182aa35a324d9b526719b0"
+    },
+    {
+      "path": "dataset.json",
+      "sha256": "be927772fc1c1b23f7bc5b423fc1cc29dd42e3bdc665940c6cbddbcaca96b852"
+    },
+    {
+      "path": "rankings-embeddinggemma-2.jsonl",
+      "sha256": "8b3db25c4f3732ddb4f0b9e0249f296dc1f5b41faf8cacf674502763f5e28f56"
+    },
+    {
+      "path": "rankings-minilm-old-package.jsonl",
+      "sha256": "1109940680c125ed610d82359910c9083d12a4c15c28b1704782246761cca7b5"
+    },
+    {
+      "path": "rankings-minilm.jsonl",
+      "sha256": "4b980451df5ee42a5b641cc0757a086b7ebf404bac34377f3267c54b3660942e"
+    },
+    {
+      "path": "run-embeddinggemma-2.json",
+      "sha256": "1d036adf81a6aa3b6f6d5fcf0096ddde6ed8eb55853c4b3b88896ca161f1cf50"
+    },
+    {
+      "path": "run-minilm-old-package.json",
+      "sha256": "9be19c7ba2978913c8d8febb49fd53b4efc2dbe7177944089aef83246a886763"
+    },
+    {
+      "path": "run-minilm.json",
+      "sha256": "739e910017a1e1a2ec475bcb144c0e1bb216161f200d02b276c32a5e2355616c"
+    },
+    {
+      "path": "same-default.json",
+      "sha256": "e7e3ee7b090ad4891b2437f3801f905ae4b1b953b037379546a28180eaf57f8d"
+    }
+  ]
+}

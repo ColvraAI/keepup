@@ -1,0 +1,539 @@
+From 959a715299024e6f5822fc3d82373a3e90008f5b Mon Sep 17 00:00:00 2001
+From: "keepup[bot]" <keepup[bot]@users.noreply.github.com>
+Date: Tue, 1 Sep 2026 12:00:00 +0000
+Subject: [PATCH] feat: move OpenAI transcription to gpt-transcribe before
+ whisper-1 shuts down
+
+OpenAI announced on 26 Aug 2026 that whisper-1 shuts down on 26 Feb 2027 and
+named gpt-transcribe as a successor. The OpenAI transcription provider hardcodes
+whisper-1, so audio uploads through it would start failing that day.
+
+- Default the provider to gpt-transcribe. OpenAI's transcription guide and API
+  reference give it the same request and answer this provider already uses:
+  file, model and temperature go in, and text comes back.
+- Add a WhisperOpenAiModel setting (WHISPER_OPEN_AI_MODEL), added the same way
+  as the generic provider's model, so the next change is a config edit and going
+  back to whisper-1 until the shutdown is one too.
+- When OpenAI refuses the configured model, name the model and the setting.
+  Only OpenAI knows which models a key can use, and a list kept here would block
+  the next model, so the check is OpenAI's answer rather than a list. A failure
+  about the audio or another parameter keeps OpenAI's own message, even when it
+  mentions the model, so it doesn't send anyone to the wrong setting.
+- Replace the disabled "Whisper Large" field, which would now be wrong, with the
+  real setting.
+
+Replay date: 2026-09-01
+Source: https://developers.openai.com/api/docs/changelog (26 Aug entry)
+---
+ .../WhisperProviders/OpenAiWhisper.test.js    | 235 ++++++++++++++++++
+ .../utils/WhisperProviders/OpenAiWhisper.js   |  34 ++-
+ docker/.env.example                           |   3 +-
+ .../OpenAiOptions/index.jsx                   |  23 +-
+ .../TranscriptionPreference/index.jsx         |   2 +-
+ server/.env.example                           |   3 +-
+ .../collectorApi/whisperOpenAiModel.test.js   |  58 +++++
+ server/models/systemSettings.js               |   1 +
+ server/utils/collectorApi/index.js            |   2 +
+ server/utils/helpers/updateENV.js             |   5 +
+ 10 files changed, 352 insertions(+), 14 deletions(-)
+ create mode 100644 collector/__tests__/utils/WhisperProviders/OpenAiWhisper.test.js
+ create mode 100644 server/__tests__/utils/collectorApi/whisperOpenAiModel.test.js
+
+diff --git a/collector/__tests__/utils/WhisperProviders/OpenAiWhisper.test.js b/collector/__tests__/utils/WhisperProviders/OpenAiWhisper.test.js
+new file mode 100644
+index 00000000..c429018b
+--- /dev/null
++++ b/collector/__tests__/utils/WhisperProviders/OpenAiWhisper.test.js
+@@ -0,0 +1,235 @@
++/* eslint-env jest, node */
++const fs = require("fs");
++const { NotFoundError, BadRequestError, AuthenticationError } =
++  jest.requireActual("openai");
++
++const mockCreate = jest.fn();
++jest.mock("openai", () => ({
++  OpenAI: jest.fn(() => ({
++    audio: { transcriptions: { create: mockCreate } },
++  })),
++}));
++
++const {
++  OpenAiWhisper,
++} = require("../../../utils/WhisperProviders/OpenAiWhisper");
++
++const fakeStream = { fake: "stream" };
++const options = { openAiKey: "sk-test" };
++const notFound = (model) =>
++  new NotFoundError(
++    404,
++    {
++      message: `The model \`${model}\` does not exist or you do not have access to it.`,
++      type: "invalid_request_error",
++      param: null,
++      code: "model_not_found",
++    },
++    undefined,
++    {}
++  );
++
++describe("OpenAiWhisper", () => {
++  beforeEach(() => {
++    mockCreate.mockReset();
++    mockCreate.mockResolvedValue({ text: "hello" });
++    jest.spyOn(fs, "createReadStream").mockReturnValue(fakeStream);
++    jest.spyOn(console, "log").mockImplementation(() => {});
++  });
++
++  afterEach(() => {
++    jest.restoreAllMocks();
++  });
++
++  it("requires an API key", () => {
++    expect(() => new OpenAiWhisper({ options: {} })).toThrow(
++      "No OpenAI API key was set."
++    );
++  });
++
++  it("defaults to gpt-transcribe when no model is set", async () => {
++    const whisper = new OpenAiWhisper({ options });
++    await whisper.processFile("/tmp/audio.mp3");
++
++    expect(fs.createReadStream).toHaveBeenCalledWith("/tmp/audio.mp3");
++    expect(mockCreate).toHaveBeenCalledWith({
++      file: fakeStream,
++      model: "gpt-transcribe",
++      temperature: 0,
++    });
++  });
++
++  it("sends the configured model", async () => {
++    const whisper = new OpenAiWhisper({
++      options: { ...options, WhisperOpenAiModel: "gpt-next-transcribe" },
++    });
++    await whisper.processFile("/tmp/audio.mp3");
++
++    expect(mockCreate.mock.calls[0][0].model).toBe("gpt-next-transcribe");
++  });
++
++  it("can roll back to whisper-1 through the setting", async () => {
++    const whisper = new OpenAiWhisper({
++      options: { ...options, WhisperOpenAiModel: "whisper-1" },
++    });
++    const result = await whisper.processFile("/tmp/audio.mp3");
++
++    expect(mockCreate.mock.calls[0][0].model).toBe("whisper-1");
++    expect(result).toEqual({ content: "hello", error: null });
++  });
++
++  it("returns only the text from gpt-transcribe's response", async () => {
++    mockCreate.mockResolvedValue({
++      text: "Bonjour, pouvez-vous m'entendre ?",
++      languages: [{ code: "fr" }],
++      usage: { type: "duration", seconds: 3 },
++    });
++    const whisper = new OpenAiWhisper({ options });
++
++    expect(await whisper.processFile("/tmp/audio.mp3")).toEqual({
++      content: "Bonjour, pouvez-vous m'entendre ?",
++      error: null,
++    });
++  });
++
++  it("reports an empty response in the same shape", async () => {
++    mockCreate.mockResolvedValue(null);
++    const whisper = new OpenAiWhisper({ options });
++
++    expect(await whisper.processFile("/tmp/audio.mp3")).toEqual({
++      content: "",
++      error: "No content was able to be transcribed.",
++    });
++  });
++
++  it("names the model and the setting when OpenAI does not know the model", async () => {
++    mockCreate.mockRejectedValue(notFound("gpt-typo"));
++    const whisper = new OpenAiWhisper({
++      options: { ...options, WhisperOpenAiModel: "gpt-typo" },
++    });
++    const { content, error } = await whisper.processFile("/tmp/audio.mp3");
++
++    expect(content).toBe("");
++    expect(error).toContain('"gpt-typo"');
++    expect(error).toContain("WHISPER_OPEN_AI_MODEL");
++    expect(error).toContain("gpt-transcribe");
++    expect(error).toContain("does not exist or you do not have access to it");
++  });
++
++  it("gives the same clear error when the model is refused with a bad request", async () => {
++    mockCreate.mockRejectedValue(
++      new BadRequestError(
++        400,
++        { message: "invalid model ID", type: "invalid_request_error" },
++        undefined,
++        {}
++      )
++    );
++    const whisper = new OpenAiWhisper({
++      options: { ...options, WhisperOpenAiModel: "gpt-4o" },
++    });
++    const { error } = await whisper.processFile("/tmp/audio.mp3");
++
++    expect(error).toContain('"gpt-4o"');
++    expect(error).toContain("WHISPER_OPEN_AI_MODEL");
++  });
++
++  it("gives the same clear error when OpenAI points at the model parameter", async () => {
++    mockCreate.mockRejectedValue(
++      new BadRequestError(
++        400,
++        { message: "Unsupported value.", param: "model" },
++        undefined,
++        {}
++      )
++    );
++    const whisper = new OpenAiWhisper({
++      options: { ...options, WhisperOpenAiModel: "gpt-4o" },
++    });
++    const { error } = await whisper.processFile("/tmp/audio.mp3");
++
++    expect(error).toContain('"gpt-4o"');
++    expect(error).toContain("WHISPER_OPEN_AI_MODEL");
++  });
++
++  // These messages are written for the test. They are the shapes that must not
++  // send someone to the model setting, not text documented by OpenAI.
++  it.each([
++    [400, "Audio duration 1500 seconds is longer than the maximum for this model"],
++    [400, "Temperature is not supported with this model"],
++    [400, "This model does not support the format you provided"],
++  ])("does not blame the model for a %i about the audio or a parameter: %s", async (status, message) => {
++    mockCreate.mockRejectedValue(
++      new BadRequestError(status, { message }, undefined, {})
++    );
++    const whisper = new OpenAiWhisper({ options });
++
++    expect(await whisper.processFile("/tmp/audio.mp3")).toEqual({
++      content: "",
++      error: `${status} ${message}`,
++    });
++  });
++
++  it("does not blame the model when OpenAI names another parameter", async () => {
++    mockCreate.mockRejectedValue(
++      new BadRequestError(
++        400,
++        { message: "Invalid model settings for this file", param: "file" },
++        undefined,
++        {}
++      )
++    );
++    const whisper = new OpenAiWhisper({ options });
++
++    expect(await whisper.processFile("/tmp/audio.mp3")).toEqual({
++      content: "",
++      error: "400 Invalid model settings for this file",
++    });
++  });
++
++  it("does not blame the model for a 404 that does not mention it", async () => {
++    mockCreate.mockRejectedValue(
++      new NotFoundError(404, { message: "Not found" }, undefined, {})
++    );
++    const whisper = new OpenAiWhisper({ options });
++
++    expect(await whisper.processFile("/tmp/audio.mp3")).toEqual({
++      content: "",
++      error: "404 Not found",
++    });
++  });
++
++  it("leaves errors that are not about the model as they were", async () => {
++    mockCreate.mockRejectedValue(
++      new AuthenticationError(
++        401,
++        { message: "Incorrect API key provided." },
++        undefined,
++        {}
++      )
++    );
++    const whisper = new OpenAiWhisper({ options });
++
++    expect(await whisper.processFile("/tmp/audio.mp3")).toEqual({
++      content: "",
++      error: "401 Incorrect API key provided.",
++    });
++  });
++
++  it("does not blame the model for a bad request about something else", async () => {
++    mockCreate.mockRejectedValue(
++      new BadRequestError(
++        400,
++        { message: "Audio file might be corrupted or unsupported" },
++        undefined,
++        {}
++      )
++    );
++    const whisper = new OpenAiWhisper({ options });
++
++    expect(await whisper.processFile("/tmp/audio.mp3")).toEqual({
++      content: "",
++      error: "400 Audio file might be corrupted or unsupported",
++    });
++  });
++});
+diff --git a/collector/utils/WhisperProviders/OpenAiWhisper.js b/collector/utils/WhisperProviders/OpenAiWhisper.js
+index e2405b6a..c826b9a5 100644
+--- a/collector/utils/WhisperProviders/OpenAiWhisper.js
++++ b/collector/utils/WhisperProviders/OpenAiWhisper.js
+@@ -1,5 +1,7 @@
+ const fs = require("fs");
+ 
++const DEFAULT_MODEL = "gpt-transcribe";
++
+ class OpenAiWhisper {
+   constructor({ options }) {
+     const { OpenAI: OpenAIApi } = require("openai");
+@@ -8,7 +10,7 @@ class OpenAiWhisper {
+     this.openai = new OpenAIApi({
+       apiKey: options.openAiKey,
+     });
+-    this.model = "whisper-1";
++    this.model = options.WhisperOpenAiModel || DEFAULT_MODEL;
+     this.temperature = 0;
+     this.#log("Initialized.");
+   }
+@@ -17,6 +19,34 @@ class OpenAiWhisper {
+     console.log(`\x1b[32m[OpenAiWhisper]\x1b[0m ${text}`, ...args);
+   }
+ 
++  /**
++   * Whether OpenAI's error is about the model ID itself. An error about the audio
++   * or another parameter can mention the model too, and must not point at the setting.
++   * @param {Error} error - The error thrown by the OpenAI client
++   * @returns {boolean}
++   */
++  #modelRefused(error) {
++    if (error.code === "model_not_found" || error.param === "model")
++      return true;
++    if (error.param) return false;
++    return (
++      [400, 404].includes(error.status) &&
++      /invalid model|\bmodel\b.*(does not exist|not found)/i.test(error.message)
++    );
++  }
++
++  /**
++   * Only OpenAI knows which models a key can use, so we keep no list of them here.
++   * When it refuses the configured model, name the model and the setting to change.
++   * @param {Error} error - The error thrown by the OpenAI client
++   * @returns {string} - The message to show the user
++   */
++  #errorMessage(error) {
++    if (!this.#modelRefused(error)) return error.message;
++
++    return `OpenAI refused the transcription model "${this.model}". Check the Transcription Model setting (WHISPER_OPEN_AI_MODEL); the default is ${DEFAULT_MODEL}. OpenAI said: ${error.message}`;
++  }
++
+   async processFile(fullFilePath) {
+     return await this.openai.audio.transcriptions
+       .create({
+@@ -39,7 +69,7 @@ class OpenAiWhisper {
+           `Could not get any response from openai whisper`,
+           error.message
+         );
+-        return { content: "", error: error.message };
++        return { content: "", error: this.#errorMessage(error) };
+       });
+   }
+ }
+diff --git a/docker/.env.example b/docker/.env.example
+index 4bd90f80..bba697c4 100644
+--- a/docker/.env.example
++++ b/docker/.env.example
+@@ -342,9 +342,10 @@ GID='1000'
+ # (default) use built-in whisper-small model.
+ # WHISPER_PROVIDER="local"
+ 
+-# use openai hosted whisper model.
++# use openai hosted transcription model.
+ # WHISPER_PROVIDER="openai"
+ # OPEN_AI_KEY=sk-xxxxxxxx
++# WHISPER_OPEN_AI_MODEL="gpt-transcribe"
+ 
+ # use any OpenAI compatible transcription endpoint.
+ # WHISPER_PROVIDER="generic-openai"
+diff --git a/frontend/src/components/TranscriptionSelection/OpenAiOptions/index.jsx b/frontend/src/components/TranscriptionSelection/OpenAiOptions/index.jsx
+index 615eb23d..3cf21447 100644
+--- a/frontend/src/components/TranscriptionSelection/OpenAiOptions/index.jsx
++++ b/frontend/src/components/TranscriptionSelection/OpenAiOptions/index.jsx
+@@ -25,16 +25,21 @@ export default function OpenAiWhisperOptions({ settings }) {
+       </div>
+       <div className="flex flex-col w-60">
+         <label className="text-white text-sm font-semibold block mb-3">
+-          Whisper Model
++          Transcription Model
+         </label>
+-        <select
+-          disabled={true}
+-          className="border-none flex-shrink-0 bg-theme-settings-input-bg border-gray-500 text-white text-sm rounded-lg block w-full p-2.5"
+-        >
+-          <option disabled={true} selected={true}>
+-            Whisper Large
+-          </option>
+-        </select>
++        <input
++          type="text"
++          name="WhisperOpenAiModel"
++          className="border-none bg-theme-settings-input-bg text-white placeholder:text-theme-settings-input-placeholder text-sm rounded-lg focus:outline-primary-button active:outline-primary-button outline-none block w-full p-2.5"
++          placeholder="gpt-transcribe"
++          defaultValue={settings?.WhisperOpenAiModel}
++          required={true}
++          autoComplete="off"
++          spellCheck={false}
++        />
++        <p className="text-xs leading-[18px] font-base text-white text-opacity-60 mt-2">
++          The OpenAI model used to transcribe audio.
++        </p>
+       </div>
+     </div>
+   );
+diff --git a/frontend/src/pages/GeneralSettings/TranscriptionPreference/index.jsx b/frontend/src/pages/GeneralSettings/TranscriptionPreference/index.jsx
+index d996b447..6b4db052 100644
+--- a/frontend/src/pages/GeneralSettings/TranscriptionPreference/index.jsx
++++ b/frontend/src/pages/GeneralSettings/TranscriptionPreference/index.jsx
+@@ -21,7 +21,7 @@ const PROVIDERS = [
+     value: "openai",
+     logo: OpenAiLogo,
+     options: (settings) => <OpenAiWhisperOptions settings={settings} />,
+-    description: "Leverage the OpenAI Whisper-large model using your API key.",
++    description: "Transcribe audio with an OpenAI model using your API key.",
+   },
+   {
+     name: "OpenAI Compatible",
+diff --git a/server/.env.example b/server/.env.example
+index 261b6e7d..76a0ddd1 100644
+--- a/server/.env.example
++++ b/server/.env.example
+@@ -349,9 +349,10 @@ VECTOR_DB="lancedb"
+ # (default) use built-in whisper-small model.
+ WHISPER_PROVIDER="local"
+ 
+-# use openai hosted whisper model.
++# use openai hosted transcription model.
+ # WHISPER_PROVIDER="openai"
+ # OPEN_AI_KEY=sk-xxxxxxxx
++# WHISPER_OPEN_AI_MODEL="gpt-transcribe"
+ 
+ # use any OpenAI-compatible transcription endpoint.
+ # WHISPER_PROVIDER="generic-openai"
+diff --git a/server/__tests__/utils/collectorApi/whisperOpenAiModel.test.js b/server/__tests__/utils/collectorApi/whisperOpenAiModel.test.js
+new file mode 100644
+index 00000000..7bb5045c
+--- /dev/null
++++ b/server/__tests__/utils/collectorApi/whisperOpenAiModel.test.js
+@@ -0,0 +1,58 @@
++/* eslint-env jest, node */
++jest.mock("../../../utils/comKey", () => ({
++  CommunicationKey: jest.fn(() => ({
++    sign: () => "signed",
++    encrypt: () => "encrypted",
++  })),
++}));
++jest.mock("../../../utils/EncryptionManager", () => ({
++  EncryptionManager: jest.fn(() => ({ xPayload: "payload" })),
++}));
++
++const { updateENV } = require("../../../utils/helpers/updateENV");
++const { CollectorApi } = require("../../../utils/collectorApi");
++
++describe("WhisperOpenAiModel setting", () => {
++  const ORIGINAL_ENV = process.env;
++  const ORIGINAL_FETCH = global.fetch;
++
++  const optionsSentToCollector = async () => {
++    await new CollectorApi().processDocument("audio.mp3");
++    return JSON.parse(global.fetch.mock.calls[0][1].body).options;
++  };
++
++  beforeEach(() => {
++    process.env = { ...ORIGINAL_ENV };
++    delete process.env.WHISPER_OPEN_AI_MODEL;
++    global.fetch = jest.fn(async () => ({
++      ok: true,
++      json: async () => ({ success: true }),
++    }));
++  });
++
++  afterAll(() => {
++    process.env = ORIGINAL_ENV;
++    global.fetch = ORIGINAL_FETCH;
++  });
++
++  test("a saved model reaches the collector", async () => {
++    const { error } = await updateENV({ WhisperOpenAiModel: "whisper-1" });
++
++    expect(error).toBe(false);
++    expect(process.env.WHISPER_OPEN_AI_MODEL).toBe("whisper-1");
++    expect((await optionsSentToCollector()).WhisperOpenAiModel).toBe(
++      "whisper-1"
++    );
++  });
++
++  test("an empty model is refused", async () => {
++    const { error } = await updateENV({ WhisperOpenAiModel: "" });
++
++    expect(error).toBe("Value cannot be empty");
++    expect(process.env.WHISPER_OPEN_AI_MODEL).toBeUndefined();
++  });
++
++  test("with nothing saved, the collector falls back to its default", async () => {
++    expect((await optionsSentToCollector()).WhisperOpenAiModel).toBeNull();
++  });
++});
+diff --git a/server/models/systemSettings.js b/server/models/systemSettings.js
+index 3eb67247..e411054d 100644
+--- a/server/models/systemSettings.js
++++ b/server/models/systemSettings.js
+@@ -537,6 +537,7 @@ const SystemSettings = {
+       WhisperProvider: process.env.WHISPER_PROVIDER || "local",
+       WhisperModelPref:
+         process.env.WHISPER_MODEL_PREF || "Xenova/whisper-small",
++      WhisperOpenAiModel: process.env.WHISPER_OPEN_AI_MODEL || "gpt-transcribe",
+       WhisperGenericOpenAiBaseUrl: process.env.WHISPER_GENERIC_OPEN_AI_BASE_URL,
+       WhisperGenericOpenAiApiKey: !!process.env.WHISPER_GENERIC_OPEN_AI_API_KEY,
+       WhisperGenericOpenAiModel: process.env.WHISPER_GENERIC_OPEN_AI_MODEL,
+diff --git a/server/utils/collectorApi/index.js b/server/utils/collectorApi/index.js
+index d3ff7185..80657caa 100644
+--- a/server/utils/collectorApi/index.js
++++ b/server/utils/collectorApi/index.js
+@@ -6,6 +6,7 @@ const { Agent } = require("undici");
+  * @property {string} whisperProvider - The provider to use for whisper, defaults to "local"
+  * @property {string} WhisperModelPref - The model to use for whisper if set.
+  * @property {string} openAiKey - The API key to use for OpenAI interfacing, mostly passed to OAI Whisper provider.
++ * @property {string} WhisperOpenAiModel - The transcription model used by the OpenAI Whisper provider.
+  * @property {string} WhisperGenericOpenAiBaseUrl - The base URL of the OpenAI compatible endpoint used by the generic Whisper provider.
+  * @property {string} WhisperGenericOpenAiApiKey - The API key used by the generic (OpenAI compatible) Whisper provider.
+  * @property {string} WhisperGenericOpenAiModel - The transcription model used by the generic (OpenAI compatible) Whisper provider.
+@@ -67,6 +68,7 @@ class CollectorApi {
+       whisperProvider: process.env.WHISPER_PROVIDER || "local",
+       WhisperModelPref: process.env.WHISPER_MODEL_PREF,
+       openAiKey: process.env.OPEN_AI_KEY || null,
++      WhisperOpenAiModel: process.env.WHISPER_OPEN_AI_MODEL || null,
+       WhisperGenericOpenAiBaseUrl:
+         process.env.WHISPER_GENERIC_OPEN_AI_BASE_URL || null,
+       WhisperGenericOpenAiApiKey:
+diff --git a/server/utils/helpers/updateENV.js b/server/utils/helpers/updateENV.js
+index be68cb21..6c3cbd91 100644
+--- a/server/utils/helpers/updateENV.js
++++ b/server/utils/helpers/updateENV.js
+@@ -550,6 +550,11 @@ const KEY_MAPPING = {
+     checks: [validLocalWhisper],
+     postUpdate: [],
+   },
++  WhisperOpenAiModel: {
++    envKey: "WHISPER_OPEN_AI_MODEL",
++    checks: [isNotEmpty],
++    postUpdate: [],
++  },
+   WhisperGenericOpenAiBaseUrl: {
+     envKey: "WHISPER_GENERIC_OPEN_AI_BASE_URL",
+     checks: [isValidURL],

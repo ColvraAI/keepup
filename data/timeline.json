@@ -1,0 +1,196 @@
+{
+  "version": 1,
+  "window": {"from": "2026-09-01", "to": "2026-10-31", "fetched": "2026-10-31"},
+  "note": "Every event, date, commit and source here is real. Only keepup's actions are simulated: what it would have done on that day had it been installed on 1 Sep. All replay dates are UTC (decisions D23 and D34): base_commit is the last upstream commit before the event's date in UTC, and the pull request is opened against it on the fork. AnythingLLM's bases are on master. AURA's three early bases were on its nightly branch on those dates and reached main later, so they aren't what main looked like that day. The Claude-only variant of PR 01 is built on ead123f0, not on afd2da90, the last commit before 22 Oct. On a pr_updated row base_commit is only the last upstream commit before that update, because the pull request stays on the base in its pr.json. days_after counts UTC days from the row's date to the commit's UTC date. Something older than the install is dated 1 Sep, the day keepup would have raised it, with its real dates in the text. A where is read at pinned_commit, unless where_at says base. A finding row counts only if the engine's checks plus a judge reach it at that commit. A pull request row is different: its spec was written by hand against the real code, and the engine isn't claimed to find it. So a team point needs something keepup really did: a finding the engine reaches, or a pull request that's built. The 35 and 28 day points are on pull request rows. A live run at f92433b4 as of 22 Sep didn't raise GPT-6 Sol or Luna (data/runs/replay-checks/anything-llm-f92433b4-2026-09-22.json), and without that point the median is 42. The gpt-4.1-nano row gets there through db/patterns and a judge, not the changelog exact check, because OpenAI's 22 Apr notice is only on its deprecations page, which data/db doesn't hold. A live run at bbefbc7f as of 1 Sep raised it, citing server/models/systemSettings.js:878 (data/runs/replay-checks/anything-llm-bbefbc7f-2026-09-01.json). That run read the 31 Oct database and a pattern list dated 1 Nov, because --as-of doesn't cut newer records. The notice itself is older than the install. AURA's prompt caching row is a finding too: a live run at 40b75ed4 as of 7 Oct raised it (data/runs/replay-checks/aura-40b75ed4-2026-10-07.json), on the same database and lever list. 40b75ed4 was on the nightly branch that day and reached main on 9 Oct, like two of AURA's early bases.",
+  "repos": [
+    {
+      "repo": "Mintplex-Labs/anything-llm",
+      "fork": "<demo-org>/anything-llm",
+      "pinned_commit": "9caf2b4",
+      "events": [
+        {
+          "date": "2026-09-01", "thing": "gpt-4.1-nano, your OpenAI default, shuts down on 23 Oct (announced 22 Apr)", "kind": "deprecation",
+          "source_url": "https://developers.openai.com/api/docs/deprecations",
+          "where": "server/models/systemSettings.js:878 and server/utils/AiProviders/openAi/index.js:24", "where_at": "base",
+          "keepup": {"action": "pr_opened", "pr": "07", "summary": "Move the OpenAI default to gpt-5.6-luna, OpenAI's named substitute. With no model set, chats fall back to gpt-4.1-nano (server/models/systemSettings.js:878 at this base)"},
+          "run": "data/runs/replay-checks/anything-llm-bbefbc7f-2026-09-01.json",
+          "base_commit": "bbefbc7f",
+          "team": {"date": "2026-10-27", "commit": "5edf32b9", "days_after": 56, "note": "4 days after the model stopped working. Merged to master; no tagged release carries it as of 9caf2b4"}
+        },
+        {
+          "date": "2026-09-01", "thing": "OpenAI announces whisper-1 shuts down on 26 Feb 2027 (announced 26 Aug)", "kind": "deprecation",
+          "source_url": "https://developers.openai.com/api/docs/changelog",
+          "where": "collector/utils/WhisperProviders/OpenAiWhisper.js:11",
+          "keepup": {"action": "pr_opened", "pr": "02", "summary": "Move OpenAI audio uploads to gpt-transcribe before whisper-1 shuts down"},
+          "base_commit": "bbefbc7f"
+        },
+        {
+          "date": "2026-09-03", "thing": "GPT-6 Astra: tool calling requires the Responses API", "kind": "api-feature",
+          "source_url": "https://developers.openai.com/api/docs/changelog",
+          "where": "server/utils/agents/aibitat/providers/openai.js:65",
+          "keepup": {"action": "held_back", "summary": "Already handled: your OpenAI agent provider has called tools through the Responses API since 1 Oct 2025"},
+          "team": {"date": "2025-10-01", "commit": "8f0f9df4", "days_after": -337, "note": "the team moved agents to the Responses API 337 days before GPT-6 Astra shipped; 6bc238b8 (25 Sep 2026) only moved that code into a helper"}
+        },
+        {
+          "date": "2026-09-16", "thing": "@huggingface/transformers 4.3.0", "kind": "release",
+          "source_url": "https://www.npmjs.com/package/@huggingface/transformers",
+          "where": "server/package.json:41",
+          "keepup": {"action": "watching", "summary": "The maintained successor of @xenova/transformers (no release since 29 May 2024). Your native embedder, reranker and local Whisper still load through the old package"}
+        },
+        {
+          "date": "2026-09-21", "thing": "@tanstack/ai-typesafe 0.1.0, the first real release of the TanStack AI adapter for TypeSafe Jev", "kind": "package",
+          "source_url": "https://www.npmjs.com/package/@tanstack/ai-typesafe",
+          "where": "server/utils/agents/aibitat/plugins/router-classifier.js:71",
+          "keepup": {"action": "held_back", "summary": "It only helps products already built on @tanstack/ai, and this product does not use it. The router idea is raised separately, with Jev's own API as an option"},
+          "run": "data/runs/replay-checks/anything-llm-f92433b4-2026-09-22.json"
+        },
+        {
+          "date": "2026-09-22", "thing": "GPT-6 Sol and GPT-6 Luna released", "kind": "model",
+          "source_url": "https://developers.openai.com/api/docs/changelog",
+          "where": "server/utils/helpers/customModels.js:222",
+          "keepup": {"action": "pr_opened", "pr": "06", "summary": "Add GPT-6 Sol and GPT-6 Luna to the OpenAI fallback model list, and leave temperature out of gpt-6 requests"},
+          "base_commit": "f92433b4",
+          "team": {"date": "2026-10-27", "commit": "5edf32b9", "days_after": 35, "note": "This commit was the gpt-4.1-nano shutdown fix, and it also changed the fallback list. gpt-6-luna first appears there in this commit, and gpt-6-sol was never added, as of 9caf2b4. The list is only used when the live model list call fails (customModels.js:220)"}
+        },
+        {
+          "date": "2026-09-29", "thing": "GPT-6.1 Sol released", "kind": "model",
+          "source_url": "https://developers.openai.com/api/docs/changelog",
+          "where": "server/utils/helpers/customModels.js:222",
+          "keepup": {"action": "pr_updated", "pr": "06", "summary": "Add GPT-6.1 Sol to the fallback model list"},
+          "base_commit": "a3557034",
+          "team": {"date": "2026-10-27", "commit": "5edf32b9", "days_after": 28, "note": "This commit was the gpt-4.1-nano shutdown fix, and it also changed the fallback list. gpt-6.1-sol first appears there in this commit. The list is only used when the live model list call fails (customModels.js:220)"}
+        },
+        {
+          "date": "2026-10-01", "thing": "(your team) workspace temperature applied to agents, omitted when unset", "kind": "team",
+          "source_url": "https://github.com/Mintplex-Labs/anything-llm/commit/4bff9da5",
+          "keepup": {"action": "none", "summary": "Your own change; keepup notes it"}
+        },
+        {
+          "date": "2026-10-04", "thing": "EmbeddingGemma 2 ONNX build for transformers.js (Hugging Face repo created 4 Oct; Google launched the model on 6 Oct)", "kind": "model",
+          "source_url": "https://huggingface.co/onnx-community/embeddinggemma-2-ONNX",
+          "where": "server/utils/EmbeddingEngines/native/index.js:8",
+          "keepup": {"action": "pr_opened", "pr": "03", "summary": "Move the native embedder to @huggingface/transformers, ready for EmbeddingGemma 2. 4.3.0 can't run the model yet"},
+          "base_commit": "a72104c5"
+        },
+        {
+          "date": "2026-10-06", "thing": "OpenAI Decisions API (beta) with gpt-6-luna", "kind": "api-feature",
+          "source_url": "https://developers.openai.com/api/docs/changelog",
+          "where": "server/utils/agents/aibitat/plugins/router-classifier.js:71",
+          "keepup": {"action": "pr_opened", "pr": "01", "summary": "Route messages with a decision model; today's call stays as the fallback"},
+          "base_commit": "ead123f0"
+        },
+        {
+          "date": "2026-10-06", "thing": "@huggingface/transformers 4.3.1 adds EmbeddingGemma 2, the first release that can run the ONNX build", "kind": "release",
+          "source_url": "https://www.npmjs.com/package/@huggingface/transformers",
+          "where": "server/utils/EmbeddingEngines/native/index.js:8",
+          "keepup": {"action": "pr_updated", "pr": "03", "summary": "EmbeddingGemma 2 for the native embedder, behind a setting"}
+        },
+        {
+          "date": "2026-10-07", "thing": "Claude Haiku 5.5: temperature, top_p and top_k can return a 400 error", "kind": "api-feature",
+          "source_url": "https://platform.claude.com/docs/en/release-notes/overview",
+          "where": "server/utils/AiProviders/anthropic/index.js:15",
+          "keepup": {"action": "held_back", "summary": "Already handled: since 24 Sep your Anthropic provider never sends temperature, for any model"},
+          "team": {"date": "2026-09-24", "commit": "6d59b243", "days_after": -13, "note": "the team was 13 days ahead: this commit stopped sending temperature to every Anthropic model"}
+        },
+        {
+          "date": "2026-10-13", "thing": "Indra OCR (Datalab): 1M-parameter CPU OCR; Latin, Cyrillic, Greek, Devanagari, Bengali and Chinese at launch", "kind": "model",
+          "source_url": "https://www.datalab.to/blog/indra-ocr",
+          "where": "collector/utils/OCRLoader/index.js:111",
+          "keepup": {"action": "watching", "summary": "Fits your OCR job; Python package only, and the weights' licence limits commercial use above $20M"}
+        },
+        {
+          "date": "2026-10-15", "thing": "NVIDIA Nemotron 3.5 Rerank 8B", "kind": "model",
+          "source_url": "https://huggingface.co/nvidia/Nemotron-3.5-Rerank-8B-BF16",
+          "where": "server/utils/EmbeddingRerankers/native/index.js:23",
+          "keepup": {"action": "held_back", "summary": "Too large for your CPU reranker. Public on Hugging Face from 15 Oct; NVIDIA's card gives 20 Oct as its release date and its announcement is dated 21 Oct"}
+        },
+        {
+          "date": "2026-10-19", "thing": "(your team) default image model moved from gpt-image-1 to gpt-image-2.5-flare, merged to master 4 days before the 23 Oct shutdown; the first release with it, v1.19.0, was published 26 Oct", "kind": "team",
+          "source_url": "https://github.com/Mintplex-Labs/anything-llm/commit/43a23b1d",
+          "where": "server/utils/ImageGenerators/openAi/index.js:12",
+          "keepup": {"action": "none", "summary": "Your own change. keepup's scan marks this line from install day, but it needs a lever keepup doesn't have yet to become a finding, so it isn't counted as a team point"}
+        },
+        {
+          "date": "2026-10-22", "thing": "Decisions API generally available; @tanstack/ai-typesafe 1.0", "kind": "api-feature",
+          "source_url": "https://developers.openai.com/api/docs/changelog",
+          "keepup": {"action": "pr_updated", "pr": "01", "summary": "Decisions API is GA: a category list of 1,024+ tokens moves to a cached shared prefix, shorter lists keep plain choices with caching turned off, input_json isn't used; offer Jev for Claude-only setups"}
+        },
+        {
+          "date": "2026-10-23", "thing": "MCP TypeScript SDK 1.32.2", "kind": "release",
+          "source_url": "https://www.npmjs.com/package/@modelcontextprotocol/sdk",
+          "where": "server/package.json:36 and server/yarn.lock:864",
+          "keepup": {"action": "held_back", "summary": "This release adds nothing for your client: it changes only types and server registration. But server/yarn.lock:864 installs 1.24.3, which is behind the client security fix in 1.32.0. keepup doesn't read advisories, so that one is a person's call"}
+        },
+        {
+          "date": "2026-10-27", "thing": "@huggingface/transformers 4.3.2", "kind": "release",
+          "source_url": "https://www.npmjs.com/package/@huggingface/transformers",
+          "keepup": {"action": "pr_updated", "pr": "03", "summary": "Bump to 4.3.2"}
+        }
+      ]
+    },
+    {
+      "repo": "mezmo/aura",
+      "fork": "<demo-org>/aura",
+      "pinned_commit": "5efb4e8",
+      "events": [
+        {
+          "date": "2026-09-01", "thing": "claude-sonnet-4-20250514 was retired on 15 Jun 2026; requests return an error", "kind": "deprecation",
+          "source_url": "https://platform.claude.com/docs/en/release-notes/overview",
+          "where": "examples/minimal/anthropic.toml:14",
+          "keepup": {"action": "pr_opened", "pr": "05", "summary": "Move the Anthropic example to a current model (claude-sonnet-5 at the time)"},
+          "base_commit": "5a5efba",
+          "team": {"date": null, "commit": null, "days_after": null, "note": "Still unchanged at 5efb4e8 (30 Oct): 137 days after the retirement"}
+        },
+        {
+          "date": "2026-09-10", "thing": "rmcp 3.3.0 (AURA pins 0.12.0 from Dec 2025)", "kind": "release",
+          "source_url": "https://crates.io/crates/rmcp",
+          "where": "Cargo.toml:49",
+          "keepup": {"action": "brief_only", "summary": "Three major versions behind; a project, so a brief rather than a pull request"}
+        },
+        {
+          "date": "2026-09-25", "thing": "Sentry MCP server v0.42.0 (official)", "kind": "mcp-server",
+          "source_url": "https://github.com/getsentry/toolkit/releases/tag/0.42.0",
+          "where": "README.md:78 (Integrations) and examples/complete/incident-response-datadog.toml:26",
+          "keepup": {"action": "pr_opened", "pr": "04", "summary": "Add Sentry as an incident integration: example TOML and README row"},
+          "base_commit": "3a49ac4"
+        },
+        {
+          "date": "2026-09-28", "thing": "Claude Sonnet 5.5 released; forced tool use returns a 400 error", "kind": "model",
+          "source_url": "https://platform.claude.com/docs/en/release-notes/overview",
+          "keepup": {"action": "pr_updated", "pr": "05", "summary": "Successor becomes claude-sonnet-5-5; AURA's crates never force tool use"}
+        },
+        {
+          "date": "2026-09-30", "thing": "Claude Sonnet 4.5 retires on 30 Nov 2026", "kind": "deprecation",
+          "source_url": "https://platform.claude.com/docs/en/release-notes/overview",
+          "where": "examples/complete/reasoning-models.toml:61",
+          "keepup": {"action": "pr_updated", "pr": "05", "summary": "Add the second example that uses a retiring model; its thinking budget returns a 400 error on Sonnet 5.5, so it moves to adaptive thinking and drops temperature"},
+          "base_commit": "e552288"
+        },
+        {
+          "date": "2026-10-07", "thing": "Claude Sonnet 5.5 cache reads drop to 0.05x the input price", "kind": "api-feature",
+          "source_url": "https://platform.claude.com/docs/en/release-notes/overview",
+          "where": "examples/reference.toml:234",
+          "keepup": {"action": "finding", "summary": "Prompt caching is opt-in; multi-agent sessions re-send the same prompts and tools every turn"},
+          "run": "data/runs/replay-checks/aura-40b75ed4-2026-10-07.json",
+          "base_commit": "40b75ed4"
+        },
+        {
+          "date": "2026-10-20", "thing": "rmcp 3.6.0: the client can cancel an abandoned tools/call", "kind": "release",
+          "source_url": "https://github.com/modelcontextprotocol/rust-sdk/blob/main/crates/rmcp/CHANGELOG.md",
+          "keepup": {"action": "held_back", "summary": "Not needed for approvals, which gate before the call; AURA's streaming path already cancels in-flight calls on disconnect, timeout and shutdown. Published 20 Oct UTC; its changelog heading says 19 Oct. Noted in the rmcp brief"}
+        },
+        {
+          "date": "2026-10-20", "thing": "Grafana MCP server v2.1.1", "kind": "mcp-server",
+          "source_url": "https://github.com/grafana/mcp-grafana",
+          "keepup": {"action": "held_back", "summary": "Grafana is already integrated; nothing pins an old version"}
+        },
+        {
+          "date": "2026-10-30", "thing": "SigNoz MCP v0.17.0 and Dynatrace Managed MCP v2.0.0 (new releases of the vendors' own servers)", "kind": "mcp-server",
+          "source_url": "https://registry.modelcontextprotocol.io",
+          "keepup": {"action": "pr_updated", "pr": "04", "summary": "These releases take the incident integrations from Sentry alone to Sentry, SigNoz and Dynatrace Managed; both servers were already in the registry on 25 Sep"},
+          "base_commit": "b113e33"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,76 @@
+{
+  "id": "ADV-2026-1022-openai-decisions-api",
+  "name": "OpenAI's Decisions API for calls that only pick a label",
+  "pattern": "PAT-label-picking-call",
+  "kind": "llm-call-substitute",
+  "providers": [
+    "openai"
+  ],
+  "effects": [
+    "cheaper",
+    "faster"
+  ],
+  "gain": "OpenAI's words: typed answers \"about 10x faster than the Responses API\" (vendor claim). Nobody has measured it on this code yet.",
+  "proof": "vendor claim",
+  "source": "https://developers.openai.com/api/docs/guides/decisions",
+  "how": "POST /v1/decisions with model gpt-6-luna, the shared input and a choice, score or predicate question, plus a fallback option such as \"other\". Set the threshold from labeled examples, and keep today's call as the fallback below it.",
+  "replaces": "A chat call asked to classify, route, answer yes or no, or score.",
+  "trade_offs": [
+    "Only gpt-6-luna is supported, so this ties the call to OpenAI.",
+    "It returns a choice, a score or a probability and never generated text.",
+    "The answer is probabilistic, so a threshold has to be set and owned.",
+    "Files, audio and item references are not supported as input."
+  ],
+  "needs": "An OpenAI key.",
+  "price": "$0.10 per 1M uncached input tokens on gpt-6-luna; output tokens are not charged on /v1/decisions.",
+  "checked": "2026-11-01",
+  "checked_by": "agent",
+  "usage_signal": "Usage and Cost API: high call count with few output tokens per call",
+  "gain_model": {
+    "formula": "calls * (current_cost_per_call - decision_cost_per_call), plus p50 latency difference",
+    "inputs": [
+      {
+        "name": "calls",
+        "value": null,
+        "source": "the product's usage data or the bill",
+        "assumed": false
+      },
+      {
+        "name": "current_cost_per_call",
+        "value": null,
+        "source": "the product's usage data or the bill",
+        "assumed": false
+      },
+      {
+        "name": "decision_cost_per_call",
+        "value": null,
+        "source": "the product's usage data or the bill",
+        "assumed": false
+      },
+      {
+        "name": "decision_input_price_per_m",
+        "value": 0.1,
+        "source": "OpenAI's price on gpt-6-luna, output not charged: https://developers.openai.com/api/docs/guides/decisions",
+        "assumed": false
+      }
+    ]
+  },
+  "test_recipe": {
+    "what_to_compare": "agreement with the current call, p50 latency, fallback rate",
+    "samples": 500,
+    "can_run_with": [
+      "OPENAI_API_KEY",
+      "TYPESAFE_API_KEY"
+    ]
+  },
+  "verify_rule": "Cost line and p50 for that call over 14 days; fallback rate under the gate",
+  "change_recipe": {
+    "kind": "pull request, off by default",
+    "how": "POST /v1/decisions with model gpt-6-luna, the shared input and a choice, score or predicate question, plus a fallback option such as \"other\". Set the threshold from labeled examples, and keep today's call as the fallback below it.",
+    "left_off": "Nothing else changes; the new path sits behind a setting until a person turns it on"
+  },
+  "audience": "product",
+  "gain_independent": null,
+  "gain_vendor": "OpenAI's words: typed answers \"about 10x faster than the Responses API\" (vendor claim). Nobody has measured it on this code yet.",
+  "tier": "huge"
+}

@@ -1,0 +1,9 @@
+{
+  "name": "keepup",
+  "displayName": "keepup",
+  "description": "You can't keep up with AI. Your product can. Checks your code against everything new in AI and tells you the few changes worth making.",
+  "author": { "name": "ColvraAI" },
+  "repository": "https://github.com/ColvraAI/keepup",
+  "license": "Apache-2.0",
+  "keywords": ["ai", "llm", "dependencies", "model-retirement", "code-review"]
+}

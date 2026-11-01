@@ -1,0 +1,87 @@
+/* Design tokens. Paper is the product; ink is the noise. */
+:root {
+  --paper: #f6f3ec;
+  --paper-2: #efebe2;
+  --box: #e8e3d7;
+  --rule: #d6d0c2;
+  --rule-strong: #b9b2a2;
+  --ink: #16140f;
+  --ink-2: #47433a;
+  --ink-3: #686358;
+  --blue: #2f6fde;
+  --blue-ink: #1f57ba;
+  --blue-wash: #dfe8f8;
+  --green: #17693f;
+  --green-wash: #dcebdf;
+  --amber: #8f5606;
+  --amber-wash: #f4e6c9;
+  --grey: #686358;
+  --grey-wash: #e8e3d7;
+  --red-diff: #f6dfd9;
+  --green-diff: #dfeedd;
+
+  --noise: #0b0a08;
+  --noise-2: #1a1814;
+  --noise-rule: #35312a;
+  --noise-text: #f3f0e8;
+  --noise-dim: #a8a396;
+
+  --sans: var(--font-grotesk), 'Helvetica Neue', Arial, sans-serif;
+  --mono: var(--font-mono), ui-monospace, Menlo, monospace;
+
+  /* Type: dashboard sizes. Present mode replaces every one of these. */
+  --t-xs: 12px;
+  --t-s: 13px;
+  --t-b: 15px;
+  --t-m: 18px;
+  --t-l: 24px;
+  --t-xl: 38px;
+  --t-xxl: 64px;
+  --t-huge: 112px;
+
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 12px;
+  --s-4: 16px;
+  --s-5: 24px;
+  --s-6: 32px;
+  --s-7: 48px;
+  --s-8: 72px;
+
+  --rail: 216px;
+  --gutter: clamp(16px, 3vw, 44px);
+  --measure: 1180px;
+}
+
+.is-present {
+  --t-xs: 20px;
+  --t-s: 21px;
+  --t-b: 24px;
+  --t-m: 30px;
+  --t-l: 40px;
+  --t-xl: 60px;
+  --t-xxl: 104px;
+  --t-huge: 190px;
+  --s-1: 6px;
+  --s-2: 12px;
+  --s-3: 18px;
+  --s-4: 24px;
+  --s-5: 34px;
+  --s-6: 44px;
+  --s-7: 64px;
+  --s-8: 90px;
+  --gutter: 72px;
+  --measure: 1760px;
+  --ink-3: #4f4b42;
+  --rule: #c4bdac;
+}
+
+@media (max-width: 720px) {
+  :root:not(.is-present) {
+    --t-xl: 30px;
+    --t-xxl: 46px;
+    --t-huge: 64px;
+    --gutter: 16px;
+    --s-8: 48px;
+  }
+}

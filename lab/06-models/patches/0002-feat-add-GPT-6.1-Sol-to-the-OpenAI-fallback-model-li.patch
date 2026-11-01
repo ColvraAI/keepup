@@ -1,0 +1,62 @@
+From 8dd59597d7fe121008e5c640ab3992fcc7aa3375 Mon Sep 17 00:00:00 2001
+From: "keepup[bot]" <keepup[bot]@users.noreply.github.com>
+Date: Tue, 29 Sep 2026 12:00:00 +0000
+Subject: [PATCH 2/2] feat: add GPT-6.1 Sol to the OpenAI fallback model list
+
+OpenAI released gpt-6.1-sol on 29 Sep 2026, and the list this branch gave
+GPT-6 Sol and GPT-6 Luna on 22 Sep didn't have it yet. The temperature rule
+from that commit already covers it, since it matches on the gpt-6 prefix.
+
+Replay date: 29 Sep 2026
+Source: https://developers.openai.com/api/docs/changelog (29 Sep entry)
+---
+ server/__tests__/utils/AiProviders/openAi/index.test.js | 2 +-
+ server/__tests__/utils/helpers/customModels.test.js     | 2 +-
+ server/utils/helpers/customModels.js                    | 8 ++++++++
+ 3 files changed, 10 insertions(+), 2 deletions(-)
+
+diff --git a/server/__tests__/utils/AiProviders/openAi/index.test.js b/server/__tests__/utils/AiProviders/openAi/index.test.js
+index 1cdee2f6..1a35cda2 100644
+--- a/server/__tests__/utils/AiProviders/openAi/index.test.js
++++ b/server/__tests__/utils/AiProviders/openAi/index.test.js
+@@ -28,7 +28,7 @@ describe("OpenAiLLM temperature", () => {
+     else process.env.OPEN_AI_KEY = ORIGINAL_KEY;
+   });
+ 
+-  describe.each(["gpt-6-sol", "gpt-6-luna"])("%s", (model) => {
++  describe.each(["gpt-6-sol", "gpt-6-luna", "gpt-6.1-sol"])("%s", (model) => {
+     it("leaves temperature out of a chat request", async () => {
+       const llm = new OpenAiLLM(EMBEDDER, model);
+       await llm.getChatCompletion(MESSAGES, { temperature: 0.7 });
+diff --git a/server/__tests__/utils/helpers/customModels.test.js b/server/__tests__/utils/helpers/customModels.test.js
+index 2cf057b2..eba67f57 100644
+--- a/server/__tests__/utils/helpers/customModels.test.js
++++ b/server/__tests__/utils/helpers/customModels.test.js
+@@ -25,7 +25,7 @@ describe("OpenAI fallback model list", () => {
+   it("offers the new models when the list call fails", () => {
+     expect(mockList).toHaveBeenCalled();
+     expect(models.map((model) => model.id)).toEqual(
+-      expect.arrayContaining(["gpt-6-sol", "gpt-6-luna"])
++      expect.arrayContaining(["gpt-6-sol", "gpt-6-luna", "gpt-6.1-sol"])
+     );
+   });
+ 
+diff --git a/server/utils/helpers/customModels.js b/server/utils/helpers/customModels.js
+index f8574494..6da1e722 100644
+--- a/server/utils/helpers/customModels.js
++++ b/server/utils/helpers/customModels.js
+@@ -271,6 +271,14 @@ async function openAiModels(apiKey = null) {
+           owned_by: "openai",
+           organization: "OpenAi",
+         },
++        {
++          name: "gpt-6.1-sol",
++          id: "gpt-6.1-sol",
++          object: "model",
++          created: 1790640000,
++          owned_by: "openai",
++          organization: "OpenAi",
++        },
+       ];
+     });
+ 

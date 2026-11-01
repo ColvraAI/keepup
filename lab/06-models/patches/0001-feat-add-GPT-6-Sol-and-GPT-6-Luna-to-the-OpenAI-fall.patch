@@ -1,0 +1,178 @@
+From b9cc8784e46c0b786b66d14bd348113bef5ed4e9 Mon Sep 17 00:00:00 2001
+From: "keepup[bot]" <keepup[bot]@users.noreply.github.com>
+Date: Tue, 22 Sep 2026 12:00:00 +0000
+Subject: [PATCH 1/2] feat: add GPT-6 Sol and GPT-6 Luna to the OpenAI fallback
+ model list
+
+OpenAI released gpt-6-sol and gpt-6-luna on 22 Sep 2026. AnythingLLM offers
+this fixed list whenever its call to OpenAI's live model list fails, and
+neither model was in it, so nobody on that path could pick them.
+
+The OpenAI provider also sends temperature on every chat. OpenAI's GPT-6
+guide says to remove temperature when reasoning effort isn't none, and this
+provider never sets an effort, so requests for gpt-6 models now leave it out.
+Older models keep what they send today.
+
+Replay date: 22 Sep 2026
+Source: https://developers.openai.com/api/docs/changelog (22 Sep entry)
+Source: https://developers.openai.com/api/docs/guides/latest-model
+---
+ .../utils/AiProviders/openAi/index.test.js    | 56 +++++++++++++++++++
+ .../utils/helpers/customModels.test.js        | 37 ++++++++++++
+ server/utils/AiProviders/openAi/index.js      |  6 +-
+ server/utils/helpers/customModels.js          | 16 ++++++
+ 4 files changed, 114 insertions(+), 1 deletion(-)
+ create mode 100644 server/__tests__/utils/AiProviders/openAi/index.test.js
+ create mode 100644 server/__tests__/utils/helpers/customModels.test.js
+
+diff --git a/server/__tests__/utils/AiProviders/openAi/index.test.js b/server/__tests__/utils/AiProviders/openAi/index.test.js
+new file mode 100644
+index 00000000..1cdee2f6
+--- /dev/null
++++ b/server/__tests__/utils/AiProviders/openAi/index.test.js
+@@ -0,0 +1,56 @@
++/* eslint-env jest */
++const mockCreate = jest.fn();
++jest.mock("openai", () => ({
++  OpenAI: jest.fn(() => ({ responses: { create: mockCreate } })),
++}));
++
++const { OpenAiLLM } = require("../../../../utils/AiProviders/openAi");
++
++const MESSAGES = [{ role: "user", content: "hello" }];
++const EMBEDDER = {};
++
++// A property set to undefined is dropped when the request is serialized.
++function sentBody() {
++  return JSON.parse(JSON.stringify(mockCreate.mock.calls[0][0]));
++}
++
++describe("OpenAiLLM temperature", () => {
++  const ORIGINAL_KEY = process.env.OPEN_AI_KEY;
++
++  beforeEach(() => {
++    process.env.OPEN_AI_KEY = "test-key";
++    mockCreate.mockReset();
++    mockCreate.mockResolvedValue({ output_text: "hi", usage: {} });
++  });
++
++  afterAll(() => {
++    if (ORIGINAL_KEY === undefined) delete process.env.OPEN_AI_KEY;
++    else process.env.OPEN_AI_KEY = ORIGINAL_KEY;
++  });
++
++  describe.each(["gpt-6-sol", "gpt-6-luna"])("%s", (model) => {
++    it("leaves temperature out of a chat request", async () => {
++      const llm = new OpenAiLLM(EMBEDDER, model);
++      await llm.getChatCompletion(MESSAGES, { temperature: 0.7 });
++      expect(sentBody().model).toBe(model);
++      expect(sentBody()).not.toHaveProperty("temperature");
++    });
++
++    it("leaves temperature out of a streaming request", async () => {
++      const llm = new OpenAiLLM(EMBEDDER, model);
++      await llm.streamGetChatCompletion(MESSAGES, { temperature: 0.7 });
++      expect(sentBody().model).toBe(model);
++      expect(sentBody()).not.toHaveProperty("temperature");
++    });
++  });
++
++  it.each([
++    ["gpt-4o", 0.7],
++    ["gpt-5-mini", 1],
++    ["o3-mini", 1],
++  ])("keeps what %s already sends", async (model, expected) => {
++    const llm = new OpenAiLLM(EMBEDDER, model);
++    await llm.getChatCompletion(MESSAGES, { temperature: 0.7 });
++    expect(sentBody().temperature).toBe(expected);
++  });
++});
+diff --git a/server/__tests__/utils/helpers/customModels.test.js b/server/__tests__/utils/helpers/customModels.test.js
+new file mode 100644
+index 00000000..2cf057b2
+--- /dev/null
++++ b/server/__tests__/utils/helpers/customModels.test.js
+@@ -0,0 +1,37 @@
++/* eslint-env jest */
++const mockList = jest.fn();
++jest.mock("openai", () => ({
++  OpenAI: jest.fn(() => ({ models: { list: mockList } })),
++}));
++
++const { getCustomModels } = require("../../../utils/helpers/customModels");
++
++describe("OpenAI fallback model list", () => {
++  const ORIGINAL_KEY = process.env.OPEN_AI_KEY;
++  let models;
++
++  beforeAll(async () => {
++    jest.spyOn(console, "error").mockImplementation(() => {});
++    mockList.mockRejectedValue(new Error("Connection error."));
++    ({ models } = await getCustomModels("openai", "test-key"));
++  });
++
++  afterAll(() => {
++    console.error.mockRestore();
++    if (ORIGINAL_KEY === undefined) delete process.env.OPEN_AI_KEY;
++    else process.env.OPEN_AI_KEY = ORIGINAL_KEY;
++  });
++
++  it("offers the new models when the list call fails", () => {
++    expect(mockList).toHaveBeenCalled();
++    expect(models.map((model) => model.id)).toEqual(
++      expect.arrayContaining(["gpt-6-sol", "gpt-6-luna"])
++    );
++  });
++
++  it("has no duplicate ids", () => {
++    const ids = models.map((model) => model.id);
++    expect(ids.length).toBeGreaterThan(0);
++    expect(new Set(ids).size).toBe(ids.length);
++  });
++});
+diff --git a/server/utils/AiProviders/openAi/index.js b/server/utils/AiProviders/openAi/index.js
+index 3aec1058..652d149e 100644
+--- a/server/utils/AiProviders/openAi/index.js
++++ b/server/utils/AiProviders/openAi/index.js
+@@ -131,9 +131,13 @@ class OpenAiLLM {
+    * Determine the appropriate temperature for the model.
+    * @param {string} modelName
+    * @param {number} temperature
+-   * @returns {number}
++   * @returns {number|undefined}
+    */
+   #temperature(modelName, temperature) {
++    // GPT-6 models don't support temperature unless reasoning effort is none,
++    // and we never set an effort, so it's left out of the request.
++    if (modelName.startsWith("gpt-6")) return undefined;
++
+     // For models that don't support temperature
+     // OpenAI accepts temperature 1
+     const NO_TEMP_MODELS = ["o", "gpt-5"];
+diff --git a/server/utils/helpers/customModels.js b/server/utils/helpers/customModels.js
+index af693943..f8574494 100644
+--- a/server/utils/helpers/customModels.js
++++ b/server/utils/helpers/customModels.js
+@@ -255,6 +255,22 @@ async function openAiModels(apiKey = null) {
+           owned_by: "openai-internal",
+           organization: "OpenAi",
+         },
++        {
++          name: "gpt-6-sol",
++          id: "gpt-6-sol",
++          object: "model",
++          created: 1790035200,
++          owned_by: "openai",
++          organization: "OpenAi",
++        },
++        {
++          name: "gpt-6-luna",
++          id: "gpt-6-luna",
++          object: "model",
++          created: 1790035200,
++          owned_by: "openai",
++          organization: "OpenAi",
++        },
+       ];
+     });
+ 

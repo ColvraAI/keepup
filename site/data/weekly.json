@@ -1,0 +1,131 @@
+{
+ "source": "app/src/brief.ts",
+ "briefs": [
+  {
+   "repo": "anything-llm",
+   "week": "2026-08-31",
+   "title": "keepup · week of 31 Aug",
+   "body": "**What shipped that touches this product**\n\n1. Chats with no model set stop working on 23 Oct, and this moves the default to OpenAI's named substitute. · keeps working · vendor claim · effort: hours\n   gpt-4.1-nano, your OpenAI default, shuts down on 23 Oct (announced 22 Apr) (1 Sep): Move the OpenAI default to gpt-5.6-luna, OpenAI's named substitute. With no model set, chats fall back to gpt-4.1-nano (server/models/systemSettings.js:878 at this base). [Source](https://developers.openai.com/api/docs/deprecations)\n   → pull request not opened yet\n\n2. Audio uploads that use OpenAI would stop working on 26 Feb 2027, when OpenAI shuts down the model they use, so this moves them to its replacement and makes the model something you can change in settings. · keeps working · vendor claim · effort: hours\n   OpenAI announces whisper-1 shuts down on 26 Feb 2027 (announced 26 Aug) (1 Sep): Move OpenAI audio uploads to gpt-transcribe before whisper-1 shuts down. [Source](https://developers.openai.com/api/docs/changelog)\n   → pull request not opened yet\n\n**Checked and held back**\n\n- GPT-6 Astra: tool calling requires the Responses API (3 Sep): Already handled: your OpenAI agent provider has called tools through the Responses API since 1 Oct 2025\n\nNothing else new for this product this week · 1,676 new or updated across AI\n\n---\n\nNew or updated counts each record once, by its one date, in: github, hn, huggingface, mcp-registry, npm, openrouter, pypi, skills, yc. Nothing compares them to this repo here: the items above are what the replay's timeline holds, and keepup check reports the repo's standing state. Left out: changelog-anthropic, changelog-gemini, changelog-openai, which have no count by date here. This is the keepup demo, a replay on a fork: real events, simulated time and place.",
+   "issue": null
+  },
+  {
+   "repo": "anything-llm",
+   "week": "2026-09-07",
+   "title": "keepup · week of 7 Sep",
+   "body": "Nothing new for this product this week · 3,862 new or updated across AI",
+   "issue": null
+  },
+  {
+   "repo": "anything-llm",
+   "week": "2026-09-14",
+   "title": "keepup · week of 14 Sep",
+   "body": "**Watching**\n\n- @huggingface/transformers 4.3.0 (16 Sep): The maintained successor of @xenova/transformers (no release since 29 May 2024). Your native embedder, reranker and local Whisper still load through the old package\n\nNothing else new for this product this week · 2,111 new or updated across AI\n\n---\n\nNew or updated counts each record once, by its one date, in: github, hn, huggingface, mcp-registry, npm, openrouter, pypi, skills, yc. Nothing compares them to this repo here: the items above are what the replay's timeline holds, and keepup check reports the repo's standing state. Left out: changelog-anthropic, changelog-gemini, changelog-openai, which have no count by date here. This is the keepup demo, a replay on a fork: real events, simulated time and place.",
+   "issue": null
+  },
+  {
+   "repo": "anything-llm",
+   "week": "2026-09-21",
+   "title": "keepup · week of 21 Sep",
+   "body": "**What shipped that touches this product**\n\n1. People using AnythingLLM can pick OpenAI's newest models and chat with them, even when the app can't fetch OpenAI's live model list. · new capability · vendor claim · effort: hours\n   GPT-6 Sol and GPT-6 Luna released (22 Sep): Add GPT-6 Sol and GPT-6 Luna to the OpenAI fallback model list, and leave temperature out of gpt-6 requests. [Source](https://developers.openai.com/api/docs/changelog)\n   → pull request not opened yet\n\n**Checked and held back**\n\n- @tanstack/ai-typesafe 0.1.0, the first real release of the TanStack AI adapter for TypeSafe Jev (21 Sep): It only helps products already built on @tanstack/ai, and this product does not use it. The router idea is raised separately, with Jev's own API as an option\n\nNothing else new for this product this week · 3,241 new or updated across AI\n\n---\n\nNew or updated counts each record once, by its one date, in: github, hn, huggingface, mcp-registry, npm, openrouter, pypi, skills, yc. Nothing compares them to this repo here: the items above are what the replay's timeline holds, and keepup check reports the repo's standing state. Left out: changelog-anthropic, changelog-gemini, changelog-openai, which have no count by date here. This is the keepup demo, a replay on a fork: real events, simulated time and place.",
+   "issue": null
+  },
+  {
+   "repo": "anything-llm",
+   "week": "2026-09-28",
+   "title": "keepup · week of 28 Sep",
+   "body": "**What shipped that touches this product**\n\n1. People using AnythingLLM can pick OpenAI's newest models and chat with them, even when the app can't fetch OpenAI's live model list. · new capability · vendor claim · effort: hours\n   GPT-6.1 Sol released (29 Sep): Add GPT-6.1 Sol to the fallback model list. [Source](https://developers.openai.com/api/docs/changelog)\n   → pull request not opened yet\n\n2. Your built-in document search can use a newer on-device model that reads many languages, and your current model stays the default. · better answers · measured · effort: a day\n   EmbeddingGemma 2 ONNX build for transformers.js (Hugging Face repo created 4 Oct; Google launched the model on 6 Oct) (4 Oct): Move the native embedder to @huggingface/transformers, ready for EmbeddingGemma 2. 4.3.0 can't run the model yet. [Source](https://huggingface.co/onnx-community/embeddinggemma-2-ONNX)\n   → pull request not opened yet\n\n**Your team**\n\n- Your team shipped: (your team) workspace temperature applied to agents, omitted when unset. Your own change; keepup notes it. [Commit](https://github.com/Mintplex-Labs/anything-llm/commit/4bff9da5)\n\nNothing else new for this product this week · 3,511 new or updated across AI\n\n---\n\nNew or updated counts each record once, by its one date, in: github, hn, huggingface, mcp-registry, npm, openrouter, pypi, skills, yc. Nothing compares them to this repo here: the items above are what the replay's timeline holds, and keepup check reports the repo's standing state. Left out: changelog-anthropic, changelog-gemini, changelog-openai, which have no count by date here. This is the keepup demo, a replay on a fork: real events, simulated time and place.",
+   "issue": null
+  },
+  {
+   "repo": "anything-llm",
+   "week": "2026-10-05",
+   "title": "keepup · week of 5 Oct",
+   "body": "**What shipped that touches this product**\n\n1. Your model router can pick a model with a small decision model instead of starting a full agent for each routed message, and today's agent stays as the fallback. · cheaper, faster · vendor claim · effort: a day\n   OpenAI Decisions API (beta) with gpt-6-luna (6 Oct): Route messages with a decision model; today's call stays as the fallback. [Source](https://developers.openai.com/api/docs/changelog)\n   → pull request not opened yet\n\n2. Your built-in document search can use a newer on-device model that reads many languages, and your current model stays the default. · better answers · measured · effort: a day\n   @huggingface/transformers 4.3.1 adds EmbeddingGemma 2, the first release that can run the ONNX build (6 Oct): EmbeddingGemma 2 for the native embedder, behind a setting. [Source](https://www.npmjs.com/package/@huggingface/transformers)\n   → pull request not opened yet\n\n**Checked and held back**\n\n- Claude Haiku 5.5: temperature, top_p and top_k can return a 400 error (7 Oct): Already handled: since 24 Sep your Anthropic provider never sends temperature, for any model\n\nNothing else new for this product this week · 3,690 new or updated across AI\n\n---\n\nNew or updated counts each record once, by its one date, in: github, hn, huggingface, mcp-registry, npm, openrouter, pypi, skills, yc. Nothing compares them to this repo here: the items above are what the replay's timeline holds, and keepup check reports the repo's standing state. Left out: changelog-anthropic, changelog-gemini, changelog-openai, which have no count by date here. This is the keepup demo, a replay on a fork: real events, simulated time and place.",
+   "issue": null
+  },
+  {
+   "repo": "anything-llm",
+   "week": "2026-10-12",
+   "title": "keepup · week of 12 Oct",
+   "body": "**Checked and held back**\n\n- NVIDIA Nemotron 3.5 Rerank 8B (15 Oct): Too large for your CPU reranker. Public on Hugging Face from 15 Oct; NVIDIA's card gives 20 Oct as its release date and its announcement is dated 21 Oct\n\n**Watching**\n\n- Indra OCR (Datalab): 1M-parameter CPU OCR; Latin, Cyrillic, Greek, Devanagari, Bengali and Chinese at launch (13 Oct): Fits your OCR job; Python package only, and the weights' licence limits commercial use above $20M\n\nNothing else new for this product this week · 5,381 new or updated across AI\n\n---\n\nNew or updated counts each record once, by its one date, in: github, hn, huggingface, mcp-registry, npm, openrouter, pypi, skills, yc. Nothing compares them to this repo here: the items above are what the replay's timeline holds, and keepup check reports the repo's standing state. Left out: changelog-anthropic, changelog-gemini, changelog-openai, which have no count by date here. This is the keepup demo, a replay on a fork: real events, simulated time and place.",
+   "issue": null
+  },
+  {
+   "repo": "anything-llm",
+   "week": "2026-10-19",
+   "title": "keepup · week of 19 Oct",
+   "body": "**What shipped that touches this product**\n\n1. Your model router can pick a model with a small decision model instead of starting a full agent for each routed message, and today's agent stays as the fallback. · cheaper, faster · vendor claim · effort: a day\n   Decisions API generally available; @tanstack/ai-typesafe 1.0 (22 Oct): Decisions API is GA: a category list of 1,024+ tokens moves to a cached shared prefix, shorter lists keep plain choices with caching turned off, input_json isn't used; offer Jev for Claude-only setups. [Source](https://developers.openai.com/api/docs/changelog)\n   → pull request not opened yet\n\n**Checked and held back**\n\n- MCP TypeScript SDK 1.32.2 (23 Oct): This release adds nothing for your client: it changes only types and server registration. But server/yarn.lock:864 installs 1.24.3, which is behind the client security fix in 1.32.0. keepup doesn't read advisories, so that one is a person's call\n\n**Your team**\n\n- Your team shipped: (your team) default image model moved from gpt-image-1 to gpt-image-2.5-flare, merged to master 4 days before the 23 Oct shutdown; the first release with it, v1.19.0, was published 26 Oct. Your own change. keepup's scan marks this line from install day, but it needs a lever keepup doesn't have yet to become a finding, so it isn't counted as a team point. [Commit](https://github.com/Mintplex-Labs/anything-llm/commit/43a23b1d)\n\nNothing else new for this product this week · 6,484 new or updated across AI\n\n---\n\nNew or updated counts each record once, by its one date, in: github, hn, huggingface, mcp-registry, npm, openrouter, pypi, skills, yc. Nothing compares them to this repo here: the items above are what the replay's timeline holds, and keepup check reports the repo's standing state. Left out: changelog-anthropic, changelog-gemini, changelog-openai, which have no count by date here. This is the keepup demo, a replay on a fork: real events, simulated time and place.",
+   "issue": null
+  },
+  {
+   "repo": "anything-llm",
+   "week": "2026-10-26",
+   "title": "keepup · week of 26 Oct",
+   "body": "**What shipped that touches this product**\n\n1. Your built-in document search can use a newer on-device model that reads many languages, and your current model stays the default. · better answers · measured · effort: a day\n   @huggingface/transformers 4.3.2 (27 Oct): Bump to 4.3.2. [Source](https://www.npmjs.com/package/@huggingface/transformers)\n   → pull request not opened yet\n\n**Your team**\n\n- A later team commit overlaps this: [5edf32b9](https://github.com/Mintplex-Labs/anything-llm/commit/5edf32b9) on 27 Oct, 56 days after keepup would have raised it on 1 Sep, and 4 days after the model stopped working. Merged to master; no tagged release carries it as of 9caf2b4. keepup's own pull request for it is not opened yet.\n- A later team commit overlaps this: [5edf32b9](https://github.com/Mintplex-Labs/anything-llm/commit/5edf32b9) on 27 Oct, 35 days after GPT-6 Sol and GPT-6 Luna released, and 28 days after GPT-6.1 Sol released. This commit was the gpt-4.1-nano shutdown fix, and it also changed the fallback list. gpt-6-luna first appears there in this commit, and gpt-6-sol was never added, as of 9caf2b4. The list is only used when the live model list call fails (customModels.js:220). gpt-6.1-sol first appears there in this commit. keepup's own pull request for it is not opened yet.\n\nNothing else new for this product this week · 11,759 new or updated across AI\n\n---\n\nNew or updated counts each record once, by its one date, in: github, hn, huggingface, mcp-registry, npm, openrouter, pypi, skills, yc. Nothing compares them to this repo here: the items above are what the replay's timeline holds, and keepup check reports the repo's standing state. Left out: changelog-anthropic, changelog-gemini, changelog-openai, which have no count by date here. This is the keepup demo, a replay on a fork: real events, simulated time and place.",
+   "issue": null
+  },
+  {
+   "repo": "aura",
+   "week": "2026-08-31",
+   "title": "keepup · week of 31 Aug",
+   "body": "**What shipped that touches this product**\n\n1. Anyone who runs your Claude examples as written gets an error instead of an answer, or soon will, because they name models Anthropic has retired or is about to retire. · keeps working · vendor claim · effort: hours\n   claude-sonnet-4-20250514 was retired on 15 Jun 2026; requests return an error (1 Sep): Move the Anthropic example to a current model (claude-sonnet-5 at the time). [Source](https://platform.claude.com/docs/en/release-notes/overview)\n   → pull request not opened yet\n\nNothing else new for this product this week · 1,676 new or updated across AI\n\n---\n\nNew or updated counts each record once, by its one date, in: github, hn, huggingface, mcp-registry, npm, openrouter, pypi, skills, yc. Nothing compares them to this repo here: the items above are what the replay's timeline holds, and keepup check reports the repo's standing state. Left out: changelog-anthropic, changelog-gemini, changelog-openai, which have no count by date here. This is the keepup demo, a replay on a fork: real events, simulated time and place.",
+   "issue": null
+  },
+  {
+   "repo": "aura",
+   "week": "2026-09-07",
+   "title": "keepup · week of 7 Sep",
+   "body": "**What shipped that touches this product**\n\n1. Your MCP client library is three major versions behind · keeps working · vendor claim · effort: a project\n   rmcp 3.3.0 (AURA pins 0.12.0 from Dec 2025) (10 Sep): Three major versions behind; a project, so a brief rather than a pull request. [Source](https://crates.io/crates/rmcp)\n\nNothing else new for this product this week · 3,862 new or updated across AI\n\n---\n\nNew or updated counts each record once, by its one date, in: github, hn, huggingface, mcp-registry, npm, openrouter, pypi, skills, yc. Nothing compares them to this repo here: the items above are what the replay's timeline holds, and keepup check reports the repo's standing state. Left out: changelog-anthropic, changelog-gemini, changelog-openai, which have no count by date here. This is the keepup demo, a replay on a fork: real events, simulated time and place.",
+   "issue": null
+  },
+  {
+   "repo": "aura",
+   "week": "2026-09-14",
+   "title": "keepup · week of 14 Sep",
+   "body": "Nothing new for this product this week · 2,111 new or updated across AI",
+   "issue": null
+  },
+  {
+   "repo": "aura",
+   "week": "2026-09-21",
+   "title": "keepup · week of 21 Sep",
+   "body": "**What shipped that touches this product**\n\n1. Adds ready-made examples for connecting your agents to Sentry for errors, and to SigNoz or Dynatrace for logs and metrics, while they work an incident. · new capability · vendor claim · effort: hours\n   Sentry MCP server v0.42.0 (official) (25 Sep): Add Sentry as an incident integration: example TOML and README row. [Source](https://github.com/getsentry/toolkit/releases/tag/0.42.0)\n   → pull request not opened yet\n\nNothing else new for this product this week · 3,241 new or updated across AI\n\n---\n\nNew or updated counts each record once, by its one date, in: github, hn, huggingface, mcp-registry, npm, openrouter, pypi, skills, yc. Nothing compares them to this repo here: the items above are what the replay's timeline holds, and keepup check reports the repo's standing state. Left out: changelog-anthropic, changelog-gemini, changelog-openai, which have no count by date here. This is the keepup demo, a replay on a fork: real events, simulated time and place.",
+   "issue": null
+  },
+  {
+   "repo": "aura",
+   "week": "2026-09-28",
+   "title": "keepup · week of 28 Sep",
+   "body": "**What shipped that touches this product**\n\n1. Anyone who runs your Claude examples as written gets an error instead of an answer, or soon will, because they name models Anthropic has retired or is about to retire. · keeps working · vendor claim · effort: hours\n   Claude Sonnet 5.5 released; forced tool use returns a 400 error (28 Sep): Successor becomes claude-sonnet-5-5; AURA's crates never force tool use. [Source](https://platform.claude.com/docs/en/release-notes/overview)\n   Claude Sonnet 4.5 retires on 30 Nov 2026 (30 Sep): Add the second example that uses a retiring model; its thinking budget returns a 400 error on Sonnet 5.5, so it moves to adaptive thinking and drops temperature. [Source](https://platform.claude.com/docs/en/release-notes/overview)\n   → pull request not opened yet\n\nNothing else new for this product this week · 3,511 new or updated across AI\n\n---\n\nNew or updated counts each record once, by its one date, in: github, hn, huggingface, mcp-registry, npm, openrouter, pypi, skills, yc. Nothing compares them to this repo here: the items above are what the replay's timeline holds, and keepup check reports the repo's standing state. Left out: changelog-anthropic, changelog-gemini, changelog-openai, which have no count by date here. This is the keepup demo, a replay on a fork: real events, simulated time and place.",
+   "issue": null
+  },
+  {
+   "repo": "aura",
+   "week": "2026-10-05",
+   "title": "keepup · week of 5 Oct",
+   "body": "**What shipped that touches this product**\n\n1. Claude prompt caching is opt-in, and it just got cheaper · cheaper · vendor claim · effort: hours\n   Claude Sonnet 5.5 cache reads drop to 0.05x the input price (7 Oct): Prompt caching is opt-in; multi-agent sessions re-send the same prompts and tools every turn. [Source](https://platform.claude.com/docs/en/release-notes/overview)\n\nNothing else new for this product this week · 3,690 new or updated across AI\n\n---\n\nNew or updated counts each record once, by its one date, in: github, hn, huggingface, mcp-registry, npm, openrouter, pypi, skills, yc. Nothing compares them to this repo here: the items above are what the replay's timeline holds, and keepup check reports the repo's standing state. Left out: changelog-anthropic, changelog-gemini, changelog-openai, which have no count by date here. This is the keepup demo, a replay on a fork: real events, simulated time and place.",
+   "issue": null
+  },
+  {
+   "repo": "aura",
+   "week": "2026-10-12",
+   "title": "keepup · week of 12 Oct",
+   "body": "Nothing new for this product this week · 5,381 new or updated across AI",
+   "issue": null
+  },
+  {
+   "repo": "aura",
+   "week": "2026-10-19",
+   "title": "keepup · week of 19 Oct",
+   "body": "**Checked and held back**\n\n- rmcp 3.6.0: the client can cancel an abandoned tools/call (20 Oct): Not needed for approvals, which gate before the call; AURA's streaming path already cancels in-flight calls on disconnect, timeout and shutdown. Published 20 Oct UTC; its changelog heading says 19 Oct. Noted in the rmcp brief\n- Grafana MCP server v2.1.1 (20 Oct): Grafana is already integrated; nothing pins an old version\n\nNothing else new for this product this week · 6,484 new or updated across AI\n\n---\n\nNew or updated counts each record once, by its one date, in: github, hn, huggingface, mcp-registry, npm, openrouter, pypi, skills, yc. Nothing compares them to this repo here: the items above are what the replay's timeline holds, and keepup check reports the repo's standing state. Left out: changelog-anthropic, changelog-gemini, changelog-openai, which have no count by date here. This is the keepup demo, a replay on a fork: real events, simulated time and place.",
+   "issue": null
+  },
+  {
+   "repo": "aura",
+   "week": "2026-10-26",
+   "title": "keepup · week of 26 Oct",
+   "body": "**What shipped that touches this product**\n\n1. Adds ready-made examples for connecting your agents to Sentry for errors, and to SigNoz or Dynatrace for logs and metrics, while they work an incident. · new capability · vendor claim · effort: hours\n   SigNoz MCP v0.17.0 and Dynatrace Managed MCP v2.0.0 (new releases of the vendors' own servers) (30 Oct): These releases take the incident integrations from Sentry alone to Sentry, SigNoz and Dynatrace Managed; both servers were already in the registry on 25 Sep. [Source](https://registry.modelcontextprotocol.io)\n   → pull request not opened yet\n\nNothing else new for this product this week · 11,759 new or updated across AI\n\n---\n\nNew or updated counts each record once, by its one date, in: github, hn, huggingface, mcp-registry, npm, openrouter, pypi, skills, yc. Nothing compares them to this repo here: the items above are what the replay's timeline holds, and keepup check reports the repo's standing state. Left out: changelog-anthropic, changelog-gemini, changelog-openai, which have no count by date here. This is the keepup demo, a replay on a fork: real events, simulated time and place.",
+   "issue": null
+  }
+ ]
+}

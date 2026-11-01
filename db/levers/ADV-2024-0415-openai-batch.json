@@ -1,0 +1,68 @@
+{
+  "id": "ADV-2024-0415-openai-batch",
+  "name": "OpenAI's Batch API for jobs nobody is waiting on",
+  "pattern": "PAT-scheduled-llm-no-batch",
+  "kind": "api-feature",
+  "providers": [
+    "openai"
+  ],
+  "effects": [
+    "cheaper"
+  ],
+  "gain": "OpenAI's words: \"50% cost discount compared to synchronous APIs\", with higher rate limits and completion within 24 hours (vendor claim).",
+  "proof": "vendor claim",
+  "source": "https://developers.openai.com/api/docs/guides/batch",
+  "how": "Write the requests to a JSONL file, upload it, create a batch with completion_window 24h, then read the output file. Flex processing is priced at batch rates for calls that can stay synchronous but slow.",
+  "replaces": "A scheduled job that calls the API in a loop.",
+  "trade_offs": [
+    "Results can take up to 24 hours.",
+    "The job has to be rewritten around a file and polling.",
+    "Flex is in beta with limited model availability and can be unavailable at times."
+  ],
+  "needs": "A job that can wait.",
+  "price": "50% of standard token prices; for example gpt-5.6-sol is $2 / $10 per 1M tokens against $4 / $20.",
+  "checked": "2026-11-01",
+  "checked_by": "agent",
+  "usage_signal": "Usage and Cost API: synchronous tokens arriving in a regular scheduled burst",
+  "gain_model": {
+    "formula": "scheduled_tokens * price * batch_discount",
+    "inputs": [
+      {
+        "name": "scheduled_tokens",
+        "value": null,
+        "source": "the product's usage data or the bill",
+        "assumed": false
+      },
+      {
+        "name": "price",
+        "value": null,
+        "source": "the product's usage data or the bill",
+        "assumed": false
+      },
+      {
+        "name": "batch_discount",
+        "value": 0.5,
+        "source": "https://developers.openai.com/api/docs/guides/batch",
+        "assumed": false
+      }
+    ]
+  },
+  "test_recipe": {
+    "what_to_compare": "same outputs and completion time inside the window",
+    "samples": 100,
+    "can_run_with": [
+      "ANTHROPIC_API_KEY",
+      "OPENAI_API_KEY"
+    ]
+  },
+  "verify_rule": "Batch-tier tokens over two scheduled runs",
+  "change_recipe": {
+    "kind": "pull request, off by default",
+    "how": "Write the requests to a JSONL file, upload it, create a batch with completion_window 24h, then read the output file. Flex processing is priced at batch rates for calls that can stay synchronous but slow.",
+    "left_off": "Nothing else changes; the new path sits behind a setting until a person turns it on"
+  },
+  "audience": "product",
+  "gain_independent": null,
+  "gain_vendor": "OpenAI's words: \"50% cost discount compared to synchronous APIs\", with higher rate limits and completion within 24 hours (vendor claim).",
+  "tier": "huge"
+}

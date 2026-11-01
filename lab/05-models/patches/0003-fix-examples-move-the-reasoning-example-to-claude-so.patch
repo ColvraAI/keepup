@@ -1,0 +1,78 @@
+From 980842fe218b7c11efab18af13baaa24fecb75b2 Mon Sep 17 00:00:00 2001
+From: "keepup[bot]" <keepup[bot]@users.noreply.github.com>
+Date: Wed, 30 Sep 2026 12:00:00 +0000
+Subject: [PATCH 3/3] fix(examples): move the reasoning example to
+ claude-sonnet-5-5
+
+On 30 Sep 2026 Anthropic announced that claude-sonnet-4-5-20250929
+retires on the Claude API on 30 Nov 2026, so the deep-analysis worker
+moves to claude-sonnet-5-5. The model id can't move alone: Sonnet 5.5
+returns a 400 error for a manual thinking budget. Use adaptive thinking
+at high effort instead, remove the temperature as the migration guide
+says, and keep the comments true.
+
+Replay date: 2026-09-30.
+Sources: Claude Platform release notes,
+https://platform.claude.com/docs/en/release-notes/overview
+and the Claude Sonnet 5.5 migration guide,
+https://platform.claude.com/docs/en/models/sonnet-5-5/migration-guide
+---
+ examples/complete/reasoning-models.toml | 27 ++++++++++++++-----------
+ 1 file changed, 15 insertions(+), 12 deletions(-)
+
+diff --git a/examples/complete/reasoning-models.toml b/examples/complete/reasoning-models.toml
+index 0d4a22af..67fb2a15 100644
+--- a/examples/complete/reasoning-models.toml
++++ b/examples/complete/reasoning-models.toml
+@@ -1,18 +1,19 @@
+-# Reasoning / extended-thinking parameters — set per provider, side by side.
++# Reasoning / thinking parameters — set per provider, side by side.
+ #
+ # These knobs live in different places and are rejected under the wrong
+ # provider ([agent.llm] and every worker .llm reject unknown keys):
+ #   openai      reasoning_effort = "none" | "minimal" | "low" | "medium" | "high" | "xhigh"
+-#   anthropic   [..llm.additional_params.thinking]  type + budget_tokens
++#   anthropic   [..llm.additional_params.thinking]  type
++#               [..llm.additional_params.output_config]  effort
+ #   gemini      [..llm.additional_params]           provider thinking config
+ #   ollama      [..llm.additional_params]           num_ctx, seed, top_p, ...
+ # `additional_params` is merged into the provider request as-is; AURA does
+ # not validate its contents.
+ #
+ # The coordinator runs on GPT-5 with high reasoning; one worker runs on
+-# Claude with extended thinking; another runs GPT-5 with reasoning turned
+-# down for cheap, fast lookups. Each worker's `.llm` is a complete config
+-# with its own provider tag and credentials.
++# Claude with adaptive thinking at high effort; another runs GPT-5 with
++# reasoning turned down for cheap, fast lookups. Each worker's `.llm` is a
++# complete config with its own provider tag and credentials.
+ #
+ # Prerequisites:
+ #   export OPENAI_API_KEY="sk-..."
+@@ -58,17 +59,19 @@ mcp_filter = []
+ [orchestration.worker.deep-analysis.llm]
+ provider = "anthropic"
+ api_key = "{{ env.ANTHROPIC_API_KEY }}"
+-model = "claude-sonnet-4-5-20250929"
+-# Anthropic requires temperature 1.0 when thinking is enabled.
+-temperature = 1.0
+-# max_tokens must exceed the thinking budget.
++model = "claude-sonnet-5-5"
++# Thinking counts toward max_tokens, so leave room for it and the answer.
+ max_tokens = 16_000
+ context_window = 200_000
+ 
+-# Sent verbatim as the `thinking` field of the Messages API request.
++# Sent verbatim as the `thinking` field of the Messages API request. On this
++# model, a budget_tokens budget returns a 400 error.
+ [orchestration.worker.deep-analysis.llm.additional_params.thinking]
+-type = "enabled"
+-budget_tokens = 8_000
++type = "adaptive"
++
++# Sent verbatim as the `output_config` field: effort steers how much it thinks.
++[orchestration.worker.deep-analysis.llm.additional_params.output_config]
++effort = "high"
+ 
+ [orchestration.worker.fast]
+ description = "Quick factual lookups, reformatting, short summaries"

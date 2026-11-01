@@ -1,0 +1,13 @@
+# Test set notes: lab/01-router/testset.jsonl
+
+**Author.** Claude (the keepup Lane B agent), written on 1 Nov 2026 before either classifier was run on it. No person has reviewed it yet, so please read the labels before trusting the accuracy row. If you change a label, rerun the lab.
+
+**The rules.** Four rules in the shape AnythingLLM's model router stores: a lowercase title with underscores (`TITLE_REGEX` in server/models/modelRouterRule.js) and a description of when it should match, in the style of the rule form's placeholder ("The user is asking about legal topics, contracts, or compliance"). They come from the spec's examples. They're in priority order, because the router's prompt tells the model to pick the first match.
+
+**The messages.** 60, none repeated: 13 coding, 13 billing, 13 summarize_document, 11 chit_chat and 10 none. Labels were chosen by reading each message against the rule descriptions and the priority order.
+
+**Hard ones.** Lines with a `note` are the ones where the wording points at a different rule from the intent, for example a SQL query about invoices (coding) or a refund policy to condense (summarize_document). A careful person would still agree on one label, and the note says why. m13 is the only one that really fits two rules, and priority order settles it.
+
+**What this set isn't.** It's small, in English, and written for this lab rather than taken from real router traffic. The rule list is well under the 1,024 tokens the Decisions API needs for a reusable prefix, so this set can't show a cache discount.
+
+**The long rules.** testset-long-rules.jsonl has the same four rules in the same order. Each keeps its short description word for word, followed by the same passage of neutral text, so the 60 messages keep their labels. Claude wrote the passage on 1 Nov 2026, after the messages and before either classifier had run. It exists because a list this long sends a different request, with the descriptions in a shared prefix, and that request needs its own score. The passage talks only about the list itself. It adds no matching criteria, it's word for word the same on all four rules so it can't favour one, and a test checks that it shares no word of five letters or more with any message. So the check compares the form of the request and not better descriptions, and it says nothing about a list with real long descriptions, which could score higher or lower. An earlier version of this file added real detail to each rule, and that detail overlapped with the messages, so it was replaced. No person has checked the passage yet, so please read it too.

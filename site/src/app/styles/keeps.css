@@ -1,0 +1,370 @@
+/* It keeps up */
+.moment-tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--ink);
+  margin-bottom: var(--s-4);
+  flex-wrap: wrap;
+}
+
+.moment-tabs button {
+  padding: var(--s-2) var(--s-4) var(--s-2) 0;
+  margin-right: var(--s-4);
+  font-size: var(--t-b);
+  color: var(--ink-3);
+  border-bottom: 3px solid transparent;
+  margin-bottom: -1px;
+}
+
+.moment-tabs button[aria-selected='true'] {
+  color: var(--ink);
+  font-weight: 600;
+  border-bottom-color: var(--blue);
+}
+
+.moment {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: var(--s-6);
+  align-items: start;
+}
+
+.moment__text {
+  display: grid;
+  gap: var(--s-3);
+  min-width: 0;
+}
+
+.moment__date {
+  font-size: var(--t-s);
+  color: var(--ink-3);
+}
+
+.moment-pr {
+  display: block;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.moment-pr .chip {
+  vertical-align: 0.08em;
+}
+
+.moment__diff {
+  min-width: 0;
+  min-height: 0;
+}
+
+/* The new commit lands first, its row lights up, and only then its diff appears. */
+.moment--arrives .moment-commits li.on::before {
+  animation: dot-drop 420ms cubic-bezier(0.3, 1.4, 0.5, 1) both;
+}
+
+.moment--arrives .moment-commits li.on {
+  animation: row-light 900ms ease-out both;
+}
+
+.moment--arrives .moment__diff {
+  animation: fade-in 260ms ease-out 480ms both;
+}
+
+.moment--arrives .grows__new {
+  animation: rise-in 240ms ease-out both;
+  animation-delay: calc(240ms + var(--row, 0) * 180ms);
+}
+
+@keyframes dot-drop {
+  from {
+    transform: translateY(-60px) scale(1.6);
+    opacity: 0;
+  }
+}
+
+@keyframes row-light {
+  0%,
+  35% {
+    background: transparent;
+  }
+
+  50% {
+    background: var(--blue-wash);
+  }
+
+  100% {
+    background: transparent;
+  }
+}
+
+/* We're Claude-only: two plans side by side, the new one sliding in. */
+.moment--plans {
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--s-3);
+  align-items: stretch;
+}
+
+.plans__head {
+  display: flex;
+  align-items: center;
+  gap: var(--s-5);
+  flex-wrap: wrap;
+}
+
+.plans {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--s-4);
+  overflow-x: clip; /* The new plan slides in from past the edge, and the page mustn't scroll for it. */
+}
+
+.plan {
+  display: grid;
+  gap: var(--s-2);
+  align-content: start;
+  padding: var(--s-3) var(--s-4);
+  border: 1px solid var(--rule-strong);
+  border-radius: 3px;
+}
+
+.plan__line {
+  font-size: var(--t-s);
+  line-height: 1.3;
+}
+
+.plan--fresh {
+  border-color: var(--blue);
+  animation: plan-in 340ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.plan--empty {
+  border-style: dashed;
+  border-color: var(--rule);
+}
+
+.plans__note {
+  max-width: 96ch;
+}
+
+@keyframes plan-in {
+  from {
+    opacity: 0;
+    transform: translateX(80px);
+  }
+}
+
+.moment-commits {
+  border-left: 2px solid var(--rule-strong);
+  margin: var(--s-1) 0;
+}
+
+.moment-commits li {
+  display: grid;
+  gap: 0;
+  padding: var(--s-1) 0 var(--s-1) var(--s-3);
+  font-size: var(--t-s);
+  line-height: 1.25;
+  color: var(--ink-3);
+  position: relative;
+}
+
+.moment-commits li .mono {
+  font-size: var(--t-xs);
+}
+
+.moment-commits li.on {
+  color: var(--ink);
+  font-weight: 500;
+}
+
+.moment-commits li.on::before {
+  content: '';
+  position: absolute;
+  left: -7px;
+  top: 0.7em;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--blue);
+}
+
+.grows {
+  display: grid;
+  grid-template-columns: auto auto minmax(0, 1fr);
+  gap: var(--s-4);
+  align-items: start;
+  padding: var(--s-2) 0;
+}
+
+.grows__count {
+  font-size: var(--t-xxl);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.grows__arrow {
+  margin-top: 0.7em;
+  font-size: var(--t-xl);
+  color: var(--ink-3);
+}
+
+.grows ul {
+  font-size: var(--t-xs);
+  line-height: 1.35;
+  margin-top: var(--s-1);
+}
+
+.grows__new {
+  color: var(--blue-ink);
+  font-weight: 600;
+}
+
+.toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-3);
+  cursor: pointer;
+  font-size: var(--t-m);
+  font-weight: 600;
+}
+
+.toggle input {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+}
+
+.toggle__track {
+  width: 2.3em;
+  height: 1.3em;
+  border-radius: 1em;
+  background: var(--rule-strong);
+  position: relative;
+  transition: background 100ms ease;
+  flex: none;
+}
+
+.toggle__track i {
+  position: absolute;
+  top: 0.15em;
+  left: 0.15em;
+  width: 1em;
+  height: 1em;
+  border-radius: 50%;
+  background: var(--paper);
+  transition: transform 100ms ease;
+}
+
+.toggle input:checked + .toggle__track {
+  background: var(--blue);
+}
+
+.toggle input:checked + .toggle__track i {
+  transform: translateX(1em);
+}
+
+.toggle input:focus-visible + .toggle__track {
+  outline: 2px solid var(--blue);
+  outline-offset: 2px;
+}
+
+.moment__line {
+  font-size: var(--t-l);
+  font-weight: 600;
+  letter-spacing: -0.014em;
+  line-height: 1.1;
+  color: var(--blue-ink);
+  margin-top: var(--s-2);
+}
+
+.is-present .keeps {
+  display: flex;
+  flex-direction: column;
+  height: var(--stage-h);
+}
+
+.is-present .keeps .screen__head {
+  margin-bottom: var(--s-2);
+}
+
+.is-present .keeps .h1 {
+  font-size: var(--t-l);
+}
+
+.is-present .moment {
+  flex: 1;
+  min-height: 0;
+}
+
+.is-present .moment:not(.moment--plans) {
+  grid-template-rows: minmax(0, 1fr);
+}
+
+.is-present .moment--plans {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.is-present .moment__diff {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.is-present .moment__diff .diff {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.is-present .moment__diff .diff-files {
+  flex: none;
+  max-height: calc(2 * (1.35em + 4px));
+}
+
+.is-present .moment__diff .diff-body {
+  flex: 1;
+  min-height: 0;
+}
+
+
+.moment-pr {
+  display: grid;
+  justify-items: start;
+  gap: 12px;
+}
+
+.keeps__spacer {
+  visibility: hidden;
+}
+
+.plan__provider {
+  font-size: var(--t-m);
+  font-weight: 700;
+  letter-spacing: -0.012em;
+}
+
+.plan--dropped {
+  opacity: 0.45;
+}
+
+.plan__dropped {
+  font-size: var(--t-b);
+  font-weight: 600;
+}
+
+.plan--fresh {
+  border-color: var(--blue);
+  border-width: 3px;
+}
+
+.is-present .moment--plans[data-on='false'] .plan--empty {
+  border-style: dashed;
+}
+
+.is-present .moment__diff .diff-files {
+  max-height: none;
+}

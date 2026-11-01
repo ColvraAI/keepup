@@ -1,0 +1,68 @@
+{
+  "id": "ADV-2026-1101-zep-memory",
+  "name": "Zep for per-user memory",
+  "pattern": "PAT-hand-rolled-memory",
+  "kind": "memory",
+  "providers": [],
+  "effects": [
+    "cheaper"
+  ],
+  "gain": "Projected only: cheaper and faster, not more accurate.",
+  "proof": "projected",
+  "source": "https://www.getzep.com/blog/lies-damn-lies-statistics-is-mem0-really-sota-in-agent-memory/",
+  "how": "Replace re-sent history with Zep's memory store",
+  "replaces": "Re-sending the whole conversation.",
+  "trade_offs": [
+    "Zep's rerun has full-context GPT-4o-mini at 72.90% over mem0's graph mode at 68.44%; Zep is a competitor, so read it as its claim."
+  ],
+  "needs": "Per-user ids.",
+  "checked": "2026-11-01",
+  "checked_by": "agent",
+  "usage_signal": "Input tokens per turn grow with conversation length",
+  "gain_model": {
+    "formula": "turns * history_tokens_removed * input_price - memory_service_cost",
+    "inputs": [
+      {
+        "name": "turns",
+        "value": null,
+        "source": "the product's usage data or the bill",
+        "assumed": false
+      },
+      {
+        "name": "history_tokens_removed",
+        "value": null,
+        "source": "the product's usage data or the bill",
+        "assumed": false
+      },
+      {
+        "name": "input_price",
+        "value": null,
+        "source": "the product's usage data or the bill",
+        "assumed": false
+      },
+      {
+        "name": "memory_service_cost",
+        "value": null,
+        "source": "the product's usage data or the bill",
+        "assumed": false
+      }
+    ]
+  },
+  "test_recipe": {
+    "what_to_compare": "token cost and latency on real multi-session users; accuracy is not assumed to rise",
+    "samples": 100,
+    "can_run_with": [
+      "MEM0_API_KEY"
+    ]
+  },
+  "verify_rule": "Input tokens per turn over 30 days",
+  "change_recipe": {
+    "kind": "pull request, off by default",
+    "how": "Replace re-sent history with Zep's memory store",
+    "left_off": "Nothing else changes; the new path sits behind a setting until a person turns it on"
+  },
+  "audience": "product",
+  "gain_independent": null,
+  "gain_vendor": null,
+  "tier": "long_tail"
+}

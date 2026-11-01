@@ -1,0 +1,164 @@
+.app {
+  display: grid;
+  grid-template-columns: var(--rail) minmax(0, 1fr);
+  min-height: 100dvh;
+}
+
+.app--present {
+  display: block;
+}
+
+.main {
+  min-width: 0;
+}
+
+.rail {
+  position: sticky;
+  top: 0;
+  align-self: start;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  padding: var(--s-4) var(--s-4) var(--s-4) var(--s-4);
+  border-right: 1px solid var(--rule);
+  background: var(--paper);
+  z-index: 5;
+}
+
+.rail__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.rail__mark {
+  font-weight: 700;
+  font-size: 19px;
+  letter-spacing: -0.03em;
+  text-decoration: none;
+  padding-left: 8px;
+}
+
+.rail__menu {
+  display: none;
+  font-size: var(--t-s);
+}
+
+.rail__body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 0;
+  margin-top: var(--s-5);
+}
+
+.rail__link {
+  display: block;
+  padding: 5px 8px;
+  border-radius: 3px;
+  text-decoration: none;
+  font-size: 14px;
+  color: var(--ink-2);
+}
+
+.rail__link:hover {
+  background: var(--box);
+  color: var(--ink);
+}
+
+.rail__link[aria-current='page'] {
+  color: var(--ink);
+  font-weight: 600;
+  background: var(--box);
+}
+
+.rail__sub {
+  margin: 2px 0 6px 8px;
+  border-left: 1px solid var(--rule);
+}
+
+.rail__sub a {
+  display: block;
+  padding: 3px 0 3px 12px;
+  font-size: 13px;
+  text-decoration: none;
+  color: var(--ink-3);
+}
+
+.rail__sub a[aria-current='page'] {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.rail__foot {
+  display: grid;
+  gap: var(--s-2);
+  padding-left: 8px;
+  font-size: 11.5px;
+  line-height: 1.4;
+  color: var(--ink-3);
+}
+
+.rail__present {
+  justify-self: start;
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--ink);
+  margin-bottom: var(--s-2);
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.rail__present:hover {
+  color: var(--blue-ink);
+}
+
+kbd {
+  font-family: var(--mono);
+  font-size: 0.86em;
+  border: 1px solid var(--rule-strong);
+  border-radius: 2px;
+  padding: 0 0.35em;
+  background: var(--paper);
+  font-weight: 500;
+}
+
+@media (max-width: 860px) {
+  .app {
+    display: block;
+  }
+
+  .rail {
+    position: sticky;
+    height: auto;
+    border-right: 0;
+    border-bottom: 1px solid var(--rule);
+    padding: 10px 16px;
+  }
+
+  .rail__menu {
+    display: block;
+  }
+
+  .rail__body {
+    display: none;
+    margin-top: var(--s-3);
+  }
+
+  .rail--open .rail__body {
+    display: block;
+  }
+
+  .rail__foot {
+    margin-top: var(--s-4);
+  }
+
+  .rail__link,
+  .rail__sub a {
+    padding-top: 9px;
+    padding-bottom: 9px;
+  }
+}

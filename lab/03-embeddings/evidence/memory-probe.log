@@ -1,0 +1,10 @@
+[5 4000 zh] exit 137
+{"language":"zh","batch":5,"chars":2000,"tokens":1336,"dims":[5,768],"ms":78261,"loadedMb":419,"peakMb":2202}
+[5 2000 zh] exit 0
+{"language":"zh","batch":5,"chars":1000,"tokens":669,"dims":[5,768],"ms":24738,"loadedMb":403,"peakMb":1230}
+[5 1000 zh] exit 0
+{"language":"en","batch":5,"chars":1000,"tokens":174,"dims":[5,768],"ms":4848,"loadedMb":410,"peakMb":582}
+[5 1000 en] exit 0
+{"language":"en","batch":5,"chars":2000,"tokens":345,"dims":[5,768],"ms":8535,"loadedMb":415,"peakMb":773}
+[5 2000 en] exit 0
+[5 16000 en] exit 137

@@ -1,0 +1,51 @@
+Xiaomi-OCR-0 
+ A unified 0.8B model for document parsing and OCR-related understanding. 
+ English · 简体中文 
+Xiaomi-OCR-0 is a unified 0.8B OCR-specialized vision-language model for both **document parsing** and **OCR-centric understanding**.
+## 🏆 Benchmark results
+- 🥇 **95.24** on Real5-OmniDocBench, ranked **#1**.
+- 🥈 **96.83** on OmniDocBench v1.6 and **87.94** on Wild-OmniDocBench, both ranked **#2**.
+- 📐 **97.84** on UniMER-Test (formula recognition) and **92.27** on PubTabNet (table recognition).
+- ✍️ Historical handwriting and calligraphy: **73** on Chronicles-OCR Mature Scripts (Clerical, Cursive, Running, and Regular scripts), on par with Seed 2.0 Pro(72).
+- 🧠 An average of **83.2** across five OCR-centric VQA benchmarks, exceeding Qwen3.5-2B (**80.9**) with only **0.8B** parameters.
+## 📰 News
+- **2026-10-08:** Thanks to the community for supporting Xiaomi-OCR-0 and contributing prithivMLmods’ GGUF, xzl01’s GGUF, and ByronLeeee’s BF16 NInfer conversion.
+- **2026-09-30:** Technical report published and model weights released.
+## About the model
+Starting from Qwen3.5-0.8B-Base, Xiaomi-OCR-0 is trained on an approximately 170M-sample OCR-centric corpus with a progressive training recipe:
+- 📍 **Q-Mask text anchoring**: align fine-grained text with its location
+- 📚 **OCR-centric continued pretraining (CPT)**: build broad, multi-task capability
+- 🎯 **Mixed-task reinforcement learning (Mix-RL)**: use verifiable rewards on hard examples
+## ✨ Highlights
+- 🧩 **Compact and unified**: one 0.8B model covering document parsing, OCR-oriented VQA, and key information extraction (KIE).
+- 🧪 **Scalable data engine**: combines heterogeneous-expert consensus, render-guided verification, multi-factor sample mining, and targeted synthesis.
+- 📄 **Robust document parsing**: stable on standard documents and on scanned, warped, photographed, skewed, and otherwise recaptured ones.
+- 💬 **OCR-centric understanding**: supports question answering and structured field extraction, not just transcription.
+## 📊 Benchmark comparisons
+ Parameter efficiency charts 
+Parameter efficiency on OmniDocBench v1.6
+Parameter efficiency on OCR-oriented VQA
+Parameter efficiency on Real5-OmniDocBench
+Parameter efficiency on Wild-OmniDocBench
+↑ means higher is better, ↓ means lower is better; bold only marks Xiaomi-OCR-0 and does not necessarily indicate the best value in a column.
+### Document parsing: selected comparisons
+| Model | Size | OmniDocBench v1.6 ↑ | Real5 ↑ | Wild ↑ |
+|:--|--:|--:|--:|--:|
+| **Xiaomi-OCR-0** | **0.8B** | **96.83** | **95.24** | **87.94** |
+| TeleOCR | 1.2B | 96.87 | — | 88.53 |
+| OvisOCR2 | 0.8B | 96.58 | 92.29 | 87.91 |
+| PaddleOCR-VL-1.6 | 0.9B | 96.33 | 93.19 | 87.36 |
+| MinerU2.5-Pro | 1.2B | 95.75 | 88.94 | 87.33 |
+| GLM-OCR | 0.9B | 95.22 | 90.32 | 85.08 |
+All three columns report Overall score; “—” means the source table does not report it.
+### OCR-centric visual question answering
+| Model | Size | DocVQA | InfoVQA | ChartQA | OCRBench | TextVQA | Mean |
+|:--|--:|--:|--:|--:|--:|--:|--:|
+| **Xiaomi-OCR-0** | **0.8B** | **93.1** | **75.1** | **84.6** | **84.6** | **78.6** | **83.2** |
+| Qwen3.5-0.8B | 0.8B | 88.5 | 60.3 | 69.5 | 77.9 | 68.3 | 72.9 |
+| Qwen3.5-2B | 2B | 92.4 | 72.4 | 77.0 | 85.9 | 76.9 | 80.9 |
+| Qwen3.5-4B | 4B | 94.4 | 80.4 | 82.4 | 86.6 | 80.8 | 84.9 |
+| MiniCPM-V-4.5 | 8B | 84.9 | 69.6 | 87.4 | 89.0 | 82.2 | 82.6 |
+The mean is the arithmetic average of these five benchmarks on a 0–100 scale.
+## 🧬 Data Engine
+Aut

@@ -1,0 +1,42 @@
+{
+  "id": "ADV-2026-1101-superpowers",
+  "name": "superpowers skills",
+  "pattern": "PAT-coding-agent-setup",
+  "kind": "install",
+  "providers": [],
+  "effects": [
+    "better answers"
+  ],
+  "gain": "A workflow for coding agents. No gain measured.",
+  "proof": "adoption only",
+  "source": "https://github.com/obra/superpowers",
+  "how": "/plugin install superpowers@claude-plugins-official",
+  "replaces": "Ad-hoc agent sessions.",
+  "trade_offs": [
+    "Community skills: read before installing. Read a community skill before installing it: the plan reports many malicious ones."
+  ],
+  "needs": "Claude Code.",
+  "install": "/plugin install superpowers@claude-plugins-official",
+  "audience": "team",
+  "checked": "2026-11-01",
+  "checked_by": "agent",
+  "usage_signal": "Not visible in the bill",
+  "gain_model": {
+    "formula": "no money figure: developer time, unmeasured",
+    "inputs": []
+  },
+  "test_recipe": {
+    "what_to_compare": "a developer tries it on one task",
+    "samples": 1,
+    "can_run_with": []
+  },
+  "verify_rule": "Whether the team keeps it installed after 30 days",
+  "change_recipe": {
+    "kind": "written steps",
+    "how": "/plugin install superpowers@claude-plugins-official",
+    "left_off": "Never a pull request: a brief line"
+  },
+  "gain_independent": null,
+  "gain_vendor": null,
+  "tier": "long_tail"
+}

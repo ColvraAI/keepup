@@ -1,0 +1,23 @@
+**NVIDIA Nemotron 3.5 Embed**
+&nbsp;
+&nbsp;
+# Nemotron-3.5-Embed-1B-BF16 Overview
+## Description: 
+**Nemotron-3.5-Embed-1B-BF16** is a versatile embedding model developed by NVIDIA for multimodal and multilingual question-answering retrieval. The model can embed a document page in the form of an image, text, or combined image–text input. Documents can be retrieved given a user query in text form. The model supports page images containing text, tables, charts, and infographics. For text retrieval, the model was evaluated across 34 languages: English, Arabic, Assamese, Bengali, Bulgarian, Chinese, Danish, Dutch, Finnish, French, German, Hindi, Hinglish, Indonesian, Italian, Japanese, Korean, Malay, Marathi, Nepali, Norwegian, Persian, Portuguese, Romanian, Russian, Spanish, Swahili, Swedish, Tamil, Telugu, Thai, Ukrainian, Urdu, and Vietnamese. For image retrieval, it was evaluated across 18 languages: Arabic, Bengali, Chinese, English, Persian, Finnish, French, German, Hindi, Indonesian, Japanese, Korean, Russian, Spanish, Swahili, Telugu, Thai, and Yoruba. The model may support additional languages beyond these evaluation sets.
+Among models of comparable size, Nemotron-3.5-Embed-1B-BF16 achieves state-of-the-art results across multiple multilingual and multimodal retrieval benchmarks. Read more details in our Blog Post.
+This model is ready for commercial or non-commercial use.
+### License/Terms of Use:
+**Governing Download Terms:** Use of the model is governed by the OpenMDW License Agreement, version 1.1 (OpenMDW-1.1). 
+**Additional Information:** The Ministral-3-3B-Instruct-2512-BF16 and Ministral-3-8B-Instruct-2512-BF16 base models are governed by the Apache License, Version 2.0.
+### Deployment Geography:
+Global
+### Use Case: 
+The **Nemotron-3.5-Embed-1B-BF16** is suitable for users who want to build a multimodal question-and-answer application over a large corpus, leveraging the latest dense retrieval technology. The input of the model is a text or a document image, and the output is a fixed-size embedding vector. The embedding model is a bi-encoder that supports context in textual format (e.g. the query or the OCR text of a page or a section of a document) or the image of a document page.
+Typically, the embedding model is used first to embed (vectorize) the whole corpus (document images or text chunks), and embeddings are stored in a vector database associated to its raw content (image or text). Then at inference time, the embedding model is used to embed the query. The model generates dense vector embeddings from text or image inputs, enabling multimodal retrieval, semantic search, and (agentic) RAG workflows. 
+### Release Date:
+Hugging Face 10/20/2026 via https://huggingface.co/nvidia/Nemotron-3.5-Embed-1B-BF16
+## Model Architecture:
+**Architecture Type:** Transformer 
+**Network Architecture:** `Nemotron-3.5-Embed-1B-BF16` consists of a Pixtral vision encoder initialized from mistralai/Ministral-3-3B-Instruct-2512-BF16 and a language model initialized from nvidia/Nemotron-3-Embed-1B-BF16. 
+**Number of model parameters:** 1.55B
+The `Nemotron-3.5-Embed-1B-BF16` model was distilled from the Nemotron-3.5-Embed-8B-BF16 embedding teacher using combined cosine distance (COS) and mean squared error (MSE) losses on multilingual text and image retrieval data. Its language-model component was initialized from Nemotron-3-Embed-1B-BF16 and kept frozen during distillation. Consequently, `Nemotron-3.5-Embed-1B-BF16` shares the same text embeddi

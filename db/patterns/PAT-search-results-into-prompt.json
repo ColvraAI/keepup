@@ -1,0 +1,46 @@
+{
+  "version": "1",
+  "id": "PAT-search-results-into-prompt",
+  "name": "Search results go straight into the prompt",
+  "find": [
+    {
+      "regex": "(?<!def )\\b(?:similarity_search(?:_with_score|_with_relevance_scores)?|similaritySearch(?:WithScore)?|asimilarity_search)\\s*\\("
+    }
+  ],
+  "skip_if_near": [
+    "[rR][eE][rR][aA][nN][kK]|[cC][rR][oO][sS][sS].?[eE][nN][cC][oO][dD][eE][rR]"
+  ],
+  "skip_if_in_file": [
+    "[rR][eE][rR][aA][nN][kK]|[cC][rR][oO][sS][sS].?[eE][nN][cC][oO][dD][eE][rR]"
+  ],
+  "files": [
+    "**/*.py",
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.js",
+    "**/*.jsx",
+    "**/*.mjs",
+    "**/*.cjs"
+  ],
+  "skip_files": [
+    "**/__tests__/**",
+    "**/test/**",
+    "**/tests/**",
+    "**/testdata/**",
+    "**/fixtures/**",
+    "**/examples/**",
+    "**/samples/**",
+    "**/docs/**",
+    "**/node_modules/**",
+    "**/vendor/**",
+    "**/dist/**",
+    "**/*.test.*",
+    "**/*.spec.*"
+  ],
+  "why": "Top vector hits reach the prompt with no second look, so the wrong passages cost tokens and answers. It doesn't fit keyword search or a product with very few documents.",
+  "status": "info",
+  "effect": [
+    "better answers"
+  ],
+  "live_from": "v0.3"
+}

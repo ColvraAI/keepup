@@ -1,0 +1,67 @@
+{
+  "schema": 1,
+  "id": "02",
+  "spec": "docs/prs/02-anythingllm-whisper-retirement.md",
+  "upstream": "Mintplex-Labs/anything-llm",
+  "fork": "anything-llm",
+  "baseCommit": "bbefbc7f75f8227327242d8c5ef0b9c15577751b",
+  "baseBranch": "replay/bbefbc7f",
+  "ciWorkflow": null,
+  "branch": "keepup/2026-09-01-whisper-retirement",
+  "lab": "lab/02-whisper",
+  "source": "OpenAI API changelog",
+  "sourceUrl": "https://developers.openai.com/api/docs/changelog",
+  "where": [
+    {
+      "path": "collector/utils/WhisperProviders/OpenAiWhisper.js",
+      "line": 11
+    },
+    {
+      "path": "frontend/src/components/TranscriptionSelection/OpenAiOptions/index.jsx",
+      "line": 35
+    },
+    {
+      "path": "frontend/src/pages/GeneralSettings/TranscriptionPreference/index.jsx",
+      "line": 24
+    }
+  ],
+  "founderLine": "Audio uploads that use OpenAI would stop working on 26 Feb 2027, when OpenAI shuts down the model they use, so this moves them to its replacement and makes the model something you can change in settings.",
+  "effect": [
+    "keeps working"
+  ],
+  "effort": "Hours",
+  "whyItFits": "collector/utils/WhisperProviders/OpenAiWhisper.js sets this.model = \"whisper-1\", so after 26 Feb 2027 audio uploads that use the OpenAI provider will fail. gpt-transcribe is OpenAI's recommended model for completed recordings, which is what these uploads are.",
+  "risks": "A different output shape or price. The provider reads only the text field of OpenAI's answer, and the lab checks the response fields and both prices. OpenAI warns that changing the model doesn't keep every capability, such as word timestamps and subtitles; this provider uses neither. The lab's recordings run one to two minutes, so it says nothing about long files: OpenAI's guide states a 25 MB limit and no length limit. The lab sends only mp3, so the .ogg, .oga and .opus uploads the collector accepts are untested on gpt-transcribe: OpenAI's guide and its API reference disagree on ogg, and neither lists oga or opus. If OpenAI refuses the configured model, the upload fails with an error that names the model and the setting. Not covered here, and each needs its own change before 26 Feb 2027: voice input defaults to whisper-1, through its own setting, at server/utils/SpeechToText/openAi/index.js:8 and frontend/src/components/SpeechToText/OpenAiOptions/index.jsx:76, and the fallback list at server/utils/helpers/customModels.js:306 offers whisper-1 when the live model list call fails, along with gpt-4o-transcribe and gpt-4o-mini-transcribe, which shut down the same day.",
+  "rollback": "Set the Transcription Model setting (WHISPER_OPEN_AI_MODEL) back to whisper-1, which works until 26 Feb 2027.",
+  "proof": {
+    "vendor": {
+      "claim": "whisper-1 shuts down on 26 Feb 2027, and the recommended replacements are gpt-live-transcribe or gpt-transcribe",
+      "url": "https://developers.openai.com/api/docs/deprecations#2026-08-26-transcription-models"
+    },
+    "independent": null
+  },
+  "sources": [
+    "https://developers.openai.com/api/docs/changelog",
+    "https://developers.openai.com/api/docs/deprecations#2026-08-26-transcription-models",
+    "https://developers.openai.com/api/docs/guides/speech-to-text",
+    "https://developers.openai.com/api/docs/guides/transcription",
+    "https://developers.openai.com/api/reference/resources/audio/subresources/transcriptions/methods/create",
+    "https://developers.openai.com/api/docs/pricing"
+  ],
+  "sourcedNumbers": [
+    { "text": "25 MB", "source": "https://developers.openai.com/api/docs/guides/speech-to-text" }
+  ],
+  "stages": [
+    {
+      "date": "2026-09-01",
+      "patches": [
+        "patches/0001-feat-move-OpenAI-transcription-to-gpt-transcribe-bef.patch"
+      ],
+      "title": "Keep audio uploads working after 26 Feb 2027 · {{lab.title_number}}",
+      "titleUnmeasured": "Keep audio uploads working after 26 Feb 2027 · whisper-1 → gpt-transcribe",
+      "whatShipped": "On 26 Aug 2026 OpenAI announced that whisper-1 shuts down on 26 Feb 2027, and named gpt-transcribe and gpt-live-transcribe as its successors.",
+      "whatThisChanges": "collector/utils/WhisperProviders/OpenAiWhisper.js reads its model from a new setting, WhisperOpenAiModel (WHISPER_OPEN_AI_MODEL), and gpt-transcribe is the default for anyone on the OpenAI transcription provider. The built-in local model stays the default provider. server/utils/helpers/updateENV.js, server/models/systemSettings.js and server/utils/collectorApi/index.js carry the setting to the collector. In the transcription settings, the disabled \"Whisper Large\" field becomes the real setting, and the provider's description no longer names Whisper. docker/.env.example and server/.env.example list the new setting.",
+      "comment": null
+    }
+  ]
+}

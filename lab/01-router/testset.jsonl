@@ -1,0 +1,64 @@
+{"type":"rule","title":"coding","description":"The user wants help writing, debugging, reviewing or explaining source code, scripts, SQL queries or shell commands."}
+{"type":"rule","title":"billing","description":"The user is asking about their own invoices, charges, refunds, payment method or subscription plan with us."}
+{"type":"rule","title":"summarize_document","description":"The user wants an existing document, article, transcript or pasted text condensed into a shorter version."}
+{"type":"rule","title":"chit_chat","description":"The user is greeting, thanking or making small talk, with no task to be done."}
+{"type":"message","id":"m01","expected":"coding","text":"Why does this Python loop never stop? while i < 10: print(i)"}
+{"type":"message","id":"m02","expected":"coding","text":"Write a bash script that deletes log files older than 30 days."}
+{"type":"message","id":"m03","expected":"coding","text":"I'm getting TypeError: cannot read properties of undefined (reading 'map') in my React component. How do I fix it?"}
+{"type":"message","id":"m04","expected":"coding","text":"Can you review this function and tell me if the error handling is ok?\n\nasync function load(id) { const r = await fetch('/items/' + id); return r.json(); }"}
+{"type":"message","id":"m05","expected":"coding","text":"What's the difference between git rebase and git merge when I'm working on a feature branch, and which command should I run?"}
+{"type":"message","id":"m06","expected":"coding","text":"convert this regex so it also matches uppercase letters: ^[a-z0-9_]+$"}
+{"type":"message","id":"m07","expected":"coding","text":"Write a SQL query that totals last month's invoices per customer.","note":"Hard: mentions invoices, but the task is writing a query, not a question about the user's own bill."}
+{"type":"message","id":"m08","expected":"coding","text":"Our payment webhook handler returns 500 when Stripe retries. Here's the Express route, where's the bug?","note":"Hard: about payments, but the ask is debugging a route."}
+{"type":"message","id":"m09","expected":"coding","text":"Explain line by line what this does: awk -F, '{s+=$3} END {print s}' sales.csv","note":"Hard: 'explain' could read as a summary, but this is explaining a command."}
+{"type":"message","id":"m10","expected":"coding","text":"Add a unit test for the parseDate helper. It should cover empty strings and leap years."}
+{"type":"message","id":"m11","expected":"coding","text":"Dockerfile build fails at npm ci with EACCES. What do I change?"}
+{"type":"message","id":"m12","expected":"coding","text":"In summary mode my CLI prints nothing. Here's the argparse setup, can you spot what's wrong?","note":"Hard: the word summary appears, but no document is being summarised."}
+{"type":"message","id":"m13","expected":"coding","text":"Summarize what this Python class does and whether it has any bugs:\n\nclass Cache:\n    def __init__(self):\n        self.items = {}\n    def get(self, k):\n        return self.items[k]","note":"Hard: fits both coding and summarize_document. Coding comes first in priority order and the description covers explaining code."}
+{"type":"message","id":"m14","expected":"billing","text":"I was charged twice for my subscription this month."}
+{"type":"message","id":"m15","expected":"billing","text":"Can I get a refund for the annual plan I bought yesterday?"}
+{"type":"message","id":"m16","expected":"billing","text":"Where do I download my invoice for September?"}
+{"type":"message","id":"m17","expected":"billing","text":"My card expired. How do I update the payment method on my account?"}
+{"type":"message","id":"m18","expected":"billing","text":"What plan am I on, and when does it renew?"}
+{"type":"message","id":"m19","expected":"billing","text":"please cancel my subscription before the next renewal"}
+{"type":"message","id":"m20","expected":"billing","text":"The invoice you sent has the wrong company name and VAT number on it."}
+{"type":"message","id":"m21","expected":"billing","text":"Why did my bill go up by $40 after I added two seats?"}
+{"type":"message","id":"m22","expected":"billing","text":"Do you charge me again if I downgrade halfway through the month?"}
+{"type":"message","id":"m23","expected":"billing","text":"I see a pending charge from you on my bank statement, but I closed my account in June.","note":"Hard: no billing keyword except charge, and it reads like an account problem."}
+{"type":"message","id":"m24","expected":"billing","text":"Your checkout page took my money but the upgrade never showed up.","note":"Hard: sounds like a product bug, but the user is asking about a payment they made, not for code."}
+{"type":"message","id":"m25","expected":"billing","text":"Hi, quick one: can you switch me from monthly to yearly billing?","note":"Hard: opens with a greeting, but there is a task."}
+{"type":"message","id":"m26","expected":"billing","text":"Thanks for the reply earlier. I still haven't received the refund you promised.","note":"Hard: opens with thanks, but the point is a missing refund."}
+{"type":"message","id":"m27","expected":"summarize_document","text":"Summarize this article in three bullet points: The city council voted on Tuesday to extend the tram line north by four stops, citing rising ridership and a federal grant that covers most of the construction cost. Opponents argued the money should go to bus service in the east."}
+{"type":"message","id":"m28","expected":"summarize_document","text":"tl;dr please: Our Q3 retro covered three themes. First, on-call load doubled after the migration. Second, the design review queue slowed releases. Third, we agreed to move the planning meeting to Mondays."}
+{"type":"message","id":"m29","expected":"summarize_document","text":"Give me the key points of the attached meeting transcript."}
+{"type":"message","id":"m30","expected":"summarize_document","text":"Condense this paragraph to one sentence: Although the survey received fewer responses than last year, the people who answered were more satisfied with the onboarding, and most said the new documentation helped them get started without asking for support."}
+{"type":"message","id":"m31","expected":"summarize_document","text":"Can you shorten this report for my manager? She only has two minutes to read it."}
+{"type":"message","id":"m32","expected":"summarize_document","text":"What are the main takeaways from the PDF I just uploaded?"}
+{"type":"message","id":"m33","expected":"summarize_document","text":"Boil this email thread down to what was decided and who owns what."}
+{"type":"message","id":"m34","expected":"summarize_document","text":"I don't have time to read this 40 page contract. Give me a one paragraph version.","note":"Hard: mentions a contract, but the task is shortening it, not legal advice."}
+{"type":"message","id":"m35","expected":"summarize_document","text":"Recap this podcast transcript for me in five lines."}
+{"type":"message","id":"m36","expected":"summarize_document","text":"Here's our refund policy document. Summarize it so I can paste it in the team wiki.","note":"Hard: mentions refunds, but this is a request to condense a document, not a question about the user's own refund."}
+{"type":"message","id":"m37","expected":"summarize_document","text":"Could you turn these release notes into a short version for customers? Version 2.4 adds SSO, fixes the export crash and drops support for the old API.","note":"Hard: software topic, but no code is being written or explained."}
+{"type":"message","id":"m38","expected":"summarize_document","text":"Too long, didn't read. What does the attached research paper actually say?"}
+{"type":"message","id":"m39","expected":"summarize_document","text":"Pull out the gist of this blog post: Remote teams that write things down make decisions faster, because people in other time zones can respond without waiting for a meeting.","note":"Hard: 'pull out' could read as extraction, but the gist is a summary."}
+{"type":"message","id":"m40","expected":"chit_chat","text":"Good morning!"}
+{"type":"message","id":"m41","expected":"chit_chat","text":"Thanks, that was really helpful."}
+{"type":"message","id":"m42","expected":"chit_chat","text":"How's your day going?"}
+{"type":"message","id":"m43","expected":"chit_chat","text":"haha nice one"}
+{"type":"message","id":"m44","expected":"chit_chat","text":"hey there"}
+{"type":"message","id":"m45","expected":"chit_chat","text":"Happy Friday! Any fun plans for the weekend?"}
+{"type":"message","id":"m46","expected":"chit_chat","text":"You're funnier than I expected."}
+{"type":"message","id":"m47","expected":"chit_chat","text":"ok cool, talk later"}
+{"type":"message","id":"m48","expected":"chit_chat","text":"That fixed it, you're a lifesaver!","note":"Hard: refers to an earlier fix, but asks for nothing."}
+{"type":"message","id":"m49","expected":"chit_chat","text":"Ugh, Mondays, right?"}
+{"type":"message","id":"m50","expected":"chit_chat","text":"Just saying hi before my next meeting."}
+{"type":"message","id":"m51","expected":"none","text":"What's the capital of Mongolia?"}
+{"type":"message","id":"m52","expected":"none","text":"Translate 'where is the train station' into Japanese."}
+{"type":"message","id":"m53","expected":"none","text":"Give me a three day itinerary for Lisbon in April."}
+{"type":"message","id":"m54","expected":"none","text":"Draft a polite email asking my landlord to fix the heater."}
+{"type":"message","id":"m55","expected":"none","text":"What can I cook with chickpeas, spinach and a can of tomatoes?"}
+{"type":"message","id":"m56","expected":"none","text":"How do credit card chargebacks work in general?","note":"Hard: a payments topic, but a general question and not about the user's own account with us."}
+{"type":"message","id":"m57","expected":"none","text":"Which laptop should I buy for programming on a $1000 budget?","note":"Hard: mentions programming, but no code is involved."}
+{"type":"message","id":"m58","expected":"none","text":"Write a short poem about the first snow of the year."}
+{"type":"message","id":"m59","expected":"none","text":"What's a good name for a small coffee shop near a university?"}
+{"type":"message","id":"m60","expected":"none","text":"What does a good executive summary usually include?","note":"Hard: the word summary appears, but there is nothing to condense and it's a general question."}

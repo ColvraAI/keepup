@@ -1,0 +1,67 @@
+{
+  "version": 1,
+  "repo": "acme/support-bot",
+  "commit": "9caf2b4c29d9782f1cba4142be2525ebfa0ecd43",
+  "commit_date": "2026-10-30",
+  "scanned_at": "2026-11-01T02:00:00.000Z",
+  "db": {
+    "fetched": "2026-10-31",
+    "records": 41785,
+    "by_source": { "mcp-registry": 35587, "npm": 3953, "changelog": 70 },
+    "window": { "since": "2026-09-01", "until": "2026-10-31" }
+  },
+  "steps": [],
+  "facts": {},
+  "pattern_hits": [],
+  "exact": [],
+  "profile": {
+    "one_liner": "A support chatbot with a router in front of its model.",
+    "stack": ["TypeScript", "OpenAI"],
+    "jobs": [
+      { "job": "Route tickets", "how": "A chat call picks a label", "where": [{ "file": "src/router.ts", "line": 41 }] },
+      { "job": "Answer", "how": "A chat call with retrieved passages", "where": [{ "file": "src/answer.ts", "line": 12 }, { "file": "src/rag.ts", "line": 7 }] }
+    ],
+    "stack_lock": ["Node packages", "APIs and MCP servers"]
+  },
+  "candidates_considered": 12,
+  "findings": [
+    {
+      "rank": 1,
+      "title": "OpenAI's whisper-1 shuts down on 26 Feb 2027",
+      "reach": "sent",
+      "effect": ["keeps working"],
+      "proof": "vendor claim",
+      "effort": "Hours",
+      "where": [{ "file": "src/voice.ts", "line": 11, "text": "this.model = \"whisper-1\";" }],
+      "why": "OpenAI announced the shutdown on 26 Aug 2026.",
+      "options": [{ "name": "gpt-transcribe", "what": "Named by OpenAI as the replacement.", "needs": "", "source": "https://developers.openai.com/api/docs/changelog" }],
+      "sources": ["https://developers.openai.com/api/docs/changelog"],
+      "lever": null,
+      "pr": null
+    },
+    {
+      "rank": 2,
+      "title": "Your router can use a decision model",
+      "effect": ["cheaper", "faster"],
+      "proof": "projected",
+      "effort": "A day",
+      "where": [{ "file": "src/router.ts", "line": 41, "text": "x" }, { "file": "src/router2.ts", "line": 7, "text": "y" }],
+      "why": "This job is one answer from a fixed list.",
+      "options": [
+        { "name": "OpenAI Decisions API", "what": "Typed answers", "needs": "An OpenAI key", "source": "https://developers.openai.com/api/docs/changelog" },
+        { "name": "TypeSafe Jev | fast", "what": "No one provider", "needs": "A new vendor", "source": "https://example.com/jev" }
+      ],
+      "sources": ["https://developers.openai.com/api/docs/changelog", "https://example.com/jev"],
+      "lever": "ADV-2026-1022-decisions-api",
+      "pr": "01"
+    }
+  ],
+  "watching": [{ "thing": "Indra OCR", "why": "It ships as a Python package, and your collector is Node.", "source": "https://huggingface.co/datalab-to/indra-ocr" }],
+  "held_back": [
+    { "thing": "MCP TypeScript SDK 1.32.2", "date": "2026-10-23", "reason": "Your range ^1.24.3 (server/package.json:36) already allows it.", "source": "https://www.npmjs.com/package/@modelcontextprotocol/sdk" },
+    { "thing": "Prompt caching", "date": null, "reason": "It's your call: a product choice.", "source": null }
+  ],
+  "checks": { "passed": 9, "dropped": [{ "what": "A finding that lied", "why": "src/x.ts:9: that line says something else" }] },
+  "rank_explanation": "Order: anything that breaks within 30 days first, then the biggest proven gain per hour of work.",
+  "usage": null
+}

@@ -1,0 +1,45 @@
+{
+  "id": "ADV-2026-1101-anthropic-agent-migration",
+  "name": "Anthropic's agent path for a hand-written loop",
+  "pattern": "PAT-hand-rolled-tool-loop",
+  "kind": "agent-framework",
+  "providers": [
+    "anthropic"
+  ],
+  "effects": [
+    "keeps working"
+  ],
+  "gain": "Anthropic's words: most of that code goes away. No gain has been measured, so this stays a brief line.",
+  "proof": "adoption only",
+  "source": "https://platform.claude.com/docs/en/managed-agents/migration.md",
+  "how": "Follow Anthropic's migration page for the loop",
+  "replaces": "while True over messages.create.",
+  "trade_offs": [
+    "A big change with no measured gain; never a pull request."
+  ],
+  "needs": "A test set first.",
+  "checked": "2026-11-01",
+  "checked_by": "agent",
+  "usage_signal": "Not visible in the bill",
+  "gain_model": {
+    "formula": "no gain model: nothing has measured a gain",
+    "inputs": []
+  },
+  "test_recipe": {
+    "what_to_compare": "tool-call success on the product's test set",
+    "samples": 50,
+    "can_run_with": [
+      "ANTHROPIC_API_KEY"
+    ]
+  },
+  "verify_rule": "Test set pass rate; never auto-applied",
+  "change_recipe": {
+    "kind": "pull request with tests",
+    "how": "Follow Anthropic's migration page for the loop",
+    "left_off": "Never a pull request: a brief line"
+  },
+  "audience": "product",
+  "gain_independent": null,
+  "gain_vendor": null,
+  "tier": "long_tail"
+}

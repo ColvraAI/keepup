@@ -1,0 +1,30 @@
+Off the scale: 744 "arc-c" (747, BF16) AND 15 AI CONSTRUCTS: Each a precision engineered "consciousness" to help you in every task, using fewer tokens and 
+generating better answers. This model has significant internal upgrades under user control that are "on the fly" (you set in your prompt(s) and/or API). 
+Please read this model card carefully to get the most from it - including all the reasoning and instruct modes (27+27+9 xhigh) that feature model suggestions ("context help") for all use cases. 
+ Qwen3.8-27B-Jumbo-Fusion-IQ-747-900-Turbo-Brilliance-50X-Reasoning-Instruct-NEO-MAX-MTP-GGUF 
+This is the first fine tune HIT 747 "arc-c" (156 pts higher than Qwen 3.8 27B in BF16) AND 900 ARC-E (The OpenAI, Claude and Gemini "zone of intelligence") 
+with 8 bit at 744 arc-c and 742 arc-c in 4 bit (161 pts above Qwen 3.8 27B) AND will be powered up even further with Turbo Brilliance 50X.
+ Burning down the house with INSANE benchmarks (featuring an ALL STAR line up of the best DNA from TWENTY (20) top models) and Turbo Brilliance 50x: 
+- Higher IQ, instruction following and reduced token usage [benchmarks below].
+- Reduced thinking tokens (1/5 to 1/20 as much now, but see note below) and output (model will only be verbose if you tell it).
+- Better quality using few thinking tokens.
+- Turbo Brilliance (most modes) has been modified to use slightly more tokens to offset the thinking reduction (in normal Qwen modes) and balance the model use case(s) / task(s) a bit better.
+ And Turbo Brilliance is fast: 
+100s to 1000s of tokens are sent directly INJECTED into to the model at the pre-thinking/reasoning/instruct stage in milliseconds, these instructions are ingested
+and the model is primed for action.
+ CHOICE, POWER, SPEED and SMARTS: 
+- Choose Instruct mode (instant answer) or reasoning IN YOUR PROMPT (from tiny to massive) (also API,VLLM etc etc too); no buttons to select, nothing to change.
+- Choose your instruct or reasoning mode => no reasoning? a little? a lot? => Just use what you need, when you need it.
+- Power -> Select the reasoning or instruct mode you need. Need Qwen 3.8 "xhigh" => Choose this OR even higher "xhigh"+"combined powered" reasoning: There are 8 of them.
+- Speed -> Save time, tokens and get more work done faster.
+- Smart -> Intelligent, deep reasoning that goes beyond the default "Qwen thinking/reasoning" modes AND instruct modes too.
+- The help system is always there to instantly advise you based on use case[s] and modes of reasoning/instruct, including multi-stage too [it is built in].
+ RESULTS: 
+- The model spends little to no time getting underway (focused on the task(s) VS figuring out the task(s) and best way to approach it) by the time it produces the first token.
+- The model is focused ("on the same page"), and spends less time "guessing" and more time "doing". IE: working on the task(s) at hand.
+- The output quality jumps, and one shot/two shot "Brilliance" is the standard, vs 5-10 regens to get a good to great output.
+ IMPORTANT FAQs: 
+- The systems only activate AT YOUR REQUEST (in current version), otherwise the model runs normally, with standard default reasoning/instruct modes set.
+- The core design and premise: Use specific reasoning method[s] to both get better, stronger and more consistent outputs (bypass the temp para issue) and reduce net token usage.
+- BASE OPERATION: option to switch instantly between reasoning / instruct modes AND/OR try your prompt in multiple modes quickly.
+- USE Case[s] help is alwa

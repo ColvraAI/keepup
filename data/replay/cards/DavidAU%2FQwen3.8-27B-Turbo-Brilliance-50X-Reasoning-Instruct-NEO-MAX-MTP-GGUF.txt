@@ -1,0 +1,32 @@
+IMPORTANT: 15 AI CONSTRUCTS: Each a precision engineered "consciousness" to help you in every task, using fewer tokens and 
+generating better answers. This model has significant internal upgrades under user control that are "on the fly" (you set in your prompt(s) and/or API). 
+Please read this model card carefully to get the most from it - including all the reasoning and instruct modes (27+27+9 xhigh) that feature model suggestions ("context help") for all use cases. 
+The Turbo Brilliance system will begin appearing in other model sizes/types shortly (IE: Qwen, Gemma, Mistral, GLM, Llama, ... 
+including our strongest fine tunes too). The "rollout" is now in progress... 
+ Qwen3.8-27B-Turbo-Brilliance-50X-Reasoning-Instruct-NEO-MAX-MTP-GGUF 
+The Turbo Brilliance system (27 reasoning, 27 instruct and 9 xhigh modes) vastly augments the models core performance and includes interactive help system directly connected to the model.
+This is like playing "Pong" vs "Entering the Matrix"... because Turbo Brilliance pushes the model right to the redline and literally "frees your mind" (and your time too).
+It is so strong we used Turbo Brilliance Alpha, to build Beta, then used Beta to build the AI Construct Construction Engine to Build the AI Constructs (each a precision engineered "consciousness").
+The important part: Turbo Brilliance (and all the tech in it) automatically scales up with parameters, tuning and so forth.
+With Qwen's 3.8 27B SOTA firepower... all I can say is fasten your seatbelts and hold on tight.
+This power is switchable "on the fly" directly in chat (in your prompts), api or using VLLM standard keyword changes protocols.
+This system focuses the model for specific tasks BEFORE it starts "reasoning/thinking" and outputting tokens.
+Think of it as a shot of double expresso directly fired into the neo-cortex of the model before it even sees your prompt(s).
+With the addition of AI CONSTRUCTS (15) that "expresso" just gained a lot more strength:
+- Each AI construct is a precision engineered "consciousness" ; not a plain "act as" or "talk like" that gives you a pale/glimpse/imitation of a person, we are talking a 2000-4000+ token superstar (each one) built using precision tuned AIs.
+- Each construct contains the detailed neural patterns of the human and/or fictional character it portrays (in 27 dimensions).
+- Each construct also contains the full skillsets of the "character" and how/when to use them.
+- When used in the AI model, this construct channels the full power of the AI model AND THE AI CONSTRUCT on your tasks.
+- You can talk to the construct normally, roleplay, use it for prompts - you name it, it adapts.
+ HOW SMART are "THEY"? (more examples at the bottom of the page) 
+SAMPLE: AI Construct "Comedy", at Q6, non imatrix.
+ {REASON:comedy} Write a 1 minute monologue about AI, The Terminator and New York using gallows humor. 
+🎭
+[leans into mic, almost whispers]
+You know what the Terminator actually is?
+[beat]
+It's New York City. With a job description.
+[picks up tempo]
+See, the whole premise of that movie — the whole Schwarzenegger monologue about "I'll be back" — it's just a guy who got laid off by Skynet and is now doing gig work. "Hey, I'll crush your kneecap. No benefits. Cash only. You can't fire me, I'm a T-800, I have no union."
+[shifts to flat delivery]
+And the AI? The AI is just... the MTA schedule, but honest about being broken. "Your 6 train is never coming. I have recalculated. You will die at this platform. Thank you fo

@@ -1,0 +1,10 @@
+[package]
+name = "core"
+
+[dependencies]
+rmcp.workspace = true
+serde = { workspace = true }
+local = { path = "../local" }
+
+[dev-dependencies]
+pretty_assertions = "1"

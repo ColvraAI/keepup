@@ -1,0 +1,65 @@
+{
+  "id": "ADV-2026-1022-tanstack-ai-typesafe",
+  "name": "The TanStack AI adapter for Jev",
+  "pattern": "PAT-label-picking-call",
+  "kind": "library",
+  "providers": [],
+  "effects": [
+    "cheaper",
+    "faster"
+  ],
+  "gain": "The same Jev call from a TanStack AI product. The package states no number of its own, so only adoption can be shown.",
+  "proof": "adoption only",
+  "source": "https://www.npmjs.com/package/@tanstack/ai-typesafe",
+  "how": "Only for a product already on @tanstack/ai: add @tanstack/ai-typesafe and route the label-picking call through it, with today's call as the fallback.",
+  "replaces": "A label-picking chat call in a TanStack AI product.",
+  "trade_offs": [
+    "It only helps a product already using @tanstack/ai.",
+    "Everything in Jev's own trade-offs still applies."
+  ],
+  "needs": "A TypeSafe key and @tanstack/ai ^1.0.0.",
+  "checked": "2026-11-01",
+  "checked_by": "agent",
+  "usage_signal": "Usage and Cost API: high call count with few output tokens per call",
+  "gain_model": {
+    "formula": "calls * (current_cost_per_call - decision_cost_per_call), plus p50 latency difference",
+    "inputs": [
+      {
+        "name": "calls",
+        "value": null,
+        "source": "the product's usage data or the bill",
+        "assumed": false
+      },
+      {
+        "name": "current_cost_per_call",
+        "value": null,
+        "source": "the product's usage data or the bill",
+        "assumed": false
+      },
+      {
+        "name": "decision_cost_per_call",
+        "value": null,
+        "source": "the product's usage data or the bill",
+        "assumed": false
+      }
+    ]
+  },
+  "test_recipe": {
+    "what_to_compare": "agreement with the current call, p50 latency, fallback rate",
+    "samples": 500,
+    "can_run_with": [
+      "OPENAI_API_KEY",
+      "TYPESAFE_API_KEY"
+    ]
+  },
+  "verify_rule": "Cost line and p50 for that call over 14 days; fallback rate under the gate",
+  "change_recipe": {
+    "kind": "pull request, off by default",
+    "how": "Only for a product already on @tanstack/ai: add @tanstack/ai-typesafe and route the label-picking call through it, with today's call as the fallback.",
+    "left_off": "Nothing else changes; the new path sits behind a setting until a person turns it on"
+  },
+  "audience": "product",
+  "gain_independent": null,
+  "gain_vendor": null,
+  "tier": "long_tail"
+}

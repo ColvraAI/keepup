@@ -1,0 +1,357 @@
+/* The gap chart: 60 days across, every bar to scale. This is the argument. */
+.gap {
+  display: grid;
+  gap: var(--s-2);
+  padding: var(--s-3) 0;
+  background: var(--paper);
+}
+
+.gap__axis {
+  position: relative;
+  height: 1.4em;
+  font-size: var(--t-xs);
+  color: var(--ink-3);
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+.gap__tick {
+  position: absolute;
+  top: 0;
+  white-space: nowrap;
+  word-spacing: -0.35em;
+}
+
+.gap__tick:last-child {
+  transform: translateX(-30%);
+}
+
+.gap__dots {
+  position: relative;
+  height: 14px;
+}
+
+.axis-dot {
+  display: inline-block;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: var(--ink-3);
+}
+
+.gap__dots .axis-dot {
+  position: absolute;
+  top: 1px;
+  margin-left: -5px;
+  transition: opacity 200ms ease;
+}
+
+.gap__dots .axis-dot[data-shown='false'] {
+  opacity: 0.16;
+}
+
+.axis-dot--blue {
+  background: var(--blue);
+}
+
+.axis-dot--amber {
+  background: transparent;
+  border: 2px solid var(--amber);
+}
+
+.axis-dot--grey {
+  background: transparent;
+  border: 2px solid var(--ink-3);
+}
+
+.axis-dot--ink {
+  background: var(--ink);
+}
+
+.axis-dot--quiet {
+  background: var(--paper);
+  border: 1px solid var(--ink-3);
+}
+
+.gap-lead {
+  display: grid;
+  gap: 2px;
+  transition: opacity 200ms ease;
+}
+
+.gap-lead__top {
+  display: flex;
+  align-items: baseline;
+  gap: var(--s-3);
+}
+
+.gap-lead__days {
+  font-size: var(--t-xl);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  color: var(--blue-ink);
+}
+
+.gap-lead__what {
+  font-size: var(--t-b);
+  color: var(--ink-2);
+}
+
+.gap-lead__track {
+  position: relative;
+  height: 34px;
+  margin-top: var(--s-1);
+}
+
+.gap-bar {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  display: block;
+  background: var(--ink);
+  transform-origin: left center;
+}
+
+/* A bar draws when its stop lands, not when the screen mounts: the gap opens while it's being talked about. */
+.gap-row[data-shown='true'] .gap-bar {
+  animation: bar-grow 900ms cubic-bezier(0.3, 0, 0.2, 1) both;
+}
+
+.gap-bar--lead {
+  background: var(--blue);
+}
+
+.gap-lead[data-shown='true'] .gap-bar--lead {
+  animation: bar-grow 1100ms cubic-bezier(0.3, 0, 0.2, 1) 250ms both;
+}
+
+/* The black waits until the blue has arrived, so the break reads as what came next. */
+.gap-bar--broken {
+  background: var(--ink);
+}
+
+.gap-lead[data-shown='true'] .gap-bar--broken {
+  animation: bar-grow 320ms ease-out 1350ms both;
+}
+
+.gap-lead[data-shown='true'] .gap-lead__broken {
+  animation: fade-in 200ms ease-out 1650ms both;
+}
+
+.gap-bar--open {
+  background: var(--ink);
+}
+
+.gap-lead--open[data-shown='true'] .gap-bar--open {
+  animation: bar-grow 1100ms cubic-bezier(0.3, 0, 0.2, 1) 250ms both;
+}
+
+.gap-lead__track .gap-off--lead {
+  right: -22px;
+  margin-top: -18px;
+  border-top: 18px solid transparent;
+  border-bottom: 18px solid transparent;
+  border-left: 22px solid var(--ink);
+}
+
+.gap__plot {
+  position: relative;
+  display: grid;
+  gap: var(--s-2);
+}
+
+.gap__cursor {
+  position: absolute;
+  bottom: -2px;
+  width: 3px;
+  height: 11px;
+  margin-left: -1px;
+  background: var(--blue);
+  transition: left 240ms ease;
+}
+
+.gap__ahead {
+  font-size: var(--t-b);
+  color: var(--ink-2);
+  transition: opacity 200ms ease;
+}
+
+.gap__ahead[data-shown='false'] {
+  opacity: 0.12;
+}
+
+.gap__key-line {
+  display: inline-block;
+  width: 3px;
+  height: 1em;
+  background: var(--ink);
+}
+
+@keyframes bar-grow {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+.gap-lead__broken {
+  position: absolute;
+  bottom: calc(100% + 4px);
+  font-size: var(--t-m);
+  font-weight: 700;
+  letter-spacing: -0.012em;
+  white-space: nowrap;
+}
+
+.gap-lead__ends {
+  position: relative;
+  height: 1.5em;
+  font-family: var(--mono);
+  font-size: var(--t-xs);
+  color: var(--ink-2);
+}
+
+.gap-lead__ends span {
+  position: absolute;
+  white-space: nowrap;
+  word-spacing: -0.3em;
+}
+
+.gap-lead__end--right {
+  white-space: nowrap;
+}
+
+.gap__rows {
+  position: relative;
+  display: grid;
+  gap: var(--s-1);
+  padding-top: var(--s-1);
+}
+
+.gap-row {
+  position: relative;
+  height: 28px;
+  font-size: var(--t-xs);
+  transition: opacity 200ms ease;
+}
+
+/* What the replay hasn't reached yet is a ghost: the shape of the argument is there before it lands. */
+.gap-row[data-shown='false'] {
+  opacity: 0.12;
+}
+
+.gap-lead[data-shown='false'] {
+  opacity: 0;
+}
+
+.gap-row .gap-bar {
+  top: 5px;
+  bottom: 5px;
+}
+
+.gap-row--later .gap-bar {
+  background: var(--blue);
+}
+
+.gap-row--ahead .gap-bar {
+  background: transparent;
+  border: 2px solid var(--amber);
+}
+
+.gap-row--unchanged {
+  height: 34px;
+}
+
+.gap-row--unchanged .gap-bar {
+  background: var(--ink);
+}
+
+.gap-row[data-shown='false'] .gap-bar {
+  animation: none;
+}
+
+.gap-row[data-focus='true'] .gap-row__label {
+  font-weight: 600;
+}
+
+.gap-row__label {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  white-space: nowrap;
+  color: var(--ink-2);
+  line-height: 1;
+}
+
+.gap-row__label b {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.gap-row--unchanged .gap-row__label {
+  left: 10px !important;
+  color: var(--paper);
+}
+
+.gap-row--unchanged .gap-row__label b {
+  color: var(--paper);
+}
+
+.gap-off {
+  position: absolute;
+  top: 50%;
+  width: 0;
+  height: 0;
+  margin-top: -7px;
+  border-top: 7px solid transparent;
+  border-bottom: 7px solid transparent;
+}
+
+.gap-off--left {
+  margin-left: -9px;
+  border-right: 9px solid var(--amber);
+}
+
+.gap-off--right {
+  right: -9px;
+  border-left: 9px solid var(--ink);
+}
+
+.gap__commit {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  margin-left: -1px;
+  background: var(--ink);
+  animation: fade-in 200ms ease-out both;
+}
+
+.gap__key {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-1) var(--s-4);
+  align-items: center;
+  font-size: var(--t-xs);
+  color: var(--ink-3);
+  padding-top: var(--s-2);
+}
+
+.gap__key span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45em;
+}
+
+.gap__key span.gap__key-commit {
+  display: block;
+  margin-left: auto;
+}
+
+.replay__chart {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  background: var(--paper);
+  border-bottom: 1px solid var(--rule-strong);
+}
+

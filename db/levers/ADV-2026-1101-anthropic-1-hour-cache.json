@@ -1,0 +1,83 @@
+{
+  "id": "ADV-2026-1101-anthropic-1-hour-cache",
+  "name": "Anthropic's 1-hour cache",
+  "pattern": "PAT-prompt-caching-off",
+  "kind": "sdk-feature",
+  "providers": [
+    "anthropic"
+  ],
+  "effects": [
+    "cheaper"
+  ],
+  "gain": "Anthropic's words: 1-hour cache writes cost 2 times base input, listed by the vendor; reads stay far below input.",
+  "proof": "vendor claim",
+  "source": "https://platform.claude.com/docs/en/build-with-claude/prompt-caching",
+  "how": "cache_control with ttl 1h on the last stable block",
+  "replaces": "A 5-minute cache that expires between calls.",
+  "trade_offs": [
+    "Writes cost double, so low-traffic prompts may not pay back."
+  ],
+  "needs": "The Anthropic API.",
+  "checked": "2026-11-01",
+  "checked_by": "agent",
+  "usage_signal": "Usage and Cost API: cached input tokens at or near zero on a model with large input",
+  "gain_model": {
+    "formula": "input_tokens * input_price * hit_rate * (1 - read_multiplier) - writes * input_price * (write_multiplier - 1)",
+    "inputs": [
+      {
+        "name": "input_tokens",
+        "value": null,
+        "source": "the product's usage data or the bill",
+        "assumed": false
+      },
+      {
+        "name": "input_price",
+        "value": null,
+        "source": "the product's usage data or the bill",
+        "assumed": false
+      },
+      {
+        "name": "hit_rate",
+        "value": null,
+        "source": "the product's usage data or the bill",
+        "assumed": false
+      },
+      {
+        "name": "read_multiplier",
+        "value": null,
+        "source": "the product's usage data or the bill",
+        "assumed": false
+      },
+      {
+        "name": "write_multiplier",
+        "value": 2,
+        "source": "https://platform.claude.com/docs/en/build-with-claude/prompt-caching",
+        "assumed": false
+      },
+      {
+        "name": "writes",
+        "value": null,
+        "source": "the product's usage data or the bill",
+        "assumed": false
+      }
+    ]
+  },
+  "test_recipe": {
+    "what_to_compare": "input cost and latency, identical answers",
+    "samples": 200,
+    "can_run_with": [
+      "ANTHROPIC_API_KEY",
+      "OPENAI_API_KEY"
+    ]
+  },
+  "verify_rule": "Cached-read share of input tokens on that model over 14 days",
+  "change_recipe": {
+    "kind": "pull request with tests",
+    "how": "cache_control with ttl 1h on the last stable block",
+    "left_off": "Nothing else changes; the new path sits behind a setting until a person turns it on"
+  },
+  "audience": "product",
+  "gain_independent": null,
+  "gain_vendor": "Anthropic's words: 1-hour cache writes cost 2 times base input, listed by the vendor; reads stay far below input.",
+  "tier": "long_tail"
+}

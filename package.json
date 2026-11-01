@@ -1,0 +1,42 @@
+{
+  "name": "keepup-demo",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "keepup: checks your AI product's code against everything new in AI, as a Claude Code plugin and a CLI.",
+  "bin": {
+    "keepup": "bin/keepup.ts"
+  },
+  "engines": {
+    "node": ">=22.18"
+  },
+  "scripts": {
+    "test": "node --test --test-reporter=spec \"lab/**/*.test.ts\" \"app/**/*.test.ts\" \"scripts/**/*.test.ts\" \"db/**/*.test.ts\" \"test/**/*.test.ts\"",
+    "dev": "npm --prefix site run dev",
+    "lab": "node lab/run.ts",
+    "pr": "node app/src/cli/pr.ts",
+    "brief": "node app/src/cli/brief.ts",
+    "setup": "node app/src/cli/setup.ts",
+    "go": "node app/src/cli/go.ts",
+    "status": "node app/src/cli/status.ts",
+    "deploy": "node app/src/cli/deploy.ts",
+    "replay": "node scripts/replay-summary.ts",
+    "data": "node scripts/build-site-data.ts",
+    "keepup": "node bin/keepup.ts",
+    "pin-replay": "node scripts/pin-replay.ts",
+    "dashboard": "node app/src/cli/dashboard.ts",
+    "test:e2e": "npm --prefix site run test:e2e",
+    "shots": "npm --prefix site run shots --",
+    "record-check": "node scripts/record-check.ts",
+    "clones": "node scripts/clones.ts",
+    "verify": "KEEPUP_VERIFY=1 node --test --test-reporter=spec test/acceptance.test.ts test/replay.test.ts test/heldout.test.ts"
+  },
+  "dependencies": {
+    "@octokit/auth-app": "^8.3.1",
+    "octokit": "^5.0.5"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.5",
+    "typescript": "^7.0.2"
+  }
+}

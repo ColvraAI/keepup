@@ -1,0 +1,22 @@
+{
+ "lines": [
+  {
+   "repo": "Mintplex-Labs/anything-llm",
+   "name": "anything-llm",
+   "commit": "9caf2b4c29d9782f1cba4142be2525ebfa0ecd43",
+   "as_of": "2026-10-31",
+   "command": "keepup check tmp/anything-llm --as-of 2026-10-31",
+   "line": "keepup: 1 model you use is already shut down · /keepup",
+   "recorded_at": "2026-11-01T03:51:17.559Z"
+  },
+  {
+   "repo": "mezmo/aura",
+   "name": "aura",
+   "commit": "5efb4e8b1c00d4d3d03d28e89d1500238904fd35",
+   "as_of": "2026-10-31",
+   "command": "keepup check tmp/aura --as-of 2026-10-31",
+   "line": "keepup: 3 models you use are shut down or go by 30 Nov · /keepup",
+   "recorded_at": "2026-11-01T03:51:20.053Z"
+  }
+ ]
+}

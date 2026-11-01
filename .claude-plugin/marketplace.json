@@ -1,0 +1,12 @@
+{
+  "name": "keepup",
+  "description": "keepup: check your AI product's code against everything new in AI.",
+  "owner": { "name": "ColvraAI" },
+  "plugins": [
+    {
+      "name": "keepup",
+      "source": "./plugin",
+      "description": "Reads your code, checks it against everything new in AI, and tells you the few changes worth making."
+    }
+  ]
+}

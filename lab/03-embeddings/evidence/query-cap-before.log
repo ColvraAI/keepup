@@ -1,0 +1,19 @@
+{"language":"en","chars":2000,"sentChars":2029,"tokens":352,"tokenizerLimit":1e+30}
+{"language":"en","chars":2000,"dims":768,"ms":5003,"loadedMb":429,"peakMb":518}
+[2000 en] exit 0
+{"language":"en","chars":8000,"sentChars":8029,"tokens":1379,"tokenizerLimit":1e+30}
+{"language":"en","chars":8000,"dims":768,"ms":7134,"loadedMb":417,"peakMb":772}
+[8000 en] exit 0
+{"language":"en","chars":16000,"sentChars":16029,"tokens":2746,"tokenizerLimit":1e+30}
+{"language":"en","chars":16000,"dims":768,"ms":20480,"loadedMb":433,"peakMb":1434}
+[16000 en] exit 0
+{"language":"en","chars":60000,"sentChars":60029,"tokens":10273,"tokenizerLimit":1e+30}
+[60000 en] exit 137
+{"language":"zh","chars":2000,"sentChars":2029,"tokens":1343,"tokenizerLimit":1e+30}
+{"language":"zh","chars":2000,"dims":768,"ms":4880,"loadedMb":414,"peakMb":792}
+[2000 zh] exit 0
+{"language":"zh","chars":8000,"sentChars":8029,"tokens":5343,"tokenizerLimit":1e+30}
+{"language":"zh","chars":8000,"dims":768,"ms":71798,"loadedMb":402,"peakMb":3480}
+[8000 zh] exit 0
+{"language":"zh","chars":16000,"sentChars":16029,"tokens":10676,"tokenizerLimit":1e+30}
+[16000 zh] exit 137

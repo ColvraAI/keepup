@@ -1,0 +1,24 @@
+{
+  "check": "e5",
+  "node": "v18.20.8",
+  "model": "MintplexLabs/multilingual-e5-small",
+  "chunkChars": 1000,
+  "tokens": {
+    "texts": 75,
+    "differing": 0
+  },
+  "chunks": {
+    "n": 50,
+    "oldDim": 384,
+    "newDim": 384,
+    "minCosine": 0.999999999999837,
+    "meanCosine": 0.9999999999999046
+  },
+  "queries": {
+    "n": 25,
+    "oldDim": 384,
+    "newDim": 384,
+    "minCosine": 0.9999999999996909,
+    "meanCosine": 0.9999999999998433
+  }
+}

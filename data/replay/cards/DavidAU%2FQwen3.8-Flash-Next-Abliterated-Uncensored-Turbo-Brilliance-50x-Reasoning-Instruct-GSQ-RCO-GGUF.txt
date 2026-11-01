@@ -1,0 +1,28 @@
+IMPORTANT: 120B parameter model, no nanny with 15 AI CONSTRUCTS: Each a precision engineered "consciousness" to help you in every task, using fewer tokens and 
+generating better answers. This model has significant internal upgrades under user control that are "on the fly" (you set in your prompt(s) and/or API). 
+Please read this model card carefully to get the most from it - including all the reasoning and instruct modes (27+27+9 xhigh) that feature model suggestions ("context help") for all use cases. 
+The Turbo Brilliance system will begin appearing in other model sizes/types shortly (IE: Qwen, Gemma, Mistral, GLM, Llama, ... 
+including our strongest fine tunes too). (TIP: You can run this model on 12GB GPUs and up too "at speed".) 
+ Qwen3.8-Flash-Next-Abliterated-Uncensored-Turbo-Brilliance-50x-Reasoning-Instruct-GSQ-RCO-GGUF 
+FIREPOWER:
+- 180 Billion parameters with 512 experts, 10 activated per token.
+- Turbo Brilliance: Token reduction (thinking) when using AI CONSTRUCTS (preloads at 1000+ t/s) : EXTREME ; instruct modes: 0 thinking tokens.
+- SOTA BF16 performance in "IQ3_S" using quant tuning stronger than QAT by GSQ-RCO (ISTA-DASLab)
+- Speed TEST: 46 GB on 2 GPUS + offload onto ram: 17 t/s ; speed at full offload (to GPUs) : 60-90 t/s + depending on GPU[s] / setup etc etc. || RTX6000 [96 GB VRAM] :150 t/s (estimated based on avail data)+ ; STRATA will be even faster / can be used on 12GB VRAM cards and up.
+- Example generations below [4], including a "business plan" (from AI Construct "Business").
+- Token reduction (thinking) when using AI CONSTRUCTS (preloads at 1000+ t/s) : EXTREME ; instruct modes: 0 thinking tokens.
+- No nanny, no censorship ; this is the abliterated version.
+- Abliteration of GSQ-RCO quant by "SC117" (see model tree, visit repo for info) ; did an outstanding job!
+ DETAILS on Turbo Brilliance 50x: 
+The Turbo Brilliance system (27 reasoning, and 27 instruct modes) vastly augments the models core performance and includes interactive help system directly connected to the model.
+This is like playing "Pong" vs "Entering the Matrix"... because Turbo Brilliance pushes the model right to the redline and literally "frees your mind" (and your time too).
+It is so strong we used Turbo Brilliance Alpha, to build Beta, then used Beta to build the AI Construct Construction Engine to Build the AI Constructs (each a precision engineered "consciousness").
+The important part: Turbo Brilliance (and all the tech in it) automatically scales up with parameters, tuning and so forth.
+With Qwen3.8-Flash-Next 120B SOTA firepower... all I can say is fasten your seatbelts and hold on tight.
+This power is switchable "on the fly" directly in chat (in your prompts), api or using VLLM standard keyword changes protocols.
+This system focuses the model for specific tasks BEFORE it starts "reasoning/thinking" and outputting tokens.
+Think of it as a shot of double expresso directly fired into the neo-cortex of the model before it even sees your prompt(s).
+With the addition of AI CONSTRUCTS (15) that "expresso" just gained a lot more strength:
+- Each AI construct is a precision engineered "consciousness" ; not a plain "act as" or "talk like" that gives you a pale/glimpse/imitation of a person, we are talking a 2000-4000+ token superstar (each one) built using precision tuned AIs.
+- Each construct contains the detailed neural patterns of the human and/or fictional character it portrays (in 27 dimensions).
+- Each construct also contains the full sk

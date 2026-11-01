@@ -1,0 +1,12 @@
+=== memory
+[5 4000 zh] exit 137
+{"language":"zh","batch":5,"chars":2000,"tokens":1336,"dims":[5,768],"ms":38326,"loadedMb":430,"peakMb":2213}
+[5 2000 zh] exit 0
+{"language":"zh","batch":5,"chars":1000,"tokens":669,"dims":[5,768],"ms":12045,"loadedMb":418,"peakMb":1244}
+[5 1000 zh] exit 0
+{"language":"en","batch":5,"chars":1000,"tokens":174,"dims":[5,768],"ms":2419,"loadedMb":416,"peakMb":590}
+[5 1000 en] exit 0
+{"language":"en","batch":5,"chars":2000,"tokens":345,"dims":[5,768],"ms":4713,"loadedMb":456,"peakMb":745}
+[5 2000 en] exit 0
+[5 16000 en] exit 137
+=== done

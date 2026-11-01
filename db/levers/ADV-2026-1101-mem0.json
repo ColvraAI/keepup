@@ -1,0 +1,71 @@
+{
+  "id": "ADV-2026-1101-mem0",
+  "name": "mem0 for products whose users come back across sessions",
+  "pattern": "PAT-hand-rolled-memory",
+  "kind": "library",
+  "providers": [],
+  "effects": [
+    "cheaper",
+    "faster"
+  ],
+  "gain": "Projected only. mem0's own table shows retrieval of about 7K tokens at about 1s p50 on its managed platform (vendor claim); it says the open-source SDK differs. Nothing is measured on this product.",
+  "proof": "projected",
+  "source": "https://github.com/mem0ai/mem0",
+  "how": "Written steps in a tracked issue, not a pull request, because it needs an install and an account or a self-hosted store. Try one memory type behind a switch and compare token use on real conversations.",
+  "replaces": "A hand-trimmed or hand-summarized message list for a returning user.",
+  "trade_offs": [
+    "It adds a service and a place where user data is stored.",
+    "The published scores are for mem0's managed platform and were run by mem0.",
+    "It only helps products whose users return across sessions; a single-session chat gains nothing."
+  ],
+  "needs": "An install, plus an account or a self-hosted store. Apache 2.0 for the open-source SDK.",
+  "checked": "2026-11-01",
+  "checked_by": "agent",
+  "usage_signal": "Input tokens per turn grow with conversation length",
+  "gain_model": {
+    "formula": "turns * history_tokens_removed * input_price - memory_service_cost",
+    "inputs": [
+      {
+        "name": "turns",
+        "value": null,
+        "source": "the product's usage data or the bill",
+        "assumed": false
+      },
+      {
+        "name": "history_tokens_removed",
+        "value": null,
+        "source": "the product's usage data or the bill",
+        "assumed": false
+      },
+      {
+        "name": "input_price",
+        "value": null,
+        "source": "the product's usage data or the bill",
+        "assumed": false
+      },
+      {
+        "name": "memory_service_cost",
+        "value": null,
+        "source": "the product's usage data or the bill",
+        "assumed": false
+      }
+    ]
+  },
+  "test_recipe": {
+    "what_to_compare": "token cost and latency on real multi-session users; accuracy is not assumed to rise",
+    "samples": 100,
+    "can_run_with": [
+      "MEM0_API_KEY"
+    ]
+  },
+  "verify_rule": "Input tokens per turn over 30 days",
+  "change_recipe": {
+    "kind": "pull request, off by default",
+    "how": "Written steps in a tracked issue, not a pull request, because it needs an install and an account or a self-hosted store. Try one memory type behind a switch and compare token use on real conversations.",
+    "left_off": "Nothing else changes; the new path sits behind a setting until a person turns it on"
+  },
+  "audience": "product",
+  "gain_independent": null,
+  "gain_vendor": null,
+  "tier": "long_tail"
+}

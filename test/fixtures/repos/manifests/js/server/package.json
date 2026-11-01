@@ -1,0 +1,13 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.24.3",
+    "@xenova/transformers": "^2.14.0",
+    "local-thing": "file:../local",
+    "git-thing": "git+https://github.com/example/thing.git"
+  },
+  "devDependencies": {
+    "typescript": "~5.4.0"
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "schema": 1,
+  "id": "06",
+  "spec": "docs/prs/06-anythingllm-gpt6-models.md",
+  "upstream": "Mintplex-Labs/anything-llm",
+  "fork": "anything-llm",
+  "baseCommit": "f92433b4ea0598492a1e6645ea22addbb4dd1287",
+  "baseBranch": "replay/f92433b4",
+  "ciWorkflow": null,
+  "branch": "keepup/2026-09-22-gpt-6-models",
+  "lab": "lab/06-models",
+  "source": "OpenAI API changelog",
+  "sourceUrl": "https://developers.openai.com/api/docs/changelog",
+  "where": [
+    { "path": "server/utils/helpers/customModels.js", "line": 209 },
+    { "path": "server/utils/AiProviders/openAi/index.js", "line": 136 }
+  ],
+  "founderLine": "People using AnythingLLM can pick OpenAI's newest models and chat with them, even when the app can't fetch OpenAI's live model list.",
+  "effect": ["new capability"],
+  "effort": "Hours",
+  "whyItFits": "AnythingLLM's fallback list only matters when its call to OpenAI's live model list fails, and at this commit it has nothing newer than gpt-4o. Its OpenAI provider also sends a temperature on every chat, which OpenAI's GPT-6 guide says to remove at the default reasoning effort.",
+  "risks": "The list doesn't check access, so a key without these models gets OpenAI's own error when chatting, as with every other entry. With temperature left out, a workspace's temperature setting has no effect on GPT-6 models; older models keep what they send today, and a test pins that. AnythingLLM reads context windows from LiteLLM's published list, not from this file, so until an install's cached copy lists a new model it treats the model as 4,096 tokens and compresses long prompts to fit, against the 1,050,000 on OpenAI's model pages. Any new OpenAI model behaves that way at this commit and this change doesn't alter it; LiteLLM's list had all three models when checked on 1 Nov 2026.",
+  "rollback": "Revert this pull request's commits: they add list entries and one temperature rule, and change no settings or stored data.",
+  "proof": {
+    "vendor": {
+      "claim": "Released GPT-6 Sol (gpt-6-sol) and GPT-6 Luna (gpt-6-luna), reasoning models that generate text through the Responses and Chat Completions APIs",
+      "url": "https://developers.openai.com/api/docs/changelog"
+    },
+    "independent": null
+  },
+  "sources": [
+    "https://developers.openai.com/api/docs/changelog",
+    "https://developers.openai.com/api/docs/guides/latest-model",
+    "https://developers.openai.com/api/docs/deprecations",
+    "https://developers.openai.com/api/docs/models/gpt-6-sol",
+    "https://developers.openai.com/api/docs/models/gpt-6-luna",
+    "https://developers.openai.com/api/docs/models/gpt-6.1-sol",
+    "https://github.com/Mintplex-Labs/anything-llm/commit/5edf32b9",
+    "https://raw.githubusercontent.com/BerriAI/litellm/main/model_prices_and_context_window.json"
+  ],
+  "sourcedNumbers": [
+    { "text": "4,096 tokens", "source": "https://github.com/Mintplex-Labs/anything-llm/blob/f92433b4/server/utils/AiProviders/openAi/index.js#L59" },
+    { "text": "1,050,000", "source": "https://developers.openai.com/api/docs/models/gpt-6-sol" }
+  ],
+  "stages": [
+    {
+      "date": "2026-09-22",
+      "patches": ["patches/0001-feat-add-GPT-6-Sol-and-GPT-6-Luna-to-the-OpenAI-fall.patch"],
+      "title": "Add GPT-6 Sol and GPT-6 Luna to the OpenAI fallback model list · released today",
+      "whatShipped": "OpenAI released GPT-6 Sol (gpt-6-sol) and GPT-6 Luna (gpt-6-luna) on 22 Sep 2026: reasoning models that accept text and images, through the Responses and Chat Completions APIs.",
+      "whatThisChanges": "server/utils/helpers/customModels.js adds both models to the end of the OpenAI fallback list. server/utils/AiProviders/openAi/index.js leaves temperature out of requests for gpt-6 models. server/__tests__ gains tests for both. Nothing is switched on by default: the default model stays gpt-4.1-nano, and the list only shows when the live call fails.",
+      "comment": null
+    },
+    {
+      "date": "2026-09-29",
+      "patches": ["patches/0002-feat-add-GPT-6.1-Sol-to-the-OpenAI-fallback-model-li.patch"],
+      "title": "Add GPT-6 Sol, GPT-6 Luna and GPT-6.1 Sol to the OpenAI fallback model list",
+      "whatShipped": "OpenAI released GPT-6.1 Sol (gpt-6.1-sol) on 29 Sep 2026, for complex coding and professional work at a lower cost than GPT-6 Astra.",
+      "whatThisChanges": "server/utils/helpers/customModels.js adds gpt-6.1-sol to the end of the fallback list, and the tests expect it. The temperature rule from 22 Sep already covers it.",
+      "comment": "Updated 29 Sep: GPT-6.1 Sol shipped today, so it joins the list."
+    }
+  ]
+}

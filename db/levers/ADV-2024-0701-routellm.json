@@ -1,0 +1,63 @@
+{
+  "id": "ADV-2024-0701-routellm",
+  "name": "RouteLLM routes simple calls to a cheaper model",
+  "pattern": "PAT-one-top-model",
+  "kind": "router",
+  "providers": [],
+  "effects": [
+    "cheaper"
+  ],
+  "gain": "LMSYS's words: cost reductions of over 85% on MT Bench, 45% on MMLU and 35% on GSM8K, on the vendor's own benchmark.",
+  "proof": "vendor claim",
+  "source": "https://lmsys.org/blog/2024-07-01-routellm/",
+  "how": "Send calls through the router with a threshold chosen on your test set",
+  "replaces": "One model for every call.",
+  "trade_offs": [
+    "Benchmarks aren't your traffic; needs a test set."
+  ],
+  "needs": "A test set and a self-run router.",
+  "checked": "2026-11-01",
+  "checked_by": "agent",
+  "usage_signal": "Usage and Cost API: one model holds nearly all spend across differently shaped calls",
+  "gain_model": {
+    "formula": "calls_moved * (top_cost_per_call - cheaper_cost_per_call)",
+    "inputs": [
+      {
+        "name": "calls_moved",
+        "value": null,
+        "source": "the product's usage data or the bill",
+        "assumed": false
+      },
+      {
+        "name": "top_cost_per_call",
+        "value": null,
+        "source": "the product's usage data or the bill",
+        "assumed": false
+      },
+      {
+        "name": "cheaper_cost_per_call",
+        "value": null,
+        "source": "the product's usage data or the bill",
+        "assumed": false
+      }
+    ]
+  },
+  "test_recipe": {
+    "what_to_compare": "quality on the product's own test set, cost",
+    "samples": 200,
+    "can_run_with": [
+      "ANTHROPIC_API_KEY",
+      "OPENAI_API_KEY"
+    ]
+  },
+  "verify_rule": "Spend by model and the eval score over 14 days",
+  "change_recipe": {
+    "kind": "pull request, off by default",
+    "how": "Send calls through the router with a threshold chosen on your test set",
+    "left_off": "Nothing else changes; the new path sits behind a setting until a person turns it on"
+  },
+  "audience": "product",
+  "gain_independent": null,
+  "gain_vendor": "LMSYS's words: cost reductions of over 85% on MT Bench, 45% on MMLU and 35% on GSM8K, on the vendor's own benchmark.",
+  "tier": "long_tail"
+}

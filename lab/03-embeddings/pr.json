@@ -1,0 +1,108 @@
+{
+  "schema": 1,
+  "id": "03",
+  "spec": "docs/prs/03-anythingllm-embeddinggemma2.md",
+  "upstream": "Mintplex-Labs/anything-llm",
+  "fork": "anything-llm",
+  "baseCommit": "a72104c5348cea06dd2dbec284cff30bed859608",
+  "baseBranch": "replay/a72104c5",
+  "ciWorkflow": null,
+  "branch": "keepup/2026-10-04-embeddinggemma-2",
+  "lab": "lab/03-embeddings",
+  "source": "Hugging Face",
+  "sourceUrl": "https://huggingface.co/onnx-community/embeddinggemma-2-ONNX",
+  "where": [
+    {
+      "path": "server/utils/EmbeddingEngines/native/index.js",
+      "line": 8
+    },
+    {
+      "path": "server/utils/EmbeddingEngines/native/constants.js",
+      "line": 1
+    },
+    {
+      "path": "server/package.json",
+      "line": 41
+    },
+    {
+      "path": "collector/package.json",
+      "line": 20
+    }
+  ],
+  "founderLine": "Your built-in document search can use a newer on-device model that reads many languages, and your current model stays the default.",
+  "effect": [
+    "better answers"
+  ],
+  "effort": "A day",
+  "whyItFits": "Native search defaults to all-MiniLM-L6-v2 (trained on English, capped at 512 tokens), but chunks here stop at 1,000 characters, so the limit rarely bites. The case is languages and the library: EmbeddingGemma 2 covers 100+ languages, and @xenova/transformers has had no release since 29 May 2024.",
+  "risks": "Switching to or from this model clears all embeddings and removes every document from every workspace, and nothing re-embeds on its own. People have to add their documents again. That holds in either direction, as for any embedder model change. The settings page already warns and asks first, and the model's description repeats it. Its vectors have 768 dimensions, against 384 for MiniLM.\n\nA small server can run out of memory. This entry caps chunks at 2,000 characters, because a batch of longer chunks ran a 3.5 GB container out of memory. The cap doesn't make it small. At the cap, one batch of 5 peaked at 2,202 MB on Chinese text against 773 MB on English (evidence/memory-probe.log). That is more than the 2 GB machine the embedder's own comment says it was benchmarked on. Chinese is the only such language we measured.\n\nThis tokenizer has no effective length limit: its config says 1e+30. So a chat message is cut to its first 2,000 characters before it is embedded for search, and the chat keeps the whole message. A longer message is searched on its opening only. Without that cut, one message ran the same container out of memory at 60,000 characters of English and at 16,000 of Chinese (evidence/query-cap-before.log). With it, both finished, peaking at 470 MB and 807 MB (evidence/query-cap-after.log). The developer API's embeddings route isn't capped: behind an API key, it passes its input straight to the embedder.\n\nEmbeddingGemma 2 is opt-in, but the library move is not opt-in for any existing model. all-MiniLM-L6-v2, nomic-embed-text-v1 and multilingual-e5-small all load through the new package, with the same quantized files, dimensions and token ids. MiniLM stays the default, but its vectors move slightly, for queries as well as documents. Within either package, batching alone moves them further than that. So existing workspaces keep working without being identical, and the lab's notes show what that does to MiniLM's search. nomic-embed-text-v1 moves further: the lowest cosine between packages is 0.986 on 50 SciFact passages and 0.977 on 25 claims. What that does to its search has not been measured. People on that model search old document vectors with new query vectors until they add their documents again. multilingual-e5-small's vectors did not move, to six decimal places. All of this was measured on @huggingface/transformers 4.3.2 on linux/arm64 only.\n\nThe download is bigger: the 4-bit text model is 175 MB, against 23 MB for MiniLM. Embedding is slower on small machines. The model is not on AnythingLLM's download mirror, which answers 404 for it, so it downloads only from Hugging Face. If the server can't reach Hugging Face when someone picks it, their documents have already been cleared, because the reset runs first. The failed download is then logged and the server stays up. Documents can't be embedded until Hugging Face is reachable, when the next attempt loads it with no restart. Before this guard, the same choice with Hugging Face blocked ended the server process (evidence/hf-unreachable-before-fix/crash.json).\n\nThe installed server grows because onnxruntime-node ships its binaries for every platform. On linux/x64 its install step would also download CUDA files from NuGet, about 260 MB that the CPU embedder never uses. It would also fail the whole install if NuGet can't be reached. server/.yarnrc skips that step, which we tested on linux/amd64 under emulation with NuGet blocked. sharp 0.35, which the new package asks for, requires Node 20.9, so it's pinned to 0.34.5 under that package. Node 18 installs keep working, and only image features the embedder doesn't use depend on it.",
+  "rollback": "Picking all-MiniLM-L6-v2 again in the embedder settings clears embeddings and removes documents again, so people add their documents back to re-embed them; the code can be reverted without touching the reranker or local Whisper.",
+  "proof": {
+    "vendor": {
+      "claim": "MTEB multilingual v2 at 61.36 for the full-precision checkpoint, compared on the card only with EmbeddingGemma 1; this pull request ships q4, whose text worst-case cosine to full precision is 0.988 on the card, which suggests q8 when quality matters most",
+      "url": "https://huggingface.co/onnx-community/embeddinggemma-2-ONNX"
+    },
+    "independent": null
+  },
+  "sources": [
+    "https://blog.google/innovation-and-ai/technology/developers-tools/embeddinggemma-2",
+    "https://huggingface.co/google/embeddinggemma-2",
+    "https://huggingface.co/onnx-community/embeddinggemma-2-ONNX",
+    "https://www.npmjs.com/package/@huggingface/transformers",
+    "https://github.com/huggingface/transformers.js/releases/tag/4.3.2",
+    "https://github.com/huggingface/transformers.js/commit/3fe4fbee44d1c9509f2f4b237e09bfbf17e2c53e"
+  ],
+  "sourcedNumbers": [
+    { "text": "512 tokens", "source": "docs/prs/03-anythingllm-embeddinggemma2.md" },
+    { "text": "175 MB", "source": "https://huggingface.co/onnx-community/embeddinggemma-2-ONNX/tree/main/onnx" },
+    { "text": "23 MB", "source": "https://huggingface.co/Xenova/all-MiniLM-L6-v2/tree/main/onnx" },
+    { "text": "3.5 GB", "source": "lab/03-embeddings/testset-notes.md" },
+    { "text": "2,202 MB", "source": "lab/03-embeddings/evidence/memory-probe.log" },
+    { "text": "773 MB", "source": "lab/03-embeddings/evidence/memory-probe.log" },
+    { "text": "470 MB", "source": "lab/03-embeddings/evidence/query-cap-after.log" },
+    { "text": "807 MB", "source": "lab/03-embeddings/evidence/query-cap-after.log" },
+    { "text": "2 GB", "source": "https://github.com/Mintplex-Labs/anything-llm/blob/a72104c5/server/utils/EmbeddingEngines/native/index.js#L255" },
+    { "text": "260 MB", "source": "lab/03-embeddings/evidence/amd64-install.log" },
+    { "text": "0.986", "source": "lab/03-embeddings/evidence/existing-model-nomic.json" },
+    { "text": "0.977", "source": "lab/03-embeddings/evidence/existing-model-nomic.json" },
+    { "text": "60,000", "source": "lab/03-embeddings/evidence/query-cap-before.log" },
+    { "text": "16,000", "source": "lab/03-embeddings/evidence/query-cap-before.log" },
+    { "text": "2,000", "source": "lab/03-embeddings/testset-notes.md" },
+    { "text": "1,000", "source": "lab/03-embeddings/testset-notes.md" },
+    { "text": "0.35", "source": "docs/prs/03-anythingllm-embeddinggemma2.md" }
+  ],
+  "stages": [
+    {
+      "date": "2026-10-04",
+      "patches": [
+        "patches/0001-feat-load-the-native-embedder-through-huggingface-tr.patch"
+      ],
+      "title": "Move the native embedder to @huggingface/transformers, ready for EmbeddingGemma 2",
+      "whatShipped": "The Hugging Face repo for the ONNX build of EmbeddingGemma 2 was created on 4 Oct 2026, and Google launched the model on 6 Oct. The latest transformers.js, 4.3.0, can't run it yet: it fails asking for image, video and audio inputs.",
+      "whatThisChanges": "server/package.json, server/yarn.lock, server/.yarnrc and server/utils/EmbeddingEngines/native/. All three existing models (all-MiniLM-L6-v2, nomic-embed-text-v1 and multilingual-e5-small) load through @huggingface/transformers 4.3.0 with the same quantized weights, on a new runtime that moves MiniLM's vectors very slightly and nomic-embed-text-v1's further. all-MiniLM-L6-v2 stays the default. The native reranker and local Whisper stay on @xenova/transformers; moving them is a follow-up pull request.",
+      "comment": null
+    },
+    {
+      "date": "2026-10-06",
+      "patches": [
+        "patches/0002-feat-add-EmbeddingGemma-2-to-the-native-embedder.patch"
+      ],
+      "title": "EmbeddingGemma 2 for the native embedder · {{lab.title_number}}",
+      "titleUnmeasured": "Add embeddinggemma-2 to the native embedder",
+      "whatShipped": "@huggingface/transformers 4.3.1 shipped on 6 Oct 2026 with support for EmbeddingGemma 2, the first release that can run the ONNX build.",
+      "whatThisChanges": "Bumps to 4.3.1 and adds onnx-community/embeddinggemma-2-ONNX to server/utils/EmbeddingEngines/native/constants.js at dtype q4, text model only, with the model card's query and document prefixes. embedTextInput cuts this model's queries to its 2,000-character chunk limit, because its tokenizer cuts nothing. It appears in the embedder picker, and nothing is switched on by default; picking it clears embeddings and removes documents from workspaces, as any embedder change does. Because this model isn't on the fallback host, it skips that host, one load's fallback no longer sticks for later loads, and server/utils/helpers/updateENV.js logs a failed background download instead of leaving it unhandled. That covers Hugging Face being unreachable, but on 4.3.1 a failed download of the .onnx_data weights still ended the process in our test: the rejection stays inside the library, where that catch can't see it.",
+      "comment": "Updated 6 Oct: @huggingface/transformers 4.3.1 can run the model, so EmbeddingGemma 2 is now an option in the embedder picker."
+    },
+    {
+      "date": "2026-10-27",
+      "patches": [
+        "patches/0003-chore-bump-huggingface-transformers-to-4.3.2.patch"
+      ],
+      "title": "EmbeddingGemma 2 for the native embedder · {{lab.title_number}}",
+      "titleUnmeasured": "Add embeddinggemma-2 to the native embedder",
+      "whatShipped": "@huggingface/transformers 4.3.2 shipped on 27 Oct 2026. It fixes from_pretrained never settling when an .onnx_data download fails, and EmbeddingGemma 2's q4 weights are stored in exactly that kind of file.",
+      "whatThisChanges": "Bumps @huggingface/transformers to 4.3.2 in server/package.json and server/yarn.lock, with no code changes. In our test on 4.3.1, a failed download of this model's weights ended the server process, because the library's rejection went unhandled and updateENV's catch never saw it. On 4.3.2 the load fails with the download's error, and the server logs it and stays up. The three older models keep their quantized weights in one .onnx file, so the fix doesn't reach them.",
+      "comment": "Updated 27 Oct: bumped to @huggingface/transformers 4.3.2, which stops a failed download of this model's weights from ending the server process."
+    }
+  ]
+}

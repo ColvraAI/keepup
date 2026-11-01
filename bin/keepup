@@ -1,0 +1,37 @@
+#!/bin/sh
+# The command Claude Code puts on PATH from a plugin's bin folder, so a skill can pre-approve keepup and nothing else that runs node.
+# It checks the Node version here, because an older Node can't even read keepup.ts and would print a stack trace.
+# Found through a plugin's bin folder, by the name it was called with, it's a session: keepup.ts then keeps to the project and the data folder.
+version=$(node --version 2>/dev/null)
+numbers=${version#v}
+major=${numbers%%.*}
+minor=${numbers#*.}
+minor=${minor%%.*}
+if [ -z "$version" ] || [ "${major:-0}" -lt 22 ] || { [ "$major" -eq 22 ] && [ "${minor:-0}" -lt 18 ]; }; then
+  case " $* " in *" --hook "*)
+    # The hook says it once, plainly, in the data folder's memory. It never fails a session.
+    previous=
+    state=
+    for argument in "$@"; do
+      [ "$previous" = "--weekly-state" ] && state=$argument
+      previous=$argument
+    done
+    case "$state" in */*)
+      said="${state%/*}/node-too-old-said"
+      if [ ! -e "$said" ] && mkdir -p "${state%/*}" 2>/dev/null && : > "$said" 2>/dev/null; then
+        printf '{"systemMessage":"keepup needs Node 22.18 or later; this is %s. It stays quiet until you update."}\n' "${version:-no node on PATH}"
+      fi
+    esac
+    exit 0 ;;
+  esac
+  echo "keepup needs Node 22.18 or later; this is ${version:-no node on PATH}" >&2
+  exit 3
+fi
+here=${0%/*}
+if [ -f "${here%/*}/.claude-plugin/plugin.json" ]; then
+  KEEPUP_PLUGIN=1
+else
+  KEEPUP_PLUGIN=
+fi
+export KEEPUP_PLUGIN
+exec node "$(dirname "$(realpath "$0")")/keepup.ts" "$@"

@@ -1,0 +1,63 @@
+{
+  "id": "ADV-2026-1101-openrouter-auto",
+  "name": "OpenRouter's Auto Router",
+  "pattern": "PAT-one-top-model",
+  "kind": "router",
+  "providers": [],
+  "effects": [
+    "cheaper"
+  ],
+  "gain": "OpenRouter's words: no additional fee for using the Auto Router. No gain number.",
+  "proof": "adoption only",
+  "source": "https://openrouter.ai/docs/guides/routing/routers/auto-router",
+  "how": "Set model to openrouter/auto",
+  "replaces": "One model for every call.",
+  "trade_offs": [
+    "You give up choosing the model per call."
+  ],
+  "needs": "An OpenRouter key.",
+  "checked": "2026-11-01",
+  "checked_by": "agent",
+  "usage_signal": "Usage and Cost API: one model holds nearly all spend across differently shaped calls",
+  "gain_model": {
+    "formula": "calls_moved * (top_cost_per_call - cheaper_cost_per_call)",
+    "inputs": [
+      {
+        "name": "calls_moved",
+        "value": null,
+        "source": "the product's usage data or the bill",
+        "assumed": false
+      },
+      {
+        "name": "top_cost_per_call",
+        "value": null,
+        "source": "the product's usage data or the bill",
+        "assumed": false
+      },
+      {
+        "name": "cheaper_cost_per_call",
+        "value": null,
+        "source": "the product's usage data or the bill",
+        "assumed": false
+      }
+    ]
+  },
+  "test_recipe": {
+    "what_to_compare": "quality on the product's own test set, cost",
+    "samples": 200,
+    "can_run_with": [
+      "ANTHROPIC_API_KEY",
+      "OPENAI_API_KEY"
+    ]
+  },
+  "verify_rule": "Spend by model and the eval score over 14 days",
+  "change_recipe": {
+    "kind": "pull request, off by default",
+    "how": "Set model to openrouter/auto",
+    "left_off": "Nothing else changes; the new path sits behind a setting until a person turns it on"
+  },
+  "audience": "product",
+  "gain_independent": null,
+  "gain_vendor": null,
+  "tier": "long_tail"
+}

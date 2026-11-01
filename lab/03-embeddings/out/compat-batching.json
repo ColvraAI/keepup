@@ -1,0 +1,51 @@
+{
+  "check": "batching",
+  "node": "v18.20.8",
+  "batch": 25,
+  "tokens": {
+    "texts": 400,
+    "differing": 0
+  },
+  "runtimeAlone": {
+    "n": 200,
+    "oldDim": 384,
+    "newDim": 384,
+    "minCosine": 0.9959025552758297,
+    "meanCosine": 0.9979624546555504
+  },
+  "runtimeBatched": {
+    "n": 200,
+    "oldDim": 384,
+    "newDim": 384,
+    "minCosine": 0.9944202123219057,
+    "meanCosine": 0.9975796585411181
+  },
+  "batchingOld": {
+    "n": 200,
+    "oldDim": 384,
+    "newDim": 384,
+    "minCosine": 0.9899096841441682,
+    "meanCosine": 0.9955652984355351
+  },
+  "batchingNew": {
+    "n": 200,
+    "oldDim": 384,
+    "newDim": 384,
+    "minCosine": 0.9921244979075633,
+    "meanCosine": 0.9955596883884047
+  },
+  "repeatNew": {
+    "n": 200,
+    "oldDim": 384,
+    "newDim": 384,
+    "minCosine": 1,
+    "meanCosine": 1
+  },
+  "queriesRuntimeAlone": {
+    "n": 200,
+    "oldDim": 384,
+    "newDim": 384,
+    "minCosine": 0.9922299425621516,
+    "meanCosine": 0.9987761477879612
+  }
+}

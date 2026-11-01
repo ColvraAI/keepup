@@ -1,0 +1,9 @@
+{
+  "source": "https://developers.openai.com/api/docs/pricing",
+  "fetched": "2026-11-01",
+  "section": "Transcription models: the page's estimated cost per minute. whisper-1 is the row the page names Whisper.",
+  "perMinuteUsd": {
+    "whisper-1": 0.006,
+    "gpt-transcribe": 0.0045
+  }
+}

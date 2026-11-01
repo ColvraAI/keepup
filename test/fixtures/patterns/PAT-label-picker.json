@@ -1,0 +1,14 @@
+{
+  "id": "PAT-label-picker",
+  "name": "A chat call that only picks a label",
+  "find": [
+    { "regex": "(?i)classify (this|the) ", "note": "inline (?i) converts to a JS flag" },
+    { "regex": "ANSWER WITH YES OR NO", "flags": "i" }
+  ],
+  "skip_if_near": ["v1/decisions", "typesafe"],
+  "files": ["src/**/*.py", "*.ts"],
+  "why": "A decision model does this job.",
+  "status": "live",
+  "effect": ["cheaper", "faster"],
+  "live_from": "v0.1"
+}

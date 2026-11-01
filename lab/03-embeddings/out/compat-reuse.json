@@ -1,0 +1,10 @@
+{
+  "check": "reuse",
+  "node": "v18.20.8",
+  "n": 2,
+  "oldDim": 384,
+  "newDim": 384,
+  "minCosine": 0.9973866788123946,
+  "meanCosine": 0.9979221909569211,
+  "offline": true
+}
