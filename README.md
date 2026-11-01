@@ -136,7 +136,7 @@ That builds the site if it's out of date and serves it at http://127.0.0.1:4317,
 
 - Upload your code.
 - Merge anything. A person merges every change.
-- Push or open a pull request without being asked. The plugin asks each time, and the GitHub Action only runs in repos where you added it.
+- Push or open a pull request without being asked. The plugin asks each time, and the weekly run only runs where a person turned it on.
 - Send telemetry.
 - Run anything from your repo.
 - Print a key it finds.
