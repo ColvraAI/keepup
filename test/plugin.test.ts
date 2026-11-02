@@ -21,8 +21,9 @@ describe('the plugin', () => {
     assert.equal(existsSync(join(ROOT, '.claude-plugin', 'plugin.json')), false, 'the repo root is not a plugin');
     const listed = new Set(readdirSync(join(ROOT, 'plugin')));
     for (const name of ['bin', 'src', 'db', 'data', 'skills', 'hooks', '.claude-plugin']) assert.ok(listed.has(name), name);
-    for (const name of ['.env', 'tmp', 'site', 'lab', 'app', 'node_modules', 'package.json', '.claude']) assert.ok(!listed.has(name), name);
+    for (const name of ['.env', 'tmp', 'site', 'lab', 'app', 'node_modules', '.claude']) assert.ok(!listed.has(name), name);
     assert.deepEqual(readdirSync(join(ROOT, 'plugin', 'data')), ['db']);
+    assert.deepEqual(JSON.parse(read('plugin/package.json')), { private: true, type: 'module' }, 'it says the code is modules, and installs nothing');
   });
 
   it('the engine loads nothing from outside the plugin, and no package has to be installed', () => {
