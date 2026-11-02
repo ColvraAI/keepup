@@ -28,7 +28,7 @@ function usageOf(llm: Llm): Usage {
   return { ...seen, max_usd: llm.maxUsd };
 }
 
-function declaredPackages(context: PipelineContext): Set<string> {
+export function declaredPackages(context: Pick<PipelineContext, 'facts'>): Set<string> {
   return new Set(context.facts.manifests.flatMap((manifest) => manifest.dependencies.map((dep) => dep.name)));
 }
 

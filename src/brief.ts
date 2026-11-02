@@ -2,6 +2,7 @@
 // reads, one screen; renderBrief is the whole thing. Repo and model text can't break out of either.
 import { humanDate } from './dates.ts';
 import type { CheckSummary, Coverage, Dropped, Finding, HeldBack, LeverValue, Measurement, Move, Profile, Recommendation, RoiOption, Watching } from './run-shape.ts';
+import { PAYBACK_MONTHS } from './roi.ts';
 import { AFTER_UPGRADE } from './sdk-notes.ts';
 import { codeSpan, oneLine, plainText } from './text-safety.ts';
 
@@ -9,9 +10,24 @@ export function quietLine(checked: number): string {
   return `keepup: nothing new applies · ${checked.toLocaleString('en-US')} checked`;
 }
 
-/** When Claude Code judged, what's true is what really ran: a few searches and some reads, not all of the database. */
-export function coveredLine(records: number, coverage: { readonly searches: number; readonly reads: number }, unchecked: readonly string[] = []): string {
-  return [`keepup: nothing new applies · ${records.toLocaleString('en-US')} in the database · ${coverage.searches} searches · ${coverage.reads} read closely`, ...unchecked].join(' · ');
+/** What a session really ran. Only keepup's bundles carry candidates, so a saved run or an older session keeps its searches. */
+export interface SessionCoverage {
+  readonly searches: number;
+  readonly reads: number;
+  readonly candidates?: number;
+  readonly jobs?: number;
+}
+
+const howMany = (value: number, word: string): string => `${value.toLocaleString('en-US')} ${word}${value === 1 ? '' : 's'}`;
+
+function ranWords(coverage: SessionCoverage): string[] {
+  const looked = coverage.candidates === undefined ? `${coverage.searches} searches` : `${howMany(coverage.candidates, 'candidate')} shown for ${howMany(coverage.jobs ?? 0, 'job')}`;
+  return [looked, `${coverage.reads} read closely`];
+}
+
+/** When Claude Code judged, what's true is what really ran, not all of the database. */
+export function coveredLine(records: number, coverage: SessionCoverage, unchecked: readonly string[] = []): string {
+  return [`keepup: nothing new applies · ${records.toLocaleString('en-US')} in the database`, ...ranWords(coverage), ...unchecked].join(' · ');
 }
 
 export interface DependencyCounts {
@@ -48,7 +64,7 @@ export interface BriefInput {
   readonly facts?: { readonly model_ids?: readonly unknown[]; readonly ai_call_sites?: readonly unknown[]; readonly checked?: { readonly files: number } };
   readonly exact?: readonly { readonly kind: string; readonly status?: string }[];
   /** When Claude Code judged: what the session log saw. Its quiet line says this and no more. */
-  readonly coverage?: { readonly searches: number; readonly reads: number };
+  readonly coverage?: SessionCoverage;
   /** Ids on a model list that the finder didn't recognise, so nothing was checked about them. */
   readonly unrecognised?: { readonly count: number; readonly files: readonly string[] } | null;
   readonly moves?: readonly Move[];
@@ -69,9 +85,12 @@ function isRetirement(finding: Finding): boolean {
   return Boolean(finding.reach);
 }
 
-/** It has a number, and the number says it doesn't pay back at the assumed volume. */
+/** It has a number, and the number says it doesn't pay back at the assumed volume. A worked example can't rank, but it can still say this. */
 function losesMoney(finding: Finding): boolean {
-  return finding.value?.status === 'priced' && typeof finding.value.value_usd === 'number' && finding.value.value_usd <= 0;
+  const value = finding.value;
+  if (value?.status === 'priced' && typeof value.value_usd === 'number' && value.value_usd <= 0) return true;
+  const options = value?.status === 'worked' && value.roi?.money ? value.roi.options.filter((option) => option.line) : [];
+  return options.length > 0 && options.every((option) => option.payback_months == null || option.payback_months > PAYBACK_MONTHS);
 }
 
 function latestMeasure(finding: Finding, run: BriefInput): Measurement | undefined {
@@ -270,13 +289,18 @@ function fitCount(run: BriefInput): number {
   return run.findings.filter((finding) => !isRetirement(finding)).length;
 }
 
+function shortOfSearch(run: BriefInput): string {
+  if (!run.ran?.judge) return "The search and the judge didn't run.";
+  return run.coverage?.candidates === undefined ? "The searches fell short, so this doesn't count as compared with the database." : "Some of keepup's bundles went unread, so this doesn't count as compared with the database.";
+}
+
 function checkedLine(run: BriefInput): string {
   if (!searched(run)) {
     const deps = dependencyCounts(run);
     const counted = deps.unchecked ? `${deps.checked + deps.unchecked} dependencies, ${deps.unchecked} of them not checked` : `${deps.checked} dependencies`;
-    return `Exact checks only: ${run.facts?.model_ids?.length ?? 0} model ids and ${counted}. ${run.ran?.judge ? "The searches fell short, so this doesn't count as compared with the database." : "The search and the judge didn't run."} ${fitCount(run)} fit.`;
+    return `Exact checks only: ${run.facts?.model_ids?.length ?? 0} model ids and ${counted}. ${shortOfSearch(run)} ${fitCount(run)} fit.`;
   }
-  if (run.coverage) return `${[`Compared with a database of ${run.db.records.toLocaleString('en-US')}`, `${run.coverage.searches} searches`, `${run.coverage.reads} read closely`, ...notCheckedNotes(run)].join(' · ')}. ${fitCount(run)} fit.`;
+  if (run.coverage) return `${[`Compared with a database of ${run.db.records.toLocaleString('en-US')}`, ...ranWords(run.coverage), ...notCheckedNotes(run)].join(' · ')}. ${fitCount(run)} fit.`;
   const sources = Object.keys(run.db.by_source).length;
   return `Compared with ${run.db.records.toLocaleString('en-US')} new or updated things from ${sources} sources, fetched ${humanDate(run.db.fetched)}. ${fitCount(run)} fit.`;
 }

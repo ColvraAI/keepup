@@ -41,7 +41,7 @@ export interface SessionCall {
   readonly stdinIsTty: boolean;
 }
 
-const TAKES_A_PATH = new Set(['scan', 'facts', 'show', 'verify', 'prepare', 'check', 'run', 'measure']);
+const TAKES_A_PATH = new Set(['scan', 'facts', 'show', 'verify', 'prepare', 'bundles', 'check', 'run', 'measure']);
 
 /** Throws what's refused. Outside a session it does nothing. */
 export function guardSession(call: SessionCall, env: NodeJS.ProcessEnv = process.env): void {

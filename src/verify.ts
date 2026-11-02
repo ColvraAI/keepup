@@ -8,7 +8,7 @@ import { droppedDetail, droppedCategory, noAiCode, renderSummary } from './brief
 import { rankFindings } from './rank.ts';
 import { valueContext } from './lever-prices.ts';
 import { withValues } from './lever-value.ts';
-import { coverageHolds, type SessionLog } from './session.ts';
+import { coverageFacts, coverageHolds, coverageShortfall, type SessionLog } from './session.ts';
 import { listRepoFiles } from './git-files.ts';
 import { maskText } from './mask.ts';
 import { knownWhere, type RunOptions, runPipeline } from './pipeline.ts';
@@ -185,11 +185,11 @@ function briefFor(floorRun: Run, checked: ReturnType<typeof runJudgeChecks>, ran
     held_back: checked.held_back,
     checks: checked.checks,
     ran: { search: covered, judge: true, online: false },
-    coverage: { searches: log.searches, reads: log.reads },
+    coverage: coverageFacts(log),
     unrecognised: unrecognisedOnLists(floorRun.facts.model_ids, files),
   });
   if (covered || (noAiCode(floorRun) && ranked.length === 0)) return brief;
-  return `${brief}Not checked against the database: ${log.searches} searches ran for ${jobsOf(input)} jobs, and it takes 2 for each, with at least one read.\n`;
+  return `${brief}Not checked against the database: ${coverageShortfall(log, jobsOf(input))}.\n`;
 }
 
 export interface VerifyOptions extends RunOptions {

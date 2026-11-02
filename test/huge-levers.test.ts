@@ -327,6 +327,15 @@ describe('a lever that loses money at the assumed volume is not the biggest leve
     assert.deepEqual(findings.map((item) => item.title), ['Huge', 'Tail']);
   });
 
+  it('a worked example that never pays back is not called the biggest either', () => {
+    const example = (payback_months: number | null, line: string) => ({ rank: 1, title: 'Router', effect: ['cheaper'], proof: 'vendor claim', effort: 'A day', where: [], why: 'w', options: [], sources: [], lever: 'ADV-x', value: { status: 'worked', lever: 'ADV-x', label: 'projected', inputs: INPUTS, roi: { money: true, effort: 'A day', basis: 'example', options: [{ name: 'Jev', payback_months, line }] } } }) as unknown as Finding;
+    const never = renderSummary(briefRun([example(200, 'Saves about $4 a month at 10,000 calls · a day\'s work · not worth it below 168,436 calls a month [projected, example]')]));
+    assert.doesNotMatch(never, /Biggest lever/);
+    assert.match(never, /Nothing clears its cost at the assumed volume\. Closest: Router/);
+    const pays = renderSummary(briefRun([example(10, 'Saves about $31 a month at 10,000 calls · a few hours\' work · pays back in 10 months [projected, example]')]));
+    assert.match(pays, /Biggest lever: Router/);
+  });
+
   it('the brief shows break-even first and never says biggest', () => {
     const text = renderSummary(briefRun([priced('Loses', -781)]));
     assert.doesNotMatch(text, /Biggest lever/);

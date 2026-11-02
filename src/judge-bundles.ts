@@ -28,7 +28,7 @@ const MAX_JOB_FILES = 4;
 const WHOLE_FILE_LINES = 220;
 const MAX_DESCRIPTION = 320;
 const RELATED_LIMIT = 3;
-const RETIRED_PATTERN = 'PAT-retired-model-id';
+export const RETIRED_PATTERN = 'PAT-retired-model-id';
 const CODE_NAME = /\.(?:[cm]?[jt]sx?|py|rs|go|rb|java|kt)$/;
 const STOP_WORDS = new Set(['with', 'from', 'that', 'this', 'your', 'calls', 'only', 'model', 'models', 'turn', 'move', 'shuts', 'down', 'retires', 'retired', 'anthropic', 'openai', 'gemini', 'google', 'claude']);
 

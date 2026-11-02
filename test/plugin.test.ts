@@ -111,7 +111,7 @@ describe('the plugin', () => {
   it('the model reading repo text can run the read commands and nothing else: no blanket keepup, no run, no node', () => {
     const skill = read('skills/keepup/SKILL.md');
     const allowed = skill.match(/^allowed-tools: (.*)$/m)?.[1] ?? '';
-    assert.deepEqual(allowed.split(', ').sort(), ['Bash(keepup get:*)', 'Bash(keepup levers:*)', 'Bash(keepup prepare:*)', 'Bash(keepup search:*)', 'Bash(keepup show:*)', 'Bash(keepup verify:*)']);
+    assert.deepEqual(allowed.split(', ').sort(), ['Bash(keepup bundles:*)', 'Bash(keepup get:*)', 'Bash(keepup levers:*)', 'Bash(keepup prepare:*)', 'Bash(keepup search:*)', 'Bash(keepup show:*)', 'Bash(keepup verify:*)']);
     assert.ok(!/Bash\(keepup:\*\)/.test(skill), 'that would pre-approve run, and --out to any path');
     assert.ok(!/Bash\(node/.test(skill));
     assert.ok(!/node -e/.test(skill));
@@ -151,9 +151,50 @@ describe('the plugin', () => {
 
   it('/keepup has a checklist, and the program writes the coverage line, not the model', () => {
     const skill = read('skills/keepup/SKILL.md');
-    for (const step of ['Step 1: `keepup prepare` ran', 'Step 3: at least two searches for every job', 'Step 4:', 'Step 6: `keepup verify` ran']) assert.ok(skill.includes(step), step);
+    for (const step of ['Step 1: `keepup prepare` ran', 'Step 3: `keepup bundles` ran', 'Step 4:', 'Step 6: `keepup verify` ran']) assert.ok(skill.includes(step), step);
     assert.match(skill, /Print its output word for word/);
     assert.match(skill, /Don't add a "Checked against" line or a count of your own/);
+  });
+
+  it('/keepup has the program do the deterministic work: it reads bundles, and judges them', () => {
+    const skill = read('skills/keepup/SKILL.md');
+    for (const command of ['keepup get bundles.prefix', 'keepup get bundles.rules', 'keepup bundles . --profile \'', 'keepup get bundles.patterns.0', 'keepup get bundles.jobs.0', 'keepup get bundles.floor']) assert.ok(skill.includes(command), command);
+    const order = ['keepup get bundles.prefix', 'keepup bundles . --profile', 'keepup get bundles.patterns.0', 'keepup get bundles.jobs.0', 'keepup get bundles.floor', "keepup verify . --findings '"].map((command) => skill.indexOf(command));
+    assert.deepEqual(order, [...order].sort((a, b) => a - b), 'in the order the steps run');
+    assert.match(skill, /&apos;/);
+  });
+
+  it('/keepup has no fit rules of its own, so it can\'t contradict the judge again', () => {
+    const skill = read('skills/keepup/SKILL.md');
+    assert.match(skill, /fit rules are what `bundles\.rules` prints/);
+    assert.ok(!/Labels built at runtime/.test(skill), 'against "a list the team or an admin configures counts as fixed"');
+    assert.ok(!/It isn't already here/.test(skill), 'against "caching fits where a setting is off by default"');
+    assert.ok(!/are unproven/.test(skill), 'against the rule that an info pattern the code really shows is a finding');
+    assert.ok(!/It fits only if/.test(skill));
+  });
+
+  it('/keepup adds only the judging notes that don\'t contradict the judge', () => {
+    const skill = read('skills/keepup/SKILL.md').replace(/\s+/g, ' ');
+    assert.ok(skill.includes('open where its switch is read and whether any example, config or doc turns it on'), 'an off switch is the lever');
+    assert.ok(skill.includes("A switch that's off by default and off everywhere is the lever: turn it on."));
+    assert.ok(skill.includes("A docs-only change, such as a row in a README table, isn't a lever."));
+    assert.ok(skill.includes('say whose bill a saving lands on'));
+    assert.ok(skill.includes('a new hosted vendor is at most an off-by-default option'));
+  });
+
+  it('/keepup doesn\'t send a session to re-prove what the program proved', () => {
+    const skill = read('skills/keepup/SKILL.md');
+    assert.ok(!/`keepup show` on every place you cite/.test(skill));
+    assert.match(skill, /program already proved/);
+  });
+
+  it('/keepup keeps its step numbers, because the weekly skill asks for steps 1 to 7', () => {
+    const skill = read('skills/keepup/SKILL.md');
+    assert.match(read('skills/weekly/SKILL.md'), /Do steps 1 to 7 of this plugin's `keepup` skill/);
+    const numbers = [...skill.matchAll(/^## (\d+)\. /gm)].map((match) => Number(match[1]));
+    assert.deepEqual(numbers, [1, 2, 3, 4, 5, 6, 7, 8, 9]);
+    assert.match(skill, /^## 6\. Check what you wrote, and print it$/m);
+    assert.match(skill, /^## 7\. The brief is what it printed$/m);
   });
 
   it('the manifest has no pinned version, because a pinned one would strand an install on old data', () => {

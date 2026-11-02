@@ -7,6 +7,7 @@ import { dirname, join } from 'node:path';
 import { describe, it } from 'node:test';
 import { renderRetired } from '../src/brief.ts';
 import { onlyInTrailingComment } from '../src/exact-checks.ts';
+import { listRepoFiles } from '../src/git-files.ts';
 import { dataDir } from '../src/session.ts';
 import { recordingText } from '../scripts/record-skill-run.ts';
 import { FIXTURES, fixtureRepo, ROOT } from './helpers.ts';
@@ -17,6 +18,37 @@ const HELPER = join(ROOT, 'scripts', 'skill-session.sh');
 function pluginRun(cwd: string, data: string, ...args: string[]) {
   return spawnSync(SHIM, args, { cwd, encoding: 'utf8', env: { ...process.env, CLAUDE_PLUGIN_DATA: data, CLAUDE_PROJECT_DIR: cwd } });
 }
+
+describe("what a person's own tools leave in a checkout", () => {
+  it("doesn't read as uncommitted work, because Claude Code writes one of these itself", () => {
+    const repo = fixtureRepo('quiet');
+    try {
+      mkdirSync(join(repo.path, '.claude'));
+      writeFileSync(join(repo.path, '.claude', 'settings.local.json'), '{}\n');
+      writeFileSync(join(repo.path, '.DS_Store'), 'x');
+      const read = listRepoFiles(repo.path);
+      assert.equal(read.commit, repo.commit);
+      assert.equal(read.base_commit, undefined);
+      assert.ok(!read.files.some((file) => file.path.endsWith('settings.local.json') || file.path.endsWith('.DS_Store')));
+    } finally {
+      repo.cleanup();
+    }
+  });
+
+  it('still counts when the repo tracks it, and any other new file still counts', () => {
+    const tracked = fixtureRepo('quiet', { '.DS_Store': 'x' });
+    const other = fixtureRepo('quiet');
+    try {
+      writeFileSync(join(tracked.path, '.DS_Store'), 'changed');
+      assert.equal(listRepoFiles(tracked.path).commit, null);
+      writeFileSync(join(other.path, 'new.py'), 'print(1)\n');
+      assert.equal(listRepoFiles(other.path).commit, null);
+    } finally {
+      tracked.cleanup();
+      other.cleanup();
+    }
+  });
+});
 
 describe('two repos, one plugin data folder', () => {
   it('a session in one repo never reads what another repo prepared', () => {

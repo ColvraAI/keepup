@@ -315,10 +315,13 @@ function lockFileFrom(path: string, bytes: Buffer): LockFile | null {
   return BAD_NAME.test(path) || bytes.length > MAX_BYTES ? null : { path, text: maskText(stripControl(bytes.toString('utf8'))) };
 }
 
+/** What a person's own tools leave in any checkout, which their global ignore hides and keepup doesn't read. Claude Code writes the first itself, so it would make every plugin session look like uncommitted work. */
+const PERSONAL_FILE = /(?:^|\/)(?:\.claude\/settings\.local\.json|\.DS_Store)$/;
+
 /** Compares bytes itself, because `git status` and `git diff` can run a repo's clean filter. */
 function worktreeFiles(root: string, head: string | null, onSkip: (reason: SkipReason) => void, limits: BudgetLimits, clock: ReadClock): WorktreeRead {
-  const listed = [...new Set(runGit(root, ['ls-files', '-z', '--cached', '--others', '--exclude-standard']).split('\0').filter(Boolean))];
   const blobs = head ? headBlobs(root, head) : new Map<string, string>();
+  const listed = [...new Set(runGit(root, ['ls-files', '-z', '--cached', '--others', '--exclude-standard']).split('\0').filter((path) => path && (blobs.has(path) || !PERSONAL_FILE.test(path))))];
   const realRoot = realpathSync(root);
   const listedSet = new Set(listed);
   let dirty = head !== null && listed.some((path) => !blobs.has(path));

@@ -99,6 +99,35 @@ export interface RawProfile {
   readonly stack_lock: readonly string[];
 }
 
+const WANTED = 'A profile is one_liner, stack, jobs and stack_lock. Each job is job, how, where and search_terms. Each place in where is file, line and quote.';
+const isText = (value: unknown): value is string => typeof value === 'string';
+const isTextList = (value: unknown): boolean => Array.isArray(value) && value.every(isText);
+
+function placeFits(raw: unknown): boolean {
+  const { file, line, quote } = (raw ?? {}) as Record<string, unknown>;
+  return isText(file) && Number.isInteger(line) && isText(quote);
+}
+
+function jobFits(raw: unknown): boolean {
+  const { job, how, where, search_terms: terms } = (raw ?? {}) as Record<string, unknown>;
+  return isText(job) && isText(how) && Array.isArray(where) && where.every(placeFits) && isTextList(terms);
+}
+
+/** What a model hands over is checked at the door, and the message says what shape was wanted. An apostrophe travels as &apos;, as it does for verify. */
+export function parseProfile(text: string): RawProfile {
+  let raw: Record<string, unknown>;
+  try {
+    raw = JSON.parse(text.replaceAll('&apos;', "'")) as Record<string, unknown>;
+  } catch (error) {
+    throw new Error(`Can't read the profile: ${(error as Error).message}`);
+  }
+  if (!Array.isArray(raw?.jobs)) throw new Error(`"jobs" has to be a list. ${WANTED}`);
+  const badJob = raw.jobs.findIndex((job) => !jobFits(job));
+  if (badJob !== -1) throw new Error(`"jobs" item ${badJob + 1} isn't the right shape. ${WANTED}`);
+  if (!isText(raw.one_liner) || !isTextList(raw.stack) || !isTextList(raw.stack_lock)) throw new Error(`"one_liner", "stack" and "stack_lock" are missing or the wrong shape. ${WANTED}`);
+  return raw as unknown as RawProfile;
+}
+
 function usefulSamples(context: PipelineContext, file: string): number[] {
   const lines = context.facts.ai_call_sites.filter((site) => site.file === file).map((site) => site.line);
   const fromSignals = Object.values(context.facts.signals).flatMap((signal) => signal.samples.filter((sample) => sample.file === file).map((sample) => sample.line));
@@ -195,6 +224,13 @@ export function verifyProfile(raw: RawProfile, input: ReadonlyMap<string, string
   return { profile: { one_liner: oneLiner, stack: keptLines('A line about the stack', raw.stack, corpus, dropped), jobs, stack_lock: keptLines('A line of the stack lock', raw.stack_lock, corpus, dropped) }, dropped };
 }
 
+/** The text a profile's sentences may be read from, as the checks read it. */
+export function verifyContextOf(context: Pick<PipelineContext, 'facts' | 'files'>): VerifyContext {
+  const readme = context.facts.readme ? context.files.get(context.facts.readme.file) : '';
+  const manifests = context.facts.manifests.flatMap((manifest) => manifest.dependencies.map((dep) => `${dep.name} ${dep.spec} ${dep.spec.match(/\d+\.\d+/)?.[0] ?? ''}`)).join('\n');
+  return { files: context.files, readme, manifests };
+}
+
 export async function understandProduct(llm: Pick<Llm, 'ask'>, context: PipelineContext): Promise<{ profile: Profile; dropped: Dropped[] }> {
   const prefix = repoPrefix(context);
   const pick = await llm.ask<{ files_to_read: string[] }>({ purpose: 'Pick the files to read', system: SYSTEM, prefix, prompt: PICK_PROMPT, schema: PICK_SCHEMA, maxTokens: PICK_TOKENS, effort: 'low' });
@@ -203,7 +239,5 @@ export async function understandProduct(llm: Pick<Llm, 'ask'>, context: Pipeline
   const excerpts = picked.map((file) => fileExcerpt(context, file)).join('\n');
   const prompt = [readmeLines(context), excerpts, callSiteExcerpts(context, picked), PROFILE_PROMPT].filter(Boolean).join('\n\n');
   const raw = await llm.ask<RawProfile>({ purpose: 'What we understood', system: SYSTEM, prefix, prompt, schema: PROFILE_SCHEMA, maxTokens: PROFILE_TOKENS, effort: 'medium' });
-  const readme = context.facts.readme ? context.files.get(context.facts.readme.file) : '';
-  const manifests = context.facts.manifests.flatMap((manifest) => manifest.dependencies.map((dep) => `${dep.name} ${dep.spec} ${dep.spec.match(/\d+\.\d+/)?.[0] ?? ''}`)).join('\n');
-  return verifyProfile(raw, { files: context.files, readme, manifests });
+  return verifyProfile(raw, verifyContextOf(context));
 }

@@ -11,7 +11,7 @@ import { callerLines, floorBundle, floorItems, type Bundle, type FloorItem, jobB
 import { JUDGE_SCHEMA, JUDGE_SYSTEM, type JudgeReply, type RawFinding, type RawVerdict } from './judge-schema.ts';
 import { loadLevers, loadPatternMeta, type Lever, type PatternMeta } from './levers.ts';
 import { BudgetExceededError, type Llm } from './llm.ts';
-import type { JudgeInput, JudgeResult } from './pipeline.ts';
+import type { JudgeInput, JudgeResult, PipelineContext } from './pipeline.ts';
 import { applyProviderSetting } from './provider-setting.ts';
 import { repoPrefix, untrustedBlock } from './repo-text.ts';
 import type { Dropped, Finding, FindingOption, HeldBack, Profile, Watching } from './run-shape.ts';
@@ -39,18 +39,22 @@ function profileText(profile: Profile | null): string {
   return untrustedBlock('profile', 'what an earlier step understood about the product', `${profile.one_liner}\nStack: ${profile.stack.join(', ')}\nJobs:\n${jobs}\nCan only adopt: ${profile.stack_lock.join(' ')}`);
 }
 
-function modelIdsIn(input: JudgeInput): (finding: Finding) => string[] {
-  const models = input.context.exact.filter((item): item is ModelCheck => item.kind === 'model');
+function modelIdsIn(context: PipelineContext): (finding: Finding) => string[] {
+  const models = context.exact.filter((item): item is ModelCheck => item.kind === 'model');
   const named = (text: string, id: string) => new RegExp(`(?<![\\w.-])${id.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?![\\w-])`).test(text);
   return (finding) => models.filter((model) => named(finding.why, model.model) || named(finding.title, model.model)).map((model) => model.model);
 }
 
 /** For a library behind on versions, the code near what its notes name, so the judge can see what's already handled. */
-function callersIn(input: JudgeInput): (finding: Finding) => string {
+function callersIn(context: PipelineContext): (finding: Finding) => string {
   return (finding) => {
-    const check = dependencyOf(finding, input.context.exact);
-    return check?.release_notes ? callerLines(check.name, check.release_notes.gains.map((gain) => gain.text), input.context.files) : '';
+    const check = dependencyOf(finding, context.exact);
+    return check?.release_notes ? callerLines(check.name, check.release_notes.gains.map((gain) => gain.text), context.files) : '';
   };
+}
+
+export function floorItemsFor(context: PipelineContext, findings: readonly Finding[], levers: readonly Lever[]): FloorItem[] {
+  return floorItems(findings, levers, modelIdsIn(context), callersIn(context));
 }
 
 const HUGGING_FACE = /^https:\/\/huggingface\.co\//;
@@ -271,18 +275,25 @@ function dedupeRows<T>(rows: readonly T[], key: (row: T) => string): T[] {
   return [...new Map(rows.map((row) => [key(row), row])).values()];
 }
 
-function candidatesFor(job: Profile['jobs'][number], candidates: readonly Candidate[]): Candidate[] {
+export function candidatesFor(job: Profile['jobs'][number], candidates: readonly Candidate[]): Candidate[] {
   return candidates.filter((candidate) => candidate.job === job.job);
 }
 
-function exactPlaces(input: JudgeInput): Set<string> {
-  const models = input.context.exact.filter((item): item is ModelCheck => item.kind === 'model');
+function exactPlaces(context: PipelineContext): Set<string> {
+  const models = context.exact.filter((item): item is ModelCheck => item.kind === 'model');
   return new Set(models.flatMap((model) => [...model.live_places, ...model.not_live].map((place) => `${place.file}:${place.line}`)));
 }
 
+/** What needs no profile: the floor, and each pattern with its levers and the code at its hits. */
+export function repoBundles(context: PipelineContext, options: Pick<JudgeOptions, 'patterns' | 'changelog'>, items: readonly FloorItem[], levers: readonly Lever[]): { floor: Bundle | null; patterns: Bundle[] } {
+  return {
+    floor: floorBundle(items, context.files),
+    patterns: patternBundles({ hits: context.hits, exactPlaces: exactPlaces(context), levers, patterns: options.patterns ?? loadPatternMeta(), changelog: options.changelog, files: context.files }),
+  };
+}
+
 function assembleBundles(input: JudgeInput, options: JudgeOptions, items: readonly FloorItem[], levers: readonly Lever[]): Bundle[] {
-  const floor = floorBundle(items, input.context.files);
-  const patterns = patternBundles({ hits: input.context.hits, exactPlaces: exactPlaces(input), levers, patterns: options.patterns ?? loadPatternMeta(), changelog: options.changelog, files: input.context.files });
+  const { floor, patterns } = repoBundles(input.context, options, items, levers);
   const jobs = (input.profile?.jobs ?? []).flatMap((job) => {
     const bundle = jobBundle(job, candidatesFor(job, input.candidates as readonly Candidate[]), input.context.files, options.libraryFacts ?? []);
     return bundle ? [bundle] : [];
@@ -405,7 +416,7 @@ export function oneFindingPerAbsence(findings: readonly Finding[], levers: reado
 /** Runs the judge over every bundle. The floor is never lost: a bundle that fails leaves its facts as they were. */
 export async function judgeAll(input: JudgeInput, options: JudgeOptions): Promise<JudgeResult> {
   const levers = options.levers ?? loadLevers();
-  const items = floorItems(input.floor.findings, levers, modelIdsIn(input), callersIn(input));
+  const items = floorItemsFor(input.context, input.floor.findings, levers);
   const bundles = assembleBundles(input, options, items, levers);
   const prefix = `${repoPrefix(input.context)}\n\n${profileText(input.profile)}`;
   const outcomes = await askAll(options.llm, prefix, bundles);

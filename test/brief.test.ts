@@ -86,6 +86,17 @@ describe('renderSummary', () => {
     assert.equal(renderSummary(quiet), 'keepup: nothing new applies · 41,785 checked\n');
   });
 
+  it('when the session read keepup\'s bundles, the lines say candidates and jobs, because no search ran', () => {
+    const coverage = { searches: 0, reads: 9, candidates: 356, jobs: 7 };
+    const quiet = { ...full, profile: null, findings: [], watching: [], checks: { passed: 0, dropped: [] }, ran: SEARCHED, coverage };
+    assert.equal(renderSummary(quiet), 'keepup: nothing new applies · 41,785 in the database · 356 candidates shown for 7 jobs · 9 read closely\n');
+    assert.match(renderSummary({ ...full, profile: null, ran: SEARCHED, coverage }), /Compared with a database of 41,785 · 356 candidates shown for 7 jobs · 9 read closely\. 1 fit\./);
+    assert.equal(renderSummary({ ...quiet, coverage: { ...coverage, candidates: 1, jobs: 1 } }), 'keepup: nothing new applies · 41,785 in the database · 1 candidate shown for 1 job · 9 read closely\n');
+    const short = renderSummary({ ...full, profile: null, ran: { ...SEARCHED, search: false }, coverage });
+    assert.ok(!/searches/.test(short), short);
+    assert.ok(short.replace(/\s+/g, ' ').includes("Some of keepup's bundles went unread, so this doesn't count as compared with the database."), short);
+  });
+
   it('when Claude Code judged, the quiet line says what really ran', () => {
     const quiet = { ...full, profile: null, findings: [], watching: [], checks: { passed: 0, dropped: [] }, ran: SEARCHED, coverage: { searches: 6, reads: 9 } };
     assert.equal(renderSummary(quiet), 'keepup: nothing new applies · 41,785 in the database · 6 searches · 9 read closely\n');

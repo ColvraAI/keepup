@@ -65,6 +65,17 @@ describe('the plugin as a real install leaves it, copied with its links followed
     assert.match(ok('issue-body', '--dir', data, '--save'), /^body: .*issue\.md\n$/);
   });
 
+  it('runs prepare, bundles and every part of bundles from the copy', () => {
+    ok('prepare', '.', '--dir', data);
+    assert.match(ok('get', 'bundles.rules', '--dir', data), /^You are keepup's judge\./);
+    assert.match(ok('get', 'bundles.prefix', '--dir', data), /^<untrusted kind="prepared"/);
+    const profile = { one_liner: 'A support bot.', stack: ['TypeScript'], jobs: [{ job: 'Write replies', how: 'Calls Anthropic messages.', where: [{ file: 'answer.ts', line: callLine, quote: 'messages.create' }], search_terms: ['prompt caching', 'support'] }], stack_lock: [] };
+    assert.match(ok('bundles', '.', '--profile', JSON.stringify(profile), '--dir', data), /bundles\.jobs\.0: \d+ candidates/);
+    assert.match(ok('get', 'bundles', '--dir', data), /bundles\.jobs\.0/);
+    assert.match(ok('get', 'bundles.patterns.0', '--dir', data), /<untrusted kind="lever"/);
+    assert.match(ok('get', 'bundles.jobs.0', '--dir', data), /<untrusted kind="records"/);
+  });
+
   it('the weekly notice runs from the copy, and never fails a session', () => {
     assert.equal(run('check', repo.path, '--weekly-state', join(data, 'weekly-check.json'), '--hook').status, 0);
   });

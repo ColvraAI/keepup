@@ -6,6 +6,7 @@ import { basename, dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseArgs } from 'node:util';
 import { droppedLine, renderBrief, renderRetired, renderSummary } from '../src/brief.ts';
+import { bundlePart, bundlesReport, prepareBundles, runBundles, writeBundles } from '../src/bundles-cli.ts';
 import { formatChange, loadRunFor, runChangeCommand } from '../src/change-cli.ts';
 import { runMeasureCommand, runWithMeasurement } from '../src/measure-cli.ts';
 import { formatMeasurement } from '../src/measure.ts';
@@ -39,7 +40,7 @@ const REPLAY_DIR = join(REPO_ROOT, 'data', 'replay');
 const HOOK_BUDGET_MS = 3_000;
 /** Git gets less time than the check it's in, so it's never left behind when the check is killed. */
 const HOOK_GIT_MARGIN_MS = 1_000;
-const PREPARED = ['scan', 'facts', 'floor', 'findings', 'verified'] as const;
+const PREPARED = ['scan', 'facts', 'floor', 'findings', 'verified', 'bundles'] as const;
 const DEFAULT_GET_LIMIT = 40;
 const PR_BODY_FILE = 'pr-body.md';
 const ISSUE_BODY_FILE = 'issue.md';
@@ -56,9 +57,12 @@ const USAGE = `keepup: check a product's code against everything new in AI.
                                           run the checks over findings someone else judged; prints what survives,
                                           or with --brief the one screen a founder reads, written from them
   keepup prepare <path> [--commit <sha>] [--dir <dir>]
-                                          write scan, facts and floor to the data folder, offline, in one call
-  keepup get <facts|scan|floor|findings|verified>[.field.field] [--limit <n>] [--dir <dir>]
-                                          read part of a prepared file, as JSON
+                                          write scan, facts, floor and bundles to the data folder, offline, in one call
+  keepup bundles <path> --profile '<json>' [--dir <dir>]
+                                          add a bundle per job, from a profile you wrote: its candidates, the code at its places and what's known of its
+                                          libraries. Prints every citation that didn't check out. Offline
+  keepup get <facts|scan|floor|findings|verified|bundles>[.field.field] [--limit <n>] [--dir <dir>]
+                                          read part of a prepared file, as JSON; bundles.floor, bundles.floor_rest.<n>, bundles.patterns.<n> and bundles.jobs.<n> print one bundle, whole
   keepup levers [<pattern-id>]            the levers for a pattern, as JSON, with the pattern itself
   keepup check <path> [--as-of <date>] [--commit <sha>] [--weekly-state <file>] [--hook]
                                           the weekly check, one line; with --weekly-state, at most once a week
@@ -84,7 +88,7 @@ const USAGE = `keepup: check a product's code against everything new in AI.
                                           a real before-and-after on this repo's own literal prompt, on your key. It says what it sends first, refuses a
                                           prompt built at runtime, prints n, and stops at $0.25. No key is "not measured · needs X", with no number.
 
-scan, facts, search, show, verify, prepare, get, levers and check are offline and send nothing anywhere. 'run' sends masked, bounded excerpts, which can
+scan, facts, search, show, verify, prepare, bundles, get, levers and check are offline and send nothing anywhere. 'run' sends masked, bounded excerpts, which can
 be a whole short file but never a secret, to Claude with your ANTHROPIC_API_KEY, asks npm, crates.io and PyPI about your dependencies,
 and reads public model cards and release notes. With --no-judge, or with no key, it stays offline unless you add --online, and says only what the exact checks prove.
 `;
@@ -116,6 +120,7 @@ const OPTIONS = {
   stdin: { type: 'boolean' },
   brief: { type: 'boolean' },
   findings: { type: 'string' },
+  profile: { type: 'string' },
   'first-sight': { type: 'boolean' },
   'hook-child': { type: 'boolean' },
   finding: { type: 'string' },
@@ -302,7 +307,7 @@ async function commandVerify(positionals: readonly string[], values: Values): Pr
   printJson(output, values.out);
 }
 
-/** The three deterministic files in one approved call, so the skill needs no mkdir, no loop and no shell. */
+/** The deterministic files in one approved call, so the skill needs no mkdir, no loop and no shell. */
 async function commandPrepare(path: string, values: Values): Promise<void> {
   const dir = dataDir(values.dir);
   resetLog(dir);
@@ -312,15 +317,27 @@ async function commandPrepare(path: string, values: Values): Promise<void> {
   writeFileSync(join(dir, 'scan.json'), `${JSON.stringify(scan, null, 1)}\n`);
   writeFileSync(join(dir, 'facts.json'), `${JSON.stringify(facts, null, 1)}\n`);
   writeRun(floor, { out: join(dir, 'floor.json'), force: true });
+  const bundles = prepareBundles(path, floor, values.commit);
+  writeBundles(dir, bundles);
   print([
     `keepup: prepared ${facts.repo} in ${dir}`,
-    `${facts.checked.files} files, ${facts.ai_call_sites.length} AI call sites, ${facts.model_ids.length} model ids, ${scan.hits.length} pattern hits, ${floor.findings.length} exact findings.`,
-    `Read them with: keepup get facts.ai_call_sites, keepup get scan.hits, keepup get floor.findings`,
+    `${facts.checked.files} files, ${facts.ai_call_sites.length} AI call sites, ${facts.model_ids.length} model ids, ${scan.hits.length} pattern hits, ${floor.findings.length} exact findings, ${bundles.patterns.length} pattern bundles.`,
+    `Read them with: keepup get facts.ai_call_sites, keepup get bundles.prefix, keepup get bundles.rules`,
   ].join('\n'));
 }
 
+/** An argument for the same reason verify's findings are, and an apostrophe travels the same way. */
+async function commandBundles(path: string, values: Values): Promise<void> {
+  if (values.profile === undefined) throw new UsageError("bundles takes --profile '<json>'.");
+  if (values.commit !== undefined) throw new UsageError('bundles reads the commit keepup prepare read, so it takes no --commit.');
+  const result = await runBundles({ path, text: values.profile, dir: dataDir(values.dir) });
+  print(bundlesReport(result));
+  if (result.jobs.length === 0) process.exitCode = EXIT_ERROR;
+}
+
+/** Each place in a list has one spelling. The session log counts bundles by the path read, so 0 and 00 mustn't both reach the first one. */
 function readField(value: unknown, field: string): unknown {
-  if (Array.isArray(value) && /^\d+$/.test(field)) return value[Number(field)];
+  if (Array.isArray(value) && /^(?:0|[1-9]\d*)$/.test(field)) return value[Number(field)];
   return value && typeof value === 'object' && Object.hasOwn(value, field) ? (value as Record<string, unknown>)[field] : undefined;
 }
 
@@ -332,6 +349,11 @@ function commandGet(positionals: readonly string[], values: Values): void {
   if (!existsSync(path)) throw new Error(`${name}.json isn't there yet. Run keepup prepare first.`);
   const value = fields.reduce<unknown>(readField, JSON.parse(readFileSync(path, 'utf8')));
   if (value === undefined) throw new Error(`${positionals[1]} isn't in ${name}.json.`);
+  const part = name === 'bundles' ? bundlePart(fields, value) : null;
+  if (part) {
+    if (part.read) logEvent(sessionDir(values), 'read', positionals[1], part.read);
+    return part.fence ? printData('prepared', positionals[1], part.text) : print(part.text);
+  }
   const limit = values.limit === undefined ? DEFAULT_GET_LIMIT : Number(values.limit);
   if (!Number.isInteger(limit) || limit < 1) throw new UsageError('--limit takes a positive number.');
   if (Array.isArray(value) && value.length > limit) process.stderr.write(`keepup: showing ${limit} of ${value.length}. --limit shows more.\n`);
@@ -428,6 +450,7 @@ async function main(argv: readonly string[]): Promise<void> {
   if (command === 'show') return commandShow(positionals, values);
   if (command === 'verify') return commandVerify(positionals, values);
   if (command === 'prepare') return commandPrepare(pathArgument(positionals, command), values);
+  if (command === 'bundles') return commandBundles(pathArgument(positionals, command), values);
   if (command === 'get') return commandGet(positionals, values);
   if (command === 'levers') return commandLevers(positionals);
   if (command === 'check') {
