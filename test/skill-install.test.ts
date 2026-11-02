@@ -7,6 +7,7 @@ import { dirname, join } from 'node:path';
 import { describe, it } from 'node:test';
 import { renderRetired } from '../src/brief.ts';
 import { onlyInTrailingComment } from '../src/exact-checks.ts';
+import { dataDir } from '../src/session.ts';
 import { recordingText } from '../scripts/record-skill-run.ts';
 import { FIXTURES, fixtureRepo, ROOT } from './helpers.ts';
 
@@ -28,6 +29,42 @@ describe('two repos, one plugin data folder', () => {
       const seen = pluginRun(one.path, data, 'get', 'facts.ai_call_sites', '--dir', data);
       assert.equal(seen.status, 0, seen.stderr);
       assert.match(seen.stdout, /chat\.py/);
+    } finally {
+      one.cleanup();
+      two.cleanup();
+      rmSync(data, { recursive: true, force: true });
+    }
+  });
+
+  it('each repo keeps its own pull request text, so a yes waiting in one can\'t send another\'s words', () => {
+    const one = fixtureRepo('quiet');
+    const two = fixtureRepo('quiet');
+    const data = mkdtempSync(join(tmpdir(), 'keepup-data-'));
+    const finding = { rank: 1, title: 'Cache the policy', effect: ['cheaper'], proof: 'vendor claim', effort: 'Hours', where: [{ file: 'a.ts', line: 1, text: 'x' }], options: [], sources: [], lever: 'ADV-x', pr: null };
+    const seed = (path: string, why: string) => {
+      const own = dataDir(data, { KEEPUP_PLUGIN: '1', CLAUDE_PROJECT_DIR: path });
+      mkdirSync(own, { recursive: true });
+      writeFileSync(join(own, 'facts.json'), JSON.stringify({ repo: 'x/y', commit: 'abc1234' }));
+      writeFileSync(join(own, 'verified.json'), JSON.stringify({ findings: [{ ...finding, why }] }));
+    };
+    const bodyFile = (stdout: string) => stdout.match(/^body: (.*)$/m)?.[1] ?? '';
+    try {
+      execFileSync('git', ['-C', one.path, 'remote', 'add', 'origin', 'git@github.com:acme/one.git']);
+      execFileSync('git', ['-C', two.path, 'remote', 'add', 'origin', 'git@github.com:acme/two.git']);
+      seed(one.path, 'The private words of repo one.');
+      seed(two.path, 'The words of repo two.');
+      const first = pluginRun(one.path, data, 'pr-body', '--finding', '1', '--dir', data, '--save');
+      assert.equal(first.status, 0, first.stderr);
+      assert.match(first.stdout, /^repo: acme\/one$/m);
+      const before = readFileSync(bodyFile(first.stdout), 'utf8');
+      assert.match(before, /private words of repo one/);
+      const second = pluginRun(two.path, data, 'pr-body', '--finding', '1', '--dir', data, '--save');
+      assert.equal(second.status, 0, second.stderr);
+      assert.match(second.stdout, /^repo: acme\/two$/m);
+      assert.notEqual(bodyFile(second.stdout), bodyFile(first.stdout));
+      assert.match(readFileSync(bodyFile(second.stdout), 'utf8'), /words of repo two/);
+      assert.equal(readFileSync(bodyFile(first.stdout), 'utf8'), before);
+      assert.ok(!existsSync(join(data, 'pr-body.md')), 'nothing shared at the top of the data folder');
     } finally {
       one.cleanup();
       two.cleanup();

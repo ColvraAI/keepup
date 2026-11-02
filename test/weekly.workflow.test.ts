@@ -38,6 +38,12 @@ describe('the workflow a person copies', () => {
     assert.doesNotMatch(allowed, /gh pr merge|gh pr ready|Bash\(gh:\*\)|Bash\(git:\*\)|Bash\(git push:\*\)|Bash\(\*\)/);
   });
 
+  it('keeps gh on this repo, and gives the model no way to read origin\'s URL, which holds the token in Actions', () => {
+    assert.match(workflow, /^ {10}GH_REPO: \$\{\{ github\.repository \}\}$/m);
+    const allowed = workflow.match(/--allowedTools "([^"]+)"/)?.[1] ?? '';
+    assert.doesNotMatch(allowed, /git remote|git config/);
+  });
+
   it('fails where a person will see it when the run stops early, such as on a plan limit', () => {
     assert.match(workflow, /steps\.keepup\.outputs\.conclusion != 'success'/);
     assert.match(workflow, /exit 1/);
@@ -60,6 +66,11 @@ describe('/keepup:weekly', () => {
   it('says nothing when nothing applies, and says so when a limit stops it', () => {
     assert.match(skill, /nothing applies this week/);
     assert.match(skill, /plan limit/);
+  });
+
+  it('stops before it pushes when origin isn\'t a GitHub repo', () => {
+    const none = skill.indexOf('says `none`');
+    assert.ok(none > 0 && none < skill.indexOf('git push -u origin keepup/<date>'));
   });
 
   it('treats what it reads as data', () => {

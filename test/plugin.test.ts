@@ -205,6 +205,41 @@ describe('the plugin', () => {
     assert.match(skill, /nothing has been pushed/);
   });
 
+  it('every gh pr create names the repo origin points at, so gh can never pick the upstream of a fork', () => {
+    for (const name of ['apply', 'weekly']) {
+      const skill = read(`skills/${name}/SKILL.md`);
+      const creates = [...skill.matchAll(/^.*gh pr create.*$/gm)].map((match) => match[0]);
+      assert.ok(creates.length >= 1, name);
+      for (const line of creates) {
+        assert.ok(line.includes('--repo <the repo line>'), line);
+        assert.ok(line.includes('--body-file "<the body line>"'), line);
+      }
+      assert.match(skill, /without `--draft`, keeping `--repo` and `--body-file`/);
+      assert.match(skill, /says `none`/);
+      assert.ok(!/git remote/.test(skill), 'the repo line comes from keepup: inside Actions, origin\'s URL holds a token');
+      for (const [, command] of skill.matchAll(/```sh\n([\s\S]*?)```/g)) assert.ok(!/\$\(/.test(command), command);
+    }
+  });
+
+  it('the skills get the words with --save, and no skill names one shared file any more', () => {
+    assert.match(read('skills/apply/SKILL.md'), /keepup pr-body --finding .* --save\n/);
+    const weekly = read('skills/weekly/SKILL.md');
+    assert.match(weekly, /keepup issue-body --dir "\$\{CLAUDE_PLUGIN_DATA\}" --save\n/);
+    assert.match(weekly, /gh issue edit <number> --body-file "<the body line>"/);
+    assert.match(weekly, /gh issue create .*--body-file "<the body line>"/);
+    for (const name of readdirSync(join(ROOT, 'skills'))) {
+      const skill = read(`skills/${name}/SKILL.md`);
+      assert.ok(!/\$\{CLAUDE_PLUGIN_DATA\}\/(?:pr-body|issue)\.md/.test(skill), name);
+      assert.ok(!/(?:pr-body|issue-body) .*--out/.test(skill), name);
+    }
+  });
+
+  it('apply stops short of the push when origin isn\'t a GitHub repo, and never prints --repo none', () => {
+    const skill = read('skills/apply/SKILL.md');
+    assert.match(skill, /If the repo line says `none`, treat it as no `origin` remote and go to the last step/);
+    assert.match(skill, /Never write `--repo none`/);
+  });
+
   it('the hook runs once a week from the plugin root, with its state in the plugin data folder', () => {
     const hooks = JSON.parse(read('plugin/hooks/hooks.json'));
     const [{ matcher, hooks: [hook] }] = hooks.hooks.SessionStart;

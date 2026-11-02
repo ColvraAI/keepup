@@ -37,6 +37,9 @@ jobs:
           package-manager-cache: false
       - id: keepup
         uses: anthropics/claude-code-action@d535f5172dec02b204866b393d6b20b9b2aaf98d # v1.0.266
+        env:
+          # In a fork, gh would otherwise pick the upstream repo for its issues, labels and pull request lists.
+          GH_REPO: ${{ github.repository }}
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           plugin_marketplaces: https://github.com/ColvraAI/keepup.git

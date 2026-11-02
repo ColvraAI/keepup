@@ -10,11 +10,12 @@ keepup reads your product's code, checks it against everything new in AI and tel
 
 Real findings from real repos, each with a file, a line and a source:
 
-- **A model you use is shutting down.** `collector/utils/WhisperProviders/OpenAiWhisper.js:11` sets `whisper-1`, which OpenAI shuts down on 26 Feb 2027.
-- **A chat call that only picks a label.** A decision model can do that job, with Jev and OpenAI's Decisions API side by side.
+- **A chat call that only picks a label.** `server/utils/agents/aibitat/plugins/router-classifier.js:71` starts a whole agent to pick one rule title. A decision model can do that job, with Jev and OpenAI's Decisions API side by side. OpenAI says about 10x faster (vendor claim).
+- **A long prompt sent without caching.** `crates/aura-config/src/config.rs:102` is the prompt caching switch, off by default, so the system prompt and tool list are billed at full price every turn.
 - **New tools for a job you already do,** such as a vendor's own MCP server your agents can't reach yet, or an embedder that runs in your stack.
 - **Libraries far behind, when their own release notes name what you'd gain,** such as an MCP client three major versions behind that misses a fix for endless SSE reconnects. Being old isn't enough. This one needs the registries, so it comes from `keepup run`, which asks them. `/keepup` stays offline and says how many dependencies it didn't check.
-- **Hand-parsed JSON, prompts sent without caching, parameters a provider has removed.**
+- **Hand-parsed JSON and parameters a provider has removed.**
+- **A model you use is shutting down.** `collector/utils/WhisperProviders/OpenAiWhisper.js:11` sets `whisper-1`, which OpenAI shuts down on 26 Feb 2027.
 
 It also tells you what it checked and held back, and why: a retired model id inside a test, an upgrade your version range already allows, a competitor. "Checked and held back" lists what reached a check or the judge; things a search never turned up aren't in it. When a full run finds nothing, you get one line:
 

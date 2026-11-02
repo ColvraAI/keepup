@@ -66,10 +66,14 @@ Look for the repo's own test command: `npm test` in package.json, `pytest`, `car
 The pull request's words come from the program, so its ROI and proof match the brief and nobody types a number. Leave `--tests` out if you didn't run them: it then says so.
 
 ```sh
-keepup pr-body --finding <rank> --dir "${CLAUDE_PLUGIN_DATA}" --summary "<what changed, in one sentence>" --tests "<the real result>" --out "${CLAUDE_PLUGIN_DATA}/pr-body.md"
+keepup pr-body --finding <rank> --dir "${CLAUDE_PLUGIN_DATA}" --summary "<what changed, in one sentence>" --tests "<the real result>" --save
 ```
 
+It prints two lines. `body:` is the file holding the words, kept for this repo alone. `repo:` is the GitHub repo that `origin` points at, which is where the pull request goes. Use both as printed from here on.
+
 ## 6. Ask, then open the draft pull request
+
+If the repo line says `none`, treat it as no `origin` remote and go to the last step.
 
 Show what's on the branch, then ask, in these words: "Push keepup/<date> and open a draft pull request?" Saying yes to the change wasn't a yes to this, so only a yes after you ask counts. If there's no one to answer, go to the last step.
 
@@ -80,10 +84,10 @@ git push -u origin keepup/<date>
 ```
 
 ```sh
-gh pr create --draft --title "<the finding's title>" --body-file "${CLAUDE_PLUGIN_DATA}/pr-body.md"
+gh pr create --draft --repo <the repo line> --title "<the finding's title>" --body-file "<the body line>"
 ```
 
-If GitHub says draft pull requests aren't supported in this repo, run the same command without `--draft`. Print the link gh gives you. Push only this branch, and never force. Never merge, and never mark it ready.
+`--repo` is never optional: in a clone of a fork, gh on its own would open the pull request on the upstream repo. If GitHub says draft pull requests aren't supported in this repo, run the same command without `--draft`, keeping `--repo` and `--body-file`. Print the link gh gives you. Push only this branch, and never force. Never merge, and never mark it ready.
 
 ## 7. When you didn't push
 
@@ -91,7 +95,9 @@ On a no, with no one to answer, with no `origin` remote, or when `gh` isn't ther
 
 ```sh
 git push -u origin keepup/<date>
-gh pr create --draft --title "<the finding's title>" --body-file "${CLAUDE_PLUGIN_DATA}/pr-body.md"
+gh pr create --draft --repo <the repo line> --title "<the finding's title>" --body-file "<the body line>"
 ```
+
+Never write `--repo none`. If the repo line says `none`, leave `<owner/name>` there for them to fill in, and say that keepup couldn't read a GitHub repo from `origin`, so it should be their own repo, not the one theirs was forked from.
 
 Say plainly that nothing has been pushed, and that the branch is local. To undo it: `git switch <their branch> && git branch -D keepup/<date>`.

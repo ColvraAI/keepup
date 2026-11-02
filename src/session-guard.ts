@@ -30,7 +30,7 @@ function dataRoots(env: NodeJS.ProcessEnv): string[] {
   return [...(env.CLAUDE_PLUGIN_DATA ? [env.CLAUDE_PLUGIN_DATA] : []), join(config, 'plugins', 'data'), join(homedir(), '.keepup')];
 }
 
-function projectOf(env: NodeJS.ProcessEnv): string {
+export function projectOf(env: NodeJS.ProcessEnv = process.env): string {
   return env.CLAUDE_PROJECT_DIR ?? process.cwd();
 }
 

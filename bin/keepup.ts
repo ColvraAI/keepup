@@ -18,13 +18,13 @@ import { maskText, maskValue } from '../src/mask.ts';
 import { renderIssueBody, renderPrBody } from '../src/pr-body.ts';
 import type { Finding } from '../src/run-shape.ts';
 import { dataDir, logEvent, readLog, resetLog } from '../src/session.ts';
-import { repoRoot } from '../src/git-files.ts';
+import { originRepo, repoRoot } from '../src/git-files.ts';
 import { createLlm, DEFAULT_LLM_CACHE, DEFAULT_MAX_USD, DEFAULT_MODEL } from '../src/llm.ts';
 import { RUNS_DIR, runPipeline, type RunOptions, type Seams, writeRun } from '../src/pipeline.ts';
 import { untrustedBlock } from '../src/repo-text.ts';
 import { scanRepo } from '../src/scan.ts';
 import { parseSearchQuery } from '../src/search.ts';
-import { guardSession, inSession, SessionRefusal } from '../src/session-guard.ts';
+import { guardSession, inSession, projectOf, SessionRefusal } from '../src/session-guard.ts';
 import { REPO_ROOT } from '../src/signals.ts';
 import { oneLine } from '../src/text-safety.ts';
 import { maskedFileMap, showLines, verifyFindings, type VerifyInput } from '../src/verify.ts';
@@ -41,6 +41,9 @@ const HOOK_BUDGET_MS = 3_000;
 const HOOK_GIT_MARGIN_MS = 1_000;
 const PREPARED = ['scan', 'facts', 'floor', 'findings', 'verified'] as const;
 const DEFAULT_GET_LIMIT = 40;
+const PR_BODY_FILE = 'pr-body.md';
+const ISSUE_BODY_FILE = 'issue.md';
+const REPO_NONE = 'none';
 
 const USAGE = `keepup: check a product's code against everything new in AI.
 
@@ -65,11 +68,13 @@ const USAGE = `keepup: check a product's code against everything new in AI.
                                           the whole pipeline: writes the run file, prints a one-screen brief. --full prints all of it.
                                           It writes to ~/.keepup/runs, or the plugin's data folder; --publish writes data/runs, which the dashboard reads.
                                           --replay rebuilds a demo run from data/replay: no key, no network, no cost.
-  keepup pr-body --finding <rank> [--run <run.json>] [--dir <dir>] [--summary <text>] [--tests <text>] [--out <file>]
+  keepup pr-body --finding <rank> [--run <run.json>] [--dir <dir>] [--summary <text>] [--tests <text>] [--out <file> | --save]
                                           the words for a draft pull request: why, where, ROI, proof, and the real test result if you give it. Offline.
+                                          --save writes them to this repo's data folder, and prints body: <that file> and repo: <origin's owner/name, or none>.
 
-  keepup issue-body [--dir <dir>] [--out <file>]
+  keepup issue-body [--dir <dir>] [--out <file> | --save]
                                           the weekly issue's words, from the brief keepup verify --brief wrote. Offline.
+                                          --save writes them to this repo's data folder, and prints body: <that file>.
 
   keepup change <path> --finding <rank> [--commit <sha>] [--run <run.json>] [--max-usd <n>]
                                           write the code change for one finding: one commit on a branch in a temporary clone under tmp/live-scans.
@@ -117,6 +122,7 @@ const OPTIONS = {
   summary: { type: 'string' },
   tests: { type: 'string' },
   run: { type: 'string' },
+  save: { type: 'boolean' },
   help: { type: 'boolean', short: 'h' },
 } as const;
 
@@ -347,8 +353,20 @@ function printOrWrite(text: string, out?: string): void {
   process.stderr.write(`keepup: wrote ${out}\n`);
 }
 
+function refuseOutWithSave(values: Values): void {
+  if (values.out !== undefined && values.save) throw new UsageError('--save picks its own file in the data folder, so it takes no --out.');
+}
+
+/** In this repo's own data folder, because a shared file would let a yes waiting in one repo send another repo's words. */
+function saveBody(text: string, name: string, values: Values): string {
+  const file = join(dataDir(values.dir), name);
+  printOrWrite(text, file);
+  return file;
+}
+
 /** The words for a draft pull request, from a run file or from what this session verified. */
 function commandPrBody(values: Values): void {
+  refuseOutWithSave(values);
   const rank = Number(values.finding);
   if (!Number.isInteger(rank) || rank < 1) throw new UsageError("pr-body takes --finding <rank>, a finding's number in the brief.");
   if (values.run && inSession()) throw new SessionRefusal('In a session, pr-body reads only what this session verified, so it takes no --run.');
@@ -360,15 +378,21 @@ function commandPrBody(values: Values): void {
   const run = values.run ? read(values.run) : { ...read(join(dir, 'facts.json')), findings: read(join(dir, 'verified.json')).findings };
   const finding = run.findings.find((item: Finding) => item.rank === rank) ?? run.findings[rank - 1];
   if (!finding) throw new Error(`There's no finding ${rank} in that run.`);
-  printOrWrite(maskValue(renderPrBody({ finding, repo: run.repo, commit: run.commit, summary: values.summary, tests: values.tests })), values.out);
+  const text = maskValue(renderPrBody({ finding, repo: run.repo, commit: run.commit, summary: values.summary, tests: values.tests }));
+  if (!values.save) return printOrWrite(text, values.out);
+  const repo = originRepo(projectOf());
+  print(`body: ${saveBody(text, PR_BODY_FILE, values)}\nrepo: ${repo ?? REPO_NONE}`);
 }
 
 /** The weekly issue's words, from the brief this session verified. */
 function commandIssueBody(values: Values): void {
+  refuseOutWithSave(values);
   const file = join(dataDir(values.dir), 'verified.json');
   const brief = existsSync(file) ? (JSON.parse(readFileSync(file, 'utf8')) as { brief?: string }).brief : undefined;
   if (!brief) throw new Error('There\'s no brief yet. Run keepup verify --brief first.');
-  printOrWrite(maskValue(renderIssueBody(brief)), values.out);
+  const text = maskValue(renderIssueBody(brief));
+  if (!values.save) return printOrWrite(text, values.out);
+  print(`body: ${saveBody(text, ISSUE_BODY_FILE, values)}`);
 }
 
 async function commandMeasure(path: string, values: Values): Promise<void> {

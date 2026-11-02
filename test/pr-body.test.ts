@@ -1,12 +1,14 @@
 import { strict as assert } from 'node:assert';
 import { spawnSync } from 'node:child_process';
-import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { describe, it } from 'node:test';
+import { originRepo, parseGithubRemote } from '../src/git-files.ts';
 import { findingKey, renderIssueBody, renderPrBody } from '../src/pr-body.ts';
 import { dataDir } from '../src/session.ts';
 import type { Finding, LeverValue } from '../src/run-shape.ts';
+import { fixtureRepo, git, ROOT } from './helpers.ts';
 
 const roi = {
   money: true,
@@ -133,5 +135,189 @@ describe('keepup issue-body', () => {
     mkdirSync(own, { recursive: true });
     writeFileSync(join(own, 'verified.json'), JSON.stringify({ brief: 'Biggest lever: cache it' }));
     assert.match(run().stdout, /Biggest lever: cache it/);
+  });
+});
+
+describe('parseGithubRemote', () => {
+  const token = 'ghs_16C7e42F292c6912E7710c838347Ae178B4a';
+  const github: [string, string][] = [
+    ['https://github.com/acme/app', 'acme/app'],
+    ['https://github.com/acme/app.git', 'acme/app'],
+    ['https://github.com/acme/app/', 'acme/app'],
+    ['https://GitHub.com/acme/app.github.io.git', 'acme/app.github.io'],
+    [`https://x-access-token:${token}@github.com/acme/app.git`, 'acme/app'],
+    [`https://${token}@github.com/acme/app`, 'acme/app'],
+    ['ssh://git@github.com/acme/app.git', 'acme/app'],
+    ['ssh://git@ssh.github.com:443/acme/app.git', 'acme/app'],
+    ['git@github.com:acme/app.git', 'acme/app'],
+    ['git@github.com:/acme/app.git', 'acme/app'],
+    ['github.com:acme/app', 'acme/app'],
+  ];
+  for (const [url, repo] of github) {
+    it(`${url.replace(token, '<token>')} is ${repo}`, () => assert.equal(parseGithubRemote(url), repo));
+  }
+
+  const notGithub = [
+    '',
+    'https://gitlab.com/acme/app.git',
+    'git@gitlab.com:acme/app.git',
+    'https://github.com.evil.example/acme/app',
+    'https://evil.example/github.com/acme/app',
+    'https://github.com@evil.example/acme/app',
+    'https://evil.example#@github.com/acme/app',
+    'https://evil.example?@github.com/acme/app',
+    'ssh://evil.example#@github.com/acme/app',
+    'git://github.com/acme/app.git',
+    'file:///github.com/acme/app',
+    '/srv/github.com:acme/app',
+    './github.com:acme/app',
+    'https://github.com/acme',
+    'https://github.com/acme/app/tree/main',
+    'https://github.com/-R/app',
+    'https://github.com/acme/.git',
+    'github.com:acme/..',
+    'https://github.com/acme/app\u001b]0;pwn\u0007',
+    'https://github.com/acme/app\nrepo: other/thing',
+    `x-access-token:${token}@github.com:acme/app.git`,
+  ];
+  for (const url of notGithub) {
+    it(`${JSON.stringify(url.replace(token, '<token>'))} is not a GitHub repo`, () => assert.equal(parseGithubRemote(url), null));
+  }
+});
+
+describe('originRepo', () => {
+  it('reads origin, and is null with no origin or outside a repo', () => {
+    const repo = fixtureRepo('quiet');
+    try {
+      assert.equal(originRepo(repo.path), null);
+      git(repo.path, 'remote', 'add', 'origin', 'git@github.com:acme/app.git');
+      assert.equal(originRepo(repo.path), 'acme/app');
+      assert.equal(originRepo(tmpdir()), null);
+    } finally {
+      repo.cleanup();
+    }
+  });
+
+  it('follows the push: with a push URL set, that is where the branch lands, not the fetch URL', () => {
+    const repo = fixtureRepo('quiet');
+    try {
+      git(repo.path, 'remote', 'add', 'origin', 'https://github.com/upstream/app.git');
+      git(repo.path, 'remote', 'set-url', '--push', 'origin', 'git@github.com:me/app.git');
+      assert.equal(originRepo(repo.path), 'me/app');
+      git(repo.path, 'remote', 'set-url', '--push', 'origin', 'no_push');
+      assert.equal(originRepo(repo.path), null);
+    } finally {
+      repo.cleanup();
+    }
+  });
+
+  it('gives no answer when origin pushes to more than one place', () => {
+    const repo = fixtureRepo('quiet');
+    try {
+      git(repo.path, 'remote', 'add', 'origin', 'https://github.com/acme/app.git');
+      git(repo.path, 'remote', 'set-url', '--add', 'origin', 'https://github.com/other/app.git');
+      assert.equal(originRepo(repo.path), null);
+    } finally {
+      repo.cleanup();
+    }
+  });
+
+  it('takes no URL from a file the repo\'s config includes', () => {
+    const repo = fixtureRepo('quiet');
+    try {
+      writeFileSync(join(repo.path, 'steer.cfg'), '[remote "origin"]\n\turl = https://github.com/steered/app.git\n');
+      git(repo.path, 'config', 'include.path', join(repo.path, 'steer.cfg'));
+      assert.equal(originRepo(repo.path), null);
+    } finally {
+      repo.cleanup();
+    }
+  });
+});
+
+describe('--save', () => {
+  const token = 'ghs_16C7e42F292c6912E7710c838347Ae178B4a';
+  const bin = join(ROOT, 'bin', 'keepup.ts');
+
+  function setUp(origin?: string) {
+    const repo = fixtureRepo('quiet');
+    const data = mkdtempSync(join(tmpdir(), 'keepup-save-'));
+    if (origin) git(repo.path, 'remote', 'add', 'origin', origin);
+    const env = { ...process.env, KEEPUP_PLUGIN: '1', CLAUDE_PLUGIN_DATA: data, CLAUDE_PROJECT_DIR: repo.path };
+    const own = dataDir(data, env);
+    mkdirSync(own, { recursive: true });
+    writeFileSync(join(own, 'facts.json'), JSON.stringify({ repo: 'acme/bot', commit: 'abc1234' }));
+    writeFileSync(join(own, 'verified.json'), JSON.stringify({ findings: [finding], brief: 'Biggest lever: cache it' }));
+    const run = (...args: string[]) => spawnSync(process.execPath, [bin, ...args, '--dir', data], { cwd: repo.path, encoding: 'utf8', env });
+    return { own, run, cleanup: () => { repo.cleanup(); rmSync(data, { recursive: true, force: true }); } };
+  }
+
+  it('pr-body writes to the repo\'s own folder and prints the body and repo lines, and no token', () => {
+    const { own, run, cleanup } = setUp(`https://x-access-token:${token}@github.com/acme/app.git`);
+    try {
+      const out = run('pr-body', '--finding', '1', '--save');
+      assert.equal(out.status, 0, out.stderr);
+      assert.equal(out.stdout, `body: ${join(own, 'pr-body.md')}\nrepo: acme/app\n`);
+      assert.match(readFileSync(join(own, 'pr-body.md'), 'utf8'), /a person merges/);
+      assert.ok(!`${out.stdout}${out.stderr}`.includes(token));
+      assert.ok(!readFileSync(join(own, 'pr-body.md'), 'utf8').includes(token));
+    } finally {
+      cleanup();
+    }
+  });
+
+  for (const [what, origin] of [['no origin', undefined], ['an origin that is not GitHub', 'https://gitlab.com/acme/app.git']] as const) {
+    it(`pr-body says repo: none with ${what}`, () => {
+      const { own, run, cleanup } = setUp(origin);
+      try {
+        const out = run('pr-body', '--finding', '1', '--save');
+        assert.equal(out.status, 0, out.stderr);
+        assert.equal(out.stdout, `body: ${join(own, 'pr-body.md')}\nrepo: none\n`);
+      } finally {
+        cleanup();
+      }
+    });
+  }
+
+  it('issue-body writes to the repo\'s own folder and prints only the body line', () => {
+    const { own, run, cleanup } = setUp('git@github.com:acme/app.git');
+    try {
+      const out = run('issue-body', '--save');
+      assert.equal(out.status, 0, out.stderr);
+      assert.equal(out.stdout, `body: ${join(own, 'issue.md')}\n`);
+      assert.match(readFileSync(join(own, 'issue.md'), 'utf8'), /Biggest lever: cache it/);
+    } finally {
+      cleanup();
+    }
+  });
+
+  it('--out with --save is a usage error on both, and writes nothing', () => {
+    const { own, run, cleanup } = setUp('git@github.com:acme/app.git');
+    try {
+      const file = join(own, 'elsewhere.md');
+      for (const args of [['pr-body', '--finding', '1'], ['issue-body']]) {
+        const out = run(...args, '--save', '--out', file);
+        assert.equal(out.status, 2, out.stderr);
+        assert.match(out.stderr, /--save.*--out/);
+        assert.equal(out.stdout, '');
+      }
+      assert.ok(!existsSync(file));
+      assert.ok(!existsSync(join(own, 'pr-body.md')));
+      assert.ok(!existsSync(join(own, 'issue.md')));
+    } finally {
+      cleanup();
+    }
+  });
+
+  it('--out still works alone, and says nothing about a repo', () => {
+    const { own, run, cleanup } = setUp('git@github.com:acme/app.git');
+    try {
+      const file = join(own, 'mine.md');
+      const out = run('pr-body', '--finding', '1', '--out', file);
+      assert.equal(out.status, 0, out.stderr);
+      assert.equal(out.stdout, '');
+      assert.match(readFileSync(file, 'utf8'), /a person merges/);
+    } finally {
+      cleanup();
+    }
   });
 });

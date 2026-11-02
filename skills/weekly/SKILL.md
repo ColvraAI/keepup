@@ -26,8 +26,10 @@ Do steps 1 to 7 of this plugin's `keepup` skill, every one of them. If the brief
 ## 3. Update the one issue
 
 ```sh
-keepup issue-body --dir "${CLAUDE_PLUGIN_DATA}" --out "${CLAUDE_PLUGIN_DATA}/issue.md"
+keepup issue-body --dir "${CLAUDE_PLUGIN_DATA}" --save
 ```
+
+It prints a `body:` line, the file holding the words. Use it as printed.
 
 ```sh
 gh label create keepup --force --description "What keepup found this week"
@@ -40,13 +42,13 @@ gh issue list --label keepup --state open --limit 1 --json number
 If that lists one, update it:
 
 ```sh
-gh issue edit <number> --body-file "${CLAUDE_PLUGIN_DATA}/issue.md"
+gh issue edit <number> --body-file "<the body line>"
 ```
 
 If it lists none, open it, and note the number it gives you:
 
 ```sh
-gh issue create --title "keepup: what's worth changing" --label keepup --body-file "${CLAUDE_PLUGIN_DATA}/issue.md"
+gh issue create --title "keepup: what's worth changing" --label keepup --body-file "<the body line>"
 ```
 
 ## 4. Pick the one finding
@@ -69,15 +71,17 @@ If that finding needs an install or an account, so it's written steps and no cod
 
 ## 6. Open the draft pull request
 
+Step 5 ran `keepup pr-body` with `--save`, which printed a `body:` line and a `repo:` line. These are the ones to use here, not the issue's. If the repo line says `none`, `origin` isn't a GitHub repo: say so and stop, with nothing pushed.
+
 ```sh
 git push -u origin keepup/<date>
 ```
 
 ```sh
-gh pr create --draft --title "<the finding's title>" --body-file "${CLAUDE_PLUGIN_DATA}/pr-body.md"
+gh pr create --draft --repo <the repo line> --title "<the finding's title>" --body-file "<the body line>"
 ```
 
-If GitHub says draft pull requests aren't supported in this repo, run the same command without `--draft`. Then comment its link on the issue.
+If GitHub says draft pull requests aren't supported in this repo, run the same command without `--draft`, keeping `--repo` and `--body-file`. Then comment its link on the issue.
 
 ## 7. Say what happened
 
