@@ -5,7 +5,7 @@ import { join } from 'node:path';
 import { test } from 'node:test';
 import { applyPatches, commitFile, ensureClone, fetchBranch, GitError, patchIdOfCommit, patchIdOfFile, pushRef, readPatchMessage, type GitContext } from '../src/git.ts';
 import { GuardError } from '../src/guard.ts';
-import { git, PATCH_SUBJECTS } from './fake-repos.ts';
+import { git, PATCH_SUBJECTS, utcAsOffset } from './fake-repos.ts';
 import { gitSpy } from './git-spy.ts';
 import { createWorld, ORG, type World } from './world.ts';
 
@@ -212,4 +212,10 @@ test('commitFile adds one file, authored by the bot at the given date, and re-cl
   await fetchBranch(ctx, dir, 'main');
   assert.equal(git(dir, 'rev-parse', 'refs/remotes/origin/main'), w.fix.mainTip);
   assert.ok(!readFileSync(join(dir, '.git/config'), 'utf8').includes('ghs_canary_git_token'));
+});
+
+test('a UTC date reads the same from any git, which prints Z or +00:00 depending on its version', () => {
+  assert.equal(utcAsOffset('keepup[bot]|2026-09-22T11:59:00Z|ci: add'), 'keepup[bot]|2026-09-22T11:59:00+00:00|ci: add');
+  assert.equal(utcAsOffset('2026-09-22T11:59:00+00:00'), '2026-09-22T11:59:00+00:00');
+  assert.equal(utcAsOffset('ZZ T00 Z'), 'ZZ T00 Z');
 });

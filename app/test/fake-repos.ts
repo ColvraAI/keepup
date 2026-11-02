@@ -16,8 +16,11 @@ const GIT_ENV = {
   GIT_COMMITTER_EMAIL: 'dev@example.test',
 };
 
+/** Newer git prints a UTC date as Z, and older git as +00:00. Tests pin one spelling, so they read the same on any machine. */
+export const utcAsOffset = (text: string): string => text.replace(/(T\d{2}:\d{2}:\d{2})Z\b/g, '$1+00:00');
+
 export function git(cwd: string, ...args: string[]): string {
-  return execFileSync('git', args, { cwd, env: GIT_ENV, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }).trim();
+  return utcAsOffset(execFileSync('git', args, { cwd, env: GIT_ENV, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }).trim());
 }
 
 function write(dir: string, path: string, content: string): void {

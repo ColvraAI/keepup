@@ -51,7 +51,8 @@ describe('install.sh', () => {
     assert.equal(result.status, 0, result.stderr);
     assert.deepEqual(calls(w), ['plugin marketplace add ColvraAI/keepup', 'plugin install keepup@keepup']);
     assert.match(result.stdout, /cd your-repo/);
-    assert.match(result.stdout, /\/keepup:keepup/);
+    assert.match(result.stdout, /type \/keepup\n/);
+    assert.doesNotMatch(result.stdout, /\/keepup:keepup/);
   });
 
   it('prints the commands, what they change and how to undo it, before it asks', () => {

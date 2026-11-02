@@ -32,12 +32,15 @@ export async function readCoveredForks(root: string, env: Env): Promise<string[]
   }
 }
 
+/** A file's time comes from a coarser clock than Date.now(), so on Linux a log written just after a run starts can look older than the run. */
+const FILE_CLOCK_SLACK_MS = 1000;
+
 function logsUnder(dir: string, since: number): { path: string; at: number }[] {
   if (!existsSync(dir)) return [];
   return readdirSync(dir, { recursive: true, encoding: 'utf8' })
     .filter((f) => f.endsWith('sandbox.log'))
     .map((f) => ({ path: join(dir, f), at: statSync(join(dir, f)).mtimeMs }))
-    .filter((l) => l.at >= since);
+    .filter((l) => l.at >= since - FILE_CLOCK_SLACK_MS);
 }
 
 /** The end of the log this lab's failed run wrote, so the real error is on screen. Empty when it wrote none. */

@@ -206,7 +206,7 @@ describe('the plugin', () => {
     const install = readme.indexOf('## Install');
     const oneCommand = readme.indexOf('curl -fsSL https://raw.githubusercontent.com/ColvraAI/keepup/main/install.sh | bash');
     const manual = readme.indexOf('claude plugin marketplace add ColvraAI/keepup');
-    const caveat = readme.indexOf('These work once ColvraAI/keepup is public');
+    const caveat = readme.indexOf('From a checkout of this repo');
     const local = readme.indexOf('claude plugin marketplace add /path/to/keepup');
     assert.ok(install < oneCommand && oneCommand < manual && manual < caveat && caveat < local);
     assert.ok(!/never whole files/i.test(readme));

@@ -77,7 +77,7 @@ main() {
 
   printf '\nDone. Next, in the repo you want checked:\n\n'
   printf '  cd your-repo\n  claude\n\n'
-  printf 'and type /keepup:keepup\n'
+  printf 'and type /keepup\n'
 }
 
 main "$@"

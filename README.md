@@ -42,7 +42,7 @@ claude plugin marketplace add ColvraAI/keepup
 claude plugin install keepup
 ```
 
-These work once ColvraAI/keepup is public. Until then, from a checkout of this repo, use its real path:
+From a checkout of this repo, use its real path instead:
 
 ```sh
 claude plugin marketplace add /path/to/keepup

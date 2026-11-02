@@ -1,6 +1,6 @@
 // What go looks at before it starts, what it says about a failed lab, and what status says next.
 import { strict as assert } from 'node:assert';
-import { writeFileSync } from 'node:fs';
+import { statSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { test } from 'node:test';
 import { buildPlan, runGo, type GoDeps, type GoStep } from '../src/go.ts';
@@ -70,6 +70,16 @@ test('status says a named key is set now, rather than asking for it again', asyn
   install(root, '02', '2026-09-01', NOT_RUN_RESULT);
   assert.match(formatStatus(await computeStatus({ root, env: env({ OPENAI_API_KEY: 'x' }) })), /needs OPENAI_API_KEY \(set now, so the next npm run go runs it\)/);
   assert.doesNotMatch(formatStatus(await computeStatus({ root, env: env() })), /set now/);
+});
+
+test('a log the run just wrote still counts when the file clock reads a moment behind the run start, as on Linux', () => {
+  const root = tempDir();
+  install(root, '06', '2026-09-22', NOT_RUN_RESULT);
+  const log = join(root, 'lab/.work/06-x/run/sandbox.log');
+  writeText(log, 'the real error\n');
+  const lines = failedLabLines(root, '06', statSync(log).mtimeMs + 5);
+  assert.match(lines.join('\n'), /the real error/);
+  assert.deepEqual(failedLabLines(root, '06', statSync(log).mtimeMs + 60_000), [], 'an old log is still not this run');
 });
 
 test('a lab that fails shows the end of the log it wrote in this run, with secrets gone', async () => {
