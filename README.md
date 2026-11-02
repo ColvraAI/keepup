@@ -17,13 +17,15 @@ Real findings from real repos, each with a file, a line and a source:
 - **Hand-parsed JSON and parameters a provider has removed.**
 - **A model you use is shutting down.** `collector/utils/WhisperProviders/OpenAiWhisper.js:11` sets `whisper-1`, which OpenAI shuts down on 26 Feb 2027.
 
+Real pull requests from real sessions, on forks: [turn on prompt caching on AURA](https://github.com/ColvraAI/aura/pull/1), [replace a shut-down default model on AnythingLLM](https://github.com/ColvraAI/anything-llm/pull/1), and [add Structured Outputs on MiroFish](https://github.com/ColvraAI/MiroFish/pull/1). A person reviews and merges each one.
+
 It also tells you what it checked and held back, and why: a retired model id inside a test, an upgrade your version range already allows, a competitor. "Checked and held back" lists what reached a check or the judge; things a search never turned up aren't in it. When a full run finds nothing, you get one line:
 
 ```
 keepup: nothing new applies · 41,785 checked
 ```
 
-In Claude Code, it says what really ran: `keepup: nothing new applies · 41,785 in the database · 8 searches · 12 read closely · 38 of 40 dependencies not checked (offline)`, and it counts any ids on a model list it didn't recognise. A brief with findings says the same on its second line. With no search behind it, it says only what it looked at: `keepup: exact checks only · 12 model ids · 40 dependencies not checked (offline) · nothing retired`.
+In Claude Code, it says what really ran: `keepup: nothing new applies · 41,785 in the database · 141 candidates shown for 4 jobs · 9 read closely · 38 of 40 dependencies not checked (offline)`, and it counts any ids on a model list it didn't recognise. A brief with findings says the same on its second line. With no search behind it, it says only what it looked at: `keepup: exact checks only · 12 model ids · 40 dependencies not checked (offline) · nothing retired`.
 
 ## Install
 
