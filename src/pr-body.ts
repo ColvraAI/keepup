@@ -6,16 +6,21 @@ import { oneLine, plainText } from './text-safety.ts';
 const TESTS_NOT_RUN = "keepup did not run this repo's tests: it reads a repo as text and never runs it. Run them, or let CI run them, before you merge.";
 const FOOTER = 'keepup wrote this change, and a person merges. A change can pass every check and still break an app, so read the diff and try it.';
 const KEY_LENGTH = 60;
+/** A sentence ends at a full stop before a space, so the dots inside a model id or a version don't end one. */
+const FIRST_SENTENCE = /^.*?\.(?=\s)/s;
 
 export interface PrBodyInput {
   readonly finding: Finding;
-  /** owner/name, for links to the lines. */
+  /** owner/name, for links to the lines: where the pull request goes. */
   readonly repo?: string;
   readonly commit?: string | null;
   readonly summary?: string;
+  /** What the branch changes, as opposed to where the scan matched. */
   readonly files?: readonly string[];
   /** The real test result, in words. Left out, the body says the tests didn't run. */
   readonly tests?: string;
+  /** What could stop this working, or what wasn't checked, in words. Left out, the body doesn't bring it up. */
+  readonly limits?: string;
 }
 
 /** What a later run looks for, so a lever a person already answered isn't opened again. Safe inside a comment, whatever the title says. */
@@ -46,16 +51,25 @@ export function renderIssueBody(brief: string): string {
   ].join('\n');
 }
 
+/** A retirement's why lists every shutdown record for its provider, and this pull request is about the first. */
+function whyOf(finding: Finding): string {
+  return finding.reach ? finding.why.match(FIRST_SENTENCE)?.[0] ?? finding.why : finding.why;
+}
+
 export function renderPrBody(input: PrBodyInput): string {
   const { finding } = input;
-  const changes = input.summary ? [`**What this changes:** ${plainText(input.summary)}${input.files?.length ? ` Files: ${input.files.map(oneLine).join(', ')}.` : ''}`, ''] : [];
+  const changes = input.summary ? [`**What this changes:** ${plainText(input.summary)}`, ''] : [];
+  const changed = input.files?.length ? [`**Changed:** ${input.files.map(plainText).join(', ')}`, ''] : [];
+  const limits = input.limits?.trim() ? [`**Before you merge:** ${plainText(input.limits)}`, ''] : [];
   return [
-    `**Why it fits your product:** ${plainText(finding.why)}`, '',
-    `**Where:** ${finding.where.map((place) => placeText(input, place)).join(' · ')}`, '',
+    `**Why it fits your product:** ${plainText(whyOf(finding))}`, '',
+    `**Found at:** ${finding.where.map((place) => placeText(input, place)).join(' · ')}`, '',
     ...changes,
+    ...changed,
     ...roiSection(finding.value),
     `**Proof:** ${plainText(finding.proof)} · ${finding.sources.map(oneLine).join(' · ')}`, '',
     `**Tests:** ${input.tests ? plainText(input.tests) : TESTS_NOT_RUN}`, '',
+    ...limits,
     '**Rollback:** revert this one commit.', '',
     '---', '',
     FOOTER, '',

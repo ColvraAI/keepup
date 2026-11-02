@@ -1,9 +1,9 @@
 import { strict as assert } from 'node:assert';
-import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { after, before, describe, it } from 'node:test';
-import { listRepoFiles, repoName, selectFiles, skipReason } from '../src/git-files.ts';
+import { changedFiles, listRepoFiles, repoName, selectFiles, skipReason } from '../src/git-files.ts';
 import { type FixtureRepo, fixtureRepo, git } from './helpers.ts';
 
 describe('listRepoFiles', () => {
@@ -90,6 +90,56 @@ describe('repoName', () => {
     const repo = fixtureRepo('quiet');
     try {
       assert.ok(repoName(repo.path).startsWith('keepup-quiet-'));
+    } finally {
+      repo.cleanup();
+    }
+  });
+});
+
+describe('changedFiles', () => {
+  function branched(): { repo: FixtureRepo; base: string } {
+    const repo = fixtureRepo('quiet');
+    mkdirSync(join(repo.path, 'caf\u00e9'));
+    writeFileSync(join(repo.path, 'caf\u00e9', 'answer.ts'), 'x\n');
+    writeFileSync(join(repo.path, 'second.ts'), 'y\n');
+    git(repo.path, 'add', '-A');
+    git(repo.path, '-c', 'commit.gpgsign=false', 'commit', '-q', '-m', 'the change');
+    return { repo, base: repo.commit };
+  }
+
+  it('names the files between the base and HEAD, whatever their names hold', () => {
+    const { repo, base } = branched();
+    try {
+      assert.deepEqual(changedFiles(repo.path, base), ['caf\u00e9/answer.ts', 'second.ts']);
+    } finally {
+      repo.cleanup();
+    }
+  });
+
+  it('leaves out what is only in the worktree, and runs no clean filter', () => {
+    const { repo, base } = branched();
+    const marker = join(repo.path, 'filter-ran');
+    try {
+      writeFileSync(join(repo.path, '.git', 'info', 'attributes'), '* filter=steer\n');
+      git(repo.path, 'config', 'filter.steer.clean', `touch ${marker}; cat`);
+      writeFileSync(join(repo.path, 'second.ts'), 'edited\n');
+      writeFileSync(join(repo.path, 'untracked.ts'), 'z\n');
+      assert.deepEqual(changedFiles(repo.path, base), ['caf\u00e9/answer.ts', 'second.ts']);
+      assert.ok(!existsSync(marker));
+    } finally {
+      repo.cleanup();
+    }
+  });
+
+  it('is empty with no base, a base git does not have, a base that is not a commit id, or no repo', () => {
+    const { repo, base } = branched();
+    try {
+      assert.deepEqual(changedFiles(repo.path, null), []);
+      assert.deepEqual(changedFiles(repo.path, undefined), []);
+      assert.deepEqual(changedFiles(repo.path, 'abc1234'), []);
+      assert.deepEqual(changedFiles(repo.path, '--output=steered'), []);
+      assert.ok(!existsSync(join(repo.path, 'steered')));
+      assert.deepEqual(changedFiles(tmpdir(), base), []);
     } finally {
       repo.cleanup();
     }

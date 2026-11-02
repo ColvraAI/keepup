@@ -247,6 +247,26 @@ describe('the plugin', () => {
     assert.match(skill, /nothing has been pushed/);
   });
 
+  it('every gh pr create titles the change and not the finding, and the words carry what could go wrong', () => {
+    for (const name of ['apply', 'weekly']) {
+      const skill = read(`skills/${name}/SKILL.md`);
+      const creates = [...skill.matchAll(/^.*gh pr create.*$/gm)].map((match) => match[0]);
+      assert.ok(creates.length > 0, name);
+      for (const line of creates) assert.ok(line.includes('--title "<what this change does, in one line>"'), line);
+      assert.match(skill, /says what the diff does and no more/);
+      assert.match(skill, /--limits/);
+    }
+    assert.match(read('skills/apply/SKILL.md'), /^keepup pr-body .*--limits "[^"$]*" --save$/m);
+  });
+
+  it('every gh pr create names its branch, because with --repo gh can stop and say the branch was never pushed', () => {
+    for (const name of ['apply', 'weekly']) {
+      const creates = [...read(`skills/${name}/SKILL.md`).matchAll(/^.*gh pr create.*$/gm)].map((match) => match[0]);
+      assert.ok(creates.length > 0, name);
+      for (const line of creates) assert.match(line, /--head keepup\/<date>/, line);
+    }
+  });
+
   it('every gh pr create names the repo origin points at, so gh can never pick the upstream of a fork', () => {
     for (const name of ['apply', 'weekly']) {
       const skill = read(`skills/${name}/SKILL.md`);

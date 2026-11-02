@@ -47,12 +47,46 @@ describe('renderPrBody', () => {
     assert.match(body, /https:\/\/vendor\.example\/caching/);
   });
 
+  it('calls the scan\'s places Found at, and lists the changed files under Changed as plain names', () => {
+    const body = renderPrBody({ finding, summary: 'Marks the policy for caching.', files: ['src/answer.ts', 'src/[x](https://evil.example)`.ts'] });
+    assert.match(body, /^\*\*Found at:\*\* src\/answer\.ts:25$/m);
+    assert.doesNotMatch(body, /\*\*Where:\*\*/);
+    assert.match(body, /^\*\*Changed:\*\* src\/answer\.ts, src\/\\\[x\]\(https:\/\/evil\.example\)\\`\.ts$/m);
+    assert.match(body, /^\*\*What this changes:\*\* Marks the policy for caching\.$/m);
+    assert.doesNotMatch(body, /Files:/);
+  });
+
+  it('leaves Changed out with no files', () => {
+    assert.doesNotMatch(renderPrBody({ finding }), /\*\*Changed:/);
+    assert.doesNotMatch(renderPrBody({ finding, files: [] }), /\*\*Changed:/);
+  });
+
+  it('on a retirement, keeps only the record this change is about', () => {
+    const why = 'gemini-2.0-flash-lite was shut down on 1 Jun 2026. Announced on 18 Feb 2026. Named successor: gemini-3.1-flash-lite. gemini-3.1-flash-lite-preview was shut down on 25 May 2026. Announced on 7 May 2026. Named successor: gemini-3.1-flash-lite. gemini-3-pro-image-preview was shut down on 25 Jun 2026. Announced on 28 May 2026. Named successor: gemini-3-pro-image. gemini-3.1-flash-image-preview was shut down on 25 Jun 2026. Announced on 28 May 2026. Named successor: gemini-nano-banana-2.1. deep-research-pro-preview-12-2025 was shut down on 23 Oct 2026. Announced on 8 Oct 2026. Named successor: deep-research-max-preview-04-2026. gemini-omni-flash-preview was due to shut down no earlier than 22 Oct 2026. That date has passed, so it may already be gone. Announced on 27 Aug 2026. Named successor: gemini-omni-1.1-flash. gemini-3.1-flash-lite itself shuts down no earlier than 7 May 2027. Google names gemini-3.5-flash-lite after it. server/utils/AiProviders/gemini/defaultModels.js feeds a picker or a lookup, so a person can still choose these: put the replacement on that list.';
+    const body = renderPrBody({ finding: { ...finding, why, reach: 'sent' } });
+    assert.match(body, /^\*\*Why it fits your product:\*\* gemini-2\.0-flash-lite was shut down on 1 Jun 2026\.$/m);
+    for (const gone of ['flash-lite-preview', 'pro-image', 'flash-image', 'deep-research', 'omni', 'itself shuts down', 'picker']) assert.ok(!body.includes(gone), gone);
+  });
+
+  it('keeps a lever\'s whole why, and a retirement\'s one sentence with no full stop', () => {
+    const why = 'The same policy goes out on every call. It is long, too.';
+    assert.ok(renderPrBody({ finding: { ...finding, why } }).includes(why));
+    assert.match(renderPrBody({ finding: { ...finding, why: 'tts-1 shuts down soon', reach: 'undated' } }), /^\*\*Why it fits your product:\*\* tts-1 shuts down soon$/m);
+  });
+
   it('says a person merges, and never claims the tests ran unless told', () => {
     const body = renderPrBody({ finding });
     assert.match(body, /a person merges/);
     assert.match(body, /did not run this repo's tests/);
     assert.match(renderPrBody({ finding, tests: 'npm test: 12 passed' }), /\*\*Tests:\*\* npm test: 12 passed/);
     assert.doesNotMatch(renderPrBody({ finding, tests: 'npm test: 12 passed' }), /did not run/);
+  });
+
+  it('prints what could go wrong after the tests, in plain text, and leaves it out when not given', () => {
+    const body = renderPrBody({ finding, tests: 'npm test: 12 passed', limits: 'The example prompt may be under the `caching` minimum.' });
+    assert.match(body, /\*\*Tests:\*\* npm test: 12 passed\n\n\*\*Before you merge:\*\* The example prompt may be under the \\`caching\\` minimum\.\n\n\*\*Rollback:/);
+    assert.doesNotMatch(renderPrBody({ finding }), /Before you merge/);
+    assert.doesNotMatch(renderPrBody({ finding, limits: '  ' }), /Before you merge/);
   });
 
   it('leaves out a link when it has no repo, and the ROI when there is none', () => {
@@ -77,7 +111,8 @@ describe('keepup pr-body', () => {
   const dir = mkdtempSync(join(tmpdir(), 'keepup-pr-body-'));
   const runFile = join(dir, 'run.json');
   writeFileSync(runFile, JSON.stringify({ repo: 'acme/bot', commit: 'abc1234', findings: [finding] }));
-  const keepup = (args: string[], env: NodeJS.ProcessEnv = {}) => spawnSync(process.execPath, ['bin/keepup.ts', 'pr-body', ...args], { encoding: 'utf8', env: { ...process.env, KEEPUP_PLUGIN: '', ...env } });
+  // The project is a folder with no origin, so these links come from the run file and not from this repo's own remote.
+  const keepup = (args: string[], env: NodeJS.ProcessEnv = {}) => spawnSync(process.execPath, ['bin/keepup.ts', 'pr-body', ...args], { encoding: 'utf8', env: { ...process.env, KEEPUP_PLUGIN: '', CLAUDE_PROJECT_DIR: dir, ...env } });
 
   it('prints the words for a finding in a run, with the test result it was given', () => {
     const out = keepup(['--finding', '1', '--run', runFile, '--tests', 'npm test: 12 passed']);
@@ -85,6 +120,18 @@ describe('keepup pr-body', () => {
     assert.match(out.stdout, /Saves about \$32 a month/);
     assert.match(out.stdout, /github\.com\/acme\/bot\/blob\/abc1234/);
     assert.match(out.stdout, /npm test: 12 passed/);
+  });
+
+  it('a run file says where its own links go, even from inside another clone', () => {
+    const out = keepup(['--finding', '1', '--run', runFile], { CLAUDE_PROJECT_DIR: process.cwd() });
+    assert.equal(out.status, 0, out.stderr);
+    assert.match(out.stdout, /github\.com\/acme\/bot\/blob\/abc1234/);
+  });
+
+  it('passes --limits through to the words', () => {
+    const out = keepup(['--finding', '1', '--run', runFile, '--limits', 'Nobody tried it on Bedrock.']);
+    assert.equal(out.status, 0, out.stderr);
+    assert.match(out.stdout, /^\*\*Before you merge:\*\* Nobody tried it on Bedrock\.$/m);
   });
 
   it('writes them to a file, so gh can read them', () => {
@@ -262,6 +309,47 @@ describe('--save', () => {
       assert.ok(!readFileSync(join(own, 'pr-body.md'), 'utf8').includes(token));
     } finally {
       cleanup();
+    }
+  });
+
+  it('names what the branch changed since the run\'s commit, and leaves it out when git can\'t say', () => {
+    const repo = fixtureRepo('quiet');
+    const data = mkdtempSync(join(tmpdir(), 'keepup-save-'));
+    const env = { ...process.env, KEEPUP_PLUGIN: '1', CLAUDE_PLUGIN_DATA: data, CLAUDE_PROJECT_DIR: repo.path };
+    const own = dataDir(data, env);
+    const body = (commit: string | null) => {
+      writeFileSync(join(own, 'facts.json'), JSON.stringify({ repo: 'acme/bot', commit }));
+      const out = spawnSync(process.execPath, [bin, 'pr-body', '--finding', '1', '--dir', data], { cwd: repo.path, encoding: 'utf8', env });
+      assert.equal(out.status, 0, out.stderr);
+      return out.stdout;
+    };
+    try {
+      mkdirSync(own, { recursive: true });
+      writeFileSync(join(own, 'verified.json'), JSON.stringify({ findings: [finding] }));
+      writeFileSync(join(repo.path, 'changed.ts'), 'x\n');
+      git(repo.path, 'add', 'changed.ts');
+      git(repo.path, '-c', 'commit.gpgsign=false', 'commit', '-q', '-m', 'the change');
+      assert.match(body(repo.commit), /^\*\*Changed:\*\* changed\.ts$/m);
+      assert.doesNotMatch(body(null), /\*\*Changed:/);
+      assert.doesNotMatch(body('abc1234'), /\*\*Changed:/);
+    } finally {
+      repo.cleanup();
+      rmSync(data, { recursive: true, force: true });
+    }
+  });
+
+  it('links to the repo origin pushes to, not the one the brief ran on, and to the run\'s repo with no GitHub origin', () => {
+    const fork = setUp('git@github.com:ColvraAI/MiroFish.git');
+    const none = setUp();
+    try {
+      const out = fork.run('pr-body', '--finding', '1');
+      assert.equal(out.status, 0, out.stderr);
+      assert.match(out.stdout, /github\.com\/ColvraAI\/MiroFish\/blob\/abc1234\/src\/answer\.ts#L25/);
+      assert.doesNotMatch(out.stdout, /github\.com\/acme\/bot/);
+      assert.match(none.run('pr-body', '--finding', '1').stdout, /github\.com\/acme\/bot\/blob\/abc1234/);
+    } finally {
+      fork.cleanup();
+      none.cleanup();
     }
   });
 

@@ -19,7 +19,7 @@ import { maskText, maskValue } from '../src/mask.ts';
 import { renderIssueBody, renderPrBody } from '../src/pr-body.ts';
 import type { Finding } from '../src/run-shape.ts';
 import { dataDir, logEvent, readLog, resetLog } from '../src/session.ts';
-import { originRepo, repoRoot } from '../src/git-files.ts';
+import { changedFiles, originRepo, repoRoot } from '../src/git-files.ts';
 import { createLlm, DEFAULT_LLM_CACHE, DEFAULT_MAX_USD, DEFAULT_MODEL } from '../src/llm.ts';
 import { RUNS_DIR, runPipeline, type RunOptions, type Seams, writeRun } from '../src/pipeline.ts';
 import { untrustedBlock } from '../src/repo-text.ts';
@@ -72,8 +72,8 @@ const USAGE = `keepup: check a product's code against everything new in AI.
                                           the whole pipeline: writes the run file, prints a one-screen brief. --full prints all of it.
                                           It writes to ~/.keepup/runs, or the plugin's data folder; --publish writes data/runs, which the dashboard reads.
                                           --replay rebuilds a demo run from data/replay: no key, no network, no cost.
-  keepup pr-body --finding <rank> [--run <run.json>] [--dir <dir>] [--summary <text>] [--tests <text>] [--out <file> | --save]
-                                          the words for a draft pull request: why, where, ROI, proof, and the real test result if you give it. Offline.
+  keepup pr-body --finding <rank> [--run <run.json>] [--dir <dir>] [--summary <text>] [--tests <text>] [--limits <text>] [--out <file> | --save]
+                                          the words for a draft pull request: why, found at, what changed, ROI, proof, the real test result if you give it, and --limits as what to know before merging. Offline.
                                           --save writes them to this repo's data folder, and prints body: <that file> and repo: <origin's owner/name, or none>.
 
   keepup issue-body [--dir <dir>] [--out <file> | --save]
@@ -126,6 +126,7 @@ const OPTIONS = {
   finding: { type: 'string' },
   summary: { type: 'string' },
   tests: { type: 'string' },
+  limits: { type: 'string' },
   run: { type: 'string' },
   save: { type: 'boolean' },
   help: { type: 'boolean', short: 'h' },
@@ -400,9 +401,10 @@ function commandPrBody(values: Values): void {
   const run = values.run ? read(values.run) : { ...read(join(dir, 'facts.json')), findings: read(join(dir, 'verified.json')).findings };
   const finding = run.findings.find((item: Finding) => item.rank === rank) ?? run.findings[rank - 1];
   if (!finding) throw new Error(`There's no finding ${rank} in that run.`);
-  const text = maskValue(renderPrBody({ finding, repo: run.repo, commit: run.commit, summary: values.summary, tests: values.tests }));
+  const project = projectOf();
+  const repo = originRepo(project);
+  const text = maskValue(renderPrBody({ finding, repo: values.run ? run.repo : repo ?? run.repo, commit: run.commit, summary: values.summary, files: values.run ? undefined : changedFiles(project, run.commit), tests: values.tests, limits: values.limits }));
   if (!values.save) return printOrWrite(text, values.out);
-  const repo = originRepo(projectOf());
   print(`body: ${saveBody(text, PR_BODY_FILE, values)}\nrepo: ${repo ?? REPO_NONE}`);
 }
 

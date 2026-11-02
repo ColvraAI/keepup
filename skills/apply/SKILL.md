@@ -63,10 +63,10 @@ Look for the repo's own test command: `npm test` in package.json, `pytest`, `car
 
 ## 5. Write the words
 
-The pull request's words come from the program, so its ROI and proof match the brief and nobody types a number. Leave `--tests` out if you didn't run them: it then says so.
+The pull request's words come from the program, so its ROI and proof match the brief and nobody types a number. Leave `--tests` out if you didn't run them: it then says so. `--limits` is one sentence on what could stop this working or what you didn't check, taken from what you'd tell the person, with no numbers. Leave it out if there's nothing to say.
 
 ```sh
-keepup pr-body --finding <rank> --dir "${CLAUDE_PLUGIN_DATA}" --summary "<what changed, in one sentence>" --tests "<the real result>" --save
+keepup pr-body --finding <rank> --dir "${CLAUDE_PLUGIN_DATA}" --summary "<what changed, in one sentence>" --tests "<the real result>" --limits "<what could stop this working or what you did not check, in one sentence>" --save
 ```
 
 It prints two lines. `body:` is the file holding the words, kept for this repo alone. `repo:` is the GitHub repo that `origin` points at, which is where the pull request goes. Use both as printed from here on.
@@ -84,10 +84,10 @@ git push -u origin keepup/<date>
 ```
 
 ```sh
-gh pr create --draft --repo <the repo line> --title "<the finding's title>" --body-file "<the body line>"
+gh pr create --draft --repo <the repo line> --head keepup/<date> --title "<what this change does, in one line>" --body-file "<the body line>"
 ```
 
-`--repo` is never optional: in a clone of a fork, gh on its own would open the pull request on the upstream repo. If GitHub says draft pull requests aren't supported in this repo, run the same command without `--draft`, keeping `--repo` and `--body-file`. Print the link gh gives you. Push only this branch, and never force. Never merge, and never mark it ready.
+The title says what the diff does and no more: the brief's headline is about the finding, and a pull request's title is about the change. `--repo` is never optional: in a clone of a fork, gh on its own would open the pull request on the upstream repo. If GitHub says draft pull requests aren't supported in this repo, run the same command without `--draft`, keeping `--repo` and `--body-file`. Print the link gh gives you. Push only this branch, and never force. Never merge, and never mark it ready.
 
 ## 7. When you didn't push
 
@@ -95,7 +95,7 @@ On a no, with no one to answer, with no `origin` remote, or when `gh` isn't ther
 
 ```sh
 git push -u origin keepup/<date>
-gh pr create --draft --repo <the repo line> --title "<the finding's title>" --body-file "<the body line>"
+gh pr create --draft --repo <the repo line> --head keepup/<date> --title "<what this change does, in one line>" --body-file "<the body line>"
 ```
 
 Never write `--repo none`. If the repo line says `none`, leave `<owner/name>` there for them to fill in, and say that keepup couldn't read a GitHub repo from `origin`, so it should be their own repo, not the one theirs was forked from.

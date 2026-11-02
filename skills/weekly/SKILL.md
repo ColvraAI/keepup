@@ -65,7 +65,7 @@ Take the first finding, in rank order, that has a `lever` and whose lever id isn
 
 ## 5. Make the change
 
-Do steps 1 to 5 of this plugin's `apply` skill on that one finding, with these answers: the founder said yes, and don't run the tests. The repo's own CI runs on the pull request.
+Do steps 1 to 5 of this plugin's `apply` skill on that one finding, with these answers: the founder said yes, and don't run the tests. The repo's own CI runs on the pull request. Step 5's `--limits` is one sentence on what could stop this working or what you didn't check, taken from what you'd tell the person, with no numbers. Leave it out if there's nothing to say.
 
 If that finding needs an install or an account, so it's written steps and no code, comment those steps on the issue with `gh issue comment <number> --body-file <file>`, and stop. One finding a run is enough.
 
@@ -78,10 +78,10 @@ git push -u origin keepup/<date>
 ```
 
 ```sh
-gh pr create --draft --repo <the repo line> --title "<the finding's title>" --body-file "<the body line>"
+gh pr create --draft --repo <the repo line> --head keepup/<date> --title "<what this change does, in one line>" --body-file "<the body line>"
 ```
 
-If GitHub says draft pull requests aren't supported in this repo, run the same command without `--draft`, keeping `--repo` and `--body-file`. Then comment its link on the issue.
+The title says what the diff does and no more: the brief's headline is about the finding, and a pull request's title is about the change. If GitHub says draft pull requests aren't supported in this repo, run the same command without `--draft`, keeping `--repo` and `--body-file`. Then comment its link on the issue.
 
 ## 7. Say what happened
 
