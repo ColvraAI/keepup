@@ -32,7 +32,10 @@ LEFT_OUT=(
 )
 # A file that ships must not point at one that doesn't. These are checked in everything
 # but this script, along with the committer's own email, read from git config.
-PRIVATE_STRINGS=(thoughts/shared docs/plan NOW.md DECISIONS.md .agents/skills docs/commands.md audit-instructions)
+PRIVATE_STRINGS=(thoughts/shared docs/plan NOW.md DECISIONS.md docs/commands.md audit-instructions)
+# This repo's .agents/skills is private, but the person's own ~/.agents/skills is where the Codex install
+# writes, so a path under ~, $HOME or ${HOME} is allowed and any other mention is not.
+PRIVATE_PATTERN='(^|[^/])\.agents/skills|(^|[^~E}])/\.agents/skills'
 
 repo_root="$(git rev-parse --show-toplevel)"
 cd "$repo_root"
@@ -73,7 +76,8 @@ grep_args=()
 for text in "${PRIVATE_STRINGS[@]}" "$(git config user.email || true)"; do
   [ -n "$text" ] && grep_args+=(-e "$text")
 done
-if git grep -n -I -F "${grep_args[@]}" "$tree" -- . ':(exclude)scripts/build-public.sh' >&2; then
+if git grep -n -I -F "${grep_args[@]}" "$tree" -- . ':(exclude)scripts/build-public.sh' >&2 ||
+  git grep -n -I -E -e "$PRIVATE_PATTERN" "$tree" -- . ':(exclude)scripts/build-public.sh' >&2; then
   echo "build-public: the lines above name something private; $BRANCH was not changed" >&2
   exit 1
 fi

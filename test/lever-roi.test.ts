@@ -81,6 +81,30 @@ test('a default the repo names is used before any example, and says where it was
   assert.doesNotMatch(item.value?.roi?.options[0].line ?? '', /example/);
 });
 
+// A guard names its model in a constant, and the call reaches it through a helper: the model is in the code, not set at runtime.
+const GUARDED = `const GUARD_MODEL = "small-model";\n${CLASSIFIER}async function guard(page) {\n  const model = getModel(GUARD_MODEL, "openai");\n  return generateObject({ model, prompt: page });\n}\n`;
+
+for (const [where, line] of [['the constant', 1], ['the helper call', 8]] as const) {
+  test(`a model named through ${where} is priced on, labelled as read at the constant`, () => {
+    const priceOf = (model: string) => (model === 'big-model' || model === 'small-model' ? { ...SONNET, model, input: 0.5, output: 1 } : null);
+    const [item] = withValues([{ ...finding, where: [{ file: 'c.js', line, text: 'x' }] }], context({ files: new Map([['c.js', GUARDED]]), modelIds: ['small-model'], priceOf }));
+    assert.equal(item.value?.roi?.basis, 'read');
+    assert.equal(item.value?.roi?.model?.id, 'small-model');
+    assert.equal(item.value?.roi?.model?.label, 'read at c.js:1');
+    assert.equal(item.value?.status, 'priced');
+  });
+}
+
+test('a model read at the call with no price on file is named, never called set at runtime', () => {
+  const [item] = withValues([{ ...finding, where: [{ file: 'c.js', line: 1, text: 'x' }] }], context({ files: new Map([['c.js', GUARDED]]), modelIds: ['small-model'] }));
+  const roi = item.value?.roi;
+  assert.equal(roi?.basis, 'example');
+  assert.equal(roi?.model?.id, 'big-model');
+  assert.match(roi?.model?.label ?? '', /small-model/);
+  assert.match(roi?.model?.label ?? '', /c\.js:1/);
+  assert.doesNotMatch(JSON.stringify(item.value), /set at runtime/);
+});
+
 test('two providers each with their own default name no default', () => {
   const files = new Map([['c.js', CLASSIFIER], ['a.js', 'const defaultModel = "big-model";'], ['b.js', 'const defaultModel = "other-model";']]);
   const priceOf = (model: string) => (model === 'big-model' || model === 'other-model' ? { ...SONNET, model } : null);
@@ -106,9 +130,18 @@ test('a lever with no money effect says its effect and effort, and that there is
 
 test('both briefs print a line per option, the assumptions labelled, the price sourced and dated', () => {
   const [item] = withValues([finding], context());
-  for (const text of [renderSummary({ ...run, findings: [{ ...item, rank: 1 }] }), renderBrief({ ...run, findings: [{ ...item, rank: 1 }] })].map((out) => out.replace(/\s+/g, ' '))) {
+  const summary = renderSummary({ ...run, findings: [{ ...item, rank: 1 }] }).replace(/\s+/g, ' ');
+  // The session brief keeps the per-option line and says where the assumptions and formula are.
+  assert.match(summary, /keepup get verified\.findings/);
+  assert.doesNotMatch(summary, /Assumed: 10,000 calls a month/);
+  for (const text of [summary, renderBrief({ ...run, findings: [{ ...item, rank: 1 }] }).replace(/\s+/g, ' ')]) {
+    assert.match(text, /TypeSafe Jev.*\$0\.042 per 1M input.*2026-11-01.*Saves about/);
+    assert.match(text, /OpenAI Decisions API.*\$0\.10 per 1M.*Saves about/);
+    assert.match(text, /https:\/\/jev/);
+    assert.match(text, /https:\/\/dec/);
+    assert.match(text, /example/);
+    if (text === summary) continue;
     assert.match(text, /TypeSafe Jev.*\$0\.042 per 1M input.*https:\/\/jev.*2026-11-01.*Saves about/);
-    assert.match(text, /OpenAI Decisions API.*\$0\.10 per 1M.*https:\/\/dec.*Saves about/);
     assert.match(text, /Assumed: 10,000 calls a month/);
     assert.match(text, /example/);
     assert.match(text, /payback = cost of change ÷ monthly saving/);
@@ -124,7 +157,7 @@ test('on a full screen the lead lever keeps its price, source and assumptions', 
   const flat = text.replace(/\s+/g, ' ');
   assert.ok(text.split('\n').length <= 41, 'one screen');
   assert.match(flat, /TypeSafe Jev \(\$0\.042 per 1M input/);
-  assert.match(flat, /Assumed: 10,000 calls a month/);
+  assert.match(flat, /keepup get verified\.findings/);
   assert.match(flat, /enter the model this call really uses/);
 });
 

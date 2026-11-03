@@ -42,6 +42,8 @@ export interface ValueInput {
   readonly modelLabel?: string;
   /** The price is a labelled example, not this call's model, so no figure ranks on it. */
   readonly exampleOnly?: boolean;
+  /** Why the sum is an example, when it isn't that the model is set at runtime. */
+  readonly exampleWhy?: string;
 }
 
 function usd(value: number): string {
@@ -53,6 +55,7 @@ function perCall(input: ValueInput): { today: number; frontier: number; detail: 
   if (!gainType) return input.noNumberReason ?? 'This lever has no cost formula yet.';
   if (inputTokens === null) return input.noNumberReason ?? 'The prompt this call passes is built at runtime, so there is no token count to read.';
   if (!price) return `No price on file for the model this call sends.`;
+  if (input.exampleOnly && input.exampleWhy) return input.exampleWhy;
   if (input.exampleOnly) return "This call's model is set at runtime, so no one figure holds: the sum below is on a named model, as an example.";
   const today = (inputTokens * price.input + outputTokens * price.output) / MILLION;
   if (gainType === 'substitute') {
@@ -135,10 +138,50 @@ function namedDefault(rows: readonly { id: string; place: string }[]): { id: str
 
 type Basis = NonNullable<LeverRoi['basis']>;
 
-function modelFor(file: string, line: number, context: ValueContext): { price: PriceRow | null; label: string; basis: Basis } {
+const NEAR_LINES = 10;
+const QUOTED = /["'`]([\w.:/-]+)["'`]/g;
+const COMMENT = /^\s*(?:\/\/|#|\*|\/\*)/;
+
+/** Where `name` is given a quoted value in this file, as `const NAME = "id"` or `NAME = "id"`: the value and its line. */
+function constantValue(text: string, name: string): { value: string; line: number } | null {
+  const match = new RegExp(`^[ \\t]*(?:export\\s+)?(?:(?:const|let|var|final|static|readonly)\\s+)*${name.replace(/\$/g, '\\$')}\\s*(?::[^=\\n]+)?=\\s*["'\`]([\\w.:/-]+)["'\`]`, 'm').exec(text);
+  return match ? { value: match[1], line: text.slice(0, match.index).split('\n').length } : null;
+}
+
+/**
+ * The model id the code names at or a few lines from this line, nearest first: a quoted id, or a constant those lines pass
+ * (to a helper such as getModel) whose value is one. A default or fallback is left to the default rules, which say so.
+ */
+function modelNamedNear(file: string, text: string, line: number, context: ValueContext): { id: string; place: string } | null {
+  const lines = text.split('\n');
+  const order = Array.from({ length: NEAR_LINES * 2 + 1 }, (_, index) => line + (index % 2 ? (index + 1) / 2 : -index / 2)).filter((at) => at >= 1 && at <= lines.length);
+  for (const at of order) {
+    const row = lines[at - 1];
+    if (COMMENT.test(row)) continue;
+    const quoted = [...row.matchAll(QUOTED)].map((match) => match[1]).find((id) => context.modelIds.includes(id));
+    if (quoted && !new RegExp(NAMED_DEFAULT.source, 'i').test(row)) return { id: quoted, place: `${file}:${at}` };
+    for (const name of new Set(row.match(/\b[A-Za-z_$][\w$]*\b/g) ?? [])) {
+      const held = constantValue(text, name);
+      if (held && held.line !== at && context.modelIds.includes(held.value) && !new RegExp(NAMED_DEFAULT.source, 'i').test(lines[held.line - 1])) return { id: held.value, place: `${file}:${held.line}` };
+    }
+  }
+  return null;
+}
+
+function modelFor(file: string, line: number, context: ValueContext): { price: PriceRow | null; label: string; basis: Basis; why?: string } {
   const text = context.files.get(file) ?? '';
   const called = modelAtCall(text, line, context.files);
   if (called && context.priceOf(called)) return { price: context.priceOf(called), label: `read at ${file}`, basis: 'read' };
+  const near = modelNamedNear(file, text, line, context);
+  if (near && context.priceOf(near.id)) return { price: context.priceOf(near.id), label: `read at ${near.place}`, basis: 'read' };
+  // The code names the model it sends, and there's no price for it: say which, and keep the sum an example that never ranks.
+  const unpriced = called ? { id: called, place: file } : near;
+  if (unpriced) {
+    const example = context.exampleModel ? context.priceOf(context.exampleModel) : null;
+    const label = `example: this call sends ${unpriced.id} (read at ${unpriced.place}), which has no price on file`;
+    const why = `This call sends ${unpriced.id}, read at ${unpriced.place}, and there's no price on file for it, so the sum below is on a named model, as an example.`;
+    return example ? { price: example, label, basis: 'example', why } : { price: null, label, basis: 'none' };
+  }
   const fromDefault = (named: { id: string; place: string }) => ({ price: context.priceOf(named.id), label: `assumed: this call's model is set at runtime; the default named at ${named.place}`, basis: 'default' as const });
   const ownDefault = namedDefault(defaultsIn(file, text, context));
   if (ownDefault) return fromDefault(ownDefault);
@@ -273,7 +316,7 @@ export function withValues<T extends Finding>(findings: readonly T[], context: V
     const value = computeValue({
       gainType, inputTokens: prompt ? estimateTokens(prompt.text) : null,
       outputTokens,
-      price: model.price, modelLabel: model.label, exampleOnly: model.basis === 'example', frontierInput: frontierOf(lever), hours, leverId: lever?.id ?? finding.lever ?? '',
+      price: model.price, modelLabel: model.label, exampleOnly: model.basis === 'example', ...(model.why ? { exampleWhy: model.why } : {}), frontierInput: frontierOf(lever), hours, leverId: lever?.id ?? finding.lever ?? '',
       tokensLabel,
       cacheMinimum: cacheMinimumOf(lever) ?? undefined,
     });

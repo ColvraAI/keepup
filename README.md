@@ -60,6 +60,27 @@ claude
 
 and type `/keepup`, or just ask what's worth changing. `/keepup:keepup` is its full name and works too. You get one screen. Say which finding you want and type `/keepup:apply 1`: that refuses a dirty tree and makes the change on a local branch with one commit. Then it asks, and on your yes it pushes that branch and opens a draft pull request with your `gh` login, with the ROI and the proof in it. You merge. A finding that needs an account or a project gets written steps instead of a code change.
 
+### In Codex CLI
+
+keepup also runs in Codex CLI, on your ChatGPT login with no API key. It's newer than the Claude Code plugin and hasn't had as many real sessions yet.
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/ColvraAI/keepup/main/install.sh | bash -s -- --codex
+```
+
+It checks for Node and `codex`, says what it will write, and asks. It clones keepup to `~/.keepup/repo`, writes two skills to `~/.agents/skills` from the same SKILL.md files the plugin uses, adds `~/.keepup/data` to `writable_roots` in `~/.codex/config.toml`, and adds a weekly-check hook to `~/.codex/hooks.json`. It leaves either file alone if you already have one (for config.toml, if it already has a `[sandbox_workspace_write]` table) and prints the line to add instead. It also leaves a `keepup` or `keepup-apply` skill you already had in `~/.agents/skills`, and uninstall removes only the skills it made. To remove it: `~/.keepup/repo/install.sh --codex --uninstall` (or `./install.sh --codex --uninstall` from a checkout), which keeps your briefs in `~/.keepup/data`.
+
+What works in Codex:
+
+- `$keepup`, or saying "use keepup", gives the same brief as `/keepup`. It runs inside Codex's sandbox, so it shouldn't ask you anything.
+- `$keepup-apply` makes the change on a local branch. Codex asks before each git step, and the skill asks before it pushes.
+- The weekly line when a session starts, once you've run `/hooks` in Codex to trust the hook.
+
+What doesn't work in Codex yet:
+
+- There's no `/keepup`. Slash commands in Codex are Codex's own, so you type `$keepup`.
+- There's no weekly run. `/keepup:weekly` and the GitHub workflow work only with Claude Code for now.
+
 ### What asks you first
 
 keepup can't promise you a prompt. Your permission mode decides, and this is what happens in each:

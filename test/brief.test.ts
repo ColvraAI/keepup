@@ -135,7 +135,8 @@ describe('renderSummary', () => {
   it('has the top three with where and source, and the rest one line each and what to do', () => {
     const five = Array.from({ length: 5 }, (_, index) => ({ ...full.findings[0], reach: undefined, rank: index + 1, title: `Finding ${index + 1}` }));
     const text = renderSummary({ ...full, findings: five });
-    assert.match(text, /1\. Finding 1\n {3}keeps working · vendor claim · Hours\n {3}src\/voice\.ts:11\n {3}https:/);
+    assert.match(text, /^ *1 +Finding 1 +.* +Hours +vendor claim$/m);
+    assert.match(text, /1\. Finding 1\n {3}What it does: [^\n]*\n(?: {7}[^\n]*\n)*(?: {3}Check first[^\n]*\n)? {3}Where: src\/voice\.ts:11[^\n]*\n(?:[^\n]*\n)*? {3}Source: https:[^\n]*\n {3}Next: \/keepup:apply 1\n/);
     assert.match(text, /4\. Finding 4 · keeps working · vendor claim · Hours\n {3}src\/voice\.ts:11\n {3}Do: gpt-transcribe · https:[^\n]*\n5\. Finding 5/);
   });
 });
@@ -148,8 +149,8 @@ describe('the one screen says what to do', () => {
       { name: 'TypeSafe Jev', what: 'TypeSafe says answers come back in 70ms-500ms. This is a vendor claim.', needs: '', source: 'https://typesafe.example' },
       { name: 'OpenAI Decisions API', what: 'A decision call. It costs $0.10 per 1M input tokens.', needs: '', source: 'https://openai.example' },
     ] }] });
-    assert.match(text, /Do: TypeSafe Jev: TypeSafe says answers come back in 70ms-500ms\. This is a vendor claim\.\n\s+https:\/\/typesafe\.example/);
-    assert.match(text, /Do: OpenAI Decisions API: A decision call\. It costs \$0\.10 per 1M input tokens\.\n\s+https:\/\/openai\.example/);
+    assert.match(text, /What it does: TypeSafe Jev: TypeSafe says answers come back in 70ms-500ms\. This is a vendor claim\.\n\s+https:\/\/typesafe\.example/);
+    assert.match(text, /Or: OpenAI Decisions API: A decision call\. It costs \$0\.10 per 1M input tokens\.\n\s+https:\/\/openai\.example/);
   });
 
   it('an option on the finding\'s own source doesn\'t repeat it', () => {
@@ -158,10 +159,10 @@ describe('the one screen says what to do', () => {
   });
 
   it('with no option it says the named successor, or what the finding says first', () => {
-    assert.match(renderSummary({ ...full, findings: [{ ...finding, options: [], why: 'gemini-2.0-flash was shut down. Named successor: gemini-3.6-flash. More.' }] }), /Do: move to gemini-3\.6-flash\n/);
-    assert.match(renderSummary({ ...full, findings: [{ ...finding, options: [], why: 'Cargo.toml:49 declares 0.12.0. The latest is 3.8.0.' }] }), /Do: move to 3\.8\.0\n/);
-    assert.match(renderSummary({ ...full, findings: [{ ...finding, options: [], why: 'Nothing else is known. More.' }] }), /Do: Nothing else is known\.\n/);
-    assert.match(renderSummary({ ...full, findings: [{ ...finding, why: 'x. Named successor: claude-sonnet-5-5. y', options: [{ name: 'Retired; move to the named successors', what: 'w', needs: '', source: 'https://a.example/main' }] }] }), /Do: Retired; move to claude-sonnet-5-5: w/);
+    assert.match(renderSummary({ ...full, findings: [{ ...finding, options: [], why: 'gemini-2.0-flash was shut down. Named successor: gemini-3.6-flash. More.' }] }), /What it does: move to gemini-3\.6-flash\n/);
+    assert.match(renderSummary({ ...full, findings: [{ ...finding, options: [], why: 'Cargo.toml:49 declares 0.12.0. The latest is 3.8.0.' }] }), /What it does: move to 3\.8\.0\n/);
+    assert.match(renderSummary({ ...full, findings: [{ ...finding, options: [], why: 'Nothing else is known. More.' }] }), /What it does: Nothing else is known\.\n/);
+    assert.match(renderSummary({ ...full, findings: [{ ...finding, why: 'x. Named successor: claude-sonnet-5-5. y', options: [{ name: 'Retired; move to the named successors', what: 'w', needs: '', source: 'https://a.example/main' }] }] }), /What it does: Retired; move to claude-sonnet-5-5: w/);
   });
 
   it('a warning the provider gives is on the screen', () => {

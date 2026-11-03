@@ -82,9 +82,9 @@ test('the first thing read names the biggest lever and a retired model is one li
   const lever = withValues([{ ...base, rank: 1, lever: 'L', title: 'Ticket routing can use a decision model', effort: 'A day' }], { levers: [{ id: 'L', name: 'n', pattern: 'PAT-label-picking-call', kind: 'k', effects: [], gain: 'about 10x faster', proof: 'vendor claim', source: 's', how: 'h', price: '$0.042 per 1M input tokens' }], files: new Map([['a.js', file]]), modelIds: [], priceOf: () => ({ input: 200, output: 1000, model: 'm', source: 'src' }), fallbackModel: 'm' })[0];
   const text = renderSummary({ ...run, findings: [lever, { ...retired, rank: 2 }], exact: [{ kind: 'model', status: 'retired', live_places: [{}] } as never, { kind: 'model', status: 'retired', live_places: [{}] } as never] });
   const lines = text.split('\n');
-  assert.match(lines[1], /^Biggest lever: Ticket routing can use a decision model/);
+  assert.match(lines.find((line) => line.startsWith('Biggest lever')) ?? '', /^Biggest lever: Ticket routing can use a decision model/);
   assert.match(text, /about 10x faster \[vendor claim\]/);
-  assert.match(text, /\[projected, at 10,000 calls/);
+  assert.match(text, /at 10,000 calls.*\[projected\]/s);
   assert.match(text, /assumed/);
   assert.match(text, /Also: 2 models here have shut down · a\.js:3 · want the change\?/);
   assert.ok(!/^\d+\. Your default m was shut down/m.test(text));
@@ -95,4 +95,16 @@ test('with nothing else to say, a retired model is still one line', () => {
   assert.ok(!/^1\. Your default m was shut down/m.test(text));
   assert.match(text, /Nothing big fits this week/);
   assert.match(text, /^Also: /m);
+});
+
+test('the Also count is models a place sends, never ids a price or model table only lists, and says when examples are most of it', () => {
+  const lever = withValues([{ ...base, rank: 1, lever: 'L', title: 'Ticket routing can use a decision model', effort: 'A day' }], { levers: [{ id: 'L', name: 'n', pattern: 'PAT-label-picking-call', kind: 'k', effects: [], gain: 'about 10x faster', proof: 'vendor claim', source: 's', how: 'h', price: '$0.042 per 1M input tokens' }], files: new Map([['a.js', file]]), modelIds: [], priceOf: () => ({ input: 200, output: 1000, model: 'm', source: 'src' }), fallbackModel: 'm' })[0];
+  const sent = { file: 'src/llm.ts', line: 4, context: 'code' };
+  const table = { file: 'src/prices.ts', line: 9, context: 'code', catalog: true };
+  const example = { file: 'examples/a.py', line: 2, context: 'example' };
+  const model = (status: string, ...live_places: object[]) => ({ kind: 'model', status, live_places }) as never;
+  const counted = (exact: never[]) => renderSummary({ ...run, findings: [lever, { ...retired, rank: 2 }], exact }).split('\n').find((line) => line.startsWith('Also:')) ?? '';
+  assert.match(counted([model('retired', sent), model('retired', table), model('retired', table), model('retiring', sent, table)]), /^Also: 1 model here has shut down and 1 more is retiring · /);
+  assert.match(counted([model('retired', example), model('retired', example), model('retiring', sent)]), /^Also: 2 models here have shut down and 1 more is retiring, 2 of them only in examples · /);
+  assert.match(counted([model('retired', table)]), /^Also: 1 retired or retiring model is only listed in a table here · /);
 });

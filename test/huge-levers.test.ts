@@ -562,3 +562,53 @@ describe('a clean clone with a submodule has a commit', () => {
     }
   });
 });
+
+describe('the session brief: a numbered table ranked by fit, then each lever in full', () => {
+  const lever = (rank: number, title: string, rest: Partial<Finding> = {}): Finding => ({ rank, title, effect: ['cheaper'], proof: 'vendor claim', effort: 'Hours', where: [{ file: 'src/a.py', line: 12, text: 'client.chat(model)' }], why: 'w', options: [{ name: 'Cache it', what: 'Mark the long prefix as cacheable.', needs: '', source: 'https://vendor.example/cache' }], sources: ['https://vendor.example/cache'], lever: `L${rank}`, pr: null, ...rest });
+  const roi = (basis: 'read' | 'example', label: string) => ({ money: true, effort: 'Hours', basis, model: { id: 'gpt-4o-mini', input: 0.15, output: 0.6, source: 's', label }, tokens: { input: 1000, input_label: 'assumed', output: 100, output_label: 'assumed' }, calls_per_month: 10_000, change_usd: 300, change_label: 'assumed', options: [{ name: 'Cache it', lever: 'L1', kind: 'cache' as const, price_text: '$0.15/M', source: 's', monthly_usd: 31, payback_months: 10, line: 'Saves about $31 a month at 10,000 calls · pays back in 10 months [projected]' }], assumed: 'Assumed: 1,000 input tokens a call', formula: 'saving = calls x tokens x price' });
+  const worked = (basis: 'read' | 'example', label: string) => ({ status: 'worked' as const, lever: 'L1', label: 'projected' as const, inputs: INPUTS, formula: 'f', roi: roi(basis, label) });
+  const run = briefRun([
+    lever(1, 'Cache the long policy', { value: worked('read', 'read at src/a.py') }),
+    lever(2, 'Route easy calls to a decision model', { lever: 'ADV-decision-model', where: [{ file: 'src/b.py', line: 3, text: 'x' }, { file: 'src/c.py', line: 9, text: 'y' }], options: [{ name: 'Gate it', what: 'Call the small model first and keep its answer above a confidence of 0.8.', needs: '', source: 'https://vendor.example/d' }], value: worked('example', 'example: this call sends my-own-model (read at src/b.py), which has no price on file') }),
+  ]);
+  const text = renderSummary(run);
+  const lines = text.split('\n');
+
+  it('opens with the repo, commit and date, then what keepup does', () => {
+    assert.match(lines[0], /^keepup: o\/n · Commit abcdef1 · database as of 1 Nov 2026$/);
+    assert.match(lines[1], /^keepup reads your code/);
+  });
+
+  it('ranks by fit in a numbered table with change, effect, effort and proof', () => {
+    assert.match(text, /^Ranked by fit to your code, best first:$/m);
+    assert.match(text, /^ *# +Change +Effect +Effort +Proof$/m);
+    assert.match(text, /^ *1 +Cache the.* +about \$31 a month \[projected\] +Hours +vendor claim$/m);
+    assert.match(text, /^ *2 +Route.* +about \$31 a month \[projected, example\] +Hours +vendor claim$/m);
+    assert.ok(text.indexOf(' 1  Cache') < text.indexOf(' 2  Route'));
+  });
+
+  it('gives each lever in full: what it does, where, ROI, source and the next step', () => {
+    assert.match(text, /^1\. Cache the long policy$/m);
+    assert.match(text, /^ {3}What it does: Cache it: Mark the long prefix as cacheable\.$/m);
+    assert.match(text, /^ {3}Where: src\/a\.py:12, client\.chat\(model\)$/m);
+    assert.match(text, /^ {3}ROI: Cache it \(\$0\.15\/M; s\): Saves about \$31 a month/m);
+    assert.match(text, /^ {3}Priced on gpt-4o-mini, read at src\/a\.py\.$/m);
+    assert.match(text, /^ {3}Source: https:\/\/vendor\.example\/cache$/m);
+    assert.match(text, /^ {3}Next: \/keepup:apply 1$/m);
+    assert.match(text, /^ {3}Next: \/keepup:apply 2$/m);
+  });
+
+  it('says a decision model returns a confidence, with today\'s call as the fallback below the gate', () => {
+    assert.match(text, /What it does: it returns a confidence; today's call stays the fallback below a confidence of 0\.8\.\n {3}Option: Gate it: /);
+  });
+
+  it('says plainly when the sum is on an example model', () => {
+    assert.match(text, /Priced on an example model, gpt-4o-mini, because there's no price on file for my-own-model: enter the model/);
+  });
+
+  it('keeps the assumptions and formula off the screen, and says where the full sum is', () => {
+    assert.doesNotMatch(text, /Assumed: 1,000 input tokens|saving = calls x tokens/);
+    assert.match(text, /keepup get verified\.findings/);
+    assert.ok(lines.every((line) => line.length <= 118));
+  });
+});

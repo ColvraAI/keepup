@@ -99,13 +99,17 @@ function latestMeasure(finding: Finding, run: BriefInput): Measurement | undefin
 
 /** What a lever does, in money or speed. Each number carries its label; with neither, this says nothing. */
 export function effectLine(finding: Finding, run: BriefInput): string {
+  return effectParts(finding, run).join(' · ');
+}
+
+function effectParts(finding: Finding, run: BriefInput): string[] {
   const value = finding.value;
   const measured = latestMeasure(finding, run)?.rows.filter((row) => row.headline).map((row) => `${row.headline} [measured, n=${row.n}]`) ?? [];
   const speed = value?.speed ? [`${value.speed.text} [${value.speed.label}]`] : [];
   const calls = value?.inputs.calls_per_month.value;
   const pays = value?.status === 'priced' && losesMoney(finding) && value.break_even_calls_per_month ? [`pays back above about ${value.break_even_calls_per_month.toLocaleString('en-US')} calls a month [projected]; ${Number(calls).toLocaleString('en-US')} calls a month, assumed, doesn't clear its cost`] : [];
   const cheaper = value?.status === 'priced' && !losesMoney(finding) && (value.monthly_gain_usd as number) > 0 ? [`about ${money(value.monthly_gain_usd as number)} a month cheaper [projected, at ${Number(calls).toLocaleString('en-US')} calls a month, assumed]`] : [];
-  return [...pays, ...measured, ...speed, ...cheaper].join(' · ');
+  return [...pays, ...measured, ...speed, ...cheaper];
 }
 
 /** One line per option, named, with its price, source and date. */
@@ -141,13 +145,24 @@ function formulaLines(value: LeverValue | undefined): string[] {
   return [...wrapped(`   Value: ${value.formula}`), ...wrapped(`   Inputs: ${inputs}. ${paysBack}`)];
 }
 
+interface LivePlace { readonly catalog?: boolean; readonly context?: string }
+const livePlaces = (item: unknown): readonly LivePlace[] => (item as { live_places?: LivePlace[] }).live_places ?? [];
+/** A place that sends the model: a price or capability table only lists it, so a table's ids are never counted as use. */
+const sendingPlaces = (item: unknown) => livePlaces(item).filter((place) => !place.catalog);
+
 function retirementLine(run: BriefInput, retired: readonly Finding[]): string {
-  const models = (run.exact ?? []).filter((item) => item.kind === 'model' && ((item as unknown as { live_places?: unknown[] }).live_places?.length ?? 0) > 0);
+  const listed = (run.exact ?? []).filter((item) => item.kind === 'model' && livePlaces(item).length > 0);
+  const models = listed.filter((item) => sendingPlaces(item).length > 0);
   const gone = models.filter((item) => item.status === 'retired').length;
   const going = models.length - gone;
+  const examples = models.filter((item) => sendingPlaces(item).every((place) => place.context === 'example')).length;
   const counted = [gone ? `${gone} model${gone === 1 ? '' : 's'} here ${gone === 1 ? 'has' : 'have'} shut down` : '', going ? `${going} ${gone ? 'more' : `model${going === 1 ? '' : 's'} here`} ${going === 1 ? 'is' : 'are'} retiring` : ''].filter(Boolean).join(' and ');
+  // Examples count, but when they're most of the number, it says so.
+  const ofThem = examples * 2 > models.length ? `, ${examples} of them only in examples` : '';
+  const tableOnly = listed.length - models.length;
+  const fallback = tableOnly ? `${tableOnly} retired or retiring model${tableOnly === 1 ? ' is' : 's are'} only listed in a table here` : `${retired.length} retired or retiring model finding${retired.length === 1 ? '' : 's'}`;
   const place = retired[0]?.where[0];
-  return `Also: ${counted || `${retired.length} retired or retiring model finding${retired.length === 1 ? '' : 's'}`}${place ? ` · ${fileName(place.file)}:${place.line}` : ''} · ${OFFER}`;
+  return `Also: ${counted ? `${counted}${ofThem}` : fallback}${place ? ` · ${fileName(place.file)}:${place.line}` : ''} · ${OFFER}`;
 }
 
 const NOTHING_BIG = 'Nothing big fits this week.';
@@ -487,8 +502,9 @@ function movesText(moves: readonly Move[]): string {
   return parts.join('; ');
 }
 
+/** A move is a retirement's: a lever finding at the same line keeps its own options, so its Do never names a successor. */
 function movesOf(finding: Finding, run: BriefInput): Move[] {
-  if (finding.sdk_unverified) return [];
+  if (finding.sdk_unverified || finding.lever) return [];
   const places = new Set(finding.where.map((place) => `${place.file}:${place.line}`));
   return (run.moves ?? []).filter((move) => move.places.some((place) => places.has(place)));
 }
@@ -621,12 +637,6 @@ const SCREEN_LINES = 40;
 /** The fullest shape that fits: the tail comes down to counts first, then fewer findings get their whole block. Nothing is cut to get there. */
 const SHAPES: readonly { readonly inFull: number; readonly compact: boolean }[] = [{ inFull: IN_FULL, compact: false }, { inFull: IN_FULL, compact: true }, { inFull: 2, compact: true }, { inFull: 1, compact: true }, { inFull: 0, compact: true }];
 
-function leadLines(lever: Finding, run: BriefInput): string[] {
-  const effect = effectLine(lever, run);
-  const head = losesMoney(lever) ? `${NOTHING_CLEARS} Closest: ${lever.title}` : `Biggest lever: ${lever.title}`;
-  return [...wrapped(head), ...(effect ? wrapped(effect, '  ') : [])];
-}
-
 function retiredLines(run: BriefInput, inFull: number, compact: boolean): string[] {
   const retired = run.findings.filter(isRetirement);
   return [
@@ -639,18 +649,138 @@ function retiredLines(run: BriefInput, inFull: number, compact: boolean): string
   ];
 }
 
-function summaryLines(run: BriefInput, inFull: number, compact: boolean): string[] {
+const WHAT_KEEPUP_DOES = 'keepup reads your code, checks it against a database of AI changes, and offers the few worth making.';
+const FULL_SUM = 'Each sum in full, with what it assumes: keepup get verified.findings';
+const TABLE_CAPS = { effect: 46, effort: 20, proof: 18 } as const;
+/** The table is the one thing that can't wrap and still read, so it fits an 80-column terminal. */
+const TABLE_LINE = 80;
+const TABLE_MINS = { change: 12, effect: 20, effort: 10, proof: 10 } as const;
+type TableWidths = { readonly n: number; readonly change: number; readonly effect: number; readonly effort: number; readonly proof: number };
+
+/** Narrows the change first (the block below has the whole title), then effort and proof, and the effect last, since a cut effect loses its source label. */
+function fitTable(widths: TableWidths): TableWidths {
+  const keys = ['change', 'effort', 'proof', 'effect'] as const;
+  const room = (w: TableWidths) => TABLE_LINE - 9 - w.n - keys.reduce((sum, key) => sum + w[key], 0);
+  let w = widths;
+  while (room(w) < 0) {
+    const key = keys.find((k) => w[k] > TABLE_MINS[k]);
+    if (!key) break;
+    w = { ...w, [key]: w[key] - 1 };
+  }
+  return w;
+}
+
+/** The number keepup can source, labelled; else a plain phrase from the record. Never a number it made up. */
+function effectCell(finding: Finding, run: BriefInput): string {
+  const sourced = effectParts(finding, run)[0];
+  if (sourced) return sourced.replace(/ \[projected, at [^\]]*\]/, ' [projected]').replace(/ cheaper \[projected\]$/, ' [projected]');
+  const roi = finding.value?.roi;
+  const best = roi?.money ? roi.options.filter((option) => (option.monthly_usd ?? 0) > 0).sort((a, b) => (b.monthly_usd ?? 0) - (a.monthly_usd ?? 0))[0] : undefined;
+  if (best) return `about ${money(best.monthly_usd as number)} a month [projected${roi?.basis === 'example' ? ', example' : ''}]`;
+  return finding.value?.lever_gain ?? finding.effect.join(', ');
+}
+
+const pad = (text: string, width: number) => text.padEnd(width);
+
+function tableLines(levers: readonly Finding[], run: BriefInput): string[] {
+  const rows = levers.map((lever, index) => ({ n: String(lever.rank ?? index + 1), change: oneLine(lever.title), effect: oneLine(effectCell(lever, run)), effort: oneLine(lever.effort), proof: oneLine(lever.proof) }));
+  const width = (key: 'n' | 'change' | 'effect' | 'effort' | 'proof', head: string, cap = MAX_LINE) => Math.min(cap, Math.max(head.length, ...rows.map((row) => row[key].length)));
+  const fixed = { n: width('n', '#'), effect: width('effect', 'Effect', TABLE_CAPS.effect), effort: width('effort', 'Effort', TABLE_CAPS.effort), proof: width('proof', 'Proof', TABLE_CAPS.proof) };
+  const w = fitTable({ ...fixed, change: width('change', 'Change') });
+  const line = (n: string, change: string, eff: string, effort: string, proof: string) => ` ${n.padStart(w.n)}  ${pad(atWord(change, w.change), w.change)}  ${pad(atWord(eff, w.effect), w.effect)}  ${pad(atWord(effort, w.effort), w.effort)}  ${atWord(proof, w.proof)}`.trimEnd();
+  return ['Ranked by fit to your code, best first:', line('#', 'Change', 'Effect', 'Effort', 'Proof'), ...rows.map((row) => line(row.n, row.change, row.effect, row.effort, row.proof))];
+}
+
+const DECISION = /decision[ -]?model|label-picking/i;
+const GATE = /\b(?:below|above|under|over) (an? (?:confidence|threshold|score)[^.;,]*?\d?\.?\d+%?)/i;
+
+/** A decision model's call: it answers with a confidence, and the code it replaces still runs below the gate. */
+function decisionPrefix(finding: Finding): string {
+  if (!DECISION.test(`${finding.lever ?? ''} ${finding.title}`)) return '';
+  const gate = `${finding.options.map((option) => option.what).join(' ')} ${finding.why}`.match(GATE)?.[1];
+  return `it returns a confidence; today's call stays the fallback below ${gate ?? 'the gate the lever sets'}. `;
+}
+
+/** Each option in the record's own words, with its source where it isn't the lever's. A decision model says how it gates first. */
+function whatLines(finding: Finding, trim = false): string[] {
+  const options = finding.options.filter((option) => !option.needs.startsWith(AFTER_UPGRADE));
+  const gate = decisionPrefix(finding);
+  if (options.length === 0) return wrapped(`   What it does: ${gate}${plainDo(finding).join(' ').replace(/^ {3}Do: /, '')}`);
+  const shown = new Set([finding.sources[0]]);
+  // A decision model's gate is its own line, so the options under it are never cut to make room.
+  const label = (index: number) => (index > 0 ? 'Or: ' : gate ? 'Option: ' : 'What it does: ');
+  return [...(gate ? wrapped(`   What it does: ${gate.trimEnd()}`) : []), ...options.flatMap((option, index) => {
+    const line = wholeSentences(`   ${label(index)}${optionName(option.name, finding)}: ${option.what}`);
+    if (trim || !option.source || shown.has(option.source)) return line;
+    shown.add(option.source);
+    return [...line, ...sourceLine(option.source)];
+  })];
+}
+
+function whereLine(finding: Finding): string {
+  const [place] = finding.where;
+  if (!place) return '   Where: no single line; see the source';
+  const more = finding.where.length - 1;
+  return fitWithTail(`   Where: ${fileName(place.file)}:${place.line}${place.text ? `, ${oneLine(place.text).trim()}` : ''}`, more > 0 ? ` (and ${more} more)` : '');
+}
+
+/** The one-line ROI per option, and the model it's priced on: the code's, or an example, said plainly. */
+function roiBlock(finding: Finding, run: BriefInput, trim = false): string[] {
+  const value = finding.value;
+  const roi = value?.roi;
+  if (!roi && value?.status === 'priced') return wrapped(`   ROI: ${effectParts(finding, run).filter((part) => !part.endsWith(`[${value.speed?.label}]`)).join(' · ') || money(value.value_usd ?? 0)}`);
+  if (!roi) return value?.status === 'no_number' && value.reason ? wrapped(`   ROI: no money number: ${value.reason}`) : [];
+  if (!roi.money) return wrapped(`   ROI: ${roi.statement}`);
+  const sent = roi.model?.label.match(/sends (\S+) \(read at/)?.[1];
+  const basis = !roi.model ? [] : roi.basis === 'example' ? [`Priced on an example model, ${roi.model.id}, because there's no price on file for ${sent ?? 'the model this code sends'}: enter the model this call really uses and your calls a month.`] : [`Priced on ${roi.model.id}, ${roi.model.label}.`];
+  // A source the block already prints isn't printed again: the price and its date stay with the sum.
+  const printed = new Set([finding.sources[0], ...finding.options.map((option) => option.source)]);
+  if (trim) return roi.options.flatMap((option) => wrapped(`   ROI: ${option.name}: ${option.line ?? 'enter your model and calls a month'}`));
+  const text = (option: RoiOption) => (printed.has(option.source) ? `${option.name} (${option.price_text}${option.checked ? `, checked ${option.checked}` : ''})${option.line ? `: ${option.line}` : ''}` : roiOptionText(option));
+  return [...roi.options.flatMap((option) => wrapped(`   ROI: ${text(option)}`)), ...basis.flatMap((line) => wrapped(`   ${line}`)), ...(roi.what_to_enter && roi.basis !== 'example' ? wrapped(`   ${roi.what_to_enter}`) : [])];
+}
+
+/** Trimmed, it keeps What it does, Where, one ROI line per option, Source and Next: never the lever itself. */
+function leverBlock(finding: Finding, index: number, run: BriefInput, trim = false): string[] {
+  const n = finding.rank ?? index + 1;
+  const source = finding.sources[0] ?? finding.options[0]?.source;
+  return ['', fit(`${n}. ${finding.title}`), ...whatLines(finding, trim), ...checkLine(finding), whereLine(finding), ...roiBlock(finding, run, trim), ...(source ? wrapped(`   Source: ${source}`) : []), `   Next: /keepup:apply ${n}`];
+}
+
+/** The best option's own ROI line, as roiBlock prints it, with its [projected] label. */
+function breakEven(lever: Finding): string {
+  const roi = lever.value?.roi;
+  if (!roi?.money) return '';
+  const best = roi.options.filter((option) => option.line).sort((a, b) => (b.monthly_usd ?? 0) - (a.monthly_usd ?? 0))[0];
+  return best ? `${best.name}: ${best.line}` : '';
+}
+
+function sessionLead(lever: Finding, run: BriefInput): string[] {
+  if (!losesMoney(lever)) return wrapped(`Biggest lever: ${lever.title}`);
+  // Under the honest heading, only the break-even says why; the table carries the rest.
+  const effect = lever.value?.status === 'priced' ? effectLine(lever, run) : breakEven(lever);
+  return [...wrapped(`${NOTHING_CLEARS} Closest: ${lever.title}`), ...(effect ? wrapped(effect, '  ') : [])];
+}
+
+/** How much a summary sheds to fit: 1 drops the team lines, 2 the counts too, 3 the retirement line too. Trim shortens the lead block last. */
+interface SummaryShape { readonly inFull: number; readonly compact: boolean; readonly rest: boolean; readonly shed: number; readonly trim: boolean }
+
+function summaryLines(run: BriefInput, { inFull, compact, rest, shed, trim }: SummaryShape): string[] {
   const levers = run.findings.filter((finding) => !isRetirement(finding));
   const retired = run.findings.filter(isRetirement);
+  const unshown = levers.length - inFull;
   return [
-    `keepup: ${oneLine(run.repo)} · ${commitLine(run)}`,
-    ...(levers.length ? leadLines(levers[0], run) : [NOTHING_BIG]),
+    `keepup: ${oneLine(run.repo)} · ${commitLine(run)} · database as of ${humanDate(run.db.fetched)}`,
+    WHAT_KEEPUP_DOES,
     ...wrapped(checkedLine(run)),
-    ...levers.slice(0, inFull).flatMap((finding, index) => fullFinding(finding, index, run)),
-    ...levers.slice(inFull).flatMap((finding, index) => shortFinding(finding, index + inFull, run)),
-    ...(retired.length ? ['', ...wrapped(retirementLine(run, retired))] : []),
-    ...teamLines(run, compact),
-    ...summaryTail(run, compact),
+    '',
+    ...(levers.length ? [...sessionLead(levers[0], run), ...tableLines(levers, run)] : [NOTHING_BIG]),
+    ...levers.slice(0, inFull).flatMap((finding, index) => leverBlock(finding, index, run, trim)),
+    ...(rest ? levers.slice(inFull).flatMap((finding, index) => shortFinding(finding, index + inFull, run)) : []),
+    ...(levers.length ? ['', fit(`${!rest && unshown > 0 ? `${inFull ? `The other ${unshown} are` : 'Each one is'} in the table above. ` : ''}${FULL_SUM}`)] : []),
+    ...(retired.length && shed < 3 ? ['', ...wrapped(retirementLine(run, retired))] : []),
+    ...(shed < 1 ? teamLines(run, compact) : []),
+    ...(shed < 2 ? summaryTail(run, compact) : run.incomplete ? ['', fit(`Incomplete: ${run.incomplete.reason}`)] : []),
     ...(run.findings.length ? ['', ...(measureOffer(levers) ? [measureOffer(levers)] : []), OFFER] : []),
   ];
 }
@@ -666,9 +796,18 @@ export function renderRetired(run: BriefInput): string {
   return finish(shaped.find((lines) => lines.length <= SCREEN_LINES) ?? (shaped.at(-1) as string[]));
 }
 
+// The top lever always keeps its block: the rest go to the table, then the tail goes, then the block is trimmed.
+const SUMMARY_SHAPES: readonly SummaryShape[] = [
+  ...SHAPES.filter(({ inFull }) => inFull > 0).map(({ inFull, compact }) => ({ inFull, compact, rest: true, shed: 0, trim: false })),
+  ...SHAPES.filter(({ inFull, compact }) => inFull > 0 && compact).map(({ inFull }) => ({ inFull, compact: true, rest: false, shed: 0, trim: false })),
+  ...[1, 2, 3].map((shed) => ({ inFull: 1, compact: true, rest: false, shed, trim: false })),
+  { inFull: 1, compact: true, rest: false, shed: 3, trim: true },
+];
+
 /** One screen: the top findings with where and source, the rest shorter, and a count of what was held back. */
 export function renderSummary(run: BriefInput): string {
   if (run.findings.length === 0 && run.watching.length === 0) return finish([emptyLine(run), ...quietTail(run)]);
-  const shaped = SHAPES.map(({ inFull, compact }) => summaryLines(run, inFull, compact));
+  // Past the levers in full, the rest keep their short form, or else the table alone carries them.
+  const shaped = SUMMARY_SHAPES.map((shape) => summaryLines(run, shape));
   return finish(shaped.find((lines) => lines.length <= SCREEN_LINES) ?? (shaped.at(-1) as string[]));
 }

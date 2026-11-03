@@ -129,6 +129,15 @@ describe('the Do line', () => {
     { from: 'elsewhere', to: ['nope'], places: ['other.json:1'] },
   ];
 
+  it("a lever finding's Do is its own options, never a retirement move at the same place", () => {
+    const lever = pickerFinding('Check pages with a cheaper classifier', { rank: 1, lever: 'J', reach: undefined, effect: ['cheaper'], where: [{ file: 'lib/models.json', line: 67, text: 'x' }], options: [{ name: 'TypeSafe Jev', what: 'Send the page to Jev instead.', needs: 'A key.', source: 'https://jev.example' }], sources: ['https://jev.example'] });
+    for (const text of [renderSummary(summaryRun([lever], { moves })), renderSummary(summaryRun([lever, pickerFinding('Retired', { rank: 2 })], { moves }))]) {
+      const leverPart = text.slice(text.indexOf('1. Check'), text.indexOf('2. ') > 0 ? text.indexOf('2. ') : undefined);
+      assert.ok(!leverPart.includes('gpt-6-luna'), text);
+      assert.ok(/What it does: TypeSafe Jev/.test(leverPart.replace(/\n\s+/g, ' ')), text);
+    }
+  });
+
   for (const [name, count] of [['in the top three', 1], ['past the top three', 5]] as const) {
     it(`${name}, it says this repo's ids and where each goes, uncut`, () => {
       const findings = Array.from({ length: count }, (_, index) => pickerFinding(`Finding ${index + 1}`, { rank: index + 1, where: [{ file: 'lib/models.json', line: 67, text: 'x' }, { file: 'lib/models.json', line: 88, text: 'x' }, { file: 'lib/models.json', line: 39, text: 'x' }, { file: 'lib/models.json', line: 186, text: 'x' }] }));
